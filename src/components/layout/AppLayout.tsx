@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Sidebar } from "./Sidebar";
 import { Toaster } from "@/components/ui/sonner";
@@ -56,6 +55,7 @@ export function AppLayout({ children }: AppLayoutProps) {
           {isSidebarOpen ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
         </Button>
 
+        {/* Main content area */}
         <main className={`px-4 py-6 md:px-6 ${!isSidebarOpen ? 'md:pl-16' : ''}`}>
           {children}
         </main>
