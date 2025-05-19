@@ -1,4 +1,3 @@
-
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -71,9 +70,7 @@ export function Sidebar({ className, isOpen, isDesktopOpen = true, onClose, ...p
       <aside
         className={cn(
           "fixed top-0 bottom-0 left-0 z-50 w-64 bg-card border-r transition-transform duration-300 ease-in-out",
-          // Mobile states
           isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
-          // Desktop states
           !isDesktopOpen && "md:translate-x-full md:-translate-x-full md:w-0",
           isDesktopOpen && "md:translate-x-0",
           className
@@ -93,9 +90,9 @@ export function Sidebar({ className, isOpen, isDesktopOpen = true, onClose, ...p
             size="icon"
             className="ml-auto md:hidden"
             onClick={onClose}
+            aria-label="Close Menu"
           >
             <X className="h-4 w-4" />
-            <span className="sr-only">Close Menu</span>
           </Button>
         </div>
         <ScrollArea className="flex-1 py-4">
@@ -127,7 +124,7 @@ export function Sidebar({ className, isOpen, isDesktopOpen = true, onClose, ...p
                   <span className="text-sm font-medium">{user.email}</span>
                 </div>
               </div>
-              <Button variant="outline" size="sm" onClick={() => signOut()}>
+              <Button variant="outline" size="sm" onClick={signOut}>
                 Sign out
               </Button>
             </div>
