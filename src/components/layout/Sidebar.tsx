@@ -1,104 +1,130 @@
-
-import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useAuth } from "@/contexts/AuthContext";
+import { Link, useLocation } from "react-router-dom";
 import {
-  Calendar,
-  ClipboardList,
-  Home,
-  BookOpen,
+  LayoutDashboard,
   FileText,
+  BookOpen,
+  Calendar,
+  Library,
   Menu,
-  X,
 } from "lucide-react";
 
-interface NavItemProps {
-  to: string;
-  icon: React.ElementType;
-  label: string;
-  isActive: boolean;
+interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-const NavItem = ({ to, icon: Icon, label, isActive }: NavItemProps) => {
-  return (
-    <Button
-      variant="ghost"
-      className={cn(
-        "w-full justify-start gap-3 text-left font-normal mb-1",
-        isActive ? "bg-accent text-primary font-medium" : "text-muted-foreground"
-      )}
-      asChild
-    >
-      <Link to={to}>
-        <Icon className="h-5 w-5" />
-        <span>{label}</span>
-      </Link>
-    </Button>
-  );
-};
+export function Sidebar({ className, isOpen, onClose, ...props }: SidebarProps) {
+  const { pathname } = useLocation();
+  const { user, signOut } = useAuth();
 
-export function Sidebar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const location = useLocation();
-
-  const navItems = [
-    { path: "/", label: "Dashboard", icon: Home },
-    { path: "/cases", label: "Cases", icon: ClipboardList },
-    { path: "/resources", label: "Resources", icon: FileText },
-    { path: "/schedule", label: "Schedule", icon: Calendar },
-    { path: "/study", label: "Study", icon: BookOpen },
+  const routes = [
+    {
+      label: "Dashboard",
+      icon: LayoutDashboard,
+      href: "/",
+      active: pathname === "/",
+    },
+    {
+      label: "Cases",
+      icon: FileText,
+      href: "/cases",
+      active: pathname.startsWith("/cases"),
+    },
+    {
+      label: "Study",
+      icon: BookOpen,
+      href: "/study",
+      active: pathname === "/study",
+    },
+    {
+      label: "Schedule",
+      icon: Calendar,
+      href: "/schedule",
+      active: pathname === "/schedule",
+    },
+    {
+      label: "Resources",
+      icon: Library,
+      href: "/resources",
+      active: pathname === "/resources",
+    },
   ];
 
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
-  };
-
   return (
-    <div className="relative">
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={toggleSidebar}
-        className="fixed top-4 left-4 z-40 md:hidden"
-      >
-        {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-      </Button>
-
-      <aside
+    <>
+      <div
         className={cn(
-          "fixed inset-y-0 left-0 z-30 w-64 transform bg-sidebar border-r border-border transition-transform duration-300 ease-in-out",
-          isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+          "fixed inset-0 z-40 bg-background/80 backdrop-blur-sm lg:hidden",
+          isOpen ? "block" : "hidden"
         )}
+        onClick={onClose}
+      />
+      <div
+        className={cn(
+          "fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r bg-card transition-transform duration-300 ease-in-out lg:static lg:transition-none",
+          isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
+          className
+        )}
+        {...props}
       >
-        <div className="flex h-full flex-col">
-          <div className="flex h-16 items-center border-b border-border px-6">
-            <Link to="/" className="flex items-center gap-2 font-poppins">
-              <span className="text-primary text-xl font-semibold">MedCase</span>
-            </Link>
-          </div>
-          <nav className="flex-1 overflow-y-auto p-4">
-            <div className="space-y-6">
-              <div>
-                <h3 className="mb-2 px-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Main
-                </h3>
-                <div className="space-y-1">
-                  {navItems.map((item) => (
-                    <NavItem
-                      key={item.path}
-                      to={item.path}
-                      icon={item.icon}
-                      label={item.label}
-                      isActive={location.pathname === item.path}
-                    />
-                  ))}
+        <div className="flex h-14 items-center border-b px-4 lg:h-[60px]">
+          <Link
+            to="/"
+            className="flex items-center gap-2 font-semibold"
+            onClick={onClose}
+          >
+            <span className="text-primary">Medical Case Manager</span>
+          </Link>
+          <Button
+            variant="outline"
+            size="icon"
+            className="ml-auto lg:hidden"
+            onClick={onClose}
+          >
+            <Menu className="h-4 w-4" />
+            <span className="sr-only">Toggle Menu</span>
+          </Button>
+        </div>
+        <ScrollArea className="flex-1 py-4">
+          <nav className="grid gap-1 px-2">
+            {routes.map((route) => (
+              <Link
+                key={route.href}
+                to={route.href}
+                onClick={onClose}
+                className={cn(
+                  "group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
+                  route.active ? "bg-accent" : "transparent"
+                )}
+              >
+                <route.icon className="h-5 w-5" />
+                <span>{route.label}</span>
+              </Link>
+            ))}
+          </nav>
+        </ScrollArea>
+        {user && (
+          <div className="border-t p-4">
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2">
+                <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-medium">
+                  {user.email?.[0].toUpperCase() || "U"}
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium">{user.email}</span>
                 </div>
               </div>
+              <Button variant="outline" size="sm" onClick={() => signOut()}>
+                Sign out
+              </Button>
             </div>
-          </nav>
-        </div>
-      </aside>
-    </div>
+          </div>
+        )}
+      </div>
+    </>
   );
 }
