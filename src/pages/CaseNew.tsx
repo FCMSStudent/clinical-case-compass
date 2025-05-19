@@ -51,7 +51,6 @@ import { SymptomChecklist } from "@/components/cases/SymptomChecklist";
 import { VitalsCard } from "@/components/cases/VitalsCard";
 import { LabResultsCard, LabTest } from "@/components/cases/LabResultsCard";
 import { RadiologyCard, RadiologyExam } from "@/components/cases/RadiologyCard";
-import { UrinaryReviewCard } from "@/components/cases/UrinaryReviewCard";
 
 const formSchema = z.object({
   title: z.string().min(3, { message: "Title must be at least 3 characters" }),
@@ -66,7 +65,6 @@ const formSchema = z.object({
   physicalExam: z.string().optional(),
   learningPoints: z.string().optional(),
   systemSymptoms: z.record(z.string(), z.array(z.string())).optional(),
-  urinarySymptoms: z.array(z.string()).optional(),
   vitals: z.record(z.string(), z.string()).optional(),
   labResults: z.array(z.object({
     id: z.string(),
@@ -83,13 +81,44 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
+// Additional specialties in alphabetical order
+const SPECIALTIES = [
+  { id: "allergy", name: "Allergy & Immunology" },
+  { id: "anesthesiology", name: "Anesthesiology" },
+  { id: "cardiology", name: "Cardiology" },
+  { id: "dermatology", name: "Dermatology" },
+  { id: "emergency", name: "Emergency Medicine" },
+  { id: "endocrinology", name: "Endocrinology" },
+  { id: "family", name: "Family Medicine" },
+  { id: "gastroenterology", name: "Gastroenterology" },
+  { id: "geriatrics", name: "Geriatrics" },
+  { id: "hematology", name: "Hematology" },
+  { id: "infectious", name: "Infectious Disease" },
+  { id: "internal", name: "Internal Medicine" },
+  { id: "nephrology", name: "Nephrology" },
+  { id: "neurology", name: "Neurology" },
+  { id: "neurosurgery", name: "Neurosurgery" },
+  { id: "obgyn", name: "Obstetrics & Gynecology" },
+  { id: "oncology", name: "Oncology" },
+  { id: "ophthalmology", name: "Ophthalmology" },
+  { id: "orthopedics", name: "Orthopedics" },
+  { id: "otolaryngology", name: "Otolaryngology (ENT)" },
+  { id: "pathology", name: "Pathology" },
+  { id: "pediatrics", name: "Pediatrics" },
+  { id: "psychiatry", name: "Psychiatry" },
+  { id: "pulmonology", name: "Pulmonology" },
+  { id: "radiology", name: "Radiology" },
+  { id: "rheumatology", name: "Rheumatology" },
+  { id: "surgery", name: "Surgery" },
+  { id: "urology", name: "Urology" },
+  { id: "vascular", name: "Vascular Medicine" }
+];
+
 const CaseNew = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState("case-info");
-  const allTags = getAllTags();
   const [systemSymptoms, setSystemSymptoms] = useState<Record<string, string[]>>({});
-  const [urinarySymptoms, setUrinarySymptoms] = useState<string[]>([]);
   const [vitals, setVitals] = useState<Record<string, string>>({});
   const [labResults, setLabResults] = useState<LabTest[]>([]);
   const [radiologyExams, setRadiologyExams] = useState<RadiologyExam[]>([]);
@@ -109,7 +138,6 @@ const CaseNew = () => {
       physicalExam: "",
       learningPoints: "",
       systemSymptoms: {},
-      urinarySymptoms: [],
       vitals: {},
       labResults: [],
       radiologyExams: [],
@@ -119,7 +147,6 @@ const CaseNew = () => {
   const handleSubmit = async (values: FormValues) => {
     // Include system symptoms and vitals in the form data
     values.systemSymptoms = systemSymptoms;
-    values.urinarySymptoms = urinarySymptoms;
     values.vitals = vitals;
     values.labResults = labResults;
     values.radiologyExams = radiologyExams;
@@ -160,10 +187,6 @@ const CaseNew = () => {
 
   const handleSymptomChange = (selections: Record<string, string[]>) => {
     setSystemSymptoms(selections);
-  };
-
-  const handleUrinarySymptomChange = (selections: string[]) => {
-    setUrinarySymptoms(selections);
   };
 
   const handleVitalsChange = (vitalSigns: Record<string, string>) => {
@@ -263,9 +286,9 @@ const CaseNew = () => {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {allTags.map((tag) => (
-                              <SelectItem key={tag.id} value={tag.id}>
-                                {tag.name}
+                            {SPECIALTIES.map((specialty) => (
+                              <SelectItem key={specialty.id} value={specialty.id}>
+                                {specialty.name}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -459,20 +482,10 @@ const CaseNew = () => {
                       <CheckCheck className="h-5 w-5 text-medical-600" />
                       <h3 className="font-medium">System Review</h3>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <SymptomChecklist 
-                          onSelectionChange={handleSymptomChange} 
-                          initialSelections={systemSymptoms}
-                        />
-                      </div>
-                      <div>
-                        <UrinaryReviewCard 
-                          onSelectionChange={handleUrinarySymptomChange}
-                          initialSelections={urinarySymptoms}
-                        />
-                      </div>
-                    </div>
+                    <SymptomChecklist 
+                      onSelectionChange={handleSymptomChange} 
+                      initialSelections={systemSymptoms}
+                    />
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

@@ -32,21 +32,6 @@ const systemSymptoms: SystemSymptoms[] = [
     ],
   },
   {
-    system: "Respiratory",
-    symptoms: [
-      "Cough",
-      "Dyspnea",
-      "Wheezing",
-      "Hemoptysis",
-      "Sputum production",
-      "Pleuritic pain",
-      "Orthopnea",
-      "Stridor",
-      "Apnea",
-      "Tachypnea",
-    ],
-  },
-  {
     system: "Gastrointestinal",
     symptoms: [
       "Abdominal pain",
@@ -59,6 +44,21 @@ const systemSymptoms: SystemSymptoms[] = [
       "Hematemesis",
       "Melena",
       "Jaundice",
+    ],
+  },
+  {
+    system: "Musculoskeletal",
+    symptoms: [
+      "Joint pain",
+      "Muscle pain",
+      "Swelling",
+      "Stiffness",
+      "Limited range of motion",
+      "Weakness",
+      "Back pain",
+      "Fractures",
+      "Redness",
+      "Deformity",
     ],
   },
   {
@@ -77,18 +77,35 @@ const systemSymptoms: SystemSymptoms[] = [
     ],
   },
   {
-    system: "Musculoskeletal",
+    system: "Respiratory",
     symptoms: [
-      "Joint pain",
-      "Muscle pain",
-      "Swelling",
-      "Stiffness",
-      "Limited range of motion",
-      "Weakness",
-      "Back pain",
-      "Fractures",
-      "Redness",
-      "Deformity",
+      "Cough",
+      "Dyspnea",
+      "Wheezing",
+      "Hemoptysis",
+      "Sputum production",
+      "Pleuritic pain",
+      "Orthopnea",
+      "Stridor",
+      "Apnea",
+      "Tachypnea",
+    ],
+  },
+  {
+    system: "Urinary",
+    symptoms: [
+      "Dysuria",
+      "Frequency",
+      "Urgency",
+      "Hesitancy",
+      "Nocturia",
+      "Hematuria",
+      "Incontinence",
+      "Polyuria",
+      "Oliguria",
+      "Flank pain",
+      "Suprapubic pain",
+      "Urinary retention"
     ],
   }
 ];
@@ -135,7 +152,7 @@ export function SymptomChecklist({ onSelectionChange, initialSelections = {} }: 
         onValueChange={setActiveSystem}
         className="w-full"
       >
-        <TabsList className="grid grid-cols-5 w-full rounded-none bg-medical-50/50 border-b border-medical-200">
+        <TabsList className="grid grid-cols-6 w-full rounded-none bg-medical-50/50 border-b border-medical-200">
           {systemSymptoms.map((item) => (
             <TabsTrigger 
               key={item.system} 
