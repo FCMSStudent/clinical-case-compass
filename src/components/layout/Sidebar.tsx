@@ -5,6 +5,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link, useLocation } from "react-router-dom";
 import {
+  ChevronLeft,
+  ChevronRight,
   FileText,
   PlusCircle,
   X,

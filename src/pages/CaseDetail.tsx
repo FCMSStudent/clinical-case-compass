@@ -1,5 +1,5 @@
 
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import { getCaseById } from "@/data/mock-data";
 import { Button } from "@/components/ui/button";
@@ -12,12 +12,33 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PageHeader } from "@/components/ui/page-header";
-import { BookOpen, Calendar, ChevronLeft, FileText } from "lucide-react";
+import {
+  BookOpen,
+  Calendar,
+  ChevronLeft,
+  Edit,
+  FileText,
+  Trash2,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { useState } from "react";
+import { toast } from "sonner";
 
 const CaseDetail = () => {
   const { id } = useParams<{ id: string }>();
   const medicalCase = id ? getCaseById(id) : undefined;
+  const navigate = useNavigate();
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   if (!medicalCase) {
     return (
@@ -29,6 +50,20 @@ const CaseDetail = () => {
       </div>
     );
   }
+
+  const handleEdit = () => {
+    // In a real app, this would navigate to an edit page
+    // For now, we'll just navigate to the new case page (which would be similar)
+    navigate(`/cases/new`);
+    toast.info("Editing functionality will be implemented soon");
+  };
+
+  const handleDelete = () => {
+    // In a real app, this would delete the case from the database
+    setShowDeleteDialog(false);
+    navigate("/cases");
+    toast.success("Case deleted successfully");
+  };
 
   return (
     <div>
@@ -247,12 +282,37 @@ const CaseDetail = () => {
       </Tabs>
       
       <div className="flex justify-end gap-4">
+        <Button variant="outline" onClick={() => setShowDeleteDialog(true)}>
+          <Trash2 className="mr-2 h-4 w-4" />
+          Delete Case
+        </Button>
         <Button variant="outline">
           <Calendar className="mr-2 h-4 w-4" />
           Generate Quiz
         </Button>
-        <Button>Edit Case</Button>
+        <Button onClick={handleEdit}>
+          <Edit className="mr-2 h-4 w-4" />
+          Edit Case
+        </Button>
       </div>
+
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the case
+              and remove all associated data.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

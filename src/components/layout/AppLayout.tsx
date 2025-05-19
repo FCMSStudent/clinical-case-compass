@@ -4,13 +4,15 @@ import { Sidebar } from "./Sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Menu } from "lucide-react";
+import { useLocalStorage } from "@/hooks/use-local-storage";
 
 interface AppLayoutProps {
   children: React.ReactNode;
 }
 
 export function AppLayout({ children }: AppLayoutProps) {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  // Use localStorage to persist sidebar state
+  const [isSidebarOpen, setIsSidebarOpen] = useLocalStorage("sidebar:open", true);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   const handleCloseSidebar = () => {
@@ -36,13 +38,15 @@ export function AppLayout({ children }: AppLayoutProps) {
       <div className={`flex-1 transition-all duration-300 ${isSidebarOpen ? 'md:ml-64' : 'md:ml-0'}`}>
         {/* Mobile menu button */}
         <div className="flex items-center p-4 md:hidden">
-          <button 
+          <Button
+            variant="outline"
+            size="icon" 
             onClick={handleToggleMobileSidebar}
-            className="p-2 rounded-md hover:bg-gray-200"
+            className="rounded-md"
             aria-label="Toggle sidebar"
           >
             <Menu className="h-6 w-6" />
-          </button>
+          </Button>
         </div>
 
         {/* Desktop toggle button */}
