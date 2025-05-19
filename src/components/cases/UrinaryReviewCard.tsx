@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Urine } from "lucide-react";
+import { Droplet } from "lucide-react";
 
 interface UrinaryReviewCardProps {
   onSelectionChange?: (selections: string[]) => void;
@@ -47,7 +47,7 @@ export function UrinaryReviewCard({ onSelectionChange, initialSelections = [] }:
   return (
     <Card className="border-medical-200 shadow-sm">
       <CardHeader className="pb-2 pt-4 px-4 bg-medical-50/70 flex flex-row items-center space-x-2">
-        <Urine className="h-4 w-4 text-medical-600" />
+        <Droplet className="h-4 w-4 text-medical-600" />
         <CardTitle className="text-sm font-medium text-medical-800">Urinary System Review</CardTitle>
       </CardHeader>
       <CardContent className="p-4">

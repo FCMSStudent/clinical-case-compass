@@ -1,11 +1,10 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { XRay, Plus, X } from "lucide-react";
+import { Scan, Plus, X } from "lucide-react";
 
 interface RadiologyCardProps {
   onRadiologyChange?: (results: RadiologyExam[]) => void;
@@ -87,7 +86,7 @@ export function RadiologyCard({ onRadiologyChange, initialResults = [] }: Radiol
             <div key={exam.id} className="border border-medical-100 rounded-md p-3 bg-white">
               <div className="flex justify-between mb-2">
                 <div className="flex items-center">
-                  <XRay className="h-4 w-4 text-medical-600 mr-2" />
+                  <Scan className="h-4 w-4 text-medical-600 mr-2" />
                   <Label className="text-xs font-medium text-medical-700">Imaging Study</Label>
                 </div>
                 <Button 
