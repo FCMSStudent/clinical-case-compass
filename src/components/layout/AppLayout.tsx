@@ -35,7 +35,7 @@ export function AppLayout({ children }: AppLayoutProps) {
             </svg>
           </button>
         </div>
-        <main className="px-4 md:px-8 py-6 animate-fade-in">
+        <main className="p-6 animate-fade-in">
           {children}
         </main>
       </div>
