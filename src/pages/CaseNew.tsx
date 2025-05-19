@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
@@ -48,6 +49,9 @@ import { Separator } from "@/components/ui/separator";
 import { getAllTags } from "@/data/mock-data";
 import { SymptomChecklist } from "@/components/cases/SymptomChecklist";
 import { VitalsCard } from "@/components/cases/VitalsCard";
+import { LabResultsCard, LabTest } from "@/components/cases/LabResultsCard";
+import { RadiologyCard, RadiologyExam } from "@/components/cases/RadiologyCard";
+import { UrinaryReviewCard } from "@/components/cases/UrinaryReviewCard";
 
 const formSchema = z.object({
   title: z.string().min(3, { message: "Title must be at least 3 characters" }),
@@ -62,7 +66,19 @@ const formSchema = z.object({
   physicalExam: z.string().optional(),
   learningPoints: z.string().optional(),
   systemSymptoms: z.record(z.string(), z.array(z.string())).optional(),
+  urinarySymptoms: z.array(z.string()).optional(),
   vitals: z.record(z.string(), z.string()).optional(),
+  labResults: z.array(z.object({
+    id: z.string(),
+    name: z.string(),
+    value: z.string(),
+    unit: z.string()
+  })).optional(),
+  radiologyExams: z.array(z.object({
+    id: z.string(),
+    modality: z.string(),
+    findings: z.string()
+  })).optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -73,7 +89,10 @@ const CaseNew = () => {
   const [activeTab, setActiveTab] = useState("case-info");
   const allTags = getAllTags();
   const [systemSymptoms, setSystemSymptoms] = useState<Record<string, string[]>>({});
+  const [urinarySymptoms, setUrinarySymptoms] = useState<string[]>([]);
   const [vitals, setVitals] = useState<Record<string, string>>({});
+  const [labResults, setLabResults] = useState<LabTest[]>([]);
+  const [radiologyExams, setRadiologyExams] = useState<RadiologyExam[]>([]);
   
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -90,14 +109,20 @@ const CaseNew = () => {
       physicalExam: "",
       learningPoints: "",
       systemSymptoms: {},
+      urinarySymptoms: [],
       vitals: {},
+      labResults: [],
+      radiologyExams: [],
     },
   });
 
   const handleSubmit = async (values: FormValues) => {
     // Include system symptoms and vitals in the form data
     values.systemSymptoms = systemSymptoms;
+    values.urinarySymptoms = urinarySymptoms;
     values.vitals = vitals;
+    values.labResults = labResults;
+    values.radiologyExams = radiologyExams;
     
     setIsSubmitting(true);
     try {
@@ -137,8 +162,20 @@ const CaseNew = () => {
     setSystemSymptoms(selections);
   };
 
+  const handleUrinarySymptomChange = (selections: string[]) => {
+    setUrinarySymptoms(selections);
+  };
+
   const handleVitalsChange = (vitalSigns: Record<string, string>) => {
     setVitals(vitalSigns);
+  };
+
+  const handleLabResultsChange = (results: LabTest[]) => {
+    setLabResults(results);
+  };
+
+  const handleRadiologyExamsChange = (exams: RadiologyExam[]) => {
+    setRadiologyExams(exams);
   };
 
   return (
@@ -422,18 +459,28 @@ const CaseNew = () => {
                       <CheckCheck className="h-5 w-5 text-medical-600" />
                       <h3 className="font-medium">System Review</h3>
                     </div>
-                    <SymptomChecklist 
-                      onSelectionChange={handleSymptomChange} 
-                      initialSelections={systemSymptoms}
-                    />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <SymptomChecklist 
+                          onSelectionChange={handleSymptomChange} 
+                          initialSelections={systemSymptoms}
+                        />
+                      </div>
+                      <div>
+                        <UrinaryReviewCard 
+                          onSelectionChange={handleUrinarySymptomChange}
+                          initialSelections={urinarySymptoms}
+                        />
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <FormField
                       control={form.control}
                       name="physicalExam"
                       render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="md:col-span-1">
                           <FormLabel className="text-md font-medium">Physical Examination</FormLabel>
                           <FormControl>
                             <Textarea
@@ -446,11 +493,21 @@ const CaseNew = () => {
                         </FormItem>
                       )}
                     />
-                    <div>
+                    <div className="md:col-span-2 space-y-4">
                       <VitalsCard 
                         onVitalsChange={handleVitalsChange}
                         initialVitals={vitals}
                       />
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <LabResultsCard 
+                          onLabResultsChange={handleLabResultsChange}
+                          initialResults={labResults}
+                        />
+                        <RadiologyCard 
+                          onRadiologyChange={handleRadiologyExamsChange}
+                          initialResults={radiologyExams}
+                        />
+                      </div>
                     </div>
                   </div>
                 </CardContent>
