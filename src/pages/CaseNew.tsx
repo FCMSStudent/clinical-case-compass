@@ -17,7 +17,8 @@ import {
   UserCircle, 
   Stethoscope,
   ArrowRight,
-  ArrowLeft
+  ArrowLeft,
+  CheckCheck
 } from "lucide-react";
 import {
   Form,
@@ -46,6 +47,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { getAllTags } from "@/data/mock-data";
+import { SymptomChecklist } from "@/components/cases/SymptomChecklist";
 
 const formSchema = z.object({
   title: z.string().min(3, { message: "Title must be at least 3 characters" }),
@@ -59,6 +61,7 @@ const formSchema = z.object({
   history: z.string().optional(),
   physicalExam: z.string().optional(),
   learningPoints: z.string().optional(),
+  systemSymptoms: z.record(z.string(), z.array(z.string())).optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -68,6 +71,7 @@ const CaseNew = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState("case-info");
   const allTags = getAllTags();
+  const [systemSymptoms, setSystemSymptoms] = useState<Record<string, string[]>>({});
   
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -83,10 +87,14 @@ const CaseNew = () => {
       history: "",
       physicalExam: "",
       learningPoints: "",
+      systemSymptoms: {},
     },
   });
 
   const handleSubmit = async (values: FormValues) => {
+    // Include system symptoms in the form data
+    values.systemSymptoms = systemSymptoms;
+    
     setIsSubmitting(true);
     try {
       // In a real app, we would save this to the database
@@ -119,6 +127,10 @@ const CaseNew = () => {
     if (activeTab === "learning") setActiveTab("clinical-details");
     else if (activeTab === "clinical-details") setActiveTab("patient-info");
     else if (activeTab === "patient-info") setActiveTab("case-info");
+  };
+
+  const handleSymptomChange = (selections: Record<string, string[]>) => {
+    setSystemSymptoms(selections);
   };
 
   return (
@@ -396,6 +408,17 @@ const CaseNew = () => {
                       </FormItem>
                     )}
                   />
+
+                  <div className="mt-6">
+                    <div className="flex items-center gap-2 mb-3">
+                      <CheckCheck className="h-5 w-5 text-medical-600" />
+                      <h3 className="font-medium">System Review</h3>
+                    </div>
+                    <SymptomChecklist 
+                      onSelectionChange={handleSymptomChange} 
+                      initialSelections={systemSymptoms}
+                    />
+                  </div>
 
                   <FormField
                     control={form.control}
