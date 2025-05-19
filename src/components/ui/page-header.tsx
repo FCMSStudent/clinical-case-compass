@@ -15,7 +15,7 @@ export function PageHeader({
   children 
 }: PageHeaderProps) {
   return (
-    <div className={cn("mb-8 flex flex-col gap-1 md:flex-row md:items-center md:justify-between", className)}>
+    <div className={cn("mb-6 flex flex-col gap-1 md:flex-row md:items-center md:justify-between", className)}>
       <div>
         <h1 className="text-2xl md:text-3xl font-bold tracking-tight">{title}</h1>
         {description && (

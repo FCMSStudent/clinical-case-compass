@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import { PageHeader } from "@/components/ui/page-header";
 import { CaseCard } from "@/components/cases/CaseCard";
 import { getAllCases, getAllTags } from "@/data/mock-data";
-import { MedicalCase, CaseTag } from "@/types/case";
 import { ClipboardList, Search } from "lucide-react";
 import {
   Select,
@@ -50,7 +49,7 @@ const Cases = () => {
   };
 
   return (
-    <div>
+    <div className="space-y-6">
       <PageHeader 
         title="Clinical Cases" 
         description="Manage and browse your documented cases"

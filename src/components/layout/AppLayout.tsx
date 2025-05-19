@@ -19,9 +19,10 @@ export function AppLayout({ children }: AppLayoutProps) {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex min-h-screen bg-background">
       <Sidebar isOpen={isSidebarOpen} onClose={handleCloseSidebar} />
-      <div className="md:ml-64 min-h-screen">
+      
+      <div className="flex-1 transition-all duration-300 md:ml-64">
         <div className="flex items-center p-4 md:hidden">
           <button 
             onClick={handleToggleSidebar}
@@ -35,7 +36,7 @@ export function AppLayout({ children }: AppLayoutProps) {
             </svg>
           </button>
         </div>
-        <main className="p-6 animate-fade-in">
+        <main className="px-4 py-6 md:px-6">
           {children}
         </main>
       </div>
