@@ -1,3 +1,4 @@
+
 import React, {
   useState,
   useCallback,
@@ -156,4 +157,10 @@ const SidebarProvider = forwardRef<
           >
             {children}
           </div>
-        </
+        </TooltipProvider>
+      </SidebarContext.Provider>
+    );
+  }
+);
+
+export { SidebarProvider, useSidebar };

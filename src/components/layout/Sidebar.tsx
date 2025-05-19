@@ -1,14 +1,11 @@
+
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link, useLocation } from "react-router-dom";
 import {
-  LayoutDashboard,
   FileText,
-  BookOpen,
-  Calendar,
-  Library,
   X,
 } from "lucide-react";
 
@@ -24,35 +21,17 @@ export function Sidebar({ className, isOpen, isDesktopOpen = true, onClose, ...p
 
   const routes = [
     {
-      label: "Dashboard",
-      icon: LayoutDashboard,
-      href: "/",
-      active: pathname === "/",
-    },
-    {
-      label: "Cases",
+      label: "All Cases",
       icon: FileText,
       href: "/cases",
-      active: pathname.startsWith("/cases"),
+      active: pathname === "/cases",
     },
     {
-      label: "Study",
-      icon: BookOpen,
-      href: "/study",
-      active: pathname === "/study",
-    },
-    {
-      label: "Schedule",
-      icon: Calendar,
-      href: "/schedule",
-      active: pathname === "/schedule",
-    },
-    {
-      label: "Resources",
-      icon: Library,
-      href: "/resources",
-      active: pathname === "/resources",
-    },
+      label: "New Case",
+      icon: FileText,
+      href: "/cases/new",
+      active: pathname === "/cases/new",
+    }
   ];
 
   return (
@@ -83,7 +62,7 @@ export function Sidebar({ className, isOpen, isDesktopOpen = true, onClose, ...p
             className="flex items-center gap-2 font-semibold"
             onClick={onClose}
           >
-            <span className="text-primary">Medical Case Manager</span>
+            <span className="text-primary">Clinical Case Manager</span>
           </Link>
           <Button
             variant="outline"
