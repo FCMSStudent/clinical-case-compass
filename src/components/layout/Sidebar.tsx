@@ -74,7 +74,7 @@ export function Sidebar({ className, isOpen, isDesktopOpen = true, onClose, ...p
           // Mobile states
           isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
           // Desktop states
-          !isDesktopOpen && "md:-translate-x-full md:w-0",
+          !isDesktopOpen && "md:translate-x-full md:-translate-x-full md:w-0",
           isDesktopOpen && "md:translate-x-0",
           className
         )}
