@@ -9,6 +9,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import Dashboard from "./pages/Dashboard";
 import Cases from "./pages/Cases";
 import CaseDetail from "./pages/CaseDetail";
+import CaseNew from "./pages/CaseNew";
 import Resources from "./pages/Resources";
 import Study from "./pages/Study";
 import Schedule from "./pages/Schedule";
@@ -39,6 +40,7 @@ const App = () => (
             <Route path="/auth" element={<Auth />} />
             <Route path="/" element={<PrivateRoute><AppWithAuth><Dashboard /></AppWithAuth></PrivateRoute>} />
             <Route path="/cases" element={<PrivateRoute><AppWithAuth><Cases /></AppWithAuth></PrivateRoute>} />
+            <Route path="/cases/new" element={<PrivateRoute><AppWithAuth><CaseNew /></AppWithAuth></PrivateRoute>} />
             <Route path="/cases/:id" element={<PrivateRoute><AppWithAuth><CaseDetail /></AppWithAuth></PrivateRoute>} />
             <Route path="/resources" element={<PrivateRoute><AppWithAuth><Resources /></AppWithAuth></PrivateRoute>} />
             <Route path="/study" element={<PrivateRoute><AppWithAuth><Study /></AppWithAuth></PrivateRoute>} />
