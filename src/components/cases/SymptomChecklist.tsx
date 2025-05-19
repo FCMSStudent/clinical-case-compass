@@ -4,6 +4,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { 
+  Collapsible, 
+  CollapsibleContent, 
+  CollapsibleTrigger 
+} from "@/components/ui/collapsible";
+import { ChevronDown } from "lucide-react";
 
 interface SymptomChecklistProps {
   onSelectionChange: (selections: Record<string, string[]>) => void;
@@ -113,6 +120,7 @@ const systemSymptoms: SystemSymptoms[] = [
 export function SymptomChecklist({ onSelectionChange, initialSelections = {} }: SymptomChecklistProps) {
   const [selectedSymptoms, setSelectedSymptoms] = useState<Record<string, string[]>>(initialSelections);
   const [activeSystem, setActiveSystem] = useState<string>(systemSymptoms[0].system);
+  const isMobile = useIsMobile();
 
   const handleSymptomToggle = (system: string, symptom: string, checked: boolean) => {
     setSelectedSymptoms((prev) => {
@@ -141,6 +149,51 @@ export function SymptomChecklist({ onSelectionChange, initialSelections = {} }: 
     return selectedSymptoms[system]?.includes(symptom) || false;
   };
 
+  // Mobile view uses Collapsible components
+  if (isMobile) {
+    return (
+      <div className="bg-white rounded-lg border border-medical-200 overflow-hidden shadow-sm">
+        <div className="p-3 bg-medical-50 border-b border-medical-200">
+          <h3 className="font-medium text-medical-800">System Review Checklist</h3>
+        </div>
+        
+        <div className="divide-y divide-medical-100">
+          {systemSymptoms.map((systemItem) => (
+            <Collapsible key={systemItem.system} className="w-full">
+              <CollapsibleTrigger className="flex w-full items-center justify-between p-3 font-medium text-left hover:bg-medical-50/60 transition-colors">
+                <span className="text-sm">{systemItem.system}</span>
+                <ChevronDown className="h-4 w-4 text-medical-500 transition-transform duration-200 ui-open:rotate-180" />
+              </CollapsibleTrigger>
+              <CollapsibleContent className="p-2 pb-3 bg-medical-50/20">
+                <div className="grid grid-cols-1 gap-2">
+                  {systemItem.symptoms.map((symptom) => (
+                    <div key={symptom} className="flex items-start space-x-2 py-1">
+                      <Checkbox 
+                        id={`${systemItem.system}-${symptom}-mobile`} 
+                        checked={isChecked(systemItem.system, symptom)}
+                        onCheckedChange={(checked) => 
+                          handleSymptomToggle(systemItem.system, symptom, checked === true)
+                        }
+                        className="mt-0.5"
+                      />
+                      <Label 
+                        htmlFor={`${systemItem.system}-${symptom}-mobile`}
+                        className="text-sm leading-tight cursor-pointer"
+                      >
+                        {symptom}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
+          ))}
+        </div>
+      </div>
+    );
+  }
+  
+  // Desktop view uses Tabs
   return (
     <div className="bg-white rounded-lg border border-medical-200 overflow-hidden shadow-sm">
       <div className="p-3 bg-medical-50 border-b border-medical-200">
