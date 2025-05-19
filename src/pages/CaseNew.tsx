@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { PageHeader } from "@/components/ui/page-header";
-import { ChevronLeft, FileText } from "lucide-react";
+import { ChevronLeft, FileText, Clipboard, UserCircle, Stethoscope } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -27,7 +27,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { 
+  Card, 
+  CardContent, 
+  CardHeader, 
+  CardTitle,
+  CardDescription 
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { getAllTags } from "@/data/mock-data";
 
 const formSchema = z.object({
@@ -88,32 +95,44 @@ const CaseNew = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <button
+    <div className="max-w-4xl mx-auto pb-12">
+      <Button
         onClick={() => navigate("/cases")}
-        className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-6"
+        variant="ghost"
+        className="flex items-center text-sm text-muted-foreground hover:text-foreground mb-6"
       >
         <ChevronLeft className="mr-1 h-4 w-4" />
         Back to all cases
-      </button>
+      </Button>
 
-      <PageHeader title="New Clinical Case" description="Document a new clinical case" />
+      <PageHeader 
+        title="New Clinical Case" 
+        description="Document a new clinical case for learning and reference"
+      />
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
-          <Card>
-            <CardHeader>
-              <CardTitle>Case Information</CardTitle>
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8 mt-6">
+          <Card className="border-medical-200 shadow-md hover:shadow-lg transition-shadow">
+            <CardHeader className="bg-gradient-to-r from-medical-50 to-medical-100 rounded-t-lg">
+              <div className="flex items-center">
+                <FileText className="h-6 w-6 text-medical-800 mr-2" />
+                <CardTitle>Case Information</CardTitle>
+              </div>
+              <CardDescription>Enter the basic details about this clinical case</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-6 pt-6">
               <FormField
                 control={form.control}
                 name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Case Title</FormLabel>
+                    <FormLabel className="text-md font-medium">Case Title</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., Acute Appendicitis in a 25-Year-Old Male" {...field} />
+                      <Input 
+                        placeholder="e.g., Acute Appendicitis in a 25-Year-Old Male" 
+                        {...field}
+                        className="border-medical-200 focus-visible:ring-medical-500" 
+                      />
                     </FormControl>
                     <FormDescription>
                       A descriptive title for this clinical case
@@ -128,13 +147,13 @@ const CaseNew = () => {
                 name="tags"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Clinical Specialty</FormLabel>
+                    <FormLabel className="text-md font-medium">Clinical Specialty</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="border-medical-200 focus-visible:ring-medical-500">
                           <SelectValue placeholder="Select a specialty" />
                         </SelectTrigger>
                       </FormControl>
@@ -154,15 +173,19 @@ const CaseNew = () => {
                 )}
               />
 
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid gap-6 md:grid-cols-2">
                 <FormField
                   control={form.control}
                   name="chiefComplaint"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Chief Complaint</FormLabel>
+                      <FormLabel className="text-md font-medium">Chief Complaint</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., Severe abdominal pain" {...field} />
+                        <Input 
+                          placeholder="e.g., Severe abdominal pain" 
+                          {...field} 
+                          className="border-medical-200 focus-visible:ring-medical-500"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -173,9 +196,13 @@ const CaseNew = () => {
                   name="diagnoses"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Diagnosis (Primary)</FormLabel>
+                      <FormLabel className="text-md font-medium">Diagnosis (Primary)</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., Acute Appendicitis" {...field} />
+                        <Input 
+                          placeholder="e.g., Acute Appendicitis" 
+                          {...field} 
+                          className="border-medical-200 focus-visible:ring-medical-500"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -185,20 +212,28 @@ const CaseNew = () => {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Patient Information</CardTitle>
+          <Card className="border-medical-200 shadow-md hover:shadow-lg transition-shadow">
+            <CardHeader className="bg-gradient-to-r from-medical-50 to-medical-100 rounded-t-lg">
+              <div className="flex items-center">
+                <UserCircle className="h-6 w-6 text-medical-800 mr-2" />
+                <CardTitle>Patient Information</CardTitle>
+              </div>
+              <CardDescription>Enter patient demographics and identifiers</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid gap-4 md:grid-cols-2">
+            <CardContent className="space-y-6 pt-6">
+              <div className="grid gap-6 md:grid-cols-2">
                 <FormField
                   control={form.control}
                   name="patientName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Patient Name</FormLabel>
+                      <FormLabel className="text-md font-medium">Patient Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="Patient name" {...field} />
+                        <Input 
+                          placeholder="Patient name" 
+                          {...field} 
+                          className="border-medical-200 focus-visible:ring-medical-500"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -210,9 +245,13 @@ const CaseNew = () => {
                   name="patientMRN"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Medical Record Number (Optional)</FormLabel>
+                      <FormLabel className="text-md font-medium">Medical Record Number (Optional)</FormLabel>
                       <FormControl>
-                        <Input placeholder="MRN" {...field} />
+                        <Input 
+                          placeholder="MRN" 
+                          {...field} 
+                          className="border-medical-200 focus-visible:ring-medical-500"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -220,15 +259,20 @@ const CaseNew = () => {
                 />
               </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid gap-6 md:grid-cols-2">
                 <FormField
                   control={form.control}
                   name="patientAge"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Age</FormLabel>
+                      <FormLabel className="text-md font-medium">Age</FormLabel>
                       <FormControl>
-                        <Input type="number" placeholder="Age" {...field} />
+                        <Input 
+                          type="number" 
+                          placeholder="Age" 
+                          {...field} 
+                          className="border-medical-200 focus-visible:ring-medical-500"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -240,13 +284,13 @@ const CaseNew = () => {
                   name="patientGender"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Gender</FormLabel>
+                      <FormLabel className="text-md font-medium">Gender</FormLabel>
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
                       >
                         <FormControl>
-                          <SelectTrigger>
+                          <SelectTrigger className="border-medical-200 focus-visible:ring-medical-500">
                             <SelectValue placeholder="Select gender" />
                           </SelectTrigger>
                         </FormControl>
@@ -264,21 +308,25 @@ const CaseNew = () => {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Clinical Details</CardTitle>
+          <Card className="border-medical-200 shadow-md hover:shadow-lg transition-shadow">
+            <CardHeader className="bg-gradient-to-r from-medical-50 to-medical-100 rounded-t-lg">
+              <div className="flex items-center">
+                <Stethoscope className="h-6 w-6 text-medical-800 mr-2" />
+                <CardTitle>Clinical Details</CardTitle>
+              </div>
+              <CardDescription>Document the patient's history and examination findings</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-6 pt-6">
               <FormField
                 control={form.control}
                 name="history"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>History</FormLabel>
+                    <FormLabel className="text-md font-medium">History</FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="Describe the patient's history..."
-                        className="min-h-[100px]"
+                        className="min-h-[120px] resize-none border-medical-200 focus-visible:ring-medical-500"
                         {...field}
                       />
                     </FormControl>
@@ -292,11 +340,11 @@ const CaseNew = () => {
                 name="physicalExam"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Physical Examination</FormLabel>
+                    <FormLabel className="text-md font-medium">Physical Examination</FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="Document physical exam findings..."
-                        className="min-h-[100px]"
+                        className="min-h-[120px] resize-none border-medical-200 focus-visible:ring-medical-500"
                         {...field}
                       />
                     </FormControl>
@@ -307,40 +355,54 @@ const CaseNew = () => {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Learning</CardTitle>
+          <Card className="border-medical-200 shadow-md hover:shadow-lg transition-shadow">
+            <CardHeader className="bg-gradient-to-r from-medical-50 to-medical-100 rounded-t-lg">
+              <div className="flex items-center">
+                <Clipboard className="h-6 w-6 text-medical-800 mr-2" />
+                <CardTitle>Learning</CardTitle>
+              </div>
+              <CardDescription>Document key learning points from this clinical case</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-6">
               <FormField
                 control={form.control}
                 name="learningPoints"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Learning Points</FormLabel>
+                    <FormLabel className="text-md font-medium">Learning Points</FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="Document key learning points from this case..."
-                        className="min-h-[100px]"
+                        className="min-h-[120px] resize-none border-medical-200 focus-visible:ring-medical-500"
                         {...field}
                       />
                     </FormControl>
+                    <FormDescription>
+                      Include important insights, literature references, or best practices
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </CardContent>
           </Card>
+
+          <Separator className="my-8" />
 
           <div className="flex justify-end gap-4">
             <Button
               type="button"
               variant="outline"
               onClick={() => navigate("/cases")}
+              className="border-medical-300 hover:bg-medical-50"
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
+            <Button 
+              type="submit" 
+              disabled={isSubmitting}
+              className="bg-medical-600 hover:bg-medical-700 text-white"
+            >
               {isSubmitting ? "Creating..." : "Create Case"}
             </Button>
           </div>
