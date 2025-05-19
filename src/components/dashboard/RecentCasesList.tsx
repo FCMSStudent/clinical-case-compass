@@ -19,9 +19,9 @@ interface RecentCasesListProps {
 export function RecentCasesList({ cases }: RecentCasesListProps) {
   if (cases.length === 0) {
     return (
-      <Card>
-        <CardContent className="flex flex-col items-center justify-center py-10">
-          <p className="text-muted-foreground mb-4">No cases found</p>
+      <Card className="hover:shadow-md transition-shadow">
+        <CardContent className="flex flex-col items-center justify-center py-12">
+          <p className="text-muted-foreground mb-4 text-center">No cases found</p>
           <Button asChild>
             <Link to="/cases/new">Add your first case</Link>
           </Button>
@@ -31,9 +31,9 @@ export function RecentCasesList({ cases }: RecentCasesListProps) {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Recent Cases</CardTitle>
+    <Card className="hover:shadow-md transition-shadow">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-lg font-semibold">Recent Cases</CardTitle>
         <CardDescription>Your most recently updated cases</CardDescription>
       </CardHeader>
       <CardContent className="p-0">
@@ -42,7 +42,7 @@ export function RecentCasesList({ cases }: RecentCasesListProps) {
             <Link
               key={medCase.id}
               to={`/cases/${medCase.id}`}
-              className="block hover:bg-accent px-6 py-4 transition-colors"
+              className="block hover:bg-accent/50 px-6 py-4 transition-colors"
             >
               <div className="flex justify-between items-start">
                 <div>
@@ -56,7 +56,7 @@ export function RecentCasesList({ cases }: RecentCasesListProps) {
                   {format(new Date(medCase.updatedAt), "MMM d, yyyy")}
                 </div>
               </div>
-              <div className="flex gap-2 mt-2">
+              <div className="flex gap-2 mt-2 flex-wrap">
                 {medCase.tags.map((tag) => (
                   <span
                     key={tag.id}

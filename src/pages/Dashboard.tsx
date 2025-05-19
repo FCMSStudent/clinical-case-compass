@@ -11,6 +11,12 @@ import {
   FileText, 
   Calendar 
 } from "lucide-react";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent
+} from "@/components/ui/card";
 
 const Dashboard = () => {
   const recentCases = getRecentCases(5);
@@ -49,17 +55,20 @@ const Dashboard = () => {
   ];
 
   return (
-    <div>
+    <div className="space-y-8 animate-fade-in">
       <PageHeader 
         title="Medical Case Manager" 
         description="Document and learn from clinical cases"
       >
         <Button asChild>
-          <Link to="/cases/new">Add New Case</Link>
+          <Link to="/cases/new">
+            <ClipboardList className="mr-2 h-4 w-4" />
+            Add New Case
+          </Link>
         </Button>
       </PageHeader>
       
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
           <StatCard
             key={stat.title}
@@ -73,44 +82,42 @@ const Dashboard = () => {
       
       <RecentCasesList cases={recentCases} />
       
-      <div className="mt-8 grid gap-6 md:grid-cols-2">
-        <Card className="card-hover">
-          <CardHeader>
-            <CardTitle>Quick Start</CardTitle>
+      <div className="grid gap-6 md:grid-cols-2">
+        <Card className="hover:shadow-md transition-shadow">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg font-semibold">Quick Start</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex flex-col gap-3">
-              <Button variant="outline" asChild className="justify-start">
-                <Link to="/cases/new">
-                  <ClipboardList className="mr-2 h-4 w-4" /> 
-                  Document a new case
-                </Link>
-              </Button>
-              <Button variant="outline" asChild className="justify-start">
-                <Link to="/resources">
-                  <BookOpen className="mr-2 h-4 w-4" /> 
-                  Browse study resources
-                </Link>
-              </Button>
-              <Button variant="outline" asChild className="justify-start">
-                <Link to="/study">
-                  <FileText className="mr-2 h-4 w-4" /> 
-                  Generate practice questions
-                </Link>
-              </Button>
-            </div>
+          <CardContent className="pt-0 space-y-3">
+            <Button variant="outline" asChild className="w-full justify-start mb-2">
+              <Link to="/cases/new">
+                <ClipboardList className="mr-2 h-4 w-4" /> 
+                Document a new case
+              </Link>
+            </Button>
+            <Button variant="outline" asChild className="w-full justify-start mb-2">
+              <Link to="/resources">
+                <BookOpen className="mr-2 h-4 w-4" /> 
+                Browse study resources
+              </Link>
+            </Button>
+            <Button variant="outline" asChild className="w-full justify-start">
+              <Link to="/study">
+                <FileText className="mr-2 h-4 w-4" /> 
+                Generate practice questions
+              </Link>
+            </Button>
           </CardContent>
         </Card>
         
-        <Card className="card-hover">
-          <CardHeader>
-            <CardTitle>Study Progress</CardTitle>
+        <Card className="hover:shadow-md transition-shadow">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg font-semibold">Study Progress</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="flex flex-col gap-4">
+          <CardContent className="pt-0 space-y-4">
+            <div className="space-y-3">
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span>Cardiology</span>
+                  <span className="font-medium">Cardiology</span>
                   <span className="text-muted-foreground">1 case</span>
                 </div>
                 <div className="h-2 bg-muted rounded-full overflow-hidden">
@@ -119,7 +126,7 @@ const Dashboard = () => {
               </div>
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span>Neurology</span>
+                  <span className="font-medium">Neurology</span>
                   <span className="text-muted-foreground">1 case</span>
                 </div>
                 <div className="h-2 bg-muted rounded-full overflow-hidden">
@@ -128,16 +135,16 @@ const Dashboard = () => {
               </div>
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span>Respiratory</span>
+                  <span className="font-medium">Respiratory</span>
                   <span className="text-muted-foreground">1 case</span>
                 </div>
                 <div className="h-2 bg-muted rounded-full overflow-hidden">
                   <div className="h-full bg-primary rounded-full" style={{ width: "20%" }} />
                 </div>
               </div>
-              <div className="mt-2 text-sm text-muted-foreground">
-                Add more cases to track your progress across specialties
-              </div>
+            </div>
+            <div className="text-sm text-muted-foreground bg-accent/30 p-3 rounded-md">
+              Add more cases to track your progress across specialties
             </div>
           </CardContent>
         </Card>
@@ -145,7 +152,5 @@ const Dashboard = () => {
     </div>
   );
 };
-
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 export default Dashboard;
