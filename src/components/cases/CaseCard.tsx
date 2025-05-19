@@ -14,10 +14,10 @@ export function CaseCard({ medicalCase, className }: CaseCardProps) {
   const primaryDiagnosis = medicalCase.diagnoses.find(d => d.status === "confirmed") || medicalCase.diagnoses[0];
   
   return (
-    <Card className={cn("card-hover h-full transition-shadow hover:shadow-md", className)}>
+    <Card className={cn("transition-all duration-200 hover:shadow-lg h-full", className)}>
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start">
-          <CardTitle className="text-lg">{medicalCase.title}</CardTitle>
+          <CardTitle className="text-lg text-medical-700">{medicalCase.title}</CardTitle>
           <div className="text-xs text-muted-foreground whitespace-nowrap">
             {format(new Date(medicalCase.createdAt), "MMM d, yyyy")}
           </div>
@@ -29,7 +29,7 @@ export function CaseCard({ medicalCase, className }: CaseCardProps) {
       </CardHeader>
       <CardContent className="space-y-3">
         <div>
-          <div className="text-sm font-medium">Chief Complaint</div>
+          <div className="text-sm font-medium text-medical-600">Chief Complaint</div>
           <p className="text-sm text-muted-foreground">
             {medicalCase.chiefComplaint}
           </p>
@@ -37,7 +37,7 @@ export function CaseCard({ medicalCase, className }: CaseCardProps) {
         
         {primaryDiagnosis && (
           <div>
-            <div className="text-sm font-medium">Diagnosis</div>
+            <div className="text-sm font-medium text-medical-600">Diagnosis</div>
             <p className="text-sm text-muted-foreground">
               {primaryDiagnosis.name}
               {primaryDiagnosis.status !== "confirmed" && (
@@ -63,7 +63,7 @@ export function CaseCard({ medicalCase, className }: CaseCardProps) {
           <div className="flex-1"></div>
           <Link 
             to={`/cases/${medicalCase.id}`} 
-            className="text-xs font-medium text-primary hover:underline"
+            className="text-xs font-medium text-medical-600 hover:text-medical-800 hover:underline"
           >
             View details →
           </Link>
