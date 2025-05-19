@@ -9,7 +9,8 @@ import {
   ClipboardList, 
   BookOpen, 
   FileText, 
-  Calendar 
+  Calendar,
+  UserRound
 } from "lucide-react";
 import {
   Card,
@@ -17,6 +18,7 @@ import {
   CardTitle,
   CardContent
 } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const Dashboard = () => {
   const recentCases = getRecentCases(5);
@@ -56,6 +58,13 @@ const Dashboard = () => {
 
   return (
     <div className="space-y-6">
+      <Alert className="border-primary/20 bg-primary/5 mb-6">
+        <UserRound className="h-5 w-5 text-primary" />
+        <AlertDescription className="text-primary">
+          Welcome to Clinical Case Manager! This application was created by <strong>Alwaleed Alabdali</strong> for medical students to document and learn from clinical cases.
+        </AlertDescription>
+      </Alert>
+      
       <PageHeader 
         title="Medical Case Manager" 
         description="Document and learn from clinical cases"
