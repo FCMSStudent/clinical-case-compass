@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
@@ -48,6 +47,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { getAllTags } from "@/data/mock-data";
 import { SymptomChecklist } from "@/components/cases/SymptomChecklist";
+import { VitalsCard } from "@/components/cases/VitalsCard";
 
 const formSchema = z.object({
   title: z.string().min(3, { message: "Title must be at least 3 characters" }),
@@ -62,6 +62,7 @@ const formSchema = z.object({
   physicalExam: z.string().optional(),
   learningPoints: z.string().optional(),
   systemSymptoms: z.record(z.string(), z.array(z.string())).optional(),
+  vitals: z.record(z.string(), z.string()).optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -72,6 +73,7 @@ const CaseNew = () => {
   const [activeTab, setActiveTab] = useState("case-info");
   const allTags = getAllTags();
   const [systemSymptoms, setSystemSymptoms] = useState<Record<string, string[]>>({});
+  const [vitals, setVitals] = useState<Record<string, string>>({});
   
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -88,12 +90,14 @@ const CaseNew = () => {
       physicalExam: "",
       learningPoints: "",
       systemSymptoms: {},
+      vitals: {},
     },
   });
 
   const handleSubmit = async (values: FormValues) => {
-    // Include system symptoms in the form data
+    // Include system symptoms and vitals in the form data
     values.systemSymptoms = systemSymptoms;
+    values.vitals = vitals;
     
     setIsSubmitting(true);
     try {
@@ -131,6 +135,10 @@ const CaseNew = () => {
 
   const handleSymptomChange = (selections: Record<string, string[]>) => {
     setSystemSymptoms(selections);
+  };
+
+  const handleVitalsChange = (vitalSigns: Record<string, string>) => {
+    setVitals(vitalSigns);
   };
 
   return (
@@ -420,23 +428,31 @@ const CaseNew = () => {
                     />
                   </div>
 
-                  <FormField
-                    control={form.control}
-                    name="physicalExam"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-md font-medium">Physical Examination</FormLabel>
-                        <FormControl>
-                          <Textarea
-                            placeholder="Document physical exam findings..."
-                            className="min-h-[120px] resize-none border-medical-200 focus-visible:ring-medical-500"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <FormField
+                      control={form.control}
+                      name="physicalExam"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-md font-medium">Physical Examination</FormLabel>
+                          <FormControl>
+                            <Textarea
+                              placeholder="Document physical exam findings..."
+                              className="min-h-[240px] resize-none border-medical-200 focus-visible:ring-medical-500"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <div>
+                      <VitalsCard 
+                        onVitalsChange={handleVitalsChange}
+                        initialVitals={vitals}
+                      />
+                    </div>
+                  </div>
                 </CardContent>
                 <CardFooter className="flex justify-between pb-6">
                   <Button 
