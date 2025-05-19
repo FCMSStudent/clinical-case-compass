@@ -16,15 +16,6 @@ import { UserProfileDisplay } from "./components/auth/UserProfileDisplay";
 
 const queryClient = new QueryClient();
 
-const AppWithAuth = ({ children }: { children: React.ReactNode }) => (
-  <AppLayout>
-    {children}
-    <div className="fixed bottom-0 left-0 w-64 bg-background pb-4">
-      <UserProfileDisplay />
-    </div>
-  </AppLayout>
-);
-
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -35,9 +26,39 @@ const App = () => (
           <Routes>
             <Route path="/auth" element={<Auth />} />
             <Route path="/" element={<Navigate to="/cases" replace />} />
-            <Route path="/cases" element={<PrivateRoute><AppWithAuth><Cases /></AppWithAuth></PrivateRoute>} />
-            <Route path="/cases/new" element={<PrivateRoute><AppWithAuth><CaseNew /></AppWithAuth></PrivateRoute>} />
-            <Route path="/cases/:id" element={<PrivateRoute><AppWithAuth><CaseDetail /></AppWithAuth></PrivateRoute>} />
+            <Route 
+              path="/cases" 
+              element={
+                <PrivateRoute>
+                  <AppLayout>
+                    <Cases />
+                    <UserProfileDisplay />
+                  </AppLayout>
+                </PrivateRoute>
+              } 
+            />
+            <Route 
+              path="/cases/new" 
+              element={
+                <PrivateRoute>
+                  <AppLayout>
+                    <CaseNew />
+                    <UserProfileDisplay />
+                  </AppLayout>
+                </PrivateRoute>
+              } 
+            />
+            <Route 
+              path="/cases/:id" 
+              element={
+                <PrivateRoute>
+                  <AppLayout>
+                    <CaseDetail />
+                    <UserProfileDisplay />
+                  </AppLayout>
+                </PrivateRoute>
+              } 
+            />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

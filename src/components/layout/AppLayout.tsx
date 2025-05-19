@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Sidebar } from "./Sidebar";
 import { Toaster } from "@/components/ui/sonner";
@@ -44,12 +45,12 @@ export function AppLayout({ children }: AppLayoutProps) {
           </button>
         </div>
 
-        {/* Desktop toggle button - now visible on all screen sizes */}
+        {/* Desktop toggle button */}
         <Button
           variant="outline"
           size="icon"
           onClick={handleToggleSidebar}
-          className="fixed top-4 left-4 z-30 shadow-sm bg-background hover:bg-accent"
+          className="fixed top-4 left-4 z-30 shadow-sm bg-background hover:bg-accent hidden md:flex"
           aria-label={isSidebarOpen ? "Hide sidebar" : "Show sidebar"}
         >
           {isSidebarOpen ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}

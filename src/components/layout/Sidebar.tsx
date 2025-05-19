@@ -6,6 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Link, useLocation } from "react-router-dom";
 import {
   FileText,
+  PlusCircle,
   X,
 } from "lucide-react";
 
@@ -28,7 +29,7 @@ export function Sidebar({ className, isOpen, isDesktopOpen = true, onClose, ...p
     },
     {
       label: "New Case",
-      icon: FileText,
+      icon: PlusCircle,
       href: "/cases/new",
       active: pathname === "/cases/new",
     }
@@ -50,7 +51,7 @@ export function Sidebar({ className, isOpen, isDesktopOpen = true, onClose, ...p
         className={cn(
           "fixed top-0 bottom-0 left-0 z-50 w-64 bg-card border-r transition-transform duration-300 ease-in-out",
           isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
-          !isDesktopOpen && "md:translate-x-full md:-translate-x-full md:w-0",
+          !isDesktopOpen && "md:w-0 md:-translate-x-full",
           isDesktopOpen && "md:translate-x-0",
           className
         )}

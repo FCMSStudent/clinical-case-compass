@@ -14,7 +14,7 @@ export function CaseCard({ medicalCase, className }: CaseCardProps) {
   const primaryDiagnosis = medicalCase.diagnoses.find(d => d.status === "confirmed") || medicalCase.diagnoses[0];
   
   return (
-    <Card className={cn("card-hover h-full", className)}>
+    <Card className={cn("card-hover h-full transition-shadow hover:shadow-md", className)}>
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start">
           <CardTitle className="text-lg">{medicalCase.title}</CardTitle>
