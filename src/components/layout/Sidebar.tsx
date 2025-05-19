@@ -10,16 +10,16 @@ import {
   BookOpen,
   Calendar,
   Library,
-  Menu,
   X,
 } from "lucide-react";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   isOpen: boolean;
+  isDesktopOpen?: boolean;
   onClose: () => void;
 }
 
-export function Sidebar({ className, isOpen, onClose, ...props }: SidebarProps) {
+export function Sidebar({ className, isOpen, isDesktopOpen = true, onClose, ...props }: SidebarProps) {
   const { pathname } = useLocation();
   const { user, signOut } = useAuth();
 
@@ -58,6 +58,7 @@ export function Sidebar({ className, isOpen, onClose, ...props }: SidebarProps) 
 
   return (
     <>
+      {/* Mobile backdrop */}
       <div
         className={cn(
           "fixed inset-0 z-40 bg-background/80 backdrop-blur-sm md:hidden",
@@ -65,10 +66,16 @@ export function Sidebar({ className, isOpen, onClose, ...props }: SidebarProps) 
         )}
         onClick={onClose}
       />
+      
+      {/* Sidebar container */}
       <aside
         className={cn(
           "fixed top-0 bottom-0 left-0 z-50 w-64 bg-card border-r transition-transform duration-300 ease-in-out",
+          // Mobile states
           isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
+          // Desktop states
+          !isDesktopOpen && "md:-translate-x-full md:w-0",
+          isDesktopOpen && "md:translate-x-0",
           className
         )}
         {...props}

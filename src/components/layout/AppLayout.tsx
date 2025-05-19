@@ -2,16 +2,23 @@
 import { useState } from "react";
 import { Sidebar } from "./Sidebar";
 import { Toaster } from "@/components/ui/sonner";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight, Menu } from "lucide-react";
 
 interface AppLayoutProps {
   children: React.ReactNode;
 }
 
 export function AppLayout({ children }: AppLayoutProps) {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   const handleCloseSidebar = () => {
-    setIsSidebarOpen(false);
+    setIsMobileSidebarOpen(false);
+  };
+
+  const handleToggleMobileSidebar = () => {
+    setIsMobileSidebarOpen((prev) => !prev);
   };
 
   const handleToggleSidebar = () => {
@@ -20,23 +27,36 @@ export function AppLayout({ children }: AppLayoutProps) {
 
   return (
     <div className="flex min-h-screen bg-background">
-      <Sidebar isOpen={isSidebarOpen} onClose={handleCloseSidebar} />
+      <Sidebar 
+        isOpen={isMobileSidebarOpen} 
+        isDesktopOpen={isSidebarOpen}
+        onClose={handleCloseSidebar} 
+      />
       
-      <div className="flex-1 transition-all duration-300 md:ml-64">
+      <div className={`flex-1 transition-all duration-300 ${isSidebarOpen ? 'md:ml-64' : 'md:ml-0'}`}>
+        {/* Mobile menu button */}
         <div className="flex items-center p-4 md:hidden">
           <button 
-            onClick={handleToggleSidebar}
+            onClick={handleToggleMobileSidebar}
             className="p-2 rounded-md hover:bg-gray-200"
             aria-label="Toggle sidebar"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6">
-              <line x1="3" y1="12" x2="21" y2="12"></line>
-              <line x1="3" y1="6" x2="21" y2="6"></line>
-              <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
+            <Menu className="h-6 w-6" />
           </button>
         </div>
-        <main className="px-4 py-6 md:px-6">
+
+        {/* Desktop toggle button */}
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={handleToggleSidebar}
+          className="hidden md:flex fixed top-4 left-4 z-30 shadow-sm"
+          aria-label={isSidebarOpen ? "Hide sidebar" : "Show sidebar"}
+        >
+          {isSidebarOpen ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+        </Button>
+
+        <main className={`px-4 py-6 md:px-6 ${!isSidebarOpen ? 'md:pl-16' : ''}`}>
           {children}
         </main>
       </div>
