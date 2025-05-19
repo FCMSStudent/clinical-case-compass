@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Thermometer, Pulse, BloodPressure, Weight } from "lucide-react";
+import { Thermometer, HeartPulse, Activity, Weight, Lungs } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface VitalSignProps {
@@ -74,14 +74,14 @@ export function VitalsCard({ onVitalsChange, initialVitals = {} }: VitalsCardPro
           label="Heart Rate"
           value={vitals.heartRate || ""}
           unit="bpm"
-          icon={<Pulse className="h-4 w-4" />}
+          icon={<HeartPulse className="h-4 w-4" />}
           onChange={(value) => handleVitalChange("heartRate", value)}
         />
         <VitalSign
           label="Blood Pressure"
           value={vitals.bloodPressure || ""}
           unit="mmHg"
-          icon={<BloodPressure className="h-4 w-4" />}
+          icon={<Activity className="h-4 w-4" />}
           onChange={(value) => handleVitalChange("bloodPressure", value)}
         />
         <VitalSign
@@ -95,7 +95,7 @@ export function VitalsCard({ onVitalsChange, initialVitals = {} }: VitalsCardPro
           label="Respiratory Rate"
           value={vitals.respiratoryRate || ""}
           unit="bpm"
-          icon={<Pulse className="h-4 w-4" />}
+          icon={<Lungs className="h-4 w-4" />}
           onChange={(value) => handleVitalChange("respiratoryRate", value)}
         />
       </CardContent>
