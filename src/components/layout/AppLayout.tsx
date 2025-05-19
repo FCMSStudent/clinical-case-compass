@@ -13,6 +13,7 @@ interface AppLayoutProps {
 export function AppLayout({ children }: AppLayoutProps) {
   // Use localStorage to persist sidebar state
   const [isSidebarOpen, setIsSidebarOpen] = useLocalStorage("sidebar:open", true);
+  // Separate state for mobile sidebar
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   const handleCloseSidebar = () => {
