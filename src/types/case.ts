@@ -37,6 +37,7 @@ export interface MedicalCase {
   createdAt: string;
   updatedAt: string;
   chiefComplaint: string;
+  chiefComplaintAnalysis?: string;
   history?: string;
   physicalExam?: string;
   diagnoses: Diagnosis[];

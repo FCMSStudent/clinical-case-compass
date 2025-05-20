@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
@@ -68,7 +69,7 @@ const formSchema = z.object({
   patientGender: z.string().min(1, { message: "Gender is required" }),
   patientMRN: z.string().optional(),
   chiefComplaint: z.string().min(3, { message: "Chief complaint is required" }),
-  diagnoses: z.string().optional(),
+  chiefComplaintAnalysis: z.string().optional(),
   tags: z.string().min(1, { message: "Please select at least one specialty" }),
   history: z.string().optional(),
   physicalExam: z.string().optional(),
@@ -144,7 +145,7 @@ const CaseNew = () => {
       patientGender: "",
       patientMRN: "",
       chiefComplaint: "",
-      diagnoses: "",
+      chiefComplaintAnalysis: "",
       tags: "",
       history: "",
       physicalExam: "",
@@ -440,17 +441,34 @@ const CaseNew = () => {
                 <CardContent className="space-y-6 pt-6">
                   <FormField
                     control={form.control}
-                    name="diagnoses"
+                    name="chiefComplaintAnalysis"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-md font-medium">Diagnosis (Primary)</FormLabel>
+                        <FormLabel className="text-md font-medium flex items-center">
+                          Chief Complaint Analysis
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button variant="ghost" size="sm" className="h-6 w-6 p-0 ml-1">
+                                  <HelpCircle className="h-3 w-3" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Analyze the chief complaint - consider differential diagnoses, severity, duration, etc.</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </FormLabel>
                         <FormControl>
-                          <Input 
-                            placeholder="e.g., Acute Appendicitis" 
-                            {...field} 
-                            className="border-medical-200 focus-visible:ring-medical-500"
+                          <Textarea
+                            placeholder="Analyze the presenting chief complaint..."
+                            className="min-h-[120px] resize-none border-medical-200 focus-visible:ring-medical-500"
+                            {...field}
                           />
                         </FormControl>
+                        <FormDescription>
+                          Consider differential diagnoses, potential severity, duration, and other relevant factors
+                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
