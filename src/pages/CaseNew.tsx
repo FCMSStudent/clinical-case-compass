@@ -1,10 +1,10 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "@/components/ui/sonner";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,7 +18,8 @@ import {
   Stethoscope,
   ArrowRight,
   ArrowLeft,
-  CheckCheck
+  CheckCheck,
+  HelpCircle
 } from "lucide-react";
 import {
   Form,
@@ -46,7 +47,15 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { getAllTags } from "@/data/mock-data";
+import { FormProgressIndicator } from "@/components/cases/FormProgressIndicator";
+import { AutosaveIndicator } from "@/components/cases/AutosaveIndicator";
 import { SymptomChecklist } from "@/components/cases/SymptomChecklist";
 import { VitalsCard } from "@/components/cases/VitalsCard";
 import { LabResultsCard, LabTest } from "@/components/cases/LabResultsCard";
@@ -122,6 +131,9 @@ const CaseNew = () => {
   const [vitals, setVitals] = useState<Record<string, string>>({});
   const [labResults, setLabResults] = useState<LabTest[]>([]);
   const [radiologyExams, setRadiologyExams] = useState<RadiologyExam[]>([]);
+  const [saveStatus, setSaveStatus] = useState<"saving" | "saved" | "idle">("idle");
+  const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const isMobile = useIsMobile();
   
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -144,6 +156,54 @@ const CaseNew = () => {
     },
   });
 
+  // Autosave functionality
+  useEffect(() => {
+    const subscription = form.watch(() => {
+      setSaveStatus("saving");
+      const saveTimer = setTimeout(() => {
+        // Simulate saving to server
+        localStorage.setItem("caseFormDraft", JSON.stringify({
+          formData: form.getValues(),
+          systemSymptoms,
+          vitals,
+          labResults,
+          radiologyExams
+        }));
+        setSaveStatus("saved");
+        setLastSaved(new Date());
+        
+        // Reset status after some time
+        const resetTimer = setTimeout(() => {
+          setSaveStatus("idle");
+        }, 3000);
+        
+        return () => clearTimeout(resetTimer);
+      }, 1000);
+      
+      return () => subscription.unsubscribe();
+    });
+    
+    return () => subscription.unsubscribe();
+  }, [form, systemSymptoms, vitals, labResults, radiologyExams]);
+
+  // Load draft data if available
+  useEffect(() => {
+    const savedDraft = localStorage.getItem("caseFormDraft");
+    if (savedDraft) {
+      try {
+        const draft = JSON.parse(savedDraft);
+        form.reset(draft.formData);
+        if (draft.systemSymptoms) setSystemSymptoms(draft.systemSymptoms);
+        if (draft.vitals) setVitals(draft.vitals);
+        if (draft.labResults) setLabResults(draft.labResults);
+        if (draft.radiologyExams) setRadiologyExams(draft.radiologyExams);
+        setLastSaved(new Date());
+      } catch (e) {
+        console.error("Error loading draft:", e);
+      }
+    }
+  }, [form]);
+
   const handleSubmit = async (values: FormValues) => {
     // Include system symptoms and vitals in the form data
     values.systemSymptoms = systemSymptoms;
@@ -158,6 +218,9 @@ const CaseNew = () => {
       
       // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Clear the draft after successful submission
+      localStorage.removeItem("caseFormDraft");
       
       toast.success("Case created successfully!");
       navigate("/cases");
@@ -185,6 +248,16 @@ const CaseNew = () => {
     else if (activeTab === "patient-info") setActiveTab("case-info");
   };
 
+  const getStepNumber = () => {
+    switch (activeTab) {
+      case "case-info": return 1;
+      case "patient-info": return 2;
+      case "clinical-details": return 3;
+      case "learning": return 4;
+      default: return 1;
+    }
+  };
+
   const handleSymptomChange = (selections: Record<string, string[]>) => {
     setSystemSymptoms(selections);
   };
@@ -201,24 +274,139 @@ const CaseNew = () => {
     setRadiologyExams(exams);
   };
 
+  // Define steps for the progress indicator
+  const formSteps = [
+    { id: "case-info", label: "Case Info", icon: <FileText className="h-4 w-4" /> },
+    { id: "patient-info", label: "Patient", icon: <UserCircle className="h-4 w-4" /> },
+    { id: "clinical-details", label: "Clinical", icon: <Stethoscope className="h-4 w-4" /> },
+    { id: "learning", label: "Learning", icon: <Clipboard className="h-4 w-4" /> },
+  ];
+
   return (
     <div className="max-w-4xl mx-auto pb-12">
-      <Button
-        onClick={() => navigate("/cases")}
-        variant="ghost"
-        className="flex items-center text-sm text-muted-foreground hover:text-foreground mb-6"
-      >
-        <ChevronLeft className="mr-1 h-4 w-4" />
-        Back to all cases
-      </Button>
+      <div className="flex items-center justify-between mb-6">
+        <Button
+          onClick={() => navigate("/cases")}
+          variant="ghost"
+          className="flex items-center text-sm text-muted-foreground hover:text-foreground"
+        >
+          <ChevronLeft className="mr-1 h-4 w-4" />
+          Back to all cases
+        </Button>
+        
+        <AutosaveIndicator 
+          status={saveStatus}
+          lastSaved={lastSaved}
+          className="mr-2"
+        />
+      </div>
 
       <PageHeader 
         title="New Clinical Case" 
         description="Document a new clinical case for learning and reference"
       />
 
+      {/* Overview Card - Always visible fields */}
+      <Card className="border-medical-200 shadow-md mb-6 mt-6 bg-medical-50/30">
+        <CardContent className="pt-6">
+          <Form {...form}>
+            <form className="space-y-6">
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-md font-medium flex items-center">
+                      Case Title
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button variant="ghost" size="sm" className="h-6 w-6 p-0 ml-1">
+                              <HelpCircle className="h-3 w-3" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>A descriptive title for this clinical case</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </FormLabel>
+                    <FormControl>
+                      <Input 
+                        placeholder="e.g., Acute Appendicitis in a 25-Year-Old Male" 
+                        {...field}
+                        className="border-medical-200 focus-visible:ring-medical-500" 
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="grid gap-6 md:grid-cols-2">
+                <FormField
+                  control={form.control}
+                  name="chiefComplaint"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-md font-medium">Chief Complaint</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="e.g., Severe abdominal pain" 
+                          {...field} 
+                          className="border-medical-200 focus-visible:ring-medical-500"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="tags"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-md font-medium">Clinical Specialty</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="border-medical-200 focus-visible:ring-medical-500">
+                            <SelectValue placeholder="Select a specialty" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {SPECIALTIES.map((specialty) => (
+                            <SelectItem key={specialty.id} value={specialty.id}>
+                              {specialty.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+
+      {/* Progress indicator */}
+      <div className="mb-6 sticky top-0 z-10 bg-background pt-2 pb-2">
+        <FormProgressIndicator
+          currentStep={getStepNumber()}
+          totalSteps={formSteps.length}
+          steps={formSteps}
+          onStepClick={handleTabChange}
+          className="bg-white p-4 rounded-lg shadow-sm border border-medical-100"
+        />
+      </div>
+
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8 mt-6">
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
           <Card className="border-medical-200 shadow-md">
             <Tabs 
               value={activeTab} 
@@ -226,22 +414,23 @@ const CaseNew = () => {
               className="w-full"
             >
               <div className="bg-gradient-to-r from-medical-50 to-medical-100 p-4 rounded-t-lg">
-                <TabsList className="grid grid-cols-4 w-full">
+                <TabsList className={`grid w-full ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
                   <TabsTrigger value="case-info" className="data-[state=active]:bg-white">
                     <FileText className="h-4 w-4 mr-2" />
-                    <span className="hidden sm:inline">Case Info</span>
+                    <span className={isMobile ? "text-xs" : "hidden sm:inline"}>Case Info</span>
                   </TabsTrigger>
                   <TabsTrigger value="patient-info" className="data-[state=active]:bg-white">
                     <UserCircle className="h-4 w-4 mr-2" />
-                    <span className="hidden sm:inline">Patient</span>
+                    <span className={isMobile ? "text-xs" : "hidden sm:inline"}>Patient</span>
                   </TabsTrigger>
+                  {isMobile && <div className="col-span-2 h-2" />} {/* Spacer for mobile grid */}
                   <TabsTrigger value="clinical-details" className="data-[state=active]:bg-white">
                     <Stethoscope className="h-4 w-4 mr-2" />
-                    <span className="hidden sm:inline">Clinical</span>
+                    <span className={isMobile ? "text-xs" : "hidden sm:inline"}>Clinical</span>
                   </TabsTrigger>
                   <TabsTrigger value="learning" className="data-[state=active]:bg-white">
                     <Clipboard className="h-4 w-4 mr-2" />
-                    <span className="hidden sm:inline">Learning</span>
+                    <span className={isMobile ? "text-xs" : "hidden sm:inline"}>Learning</span>
                   </TabsTrigger>
                 </TabsList>
               </div>
@@ -251,92 +440,21 @@ const CaseNew = () => {
                 <CardContent className="space-y-6 pt-6">
                   <FormField
                     control={form.control}
-                    name="title"
+                    name="diagnoses"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-md font-medium">Case Title</FormLabel>
+                        <FormLabel className="text-md font-medium">Diagnosis (Primary)</FormLabel>
                         <FormControl>
                           <Input 
-                            placeholder="e.g., Acute Appendicitis in a 25-Year-Old Male" 
-                            {...field}
-                            className="border-medical-200 focus-visible:ring-medical-500" 
+                            placeholder="e.g., Acute Appendicitis" 
+                            {...field} 
+                            className="border-medical-200 focus-visible:ring-medical-500"
                           />
                         </FormControl>
-                        <FormDescription>
-                          A descriptive title for this clinical case
-                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-
-                  <FormField
-                    control={form.control}
-                    name="tags"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-md font-medium">Clinical Specialty</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="border-medical-200 focus-visible:ring-medical-500">
-                              <SelectValue placeholder="Select a specialty" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {SPECIALTIES.map((specialty) => (
-                              <SelectItem key={specialty.id} value={specialty.id}>
-                                {specialty.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormDescription>
-                          Select the primary specialty for this case
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <div className="grid gap-6 md:grid-cols-2">
-                    <FormField
-                      control={form.control}
-                      name="chiefComplaint"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-md font-medium">Chief Complaint</FormLabel>
-                          <FormControl>
-                            <Input 
-                              placeholder="e.g., Severe abdominal pain" 
-                              {...field} 
-                              className="border-medical-200 focus-visible:ring-medical-500"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="diagnoses"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-md font-medium">Diagnosis (Primary)</FormLabel>
-                          <FormControl>
-                            <Input 
-                              placeholder="e.g., Acute Appendicitis" 
-                              {...field} 
-                              className="border-medical-200 focus-visible:ring-medical-500"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
                 </CardContent>
                 <CardFooter className="flex justify-end pb-6">
                   <Button 
