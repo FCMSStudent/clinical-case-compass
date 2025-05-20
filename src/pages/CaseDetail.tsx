@@ -286,10 +286,6 @@ const CaseDetail = () => {
           <Trash2 className="mr-2 h-4 w-4" />
           Delete Case
         </Button>
-        <Button variant="outline">
-          <Calendar className="mr-2 h-4 w-4" />
-          Generate Quiz
-        </Button>
         <Button onClick={handleEdit}>
           <Edit className="mr-2 h-4 w-4" />
           Edit Case
