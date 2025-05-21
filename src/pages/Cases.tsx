@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,28 +15,55 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card } from "@/components/ui/card";
+import { toast } from "sonner";
+import { useLocalStorage } from "@/hooks/use-local-storage";
+import { MedicalCase } from "@/types/case";
 
 const Cases = () => {
-  const allCases = getAllCases();
+  // Get cases from local storage first, then fallback to mock data
+  const [storedCases, setStoredCases] = useLocalStorage<MedicalCase[]>("medical-cases", []);
+  const [cases, setCases] = useState<MedicalCase[]>([]);
   const allTags = getAllTags();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
+  useEffect(() => {
+    // Combine stored cases with mock data, avoiding duplicates by ID
+    const mockCases = getAllCases();
+    const allCaseIds = new Set();
+    const combinedCases: MedicalCase[] = [];
+    
+    // Add stored cases first
+    storedCases.forEach(storedCase => {
+      allCaseIds.add(storedCase.id);
+      combinedCases.push(storedCase);
+    });
+    
+    // Add mock cases that don't exist in stored cases
+    mockCases.forEach(mockCase => {
+      if (!allCaseIds.has(mockCase.id)) {
+        combinedCases.push(mockCase);
+      }
+    });
+    
+    setCases(combinedCases);
+  }, [storedCases]);
+
   // Filter cases based on search term and selected tag
-  const filteredCases = allCases.filter((medCase) => {
+  const filteredCases = cases.filter((medCase) => {
     const matchesSearch =
       searchTerm === "" ||
       medCase.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       medCase.patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       medCase.chiefComplaint.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      medCase.diagnoses.some((d) =>
+      (medCase.diagnoses && medCase.diagnoses.some((d) =>
         d.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      ));
     
     const matchesTag =
       selectedTag === null ||
       selectedTag === "all" ||
-      medCase.tags.some((tag) => tag.id === selectedTag);
+      (medCase.tags && medCase.tags.some((tag) => tag.id === selectedTag));
     
     return matchesSearch && matchesTag;
   });
