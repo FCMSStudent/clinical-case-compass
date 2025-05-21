@@ -11,7 +11,10 @@ interface CaseCardProps {
 }
 
 export function CaseCard({ medicalCase, className }: CaseCardProps) {
-  const primaryDiagnosis = medicalCase.diagnoses.find(d => d.status === "confirmed") || medicalCase.diagnoses[0];
+  // Handle cases where diagnoses array might be empty
+  const primaryDiagnosis = medicalCase.diagnoses && medicalCase.diagnoses.length > 0
+    ? (medicalCase.diagnoses.find(d => d.status === "confirmed") || medicalCase.diagnoses[0])
+    : null;
   
   return (
     <Card className={cn("transition-all duration-200 hover:shadow-lg h-full", className)}>
@@ -48,7 +51,7 @@ export function CaseCard({ medicalCase, className }: CaseCardProps) {
         )}
         
         <div className="flex flex-wrap gap-2 pt-1">
-          {medicalCase.tags.map((tag) => (
+          {medicalCase.tags && medicalCase.tags.map((tag) => (
             <span
               key={tag.id}
               className="inline-flex items-center px-2 py-0.5 rounded-full text-xs"

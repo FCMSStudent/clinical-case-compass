@@ -35,12 +35,42 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T 
       // Save to local storage
       if (typeof window !== "undefined") {
         window.localStorage.setItem(key, JSON.stringify(valueToStore));
+        
+        // Dispatch storage event manually to notify other components
+        window.dispatchEvent(new StorageEvent('storage', {
+          key,
+          newValue: JSON.stringify(valueToStore),
+          oldValue: localStorage.getItem(key),
+          storageArea: localStorage,
+        }));
       }
     } catch (error) {
       console.warn(`Error setting localStorage key "${key}":`, error);
     }
   };
 
+  // Listen for changes to this localStorage key in other documents/tabs
+  useEffect(() => {
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === key && event.newValue) {
+        try {
+          const newValue = JSON.parse(event.newValue);
+          setStoredValue(newValue);
+        } catch (e) {
+          console.warn(`Error parsing localStorage change for key "${key}":`, e);
+        }
+      }
+    };
+    
+    // Listen for changes to localStorage
+    window.addEventListener('storage', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, [key]);
+
+  // Also re-read from localStorage when the component mounts
   useEffect(() => {
     setStoredValue(readValue());
     // eslint-disable-next-line react-hooks/exhaustive-deps

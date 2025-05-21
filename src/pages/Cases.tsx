@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PageHeader } from "@/components/ui/page-header";
@@ -20,13 +20,24 @@ import { useLocalStorage } from "@/hooks/use-local-storage";
 import { MedicalCase } from "@/types/case";
 
 const Cases = () => {
+  // Use location to detect navigation changes
+  const location = useLocation();
+  
   // Get cases from local storage first, then fallback to mock data
   const [storedCases, setStoredCases] = useLocalStorage<MedicalCase[]>("medical-cases", []);
   const [cases, setCases] = useState<MedicalCase[]>([]);
   const allTags = getAllTags();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
+  // Effect to handle navigation and local storage changes
+  useEffect(() => {
+    // Force a refresh when navigating back to the cases page
+    setRefreshKey(prev => prev + 1);
+  }, [location.key]);
+
+  // Effect to combine stored cases with mock data
   useEffect(() => {
     // Combine stored cases with mock data, avoiding duplicates by ID
     const mockCases = getAllCases();
@@ -34,10 +45,14 @@ const Cases = () => {
     const combinedCases: MedicalCase[] = [];
     
     // Add stored cases first
-    storedCases.forEach(storedCase => {
-      allCaseIds.add(storedCase.id);
-      combinedCases.push(storedCase);
-    });
+    if (storedCases && Array.isArray(storedCases)) {
+      storedCases.forEach(storedCase => {
+        if (storedCase && storedCase.id) {
+          allCaseIds.add(storedCase.id);
+          combinedCases.push(storedCase);
+        }
+      });
+    }
     
     // Add mock cases that don't exist in stored cases
     mockCases.forEach(mockCase => {
@@ -46,8 +61,17 @@ const Cases = () => {
       }
     });
     
+    // Sort cases by createdAt date (newest first)
+    combinedCases.sort((a, b) => 
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+    
     setCases(combinedCases);
-  }, [storedCases]);
+    
+    // Debug information
+    console.log('Stored cases:', storedCases);
+    console.log('Combined cases:', combinedCases);
+  }, [storedCases, refreshKey]);
 
   // Filter cases based on search term and selected tag
   const filteredCases = cases.filter((medCase) => {
