@@ -60,9 +60,10 @@ import { getAllTags } from "@/data/mock-data";
 import { FormProgressIndicator } from "@/components/cases/FormProgressIndicator";
 import { AutosaveIndicator } from "@/components/cases/AutosaveIndicator";
 import { SymptomChecklist } from "@/components/cases/SymptomChecklist";
-import { VitalsCard } from "@/components/cases/VitalsCard";
 import { LabResultsCard, LabTest } from "@/components/cases/LabResultsCard";
 import { RadiologyCard, RadiologyExam } from "@/components/cases/RadiologyCard";
+import { InteractiveBodyDiagram } from "@/components/cases/InteractiveBodyDiagram";
+import { InteractiveVitalsCard } from "@/components/cases/InteractiveVitalsCard";
 
 const formSchema = z.object({
   title: z.string().min(3, { message: "Title must be at least 3 characters" }),
@@ -131,6 +132,7 @@ const CaseNew = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState("case-info");
   const [systemSymptoms, setSystemSymptoms] = useState<Record<string, string[]>>({});
+  const [highlightedSymptoms, setHighlightedSymptoms] = useState<Record<string, string[]>>({});
   const [vitals, setVitals] = useState<Record<string, string>>({});
   const [labResults, setLabResults] = useState<LabTest[]>([]);
   const [radiologyExams, setRadiologyExams] = useState<RadiologyExam[]>([]);
@@ -281,6 +283,11 @@ const CaseNew = () => {
       case "learning": return 4;
       default: return 1;
     }
+  };
+
+  const handleBodyPartSelected = (selection: { relatedSystems: string[], relatedSymptoms: Record<string, string[]> }) => {
+    // Highlight symptoms related to the selected body part
+    setHighlightedSymptoms(selection.relatedSymptoms);
   };
 
   const handleSymptomChange = (selections: Record<string, string[]>) => {
@@ -637,15 +644,23 @@ const CaseNew = () => {
                     )}
                   />
 
-                  <div className="mt-6">
-                    <div className="flex items-center gap-2 mb-3">
-                      <CheckCheck className="h-5 w-5 text-medical-600" />
-                      <h3 className="font-medium">System Review</h3>
-                    </div>
-                    <SymptomChecklist 
-                      onSelectionChange={handleSymptomChange} 
-                      initialSelections={systemSymptoms}
+                  <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <InteractiveBodyDiagram 
+                      onBodyPartSelected={handleBodyPartSelected}
+                      className="bg-white p-4 rounded-lg"
                     />
+                
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-2 mb-3">
+                        <CheckCheck className="h-5 w-5 text-medical-600" />
+                        <h3 className="font-medium">System Review</h3>
+                      </div>
+                      <SymptomChecklist 
+                        onSelectionChange={handleSymptomChange} 
+                        initialSelections={systemSymptoms}
+                        highlightedSymptoms={highlightedSymptoms}
+                      />
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -667,9 +682,10 @@ const CaseNew = () => {
                       )}
                     />
                     <div className="md:col-span-2 space-y-4">
-                      <VitalsCard 
+                      <InteractiveVitalsCard 
                         onVitalsChange={handleVitalsChange}
                         initialVitals={vitals}
+                        patientAge={form.watch("patientAge") ? parseInt(form.watch("patientAge")) : undefined}
                       />
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <LabResultsCard 
@@ -737,11 +753,11 @@ const CaseNew = () => {
                     <ArrowLeft className="mr-2 h-4 w-4" /> Previous
                   </Button>
                   <Button 
-                    type="submit" 
-                    disabled={isSubmitting}
+                    type="button" 
+                    onClick={goToNextTab}
                     className="bg-medical-600 hover:bg-medical-700 text-white"
                   >
-                    {isSubmitting ? "Creating..." : "Create Case"}
+                    Next <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </CardFooter>
               </TabsContent>

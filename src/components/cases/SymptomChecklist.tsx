@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -15,6 +15,7 @@ import { ChevronDown } from "lucide-react";
 interface SymptomChecklistProps {
   onSelectionChange: (selections: Record<string, string[]>) => void;
   initialSelections?: Record<string, string[]>;
+  highlightedSymptoms?: Record<string, string[]>;
 }
 
 interface SystemSymptoms {
@@ -117,10 +118,25 @@ const systemSymptoms: SystemSymptoms[] = [
   }
 ];
 
-export function SymptomChecklist({ onSelectionChange, initialSelections = {} }: SymptomChecklistProps) {
+export function SymptomChecklist({ 
+  onSelectionChange, 
+  initialSelections = {}, 
+  highlightedSymptoms = {} 
+}: SymptomChecklistProps) {
   const [selectedSymptoms, setSelectedSymptoms] = useState<Record<string, string[]>>(initialSelections);
   const [activeSystem, setActiveSystem] = useState<string>(systemSymptoms[0].system);
   const isMobile = useIsMobile();
+
+  // Effect to update active system when highlighted symptoms change
+  useEffect(() => {
+    if (highlightedSymptoms && Object.keys(highlightedSymptoms).length > 0) {
+      // Set the active system to the first system that has highlighted symptoms
+      const systemWithHighlights = Object.keys(highlightedSymptoms)[0];
+      if (systemWithHighlights) {
+        setActiveSystem(systemWithHighlights);
+      }
+    }
+  }, [highlightedSymptoms]);
 
   const handleSymptomToggle = (system: string, symptom: string, checked: boolean) => {
     setSelectedSymptoms((prev) => {
@@ -149,6 +165,10 @@ export function SymptomChecklist({ onSelectionChange, initialSelections = {} }: 
     return selectedSymptoms[system]?.includes(symptom) || false;
   };
 
+  const isHighlighted = (system: string, symptom: string): boolean => {
+    return highlightedSymptoms[system]?.includes(symptom) || false;
+  };
+
   // Mobile view uses Collapsible components
   if (isMobile) {
     return (
@@ -159,7 +179,11 @@ export function SymptomChecklist({ onSelectionChange, initialSelections = {} }: 
         
         <div className="divide-y divide-medical-100">
           {systemSymptoms.map((systemItem) => (
-            <Collapsible key={systemItem.system} className="w-full">
+            <Collapsible 
+              key={systemItem.system} 
+              className="w-full"
+              open={Object.keys(highlightedSymptoms).includes(systemItem.system)}
+            >
               <CollapsibleTrigger className="flex w-full items-center justify-between p-3 font-medium text-left hover:bg-medical-50/60 transition-colors">
                 <span className="text-sm">{systemItem.system}</span>
                 <ChevronDown className="h-4 w-4 text-medical-500 transition-transform duration-200 ui-open:rotate-180" />
@@ -167,18 +191,30 @@ export function SymptomChecklist({ onSelectionChange, initialSelections = {} }: 
               <CollapsibleContent className="p-2 pb-3 bg-medical-50/20">
                 <div className="grid grid-cols-1 gap-2">
                   {systemItem.symptoms.map((symptom) => (
-                    <div key={symptom} className="flex items-start space-x-2 py-1">
+                    <div 
+                      key={symptom} 
+                      className={cn(
+                        "flex items-start space-x-2 py-1",
+                        isHighlighted(systemItem.system, symptom) && "bg-yellow-50 rounded-md px-1"
+                      )}
+                    >
                       <Checkbox 
                         id={`${systemItem.system}-${symptom}-mobile`} 
                         checked={isChecked(systemItem.system, symptom)}
                         onCheckedChange={(checked) => 
                           handleSymptomToggle(systemItem.system, symptom, checked === true)
                         }
-                        className="mt-0.5"
+                        className={cn(
+                          "mt-0.5",
+                          isHighlighted(systemItem.system, symptom) && "ring-2 ring-yellow-400"
+                        )}
                       />
                       <Label 
                         htmlFor={`${systemItem.system}-${symptom}-mobile`}
-                        className="text-sm leading-tight cursor-pointer"
+                        className={cn(
+                          "text-sm leading-tight cursor-pointer",
+                          isHighlighted(systemItem.system, symptom) && "font-medium"
+                        )}
                       >
                         {symptom}
                       </Label>
@@ -212,7 +248,8 @@ export function SymptomChecklist({ onSelectionChange, initialSelections = {} }: 
               value={item.system}
               className={cn(
                 "text-xs py-1.5 px-2",
-                "data-[state=active]:bg-white data-[state=active]:border-x data-[state=active]:border-t data-[state=active]:border-medical-200 data-[state=active]:border-b-0 data-[state=active]:rounded-b-none"
+                "data-[state=active]:bg-white data-[state=active]:border-x data-[state=active]:border-t data-[state=active]:border-medical-200 data-[state=active]:border-b-0 data-[state=active]:rounded-b-none",
+                Object.keys(highlightedSymptoms).includes(item.system) && "ring-2 ring-yellow-300"
               )}
             >
               {item.system}
@@ -224,18 +261,30 @@ export function SymptomChecklist({ onSelectionChange, initialSelections = {} }: 
           <TabsContent key={systemItem.system} value={systemItem.system} className="p-2 pt-3">
             <div className="grid grid-cols-2 gap-2">
               {systemItem.symptoms.map((symptom) => (
-                <div key={symptom} className="flex items-start space-x-2">
+                <div 
+                  key={symptom} 
+                  className={cn(
+                    "flex items-start space-x-2",
+                    isHighlighted(systemItem.system, symptom) && "bg-yellow-50 rounded-md p-0.5"
+                  )}
+                >
                   <Checkbox 
                     id={`${systemItem.system}-${symptom}`} 
                     checked={isChecked(systemItem.system, symptom)}
                     onCheckedChange={(checked) => 
                       handleSymptomToggle(systemItem.system, symptom, checked === true)
                     }
-                    className="mt-1"
+                    className={cn(
+                      "mt-1",
+                      isHighlighted(systemItem.system, symptom) && "ring-2 ring-yellow-400"
+                    )}
                   />
                   <Label 
                     htmlFor={`${systemItem.system}-${symptom}`}
-                    className="text-sm leading-tight cursor-pointer"
+                    className={cn(
+                      "text-sm leading-tight cursor-pointer",
+                      isHighlighted(systemItem.system, symptom) && "font-medium"
+                    )}
                   >
                     {symptom}
                   </Label>
