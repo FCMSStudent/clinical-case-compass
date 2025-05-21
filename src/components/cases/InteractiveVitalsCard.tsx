@@ -232,8 +232,10 @@ export function InteractiveVitalsCard({
                   step={vital.step}
                   value={[vital.value]}
                   onValueChange={(values) => handleVitalChange(index, values)}
-                  className="[&_.relative.h-2]:bg-transparent"
-                  thumbClassName="h-5 w-5"
+                  className={cn(
+                    "[&_.relative.h-2]:bg-transparent",
+                    "[&_[role=slider]]:h-5 [&_[role=slider]]:w-5" // Style the thumb directly
+                  )}
                 />
                 <div className="flex justify-between text-xs text-gray-500 mt-1">
                   <span>{vital.min}</span>
@@ -248,3 +250,4 @@ export function InteractiveVitalsCard({
     </Card>
   );
 }
+
