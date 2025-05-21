@@ -31,14 +31,42 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { useLocalStorage } from "@/hooks/use-local-storage";
+import { MedicalCase } from "@/types/case";
 
 const CaseDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const medicalCase = id ? getCaseById(id) : undefined;
   const navigate = useNavigate();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [storedCases] = useLocalStorage<MedicalCase[]>("medical-cases", []);
+  const [medicalCase, setMedicalCase] = useState<MedicalCase | undefined>(undefined);
+  
+  // Effect to find the case from both localStorage and mock data
+  useEffect(() => {
+    if (!id) return;
+    
+    // First check localStorage
+    const storedCase = storedCases?.find(c => c.id === id);
+    if (storedCase) {
+      console.log("Found case in localStorage:", storedCase);
+      setMedicalCase(storedCase);
+      return;
+    }
+    
+    // If not found in localStorage, check mock data
+    const mockCase = getCaseById(id);
+    if (mockCase) {
+      console.log("Found case in mock data:", mockCase);
+      setMedicalCase(mockCase);
+      return;
+    }
+    
+    // Case not found in either source
+    console.log("Case not found with ID:", id);
+    setMedicalCase(undefined);
+  }, [id, storedCases]);
 
   if (!medicalCase) {
     return (
@@ -59,7 +87,12 @@ const CaseDetail = () => {
   };
 
   const handleDelete = () => {
-    // In a real app, this would delete the case from the database
+    const [, setStoredCases] = useLocalStorage<MedicalCase[]>("medical-cases", []);
+    // Delete case from localStorage if it exists there
+    if (storedCases) {
+      const updatedCases = storedCases.filter(c => c.id !== id);
+      setStoredCases(updatedCases);
+    }
     setShowDeleteDialog(false);
     navigate("/cases");
     toast.success("Case deleted successfully");
@@ -79,7 +112,7 @@ const CaseDetail = () => {
       
       <PageHeader title={medicalCase.title}>
         <div className="flex flex-wrap gap-2">
-          {medicalCase.tags.map((tag) => (
+          {medicalCase.tags && medicalCase.tags.map((tag) => (
             <span
               key={tag.id}
               className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
@@ -128,23 +161,27 @@ const CaseDetail = () => {
             <CardTitle className="text-base">Diagnosis</CardTitle>
           </CardHeader>
           <CardContent className="text-sm">
-            <div className="space-y-3">
-              {medicalCase.diagnoses.map((diagnosis) => (
-                <div key={diagnosis.id} className="space-y-1">
-                  <div className="font-medium flex items-center gap-2">
-                    {diagnosis.name}
-                    <Badge variant={diagnosis.status === "confirmed" ? "default" : "outline"}>
-                      {diagnosis.status}
-                    </Badge>
-                  </div>
-                  {diagnosis.notes && (
-                    <div className="text-muted-foreground">
-                      Note: {diagnosis.notes}
+            {medicalCase.diagnoses && medicalCase.diagnoses.length > 0 ? (
+              <div className="space-y-3">
+                {medicalCase.diagnoses.map((diagnosis) => (
+                  <div key={diagnosis.id} className="space-y-1">
+                    <div className="font-medium flex items-center gap-2">
+                      {diagnosis.name}
+                      <Badge variant={diagnosis.status === "confirmed" ? "default" : "outline"}>
+                        {diagnosis.status}
+                      </Badge>
                     </div>
-                  )}
-                </div>
-              ))}
-            </div>
+                    {diagnosis.notes && (
+                      <div className="text-muted-foreground">
+                        Note: {diagnosis.notes}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-muted-foreground">No diagnoses recorded</div>
+            )}
           </CardContent>
         </Card>
 
@@ -233,11 +270,7 @@ const CaseDetail = () => {
                 </Button>
               </CardHeader>
               <CardContent>
-                {medicalCase.resources.length === 0 ? (
-                  <div className="text-center py-8 text-muted-foreground">
-                    No resources added yet
-                  </div>
-                ) : (
+                {medicalCase.resources && medicalCase.resources.length > 0 ? (
                   <div className="space-y-4">
                     {medicalCase.resources.map((resource) => (
                       <div
@@ -273,6 +306,10 @@ const CaseDetail = () => {
                         )}
                       </div>
                     ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8 text-muted-foreground">
+                    No resources added yet
                   </div>
                 )}
               </CardContent>
