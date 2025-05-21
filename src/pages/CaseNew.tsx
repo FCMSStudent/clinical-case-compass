@@ -1,11 +1,13 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { v4 as uuidv4 } from "uuid";
+import { useLocalStorage } from "@/hooks/use-local-storage";
+import { MedicalCase, Patient, CaseTag, Diagnosis } from "@/types/case";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -135,7 +137,8 @@ const CaseNew = () => {
   const [saveStatus, setSaveStatus] = useState<"saving" | "saved" | "idle">("idle");
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const isMobile = useIsMobile();
-  
+  const [storedCases, setStoredCases] = useLocalStorage<MedicalCase[]>("medical-cases", []);
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -214,11 +217,32 @@ const CaseNew = () => {
     
     setIsSubmitting(true);
     try {
-      // In a real app, we would save this to the database
-      console.log("Form values:", values);
+      // Create a new medical case object
+      const newCase: MedicalCase = {
+        id: uuidv4(),
+        title: values.title,
+        patient: {
+          id: uuidv4(),
+          name: values.patientName,
+          age: parseInt(values.patientAge),
+          gender: values.patientGender as "male" | "female" | "other",
+          medicalRecordNumber: values.patientMRN
+        },
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        chiefComplaint: values.chiefComplaint,
+        chiefComplaintAnalysis: values.chiefComplaintAnalysis || undefined,
+        history: values.history || undefined,
+        physicalExam: values.physicalExam || undefined,
+        diagnoses: [],
+        tags: [getAllTags().find(tag => tag.id === values.tags) || { id: values.tags, name: values.tags, color: "#4F46E5" }],
+        resources: [],
+        learningPoints: values.learningPoints || undefined
+      };
       
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Add the new case to the stored cases
+      const updatedCases = [...storedCases, newCase];
+      setStoredCases(updatedCases);
       
       // Clear the draft after successful submission
       localStorage.removeItem("caseFormDraft");
