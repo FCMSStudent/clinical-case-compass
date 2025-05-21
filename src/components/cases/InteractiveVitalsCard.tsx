@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, memo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
@@ -34,13 +34,94 @@ interface InteractiveVitalsCardProps {
   patientAge?: number;
 }
 
+// Memoized VitalSlider component to prevent unnecessary re-renders
+const VitalSlider = memo(({ 
+  vital, 
+  index, 
+  handleVitalChange 
+}: { 
+  vital: VitalSign; 
+  index: number;
+  handleVitalChange: (index: number, values: number[]) => void;
+}) => {
+  const getStatusColor = (value: number, range: VitalRange): string => {
+    if (value < range.min) return "text-blue-500";
+    if (value > range.max) return "text-red-500";
+    return "text-green-500";
+  };
+
+  return (
+    <div key={vital.name} className="p-3 bg-gray-50 rounded-lg">
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center gap-2">
+          {vital.icon && <span>{vital.icon}</span>}
+          <Label htmlFor={`slider-${vital.name}`} className="font-medium">
+            {vital.name.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+          </Label>
+        </div>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span 
+                className={cn(
+                  "font-semibold text-lg flex items-center gap-1",
+                  getStatusColor(vital.value, vital.range)
+                )}
+              >
+                {vital.value} {vital.unit}
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Normal range: {vital.range.min}-{vital.range.max} {vital.unit}</p>
+              {vital.value < vital.range.min && <p>Below normal</p>}
+              {vital.value > vital.range.max && <p>Above normal</p>}
+              {vital.value >= vital.range.min && vital.value <= vital.range.max && <p>Normal</p>}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
+      
+      <div className="relative pt-1">
+        <div className="overflow-hidden h-2 mb-1 text-xs flex bg-gray-200 rounded">
+          <div 
+            className="h-2 rounded" 
+            style={{
+              width: `${((vital.range.max - vital.min) / (vital.max - vital.min)) * 100}%`,
+              marginLeft: `${((vital.range.min - vital.min) / (vital.max - vital.min)) * 100}%`,
+              backgroundColor: "rgba(0, 128, 0, 0.2)"
+            }}
+          ></div>
+        </div>
+        <Slider
+          id={`slider-${vital.name}`}
+          min={vital.min}
+          max={vital.max}
+          step={vital.step}
+          value={[vital.value]}
+          onValueChange={(values) => handleVitalChange(index, values)}
+          className={cn(
+            "[&_.relative.h-2]:bg-transparent",
+            "[&_[role=slider]]:h-5 [&_[role=slider]]:w-5"
+          )}
+        />
+        <div className="flex justify-between text-xs text-gray-500 mt-1">
+          <span>{vital.min}</span>
+          <div className="text-center">{vital.range.min} - {vital.range.max}</div>
+          <span>{vital.max}</span>
+        </div>
+      </div>
+    </div>
+  );
+});
+VitalSlider.displayName = "VitalSlider";
+
 export function InteractiveVitalsCard({ 
   onVitalsChange, 
   initialVitals = {},
   patientAge = 30
 }: InteractiveVitalsCardProps) {
   // Define normal ranges based on age
-  const getNormalRanges = (age: number) => {
+  const getNormalRanges = useCallback((age: number) => {
     if (age < 12) { // Child
       return {
         temperature: { min: 36.5, max: 37.5 },
@@ -69,7 +150,7 @@ export function InteractiveVitalsCard({
         oxygenSaturation: { min: 95, max: 100 }
       };
     }
-  };
+  }, []);
 
   const normalRanges = getNormalRanges(patientAge);
 
@@ -134,13 +215,28 @@ export function InteractiveVitalsCard({
     }
   ]);
 
-  useEffect(() => {
-    // Convert vital signs to the format expected by parent component
-    const vitalsObj: Record<string, string> = {};
-    vitalSigns.forEach(vital => {
-      vitalsObj[vital.name] = vital.value.toString();
+  // Memoize the handleVitalChange function to prevent unnecessary re-renders
+  const handleVitalChange = useCallback((index: number, values: number[]) => {
+    const newValue = values[0];
+    setVitalSigns(prev => {
+      const updated = [...prev];
+      updated[index] = { ...updated[index], value: newValue };
+      return updated;
     });
-    onVitalsChange(vitalsObj);
+  }, []);
+
+  // Debounced version of onVitalsChange to reduce state updates
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      // Convert vital signs to the format expected by parent component
+      const vitalsObj: Record<string, string> = {};
+      vitalSigns.forEach(vital => {
+        vitalsObj[vital.name] = vital.value.toString();
+      });
+      onVitalsChange(vitalsObj);
+    }, 100);
+    
+    return () => clearTimeout(timer);
   }, [vitalSigns, onVitalsChange]);
 
   // Update initial values when they change
@@ -155,99 +251,23 @@ export function InteractiveVitalsCard({
     }
   }, [initialVitals]);
 
-  const handleVitalChange = (index: number, values: number[]) => {
-    const newValue = values[0];
-    setVitalSigns(prev => {
-      const updated = [...prev];
-      updated[index] = { ...updated[index], value: newValue };
-      return updated;
-    });
-  };
-
-  const getStatusColor = (value: number, range: VitalRange): string => {
-    if (value < range.min) return "text-blue-500";
-    if (value > range.max) return "text-red-500";
-    return "text-green-500";
-  };
-
-  const getSliderColor = (value: number, range: VitalRange): string => {
-    if (value < range.min) return "bg-blue-500";
-    if (value > range.max) return "bg-red-500";
-    return "bg-green-500";
-  };
-
   return (
     <Card className="shadow-sm">
       <CardHeader className="pb-2 pt-4">
         <CardTitle className="text-lg">Vital Signs</CardTitle>
       </CardHeader>
       <CardContent className="pt-0">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {vitalSigns.map((vital, index) => (
-            <div key={vital.name} className="p-3 bg-gray-50 rounded-lg">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  {vital.icon && <span>{vital.icon}</span>}
-                  <Label htmlFor={`slider-${vital.name}`} className="font-medium">
-                    {vital.name.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
-                  </Label>
-                </div>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <span 
-                        className={cn(
-                          "font-semibold text-lg flex items-center gap-1",
-                          getStatusColor(vital.value, vital.range)
-                        )}
-                      >
-                        {vital.value} {vital.unit}
-                      </span>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Normal range: {vital.range.min}-{vital.range.max} {vital.unit}</p>
-                      {vital.value < vital.range.min && <p>Below normal</p>}
-                      {vital.value > vital.range.max && <p>Above normal</p>}
-                      {vital.value >= vital.range.min && vital.value <= vital.range.max && <p>Normal</p>}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
-              
-              <div className="relative pt-1">
-                <div className="overflow-hidden h-2 mb-1 text-xs flex bg-gray-200 rounded">
-                  <div 
-                    className="h-2 rounded" 
-                    style={{
-                      width: `${((vital.range.max - vital.min) / (vital.max - vital.min)) * 100}%`,
-                      marginLeft: `${((vital.range.min - vital.min) / (vital.max - vital.min)) * 100}%`,
-                      backgroundColor: "rgba(0, 128, 0, 0.2)"
-                    }}
-                  ></div>
-                </div>
-                <Slider
-                  id={`slider-${vital.name}`}
-                  min={vital.min}
-                  max={vital.max}
-                  step={vital.step}
-                  value={[vital.value]}
-                  onValueChange={(values) => handleVitalChange(index, values)}
-                  className={cn(
-                    "[&_.relative.h-2]:bg-transparent",
-                    "[&_[role=slider]]:h-5 [&_[role=slider]]:w-5" // Style the thumb directly
-                  )}
-                />
-                <div className="flex justify-between text-xs text-gray-500 mt-1">
-                  <span>{vital.min}</span>
-                  <div className="text-center">{vital.range.min} - {vital.range.max}</div>
-                  <span>{vital.max}</span>
-                </div>
-              </div>
-            </div>
+            <VitalSlider 
+              key={vital.name} 
+              vital={vital} 
+              index={index} 
+              handleVitalChange={handleVitalChange} 
+            />
           ))}
         </div>
       </CardContent>
     </Card>
   );
 }
-

@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -118,6 +118,50 @@ const systemSymptoms: SystemSymptoms[] = [
   }
 ];
 
+// Memoized symptom item to prevent unnecessary re-renders
+const SymptomItem = memo(({
+  system,
+  symptom,
+  isChecked,
+  isHighlighted,
+  onToggle,
+  id
+}: {
+  system: string;
+  symptom: string;
+  isChecked: boolean;
+  isHighlighted: boolean;
+  onToggle: (checked: boolean) => void;
+  id: string;
+}) => (
+  <div 
+    className={cn(
+      "flex items-start space-x-2",
+      isHighlighted && "bg-yellow-50 rounded-md p-0.5"
+    )}
+  >
+    <Checkbox 
+      id={id} 
+      checked={isChecked}
+      onCheckedChange={(checked) => onToggle(checked === true)}
+      className={cn(
+        "mt-1",
+        isHighlighted && "ring-2 ring-yellow-400"
+      )}
+    />
+    <Label 
+      htmlFor={id}
+      className={cn(
+        "text-sm leading-tight cursor-pointer",
+        isHighlighted && "font-medium"
+      )}
+    >
+      {symptom}
+    </Label>
+  </div>
+));
+SymptomItem.displayName = "SymptomItem";
+
 export function SymptomChecklist({ 
   onSelectionChange, 
   initialSelections = {}, 
@@ -177,7 +221,7 @@ export function SymptomChecklist({
           <h3 className="font-medium text-medical-800">System Review Checklist</h3>
         </div>
         
-        <div className="divide-y divide-medical-100">
+        <div className="divide-y divide-medical-100 max-h-[400px] overflow-y-auto">
           {systemSymptoms.map((systemItem) => (
             <Collapsible 
               key={systemItem.system} 
@@ -191,34 +235,15 @@ export function SymptomChecklist({
               <CollapsibleContent className="p-2 pb-3 bg-medical-50/20">
                 <div className="grid grid-cols-1 gap-2">
                   {systemItem.symptoms.map((symptom) => (
-                    <div 
-                      key={symptom} 
-                      className={cn(
-                        "flex items-start space-x-2 py-1",
-                        isHighlighted(systemItem.system, symptom) && "bg-yellow-50 rounded-md px-1"
-                      )}
-                    >
-                      <Checkbox 
-                        id={`${systemItem.system}-${symptom}-mobile`} 
-                        checked={isChecked(systemItem.system, symptom)}
-                        onCheckedChange={(checked) => 
-                          handleSymptomToggle(systemItem.system, symptom, checked === true)
-                        }
-                        className={cn(
-                          "mt-0.5",
-                          isHighlighted(systemItem.system, symptom) && "ring-2 ring-yellow-400"
-                        )}
-                      />
-                      <Label 
-                        htmlFor={`${systemItem.system}-${symptom}-mobile`}
-                        className={cn(
-                          "text-sm leading-tight cursor-pointer",
-                          isHighlighted(systemItem.system, symptom) && "font-medium"
-                        )}
-                      >
-                        {symptom}
-                      </Label>
-                    </div>
+                    <SymptomItem
+                      key={symptom}
+                      system={systemItem.system}
+                      symptom={symptom}
+                      isChecked={isChecked(systemItem.system, symptom)}
+                      isHighlighted={isHighlighted(systemItem.system, symptom)}
+                      onToggle={(checked) => handleSymptomToggle(systemItem.system, symptom, checked)}
+                      id={`${systemItem.system}-${symptom}-mobile`}
+                    />
                   ))}
                 </div>
               </CollapsibleContent>
@@ -241,13 +266,13 @@ export function SymptomChecklist({
         onValueChange={setActiveSystem}
         className="w-full"
       >
-        <TabsList className="grid grid-cols-6 w-full rounded-none bg-medical-50/50 border-b border-medical-200">
+        <TabsList className="flex overflow-x-auto w-full rounded-none bg-medical-50/50 border-b border-medical-200">
           {systemSymptoms.map((item) => (
             <TabsTrigger 
               key={item.system} 
               value={item.system}
               className={cn(
-                "text-xs py-1.5 px-2",
+                "text-xs py-1.5 px-3 flex-shrink-0",
                 "data-[state=active]:bg-white data-[state=active]:border-x data-[state=active]:border-t data-[state=active]:border-medical-200 data-[state=active]:border-b-0 data-[state=active]:rounded-b-none",
                 Object.keys(highlightedSymptoms).includes(item.system) && "ring-2 ring-yellow-300"
               )}
@@ -257,42 +282,25 @@ export function SymptomChecklist({
           ))}
         </TabsList>
 
-        {systemSymptoms.map((systemItem) => (
-          <TabsContent key={systemItem.system} value={systemItem.system} className="p-2 pt-3">
-            <div className="grid grid-cols-2 gap-2">
-              {systemItem.symptoms.map((symptom) => (
-                <div 
-                  key={symptom} 
-                  className={cn(
-                    "flex items-start space-x-2",
-                    isHighlighted(systemItem.system, symptom) && "bg-yellow-50 rounded-md p-0.5"
-                  )}
-                >
-                  <Checkbox 
-                    id={`${systemItem.system}-${symptom}`} 
-                    checked={isChecked(systemItem.system, symptom)}
-                    onCheckedChange={(checked) => 
-                      handleSymptomToggle(systemItem.system, symptom, checked === true)
-                    }
-                    className={cn(
-                      "mt-1",
-                      isHighlighted(systemItem.system, symptom) && "ring-2 ring-yellow-400"
-                    )}
+        <div className="max-h-[400px] overflow-y-auto">
+          {systemSymptoms.map((systemItem) => (
+            <TabsContent key={systemItem.system} value={systemItem.system} className="p-2 pt-3 m-0">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                {systemItem.symptoms.map((symptom) => (
+                  <SymptomItem
+                    key={symptom}
+                    system={systemItem.system}
+                    symptom={symptom}
+                    isChecked={isChecked(systemItem.system, symptom)}
+                    isHighlighted={isHighlighted(systemItem.system, symptom)}
+                    onToggle={(checked) => handleSymptomToggle(systemItem.system, symptom, checked)}
+                    id={`${systemItem.system}-${symptom}`}
                   />
-                  <Label 
-                    htmlFor={`${systemItem.system}-${symptom}`}
-                    className={cn(
-                      "text-sm leading-tight cursor-pointer",
-                      isHighlighted(systemItem.system, symptom) && "font-medium"
-                    )}
-                  >
-                    {symptom}
-                  </Label>
-                </div>
-              ))}
-            </div>
-          </TabsContent>
-        ))}
+                ))}
+              </div>
+            </TabsContent>
+          ))}
+        </div>
       </Tabs>
     </div>
   );
