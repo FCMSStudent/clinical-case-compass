@@ -30,6 +30,19 @@ export interface Resource {
   notes?: string;
 }
 
+export interface LabTest {
+  id: string;
+  name: string;
+  value: string;
+  unit: string;
+}
+
+export interface RadiologyExam {
+  id: string;
+  modality: string;
+  findings: string;
+}
+
 export interface MedicalCase {
   id: string;
   title: string;
@@ -44,4 +57,9 @@ export interface MedicalCase {
   tags: CaseTag[];
   resources: Resource[];
   learningPoints?: string;
+  vitals?: Record<string, string>;
+  urinarySymptoms?: string[];
+  symptoms?: Record<string, boolean>;
+  labTests?: LabTest[];
+  radiologyExams?: RadiologyExam[];
 }

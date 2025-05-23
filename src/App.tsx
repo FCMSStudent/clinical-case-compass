@@ -9,6 +9,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import Cases from "./pages/Cases";
 import CaseDetail from "./pages/CaseDetail";
 import CaseNew from "./pages/CaseNew";
+import CaseEdit from "./pages/CaseEdit";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import { PrivateRoute } from "./components/auth/PrivateRoute";
@@ -43,6 +44,17 @@ const App = () => (
                 <PrivateRoute>
                   <AppLayout>
                     <CaseNew />
+                    <UserProfileDisplay />
+                  </AppLayout>
+                </PrivateRoute>
+              } 
+            />
+            <Route 
+              path="/cases/edit/:id" 
+              element={
+                <PrivateRoute>
+                  <AppLayout>
+                    <CaseEdit />
                     <UserProfileDisplay />
                   </AppLayout>
                 </PrivateRoute>

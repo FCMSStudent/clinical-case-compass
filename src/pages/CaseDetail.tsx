@@ -1,4 +1,3 @@
-
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import { getCaseById } from "@/data/mock-data";
@@ -35,12 +34,13 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { MedicalCase } from "@/types/case";
+import { InteractiveVitalsCard } from "@/components/cases/InteractiveVitalsCard";
 
 const CaseDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [storedCases] = useLocalStorage<MedicalCase[]>("medical-cases", []);
+  const [storedCases, setStoredCases] = useLocalStorage<MedicalCase[]>("medical-cases", []);
   const [medicalCase, setMedicalCase] = useState<MedicalCase | undefined>(undefined);
   
   // Effect to find the case from both localStorage and mock data
@@ -80,14 +80,11 @@ const CaseDetail = () => {
   }
 
   const handleEdit = () => {
-    // In a real app, this would navigate to an edit page
-    // For now, we'll just navigate to the new case page (which would be similar)
-    navigate(`/cases/new`);
-    toast.info("Editing functionality will be implemented soon");
+    // Navigate to the edit page with the case ID
+    navigate(`/cases/edit/${id}`);
   };
 
   const handleDelete = () => {
-    const [, setStoredCases] = useLocalStorage<MedicalCase[]>("medical-cases", []);
     // Delete case from localStorage if it exists there
     if (storedCases) {
       const updatedCases = storedCases.filter(c => c.id !== id);
