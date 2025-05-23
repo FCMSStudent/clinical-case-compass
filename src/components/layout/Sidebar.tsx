@@ -50,9 +50,8 @@ export function Sidebar({ className, isOpen, isDesktopOpen = true, onClose, ...p
       <aside
         className={cn(
           "fixed top-0 bottom-0 left-0 z-50 w-64 bg-card border-r transition-transform duration-300 ease-in-out",
-          isOpen ? "translate-x-0" : "-translate-x-full",
-          !isDesktopOpen && "md:w-14 md:translate-x-0",
-          isDesktopOpen && "md:translate-x-0",
+          isOpen ? "translate-x-0" : "-translate-x-full", // Mobile behavior
+          isDesktopOpen ? "md:translate-x-0" : "md:-translate-x-full", // Desktop behavior
           className
         )}
         {...props}
@@ -61,12 +60,11 @@ export function Sidebar({ className, isOpen, isDesktopOpen = true, onClose, ...p
           <Link
             to="/"
             className={cn(
-              "flex items-center gap-2 font-semibold",
-              !isDesktopOpen && "md:justify-center"
+              "flex items-center gap-2 font-semibold"
             )}
             onClick={onClose}
           >
-            {isDesktopOpen ? (
+            {(isDesktopOpen || isOpen) ? (
               <span className="text-primary">Clinical Case Manager</span>
             ) : (
               <span className="text-primary text-lg font-bold">CCM</span>
@@ -91,12 +89,11 @@ export function Sidebar({ className, isOpen, isDesktopOpen = true, onClose, ...p
                 onClick={onClose}
                 className={cn(
                   "group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
-                  route.active ? "bg-accent text-accent-foreground" : "text-foreground",
-                  !isDesktopOpen && "md:justify-center md:px-2"
+                  route.active ? "bg-accent text-accent-foreground" : "text-foreground"
                 )}
               >
                 <route.icon className="h-5 w-5" />
-                {(isDesktopOpen || !isDesktopOpen && isOpen) && (
+                {(isDesktopOpen || isOpen) && (
                   <span>{route.label}</span>
                 )}
               </Link>
@@ -107,8 +104,7 @@ export function Sidebar({ className, isOpen, isDesktopOpen = true, onClose, ...p
           <div className="border-t p-4">
             <div className="flex flex-col gap-2">
               <div className={cn(
-                "flex items-center gap-2",
-                !isDesktopOpen && "md:justify-center"
+                "flex items-center gap-2"
               )}>
                 <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-medium">
                   {user.email?.[0].toUpperCase() || "U"}
