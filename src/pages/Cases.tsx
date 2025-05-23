@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -155,9 +154,11 @@ const Cases = () => {
           </Button>
         </Card>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 auto-rows-fr">
           {filteredCases.map((medCase) => (
-            <CaseCard key={medCase.id} medicalCase={medCase} className="border-medical-200 shadow-md" />
+            <div key={medCase.id} className="flex">
+              <CaseCard medicalCase={medCase} className="border-medical-200 shadow-md flex-1" />
+            </div>
           ))}
         </div>
       )}
