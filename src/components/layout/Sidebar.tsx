@@ -50,8 +50,10 @@ export function Sidebar({ className, isOpen, isDesktopOpen = true, onClose, ...p
       <aside
         className={cn(
           "fixed top-0 bottom-0 left-0 z-50 w-64 bg-card border-r transition-transform duration-300 ease-in-out",
-          isOpen ? "translate-x-0" : "-translate-x-full", // Mobile behavior
-          isDesktopOpen ? "md:translate-x-0" : "md:-translate-x-full", // Desktop behavior
+          // Mobile behavior
+          isOpen ? "translate-x-0" : "-translate-x-full md:hidden",
+          // Desktop behavior - completely hide when closed
+          isDesktopOpen ? "md:translate-x-0" : "md:-translate-x-full",
           className
         )}
         {...props}
@@ -59,16 +61,10 @@ export function Sidebar({ className, isOpen, isDesktopOpen = true, onClose, ...p
         <div className="flex h-14 items-center border-b px-4">
           <Link
             to="/"
-            className={cn(
-              "flex items-center gap-2 font-semibold"
-            )}
+            className="flex items-center gap-2 font-semibold"
             onClick={onClose}
           >
-            {(isDesktopOpen || isOpen) ? (
-              <span className="text-primary">Clinical Case Manager</span>
-            ) : (
-              <span className="text-primary text-lg font-bold">CCM</span>
-            )}
+            <span className="text-primary">Clinical Case Manager</span>
           </Link>
           <Button
             variant="outline"
@@ -93,9 +89,7 @@ export function Sidebar({ className, isOpen, isDesktopOpen = true, onClose, ...p
                 )}
               >
                 <route.icon className="h-5 w-5" />
-                {(isDesktopOpen || isOpen) && (
-                  <span>{route.label}</span>
-                )}
+                <span>{route.label}</span>
               </Link>
             ))}
           </nav>
@@ -103,23 +97,17 @@ export function Sidebar({ className, isOpen, isDesktopOpen = true, onClose, ...p
         {user && (
           <div className="border-t p-4">
             <div className="flex flex-col gap-2">
-              <div className={cn(
-                "flex items-center gap-2"
-              )}>
+              <div className="flex items-center gap-2">
                 <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-medium">
                   {user.email?.[0].toUpperCase() || "U"}
                 </div>
-                {isDesktopOpen && (
-                  <div className="flex flex-col">
-                    <span className="text-sm font-medium truncate max-w-[180px]">{user.email}</span>
-                  </div>
-                )}
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium truncate max-w-[180px]">{user.email}</span>
+                </div>
               </div>
-              {isDesktopOpen && (
-                <Button variant="outline" size="sm" onClick={signOut}>
-                  Sign out
-                </Button>
-              )}
+              <Button variant="outline" size="sm" onClick={signOut}>
+                Sign out
+              </Button>
             </div>
           </div>
         )}

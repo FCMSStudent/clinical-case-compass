@@ -38,7 +38,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         onClose={handleCloseSidebar} 
       />
       
-      <div className={`flex-1 transition-all duration-300 ${isSidebarOpen ? 'md:ml-64' : 'md:ml-0'}`}>
+      <div className="flex-1 transition-all duration-300">
         {/* Mobile menu button */}
         <div className="flex items-center p-4 md:hidden">
           <Button
