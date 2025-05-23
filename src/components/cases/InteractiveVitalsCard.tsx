@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useCallback, memo } from "react";
+import React, { useState, useEffect, useCallback, memo, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
@@ -49,6 +49,13 @@ const VitalSlider = memo(({
     if (value > range.max) return "text-red-500";
     return "text-green-500";
   };
+  
+  // Calculate the range indicator position and width
+  const rangeIndicatorStyle = useMemo(() => ({
+    width: `${((vital.range.max - vital.min) / (vital.max - vital.min)) * 100}%`,
+    marginLeft: `${((vital.range.min - vital.min) / (vital.max - vital.min)) * 100}%`,
+    backgroundColor: "rgba(0, 128, 0, 0.2)"
+  }), [vital.range.max, vital.range.min, vital.min, vital.max]);
 
   return (
     <div key={vital.name} className="p-3 bg-gray-50 rounded-lg">
@@ -85,11 +92,7 @@ const VitalSlider = memo(({
         <div className="overflow-hidden h-2 mb-1 text-xs flex bg-gray-200 rounded">
           <div 
             className="h-2 rounded" 
-            style={{
-              width: `${((vital.range.max - vital.min) / (vital.max - vital.min)) * 100}%`,
-              marginLeft: `${((vital.range.min - vital.min) / (vital.max - vital.min)) * 100}%`,
-              backgroundColor: "rgba(0, 128, 0, 0.2)"
-            }}
+            style={rangeIndicatorStyle}
           ></div>
         </div>
         <Slider
@@ -99,6 +102,8 @@ const VitalSlider = memo(({
           step={vital.step}
           value={[vital.value]}
           onValueChange={(values) => handleVitalChange(index, values)}
+          showTooltip={true}
+          tooltipValue={`${vital.value} ${vital.unit}`}
           className={cn(
             "[&_.relative.h-2]:bg-transparent",
             "[&_[role=slider]]:h-5 [&_[role=slider]]:w-5"
@@ -152,7 +157,7 @@ export function InteractiveVitalsCard({
     }
   }, []);
 
-  const normalRanges = getNormalRanges(patientAge);
+  const normalRanges = useMemo(() => getNormalRanges(patientAge), [patientAge, getNormalRanges]);
 
   const [vitalSigns, setVitalSigns] = useState<VitalSign[]>([
     {
@@ -245,11 +250,22 @@ export function InteractiveVitalsCard({
       setVitalSigns(prev => 
         prev.map(vital => ({
           ...vital,
-          value: initialVitals[vital.name] ? parseFloat(initialVitals[vital.name]) : vital.value
+          value: initialVitals[vital.name] ? parseFloat(initialVitals[vital.name]) : vital.value,
+          range: normalRanges[vital.name as keyof typeof normalRanges]
         }))
       );
     }
-  }, [initialVitals]);
+  }, [initialVitals, normalRanges]);
+
+  // Update ranges when patientAge changes
+  useEffect(() => {
+    setVitalSigns(prev => 
+      prev.map(vital => ({
+        ...vital,
+        range: normalRanges[vital.name as keyof typeof normalRanges]
+      }))
+    );
+  }, [normalRanges]);
 
   return (
     <Card className="shadow-sm">
@@ -257,7 +273,7 @@ export function InteractiveVitalsCard({
         <CardTitle className="text-lg">Vital Signs</CardTitle>
       </CardHeader>
       <CardContent className="pt-0">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {vitalSigns.map((vital, index) => (
             <VitalSlider 
               key={vital.name} 
