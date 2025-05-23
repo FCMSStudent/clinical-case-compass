@@ -60,6 +60,7 @@ export interface MedicalCase {
   vitals?: Record<string, string>;
   urinarySymptoms?: string[];
   symptoms?: Record<string, boolean>;
+  systemSymptoms?: Record<string, string[]>;
   labTests?: LabTest[];
   radiologyExams?: RadiologyExam[];
 }

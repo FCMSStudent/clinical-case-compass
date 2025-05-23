@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, memo } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -16,6 +15,9 @@ interface SymptomChecklistProps {
   onSelectionChange: (selections: Record<string, string[]>) => void;
   initialSelections?: Record<string, string[]>;
   highlightedSymptoms?: Record<string, string[]>;
+  // Add backward compatibility for the old props used in CaseEdit.tsx
+  onSymptomChange?: (symptoms: Record<string, boolean>) => void;
+  initialSymptoms?: Record<string, boolean>;
 }
 
 interface SystemSymptoms {
@@ -165,11 +167,30 @@ SymptomItem.displayName = "SymptomItem";
 export function SymptomChecklist({ 
   onSelectionChange, 
   initialSelections = {}, 
-  highlightedSymptoms = {} 
+  highlightedSymptoms = {},
+  // Support for old prop interface
+  onSymptomChange,
+  initialSymptoms
 }: SymptomChecklistProps) {
   const [selectedSymptoms, setSelectedSymptoms] = useState<Record<string, string[]>>(initialSelections);
   const [activeSystem, setActiveSystem] = useState<string>(systemSymptoms[0].system);
   const isMobile = useIsMobile();
+
+  // Convert old format (boolean record) to new format (string array record) if needed
+  useEffect(() => {
+    if (initialSymptoms && Object.keys(initialSymptoms).length > 0 && 
+        Object.keys(initialSelections).length === 0) {
+      const convertedSelections: Record<string, string[]> = {};
+      
+      systemSymptoms.forEach(({ system, symptoms }) => {
+        convertedSelections[system] = symptoms.filter(
+          symptom => initialSymptoms[`${system}-${symptom}`]
+        );
+      });
+      
+      setSelectedSymptoms(convertedSelections);
+    }
+  }, [initialSymptoms, initialSelections]);
 
   // Effect to update active system when highlighted symptoms change
   useEffect(() => {
@@ -198,8 +219,21 @@ export function SymptomChecklist({
         [system]: updatedSystemSymptoms
       };
       
-      // Notify parent component
+      // Notify parent component using new prop
       onSelectionChange(updatedSelections);
+      
+      // Support for backward compatibility - convert to old format and notify if callback exists
+      if (onSymptomChange) {
+        const booleanFormat: Record<string, boolean> = {};
+        
+        Object.entries(updatedSelections).forEach(([system, symptoms]) => {
+          symptoms.forEach(symptom => {
+            booleanFormat[`${system}-${symptom}`] = true;
+          });
+        });
+        
+        onSymptomChange(booleanFormat);
+      }
       
       return updatedSelections;
     });

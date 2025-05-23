@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { z } from "zod";
@@ -57,6 +56,7 @@ const CaseEdit = () => {
   const [vitals, setVitals] = useState<Record<string, string>>({});
   const [urinarySymptoms, setUrinarySymptoms] = useState<string[]>([]);
   const [symptoms, setSymptoms] = useState<Record<string, boolean>>({});
+  const [systemSymptoms, setSystemSymptoms] = useState<Record<string, string[]>>({});
   const [labResults, setLabResults] = useState<LabTest[]>([]);
   const [radiologyExams, setRadiologyExams] = useState<RadiologyExam[]>([]);
   
@@ -179,6 +179,20 @@ const CaseEdit = () => {
     } finally {
       setIsSaving(false);
     }
+  };
+
+  // Convert boolean record format to system-based string arrays
+  const handleSymptomSelectionChange = (selections: Record<string, string[]>) => {
+    setSystemSymptoms(selections);
+    
+    // Also update the old format for backward compatibility
+    const booleanFormat: Record<string, boolean> = {};
+    Object.entries(selections).forEach(([system, symptoms]) => {
+      symptoms.forEach(symptom => {
+        booleanFormat[`${system}-${symptom}`] = true;
+      });
+    });
+    setSymptoms(booleanFormat);
   };
 
   return (
@@ -306,8 +320,8 @@ const CaseEdit = () => {
             <div className="bg-white p-4 rounded-lg shadow-sm border">
               <h3 className="font-medium text-sm mb-2">Other Symptoms</h3>
               <SymptomChecklist 
-                onSymptomChange={setSymptoms} 
-                initialSymptoms={symptoms}
+                onSelectionChange={handleSymptomSelectionChange}
+                initialSelections={systemSymptoms}
               />
             </div>
           </div>
