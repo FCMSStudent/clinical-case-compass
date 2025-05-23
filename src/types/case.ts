@@ -64,3 +64,36 @@ export interface MedicalCase {
   labTests?: LabTest[];
   radiologyExams?: RadiologyExam[];
 }
+
+// Medical specialties list for use throughout the app
+export const SPECIALTIES = [
+  { id: "allergy", name: "Allergy & Immunology" },
+  { id: "anesthesiology", name: "Anesthesiology" },
+  { id: "cardiology", name: "Cardiology" },
+  { id: "dermatology", name: "Dermatology" },
+  { id: "emergency", name: "Emergency Medicine" },
+  { id: "endocrinology", name: "Endocrinology" },
+  { id: "family", name: "Family Medicine" },
+  { id: "gastroenterology", name: "Gastroenterology" },
+  { id: "geriatrics", name: "Geriatrics" },
+  { id: "hematology", name: "Hematology" },
+  { id: "infectious", name: "Infectious Disease" },
+  { id: "internal", name: "Internal Medicine" },
+  { id: "nephrology", name: "Nephrology" },
+  { id: "neurology", name: "Neurology" },
+  { id: "neurosurgery", name: "Neurosurgery" },
+  { id: "obgyn", name: "Obstetrics & Gynecology" },
+  { id: "oncology", name: "Oncology" },
+  { id: "ophthalmology", name: "Ophthalmology" },
+  { id: "orthopedics", name: "Orthopedics" },
+  { id: "otolaryngology", name: "Otolaryngology (ENT)" },
+  { id: "pathology", name: "Pathology" },
+  { id: "pediatrics", name: "Pediatrics" },
+  { id: "psychiatry", name: "Psychiatry" },
+  { id: "pulmonology", name: "Pulmonology" },
+  { id: "radiology", name: "Radiology" },
+  { id: "rheumatology", name: "Rheumatology" },
+  { id: "surgery", name: "Surgery" },
+  { id: "urology", name: "Urology" },
+  { id: "vascular", name: "Vascular Medicine" }
+];

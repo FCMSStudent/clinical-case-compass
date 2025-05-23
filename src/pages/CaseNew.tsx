@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { v4 as uuidv4 } from "uuid";
 import { useLocalStorage } from "@/hooks/use-local-storage";
-import { MedicalCase, Patient, CaseTag, Diagnosis } from "@/types/case";
+import { MedicalCase, Patient, CaseTag, Diagnosis, SPECIALTIES } from "@/types/case";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -93,39 +93,6 @@ const formSchema = z.object({
 });
 
 type FormValues = z.infer<typeof formSchema>;
-
-// Additional specialties in alphabetical order
-const SPECIALTIES = [
-  { id: "allergy", name: "Allergy & Immunology" },
-  { id: "anesthesiology", name: "Anesthesiology" },
-  { id: "cardiology", name: "Cardiology" },
-  { id: "dermatology", name: "Dermatology" },
-  { id: "emergency", name: "Emergency Medicine" },
-  { id: "endocrinology", name: "Endocrinology" },
-  { id: "family", name: "Family Medicine" },
-  { id: "gastroenterology", name: "Gastroenterology" },
-  { id: "geriatrics", name: "Geriatrics" },
-  { id: "hematology", name: "Hematology" },
-  { id: "infectious", name: "Infectious Disease" },
-  { id: "internal", name: "Internal Medicine" },
-  { id: "nephrology", name: "Nephrology" },
-  { id: "neurology", name: "Neurology" },
-  { id: "neurosurgery", name: "Neurosurgery" },
-  { id: "obgyn", name: "Obstetrics & Gynecology" },
-  { id: "oncology", name: "Oncology" },
-  { id: "ophthalmology", name: "Ophthalmology" },
-  { id: "orthopedics", name: "Orthopedics" },
-  { id: "otolaryngology", name: "Otolaryngology (ENT)" },
-  { id: "pathology", name: "Pathology" },
-  { id: "pediatrics", name: "Pediatrics" },
-  { id: "psychiatry", name: "Psychiatry" },
-  { id: "pulmonology", name: "Pulmonology" },
-  { id: "radiology", name: "Radiology" },
-  { id: "rheumatology", name: "Rheumatology" },
-  { id: "surgery", name: "Surgery" },
-  { id: "urology", name: "Urology" },
-  { id: "vascular", name: "Vascular Medicine" }
-];
 
 const CaseNew = () => {
   const navigate = useNavigate();

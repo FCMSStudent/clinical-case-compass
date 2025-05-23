@@ -17,7 +17,7 @@ import {
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useLocalStorage } from "@/hooks/use-local-storage";
-import { MedicalCase } from "@/types/case";
+import { MedicalCase, SPECIALTIES } from "@/types/case";
 
 const Cases = () => {
   // Use location to detect navigation changes
@@ -131,9 +131,9 @@ const Cases = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Specialties</SelectItem>
-              {allTags.map((tag) => (
-                <SelectItem key={tag.id} value={tag.id}>
-                  {tag.name}
+              {SPECIALTIES.map((specialty) => (
+                <SelectItem key={specialty.id} value={specialty.id}>
+                  {specialty.name}
                 </SelectItem>
               ))}
             </SelectContent>
