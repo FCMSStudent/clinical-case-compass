@@ -9,8 +9,9 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Thermometer, Heart, ArrowUp, ArrowDown } from "lucide-react";
+import { Thermometer, Heart, ArrowUp, ArrowDown, Wind, Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 interface VitalRange {
   min: number;
@@ -26,6 +27,7 @@ interface VitalSign {
   max: number;
   step: number;
   icon?: React.ReactNode;
+  info?: string;
 }
 
 interface InteractiveVitalsCardProps {
@@ -34,7 +36,7 @@ interface InteractiveVitalsCardProps {
   patientAge?: number;
 }
 
-// Memoized VitalSlider component to prevent unnecessary re-renders
+// Memoized slider component with improved visual feedback
 const VitalSlider = memo(({ 
   vital, 
   index, 
@@ -44,24 +46,55 @@ const VitalSlider = memo(({
   index: number;
   handleVitalChange: (index: number, values: number[]) => void;
 }) => {
+  // Status color and classes for the value display
   const getStatusColor = (value: number, range: VitalRange): string => {
     if (value < range.min) return "text-blue-500";
     if (value > range.max) return "text-red-500";
     return "text-green-500";
   };
+
+  const getStatusIcon = (value: number, range: VitalRange) => {
+    if (value < range.min) return <ArrowDown className="h-3 w-3" />;
+    if (value > range.max) return <ArrowUp className="h-3 w-3" />;
+    return null;
+  };
   
-  // Calculate the range indicator position and width
-  const rangeIndicatorStyle = useMemo(() => ({
-    width: `${((vital.range.max - vital.min) / (vital.max - vital.min)) * 100}%`,
-    marginLeft: `${((vital.range.min - vital.min) / (vital.max - vital.min)) * 100}%`,
-    backgroundColor: "rgba(0, 128, 0, 0.2)"
-  }), [vital.range.max, vital.range.min, vital.min, vital.max]);
+  // Calculate range indicator positions for the colored zones
+  const rangeIndicatorStyle = useMemo(() => {
+    // Calculate width as percentage of the slider range
+    const lowRange = {
+      width: `${((vital.range.min - vital.min) / (vital.max - vital.min)) * 100}%`,
+      left: 0,
+      backgroundColor: "rgba(59, 130, 246, 0.2)" // blue for too low
+    };
+    
+    const normalRange = {
+      width: `${((vital.range.max - vital.range.min) / (vital.max - vital.min)) * 100}%`,
+      left: `${((vital.range.min - vital.min) / (vital.max - vital.min)) * 100}%`,
+      backgroundColor: "rgba(22, 163, 74, 0.2)" // green for normal
+    };
+    
+    const highRange = {
+      width: `${((vital.max - vital.range.max) / (vital.max - vital.min)) * 100}%`,
+      left: `${((vital.range.max - vital.min) / (vital.max - vital.min)) * 100}%`,
+      backgroundColor: "rgba(220, 38, 38, 0.2)" // red for too high
+    };
+    
+    return { lowRange, normalRange, highRange };
+  }, [vital.range.max, vital.range.min, vital.min, vital.max]);
+  
+  // Animation class for heart rate
+  const pulseAnimation = vital.name === "heartRate" ? "animate-pulse" : "";
 
   return (
-    <div key={vital.name} className="p-3 bg-gray-50 rounded-lg">
+    <div key={vital.name} className="p-3 bg-gray-50 rounded-lg border border-gray-100 transition-all hover:shadow-sm">
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
-          {vital.icon && <span>{vital.icon}</span>}
+          {vital.icon && (
+            <span className={cn("text-medical-600", pulseAnimation)}>
+              {vital.icon}
+            </span>
+          )}
           <Label htmlFor={`slider-${vital.name}`} className="font-medium">
             {vital.name.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
           </Label>
@@ -71,18 +104,28 @@ const VitalSlider = memo(({
             <TooltipTrigger asChild>
               <span 
                 className={cn(
-                  "font-semibold text-lg flex items-center gap-1",
+                  "font-semibold text-lg flex items-center gap-1 transition-colors",
                   getStatusColor(vital.value, vital.range)
                 )}
               >
+                {getStatusIcon(vital.value, vital.range)}
                 {vital.value} {vital.unit}
               </span>
             </TooltipTrigger>
-            <TooltipContent>
-              <p>Normal range: {vital.range.min}-{vital.range.max} {vital.unit}</p>
-              {vital.value < vital.range.min && <p>Below normal</p>}
-              {vital.value > vital.range.max && <p>Above normal</p>}
-              {vital.value >= vital.range.min && vital.value <= vital.range.max && <p>Normal</p>}
+            <TooltipContent className="p-3 max-w-xs">
+              <div className="space-y-1">
+                <p className="font-medium">Normal range: {vital.range.min}-{vital.range.max} {vital.unit}</p>
+                {vital.value < vital.range.min && (
+                  <p className="text-blue-600">Below normal range</p>
+                )}
+                {vital.value > vital.range.max && (
+                  <p className="text-red-600">Above normal range</p>
+                )}
+                {vital.value >= vital.range.min && vital.value <= vital.range.max && (
+                  <p className="text-green-600">Within normal range</p>
+                )}
+                {vital.info && <p className="text-xs text-gray-600">{vital.info}</p>}
+              </div>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -90,10 +133,9 @@ const VitalSlider = memo(({
       
       <div className="relative pt-1">
         <div className="overflow-hidden h-2 mb-1 text-xs flex bg-gray-200 rounded">
-          <div 
-            className="h-2 rounded" 
-            style={rangeIndicatorStyle}
-          ></div>
+          <div className="h-2 rounded absolute" style={rangeIndicatorStyle.lowRange}></div>
+          <div className="h-2 rounded absolute" style={rangeIndicatorStyle.normalRange}></div>
+          <div className="h-2 rounded absolute" style={rangeIndicatorStyle.highRange}></div>
         </div>
         <Slider
           id={`slider-${vital.name}`}
@@ -102,16 +144,18 @@ const VitalSlider = memo(({
           step={vital.step}
           value={[vital.value]}
           onValueChange={(values) => handleVitalChange(index, values)}
-          showTooltip={true}
-          tooltipValue={`${vital.value} ${vital.unit}`}
           className={cn(
             "[&_.relative.h-2]:bg-transparent",
-            "[&_[role=slider]]:h-5 [&_[role=slider]]:w-5"
+            "[&_[role=slider]]:h-5 [&_[role=slider]]:w-5",
+            "[&_[role=slider]]:transition-all [&_[role=slider]]:duration-200",
+            vital.value < vital.range.min && "[&_[role=slider]]:bg-blue-500 [&_[role=slider]]:border-blue-500",
+            vital.value > vital.range.max && "[&_[role=slider]]:bg-red-500 [&_[role=slider]]:border-red-500",
+            vital.value >= vital.range.min && vital.value <= vital.range.max && "[&_[role=slider]]:bg-green-500 [&_[role=slider]]:border-green-500"
           )}
         />
         <div className="flex justify-between text-xs text-gray-500 mt-1">
           <span>{vital.min}</span>
-          <div className="text-center">{vital.range.min} - {vital.range.max}</div>
+          <div className="text-center text-xs font-medium text-gray-600">{vital.range.min} - {vital.range.max}</div>
           <span>{vital.max}</span>
         </div>
       </div>
@@ -119,6 +163,50 @@ const VitalSlider = memo(({
   );
 });
 VitalSlider.displayName = "VitalSlider";
+
+// Define preset vital signs for quick selection
+const VITAL_PRESETS = {
+  normal: {
+    temperature: 37,
+    heartRate: 70,
+    systolicBP: 120,
+    diastolicBP: 80,
+    respiratoryRate: 14,
+    oxygenSaturation: 98
+  },
+  fever: {
+    temperature: 39.5,
+    heartRate: 110,
+    systolicBP: 110,
+    diastolicBP: 70,
+    respiratoryRate: 22,
+    oxygenSaturation: 96
+  },
+  hypotension: {
+    temperature: 36.5,
+    heartRate: 120,
+    systolicBP: 85,
+    diastolicBP: 50,
+    respiratoryRate: 24,
+    oxygenSaturation: 94
+  },
+  hypertension: {
+    temperature: 37,
+    heartRate: 85,
+    systolicBP: 170,
+    diastolicBP: 100,
+    respiratoryRate: 16,
+    oxygenSaturation: 97
+  },
+  respiratory: {
+    temperature: 37.8,
+    heartRate: 105,
+    systolicBP: 125,
+    diastolicBP: 85,
+    respiratoryRate: 28,
+    oxygenSaturation: 91
+  }
+};
 
 export function InteractiveVitalsCard({ 
   onVitalsChange, 
@@ -159,6 +247,16 @@ export function InteractiveVitalsCard({
 
   const normalRanges = useMemo(() => getNormalRanges(patientAge), [patientAge, getNormalRanges]);
 
+  // Clinical information for tooltips
+  const clinicalInfo = {
+    temperature: "Body temperature is regulated by the hypothalamus. Fever may indicate infection, inflammation, or other conditions requiring investigation.",
+    heartRate: "Heart rate varies with activity level, emotions, medications, and underlying conditions. Sustained tachycardia or bradycardia may require investigation.",
+    systolicBP: "Systolic blood pressure reflects the pressure when the heart contracts. Elevated readings may indicate hypertension and cardiovascular risk.",
+    diastolicBP: "Diastolic blood pressure represents the pressure when the heart relaxes. Elevated readings may indicate vascular resistance issues.",
+    respiratoryRate: "Rate of breathing is controlled by the respiratory center in the medulla oblongata. Changes can indicate respiratory, metabolic, or neurological issues.",
+    oxygenSaturation: "Oxygen saturation measures the percentage of hemoglobin binding sites occupied by oxygen. Low levels may indicate respiratory compromise."
+  };
+
   const [vitalSigns, setVitalSigns] = useState<VitalSign[]>([
     {
       name: "temperature",
@@ -168,7 +266,8 @@ export function InteractiveVitalsCard({
       min: 35,
       max: 41,
       step: 0.1,
-      icon: <Thermometer className="h-5 w-5" />
+      icon: <Thermometer className="h-5 w-5" />,
+      info: clinicalInfo.temperature
     },
     {
       name: "heartRate",
@@ -178,7 +277,8 @@ export function InteractiveVitalsCard({
       min: 40,
       max: 180,
       step: 1,
-      icon: <Heart className="h-5 w-5" />
+      icon: <Heart className="h-5 w-5" />,
+      info: clinicalInfo.heartRate
     },
     {
       name: "systolicBP",
@@ -188,7 +288,8 @@ export function InteractiveVitalsCard({
       min: 80,
       max: 200,
       step: 1,
-      icon: <ArrowUp className="h-5 w-5" />
+      icon: <ArrowUp className="h-5 w-5" />,
+      info: clinicalInfo.systolicBP
     },
     {
       name: "diastolicBP",
@@ -198,7 +299,8 @@ export function InteractiveVitalsCard({
       min: 40,
       max: 120,
       step: 1,
-      icon: <ArrowDown className="h-5 w-5" />
+      icon: <ArrowDown className="h-5 w-5" />,
+      info: clinicalInfo.diastolicBP
     },
     {
       name: "respiratoryRate",
@@ -207,7 +309,9 @@ export function InteractiveVitalsCard({
       range: normalRanges.respiratoryRate,
       min: 8,
       max: 40,
-      step: 1
+      step: 1,
+      icon: <Wind className="h-5 w-5" />,
+      info: clinicalInfo.respiratoryRate
     },
     {
       name: "oxygenSaturation",
@@ -216,9 +320,23 @@ export function InteractiveVitalsCard({
       range: normalRanges.oxygenSaturation,
       min: 80,
       max: 100,
-      step: 1
+      step: 1,
+      icon: <Activity className="h-5 w-5" />,
+      info: clinicalInfo.oxygenSaturation
     }
   ]);
+
+  // Apply preset vital signs
+  const applyPreset = (preset: keyof typeof VITAL_PRESETS) => {
+    const presetValues = VITAL_PRESETS[preset];
+    
+    setVitalSigns(prev => {
+      return prev.map(vital => ({
+        ...vital,
+        value: presetValues[vital.name as keyof typeof presetValues] || vital.value
+      }));
+    });
+  };
 
   // Memoize the handleVitalChange function to prevent unnecessary re-renders
   const handleVitalChange = useCallback((index: number, values: number[]) => {
@@ -268,11 +386,62 @@ export function InteractiveVitalsCard({
   }, [normalRanges]);
 
   return (
-    <Card className="shadow-sm">
-      <CardHeader className="pb-2 pt-4">
-        <CardTitle className="text-lg">Vital Signs</CardTitle>
+    <Card className="shadow-sm border-medical-200">
+      <CardHeader className="pb-2 pt-4 bg-medical-50/70">
+        <div className="flex justify-between items-center">
+          <CardTitle className="text-lg text-medical-800">Vital Signs</CardTitle>
+          <div className="flex gap-1.5">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="h-7 text-xs border-medical-300 bg-white"
+                    onClick={() => applyPreset("normal")}
+                  >
+                    Normal
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Apply normal vital signs</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="h-7 text-xs border-medical-300 bg-white"
+                    onClick={() => applyPreset("fever")}
+                  >
+                    Fever
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Apply febrile vital signs</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="h-7 text-xs border-medical-300 bg-white"
+                    onClick={() => applyPreset("hypotension")}
+                  >
+                    Shock
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Apply shock/hypotension vital signs</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        </div>
       </CardHeader>
-      <CardContent className="pt-0">
+      <CardContent className="pt-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {vitalSigns.map((vital, index) => (
             <VitalSlider 
