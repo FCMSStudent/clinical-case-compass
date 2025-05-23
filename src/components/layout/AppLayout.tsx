@@ -75,7 +75,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         </div>
 
         {/* Main content area */}
-        <main className={`px-4 py-6 md:px-6 ${!isSidebarOpen ? 'md:pl-16' : ''}`}>
+        <main className={`px-4 py-6 md:px-6`}>
           {children}
         </main>
       </div>
