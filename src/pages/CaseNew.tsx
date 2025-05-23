@@ -455,209 +455,159 @@ const CaseNew = () => {
                                 <p>Analyze the chief complaint - consider differential diagnoses, severity, duration, etc.</p>
                               </TooltipContent>
                             </Tooltip>
-                      </TooltipProvider>
-                    </FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Analyze the presenting chief complaint..."
-                        className="min-h-[120px] resize-none border-medical-200 focus-visible:ring-medical-500"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      Consider differential diagnoses, potential severity, duration, and other relevant factors
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              </CardContent>
-              <CardFooter className="flex justify-end pb-6">
-                <Button 
-                  type="button" 
-                  onClick={goToNextTab}
-                  className="bg-medical-600 hover:bg-medical-700 text-white"
-                >
-                  Next <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </CardFooter>
-            </TabsContent>
+                          </TooltipProvider>
+                        </FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Analyze the presenting chief complaint..."
+                            className="min-h-[120px] resize-none border-medical-200 focus-visible:ring-medical-500"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Consider differential diagnoses, potential severity, duration, and other relevant factors
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </CardContent>
+                <CardFooter className="flex justify-end pb-6">
+                  <Button 
+                    type="button" 
+                    onClick={goToNextTab}
+                    className="bg-medical-600 hover:bg-medical-700 text-white"
+                  >
+                    Next <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </CardFooter>
+              </TabsContent>
               
-            {/* Patient Information Tab */}
-            <TabsContent value="patient-info" className="p-0 m-0">
-              <CardContent className="space-y-6 pt-6">
-                <div className="grid gap-6 md:grid-cols-2">
-                  <FormField
-                    control={form.control}
-                    name="patientName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-md font-medium">Patient Name</FormLabel>
-                        <FormControl>
-                          <Input 
-                            placeholder="Patient name" 
-                            {...field} 
-                            className="border-medical-200 focus-visible:ring-medical-500"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="patientMRN"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-md font-medium">Medical Record Number (Optional)</FormLabel>
-                        <FormControl>
-                          <Input 
-                            placeholder="MRN" 
-                            {...field} 
-                            className="border-medical-200 focus-visible:ring-medical-500"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="grid gap-6 md:grid-cols-2">
-                  <FormField
-                    control={form.control}
-                    name="patientAge"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-md font-medium">Age</FormLabel>
-                        <FormControl>
-                          <Input 
-                            type="number" 
-                            placeholder="Age" 
-                            {...field} 
-                            className="border-medical-200 focus-visible:ring-medical-500"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="patientGender"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-md font-medium">Gender</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="border-medical-200 focus-visible:ring-medical-500">
-                              <SelectValue placeholder="Select gender" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="male">Male</SelectItem>
-                            <SelectItem value="female">Female</SelectItem>
-                            <SelectItem value="other">Other</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </CardContent>
-              <CardFooter className="flex justify-between pb-6">
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  onClick={goToPreviousTab}
-                  className="border-medical-300 hover:bg-medical-50"
-                >
-                  <ArrowLeft className="mr-2 h-4 w-4" /> Previous
-                </Button>
-                <Button 
-                  type="button" 
-                  onClick={goToNextTab}
-                  className="bg-medical-600 hover:bg-medical-700 text-white"
-                >
-                  Next <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </CardFooter>
-            </TabsContent>
-              
-            {/* Clinical Details Tab */}
-            <TabsContent value="clinical-details" className="p-0 m-0">
-              <CardContent className="space-y-8 pt-6">
-                {/* History Section */}
-                <FormField
-                  control={form.control}
-                  name="history"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-md font-medium">Patient History</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Describe the patient's medical history..."
-                          className="min-h-[120px] resize-none border-medical-200 focus-visible:ring-medical-500"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <Separator className="my-8" />
-
-                {/* Body Diagram and System Review Section */}
-                <div>
-                  <div className="flex items-center gap-2 mb-6">
-                    <CheckCheck className="h-5 w-5 text-medical-600" />
-                    <h3 className="text-lg font-medium">System Review & Body Diagram</h3>
-                  </div>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div className="space-y-4">
-                      <h4 className="font-medium text-medical-700">Interactive Body Diagram</h4>
-                      <InteractiveBodyDiagram 
-                        onBodyPartSelected={handleBodyPartSelected}
-                        className="bg-white p-4 rounded-lg border border-medical-200"
-                      />
-                    </div>
-                      
-                    <div className="space-y-4">
-                      <h4 className="font-medium text-medical-700">System Review Checklist</h4>
-                      <SymptomChecklist 
-                        onSelectionChange={handleSymptomChange} 
-                        initialSelections={systemSymptoms}
-                        highlightedSymptoms={highlightedSymptoms}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <Separator className="my-8" />
-
-                {/* Physical Exam and Vitals Section */}
-                <div>
-                  <div className="flex items-center gap-2 mb-6">
-                    <Stethoscope className="h-5 w-5 text-medical-600" />
-                    <h3 className="text-lg font-medium">Physical Examination & Vitals</h3>
-                  </div>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Patient Information Tab */}
+              <TabsContent value="patient-info" className="p-0 m-0">
+                <CardContent className="space-y-6 pt-6">
+                  <div className="grid gap-6 md:grid-cols-2">
                     <FormField
                       control={form.control}
-                      name="physicalExam"
+                      name="patientName"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-md font-medium">Physical Examination Findings</FormLabel>
+                          <FormLabel className="text-md font-medium">Patient Name</FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="Patient name" 
+                              {...field} 
+                              className="border-medical-200 focus-visible:ring-medical-500"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="patientMRN"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-md font-medium">Medical Record Number (Optional)</FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="MRN" 
+                              {...field} 
+                              className="border-medical-200 focus-visible:ring-medical-500"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className="grid gap-6 md:grid-cols-2">
+                    <FormField
+                      control={form.control}
+                      name="patientAge"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-md font-medium">Age</FormLabel>
+                          <FormControl>
+                            <Input 
+                              type="number" 
+                              placeholder="Age" 
+                              {...field} 
+                              className="border-medical-200 focus-visible:ring-medical-500"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="patientGender"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-md font-medium">Gender</FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="border-medical-200 focus-visible:ring-medical-500">
+                                <SelectValue placeholder="Select gender" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="male">Male</SelectItem>
+                              <SelectItem value="female">Female</SelectItem>
+                              <SelectItem value="other">Other</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </CardContent>
+                <CardFooter className="flex justify-between pb-6">
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={goToPreviousTab}
+                    className="border-medical-300 hover:bg-medical-50"
+                  >
+                    <ArrowLeft className="mr-2 h-4 w-4" /> Previous
+                  </Button>
+                  <Button 
+                    type="button" 
+                    onClick={goToNextTab}
+                    className="bg-medical-600 hover:bg-medical-700 text-white"
+                  >
+                    Next <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </CardFooter>
+              </TabsContent>
+              
+              {/* Clinical Details Tab */}
+              <TabsContent value="clinical-details" className="p-0 m-0">
+                <CardContent className="space-y-8 pt-6">
+                  {/* History Section */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2">
+                      <FileText className="h-5 w-5 text-medical-600" />
+                      <h3 className="text-lg font-medium text-medical-700">Patient History</h3>
+                    </div>
+                    <FormField
+                      control={form.control}
+                      name="history"
+                      render={({ field }) => (
+                        <FormItem>
                           <FormControl>
                             <Textarea
-                              placeholder="Document physical exam findings..."
-                              className="min-h-[240px] resize-none border-medical-200 focus-visible:ring-medical-500"
+                              placeholder="Describe the patient's medical history..."
+                              className="min-h-[120px] resize-none border-medical-200 focus-visible:ring-medical-500"
                               {...field}
                             />
                           </FormControl>
@@ -665,86 +615,146 @@ const CaseNew = () => {
                         </FormItem>
                       )}
                     />
-                      
-                    <div className="space-y-4">
-                      <h4 className="font-medium text-medical-700">Vital Signs</h4>
-                      <InteractiveVitalsCard 
-                        onVitalsChange={handleVitalsChange}
-                        initialVitals={vitals}
-                        patientAge={form.watch("patientAge") ? parseInt(form.watch("patientAge")) : undefined}
-                      />
-                    </div>
                   </div>
-                </div>
 
-                <Separator className="my-8" />
+                  <Separator className="my-8" />
 
-                {/* Lab Results and Radiology Section */}
-                <div>
-                  <div className="flex items-center gap-2 mb-6">
-                    <FileText className="h-5 w-5 text-medical-600" />
-                    <h3 className="text-lg font-medium">Laboratory & Imaging</h3>
-                  </div>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div className="space-y-4">
-                      <h4 className="font-medium text-medical-700">Laboratory Results</h4>
-                      <LabResultsCard 
-                        onLabResultsChange={handleLabResultsChange}
-                        initialResults={labResults}
-                      />
+                  {/* System Review & Body Diagram Section */}
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-2">
+                      <CheckCheck className="h-5 w-5 text-medical-600" />
+                      <h3 className="text-lg font-medium text-medical-700">System Review & Body Diagram</h3>
                     </div>
-                      
-                    <div className="space-y-4">
-                      <h4 className="font-medium text-medical-700">Radiology Studies</h4>
-                      <RadiologyCard 
-                        onRadiologyChange={handleRadiologyExamsChange}
-                        initialResults={radiologyExams}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter className="flex justify-between pb-6">
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  onClick={goToPreviousTab}
-                  className="border-medical-300 hover:bg-medical-50"
-                >
-                  <ArrowLeft className="mr-2 h-4 w-4" /> Previous
-                </Button>
-                <Button 
-                  type="button" 
-                  onClick={goToNextTab}
-                  className="bg-medical-600 hover:bg-medical-700 text-white"
-                >
-                  Next <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </CardFooter>
-            </TabsContent>
-              
-            {/* Learning Tab */}
-            <TabsContent value="learning" className="p-0 m-0">
-              <CardContent className="pt-6">
-                <FormField
-                  control={form.control}
-                  name="learningPoints"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-md font-medium">Learning Points</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Document key learning points from this case..."
-                          className="min-h-[120px] resize-none border-medical-200 focus-visible:ring-medical-500"
-                          {...field}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                      <div className="space-y-4">
+                        <h4 className="font-medium text-medical-700">Interactive Body Diagram</h4>
+                        <InteractiveBodyDiagram 
+                          onBodyPartSelected={handleBodyPartSelected}
+                          className="bg-white p-4 rounded-lg border border-medical-200"
                         />
-                      </FormControl>
-                      <FormDescription>
-                        Include important insights, literature references, or best practices
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                      </div>
+                      
+                      <div className="space-y-4">
+                        <h4 className="font-medium text-medical-700">System Review Checklist</h4>
+                        <SymptomChecklist 
+                          onSelectionChange={handleSymptomChange} 
+                          initialSelections={systemSymptoms}
+                          highlightedSymptoms={highlightedSymptoms}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <Separator className="my-8" />
+
+                  {/* Physical Exam & Vitals Section */}
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-2">
+                      <Stethoscope className="h-5 w-5 text-medical-600" />
+                      <h3 className="text-lg font-medium text-medical-700">Physical Examination & Vitals</h3>
+                    </div>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                      <FormField
+                        control={form.control}
+                        name="physicalExam"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-md font-medium">Physical Examination Findings</FormLabel>
+                            <FormControl>
+                              <Textarea
+                                placeholder="Document physical exam findings..."
+                                className="min-h-[240px] resize-none border-medical-200 focus-visible:ring-medical-500"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <div className="space-y-4">
+                        <h4 className="font-medium text-medical-700">Vital Signs</h4>
+                        <InteractiveVitalsCard 
+                          onVitalsChange={handleVitalsChange}
+                          initialVitals={vitals}
+                          patientAge={form.watch("patientAge") ? parseInt(form.watch("patientAge")) : undefined}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <Separator className="my-8" />
+
+                  {/* Lab Results & Radiology Section */}
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-2">
+                      <FileText className="h-5 w-5 text-medical-600" />
+                      <h3 className="text-lg font-medium text-medical-700">Laboratory & Imaging</h3>
+                    </div>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                      <div className="space-y-4">
+                        <h4 className="font-medium text-medical-700">Laboratory Results</h4>
+                        <LabResultsCard 
+                          onLabResultsChange={handleLabResultsChange}
+                          initialResults={labResults}
+                        />
+                      </div>
+                      
+                      <div className="space-y-4">
+                        <h4 className="font-medium text-medical-700">Radiology Studies</h4>
+                        <RadiologyCard 
+                          onRadiologyChange={handleRadiologyExamsChange}
+                          initialResults={radiologyExams}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+                <CardFooter className="flex justify-between pb-6">
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={goToPreviousTab}
+                    className="border-medical-300 hover:bg-medical-50"
+                  >
+                    <ArrowLeft className="mr-2 h-4 w-4" /> Previous
+                  </Button>
+                  <Button 
+                    type="button" 
+                    onClick={goToNextTab}
+                    className="bg-medical-600 hover:bg-medical-700 text-white"
+                  >
+                    Next <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </CardFooter>
+              </TabsContent>
+              
+              {/* Learning Tab */}
+              <TabsContent value="learning" className="p-0 m-0">
+                <CardContent className="space-y-6 pt-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Clipboard className="h-5 w-5 text-medical-600" />
+                    <h3 className="text-lg font-medium text-medical-700">Learning Points</h3>
+                  </div>
+                  <FormField
+                    control={form.control}
+                    name="learningPoints"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Document key learning points from this case..."
+                            className="min-h-[120px] resize-none border-medical-200 focus-visible:ring-medical-500"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Include important insights, literature references, or best practices
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </CardContent>
                 <CardFooter className="flex justify-between pb-6">
                   <Button 
