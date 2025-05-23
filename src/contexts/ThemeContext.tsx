@@ -1,15 +1,3 @@
-import { createContext, useEffect, useState } from "react";
-
-// Define the props for the ThemeProvider component
-interface ThemeProviderProps {
-  children: React.ReactNode;
-}
-
-// Define the type for the theme context
-interface ThemeContextType {
-  theme: string;
-  setTheme: (theme: string) => void;
-}
 
 import { createContext, useContext, useEffect, useState } from "react";
 import { useLocalStorage } from "../hooks/use-local-storage";
