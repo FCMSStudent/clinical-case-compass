@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { Progress } from "@/components/ui/progress";
 
 const Dashboard = () => {
   const { cases, isLoading, error } = useSupabaseCases();
@@ -170,12 +171,10 @@ const Dashboard = () => {
                       <span className="font-medium">{specialty}</span>
                       <span className="text-muted-foreground">{count} case{count !== 1 ? 's' : ''}</span>
                     </div>
-                    <div className="h-2 bg-muted rounded-full overflow-hidden">
-                      <div 
-                        className="h-full bg-primary rounded-full" 
-                        style={{ width: `${Math.min((count / cases.length) * 100, 100)}%` }} 
-                      />
-                    </div>
+                    <Progress 
+                      value={cases.length > 0 ? Math.min((count / cases.length) * 100, 100) : 0} 
+                      className="h-2"
+                    />
                   </div>
                 ))
               ) : (
@@ -184,9 +183,7 @@ const Dashboard = () => {
                     <span className="font-medium">No specialties yet</span>
                     <span className="text-muted-foreground">0 cases</span>
                   </div>
-                  <div className="h-2 bg-muted rounded-full overflow-hidden">
-                    <div className="h-full bg-primary rounded-full" style={{ width: "0%" }} />
-                  </div>
+                  <Progress value={0} className="h-2" />
                 </div>
               )}
             </div>
