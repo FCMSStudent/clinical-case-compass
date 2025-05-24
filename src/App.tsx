@@ -15,6 +15,17 @@ import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import { PrivateRoute } from "./components/auth/PrivateRoute";
 import { UserProfileDisplay } from "./components/auth/UserProfileDisplay";
+import { useEffect } from "react";
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
+
+// Configure NProgress
+NProgress.configure({
+  showSpinner: false,
+  minimum: 0.1,
+  speed: 200,
+  trickleSpeed: 200,
+});
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -34,76 +45,92 @@ const queryClient = new QueryClient({
   },
 });
 
-const App = () => (
-  <ErrorBoundary>
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <AuthProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/auth" element={<Auth />} />
-              <Route path="/" element={<Navigate to="/cases" replace />} />
-              <Route 
-                path="/cases" 
-                element={
-                  <PrivateRoute>
-                    <AppLayout>
-                      <ErrorBoundary>
-                        <Cases />
-                        <UserProfileDisplay />
-                      </ErrorBoundary>
-                    </AppLayout>
-                  </PrivateRoute>
-                } 
-              />
-              <Route 
-                path="/cases/new" 
-                element={
-                  <PrivateRoute>
-                    <AppLayout>
-                      <ErrorBoundary>
-                        <CaseNew />
-                        <UserProfileDisplay />
-                      </ErrorBoundary>
-                    </AppLayout>
-                  </PrivateRoute>
-                } 
-              />
-              <Route 
-                path="/cases/edit/:id" 
-                element={
-                  <PrivateRoute>
-                    <AppLayout>
-                      <ErrorBoundary>
-                        <CaseEdit />
-                        <UserProfileDisplay />
-                      </ErrorBoundary>
-                    </AppLayout>
-                  </PrivateRoute>
-                } 
-              />
-              <Route 
-                path="/cases/:id" 
-                element={
-                  <PrivateRoute>
-                    <AppLayout>
-                      <ErrorBoundary>
-                        <CaseDetail />
-                        <UserProfileDisplay />
-                      </ErrorBoundary>
-                    </AppLayout>
-                  </PrivateRoute>
-                } 
-              />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </AuthProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
-  </ErrorBoundary>
-);
+const App = () => {
+  useEffect(() => {
+    // Start loading indicator on route changes
+    const handleStart = () => NProgress.start();
+    const handleComplete = () => NProgress.done();
+
+    // Listen for route changes (simplified approach)
+    window.addEventListener('beforeunload', handleStart);
+    
+    return () => {
+      window.removeEventListener('beforeunload', handleStart);
+      handleComplete();
+    };
+  }, []);
+
+  return (
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <AuthProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/auth" element={<Auth />} />
+                <Route path="/" element={<Navigate to="/cases" replace />} />
+                <Route 
+                  path="/cases" 
+                  element={
+                    <PrivateRoute>
+                      <AppLayout>
+                        <ErrorBoundary>
+                          <Cases />
+                          <UserProfileDisplay />
+                        </ErrorBoundary>
+                      </AppLayout>
+                    </PrivateRoute>
+                  } 
+                />
+                <Route 
+                  path="/cases/new" 
+                  element={
+                    <PrivateRoute>
+                      <AppLayout>
+                        <ErrorBoundary>
+                          <CaseNew />
+                          <UserProfileDisplay />
+                        </ErrorBoundary>
+                      </AppLayout>
+                    </PrivateRoute>
+                  } 
+                />
+                <Route 
+                  path="/cases/edit/:id" 
+                  element={
+                    <PrivateRoute>
+                      <AppLayout>
+                        <ErrorBoundary>
+                          <CaseEdit />
+                          <UserProfileDisplay />
+                        </ErrorBoundary>
+                      </AppLayout>
+                    </PrivateRoute>
+                  } 
+                />
+                <Route 
+                  path="/cases/:id" 
+                  element={
+                    <PrivateRoute>
+                      <AppLayout>
+                        <ErrorBoundary>
+                          <CaseDetail />
+                          <UserProfileDisplay />
+                        </ErrorBoundary>
+                      </AppLayout>
+                    </PrivateRoute>
+                  } 
+                />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </AuthProvider>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
+  );
+};
 
 export default App;

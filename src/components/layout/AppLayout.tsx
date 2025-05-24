@@ -30,8 +30,8 @@ export function AppLayout({ children }: AppLayoutProps) {
       />
       
       <div className="flex-1 transition-all duration-300">
-        {/* Mobile menu button */}
-        <div className="flex items-center p-4 md:hidden">
+        {/* Fixed Mobile Header */}
+        <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-background border-b md:hidden">
           <Button
             variant="outline"
             size="icon" 
@@ -40,6 +40,16 @@ export function AppLayout({ children }: AppLayoutProps) {
             aria-label="Toggle sidebar"
           >
             <Menu className="h-6 w-6" />
+          </Button>
+          
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={toggleTheme}
+            className="rounded-md"
+            aria-label={theme === 'dark' ? "Switch to light mode" : "Switch to dark mode"}
+          >
+            {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button>
         </div>
 
@@ -65,7 +75,7 @@ export function AppLayout({ children }: AppLayoutProps) {
           </Button>
         </div>
 
-        <main className="px-4 py-6 md:px-6">
+        <main className="px-4 py-6 md:px-6 pt-20 md:pt-6">
           {children}
         </main>
       </div>
