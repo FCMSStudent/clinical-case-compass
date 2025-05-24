@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Menu, Moon, Sun } from "lucide-react";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { useTheme } from "../../contexts/ThemeContext";
+import { cn } from "@/lib/utils"; // Import cn utility
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -38,7 +39,10 @@ export function AppLayout({ children }: AppLayoutProps) {
         onClose={handleCloseSidebar} 
       />
       
-      <div className="flex-1 transition-all duration-300">
+      <div className={cn(
+        "flex-1 transition-all duration-300",
+        isSidebarOpen ? "md:ml-64" : "md:ml-0"
+      )}>
         {/* Mobile menu button */}
         <div className="flex items-center p-4 md:hidden">
           <Button
