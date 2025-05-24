@@ -129,7 +129,7 @@ const Dashboard = () => {
         ))}
       </div>
       
-      <RecentCasesList /> {/* Removed cases prop */}
+      <RecentCasesList cases={recentCases} />
       
       <div className="grid gap-6 md:grid-cols-2">
         <Card className="hover:shadow-md transition-shadow">
