@@ -20,7 +20,7 @@ export const CaseCard = memo<CaseCardProps>(({ medicalCase, className }) => {
     <Card className={cn("transition-all duration-200 hover:shadow-lg flex flex-col h-full", className)}>
       <CardHeader className="pb-3 flex-shrink-0">
         <div className="flex justify-between items-start gap-3">
-          <CardTitle className="text-lg text-medical-700 line-clamp-2 leading-tight">
+          <CardTitle className="text-lg line-clamp-2 leading-tight">
             {medicalCase.title}
           </CardTitle>
           <div className="text-xs text-muted-foreground whitespace-nowrap flex-shrink-0">
@@ -35,7 +35,7 @@ export const CaseCard = memo<CaseCardProps>(({ medicalCase, className }) => {
       <CardContent className="flex-1 flex flex-col">
         <div className="space-y-3 flex-1">
           <div>
-            <div className="text-sm font-medium text-medical-600 mb-1">Chief Complaint</div>
+            <div className="text-sm font-medium text-primary mb-1">Chief Complaint</div>
             <p className="text-sm text-muted-foreground line-clamp-2">
               {medicalCase.chiefComplaint}
             </p>
@@ -43,7 +43,7 @@ export const CaseCard = memo<CaseCardProps>(({ medicalCase, className }) => {
           
           {primaryDiagnosis && (
             <div>
-              <div className="text-sm font-medium text-medical-600 mb-1">Diagnosis</div>
+              <div className="text-sm font-medium text-primary mb-1">Diagnosis</div>
               <p className="text-sm text-muted-foreground line-clamp-2">
                 {primaryDiagnosis.name}
                 {primaryDiagnosis.status !== "confirmed" && (
@@ -69,7 +69,7 @@ export const CaseCard = memo<CaseCardProps>(({ medicalCase, className }) => {
               </span>
             ))}
             {medicalCase.tags && medicalCase.tags.length > 2 && (
-              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-medical-100 text-medical-600">
+              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground">
                 +{medicalCase.tags.length - 2}
               </span>
             )}
@@ -77,7 +77,7 @@ export const CaseCard = memo<CaseCardProps>(({ medicalCase, className }) => {
           <div className="flex justify-end">
             <Link 
               to={`/cases/${medicalCase.id}`} 
-              className="text-xs font-medium text-medical-600 hover:text-medical-800 hover:underline transition-colors"
+              className="text-xs font-medium text-primary hover:underline transition-colors"
             >
               View details →
             </Link>
