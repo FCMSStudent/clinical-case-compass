@@ -9,6 +9,193 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      case_tag_assignments: {
+        Row: {
+          case_id: string
+          id: string
+          tag_id: string
+        }
+        Insert: {
+          case_id: string
+          id?: string
+          tag_id: string
+        }
+        Update: {
+          case_id?: string
+          id?: string
+          tag_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "case_tag_assignments_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "medical_cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "case_tag_assignments_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "case_tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      case_tags: {
+        Row: {
+          color: string
+          created_at: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          color?: string
+          created_at?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          color?: string
+          created_at?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      diagnoses: {
+        Row: {
+          case_id: string
+          created_at: string | null
+          id: string
+          name: string
+          notes: string | null
+          status: Database["public"]["Enums"]["diagnosis_status"]
+        }
+        Insert: {
+          case_id: string
+          created_at?: string | null
+          id?: string
+          name: string
+          notes?: string | null
+          status?: Database["public"]["Enums"]["diagnosis_status"]
+        }
+        Update: {
+          case_id?: string
+          created_at?: string | null
+          id?: string
+          name?: string
+          notes?: string | null
+          status?: Database["public"]["Enums"]["diagnosis_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "diagnoses_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "medical_cases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      medical_cases: {
+        Row: {
+          chief_complaint: string
+          chief_complaint_analysis: string | null
+          created_at: string | null
+          history: string | null
+          id: string
+          lab_tests: Json | null
+          learning_points: string | null
+          patient_id: string
+          physical_exam: string | null
+          radiology_exams: Json | null
+          symptoms: Json | null
+          title: string
+          updated_at: string | null
+          urinary_symptoms: string[] | null
+          user_id: string
+          vitals: Json | null
+        }
+        Insert: {
+          chief_complaint: string
+          chief_complaint_analysis?: string | null
+          created_at?: string | null
+          history?: string | null
+          id?: string
+          lab_tests?: Json | null
+          learning_points?: string | null
+          patient_id: string
+          physical_exam?: string | null
+          radiology_exams?: Json | null
+          symptoms?: Json | null
+          title: string
+          updated_at?: string | null
+          urinary_symptoms?: string[] | null
+          user_id: string
+          vitals?: Json | null
+        }
+        Update: {
+          chief_complaint?: string
+          chief_complaint_analysis?: string | null
+          created_at?: string | null
+          history?: string | null
+          id?: string
+          lab_tests?: Json | null
+          learning_points?: string | null
+          patient_id?: string
+          physical_exam?: string | null
+          radiology_exams?: Json | null
+          symptoms?: Json | null
+          title?: string
+          updated_at?: string | null
+          urinary_symptoms?: string[] | null
+          user_id?: string
+          vitals?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "medical_cases_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      patients: {
+        Row: {
+          age: number
+          created_at: string | null
+          gender: Database["public"]["Enums"]["gender_type"]
+          id: string
+          medical_record_number: string | null
+          name: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          age: number
+          created_at?: string | null
+          gender: Database["public"]["Enums"]["gender_type"]
+          id?: string
+          medical_record_number?: string | null
+          name: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          age?: number
+          created_at?: string | null
+          gender?: Database["public"]["Enums"]["gender_type"]
+          id?: string
+          medical_record_number?: string | null
+          name?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -33,6 +220,44 @@ export type Database = {
         }
         Relationships: []
       }
+      resources: {
+        Row: {
+          case_id: string
+          created_at: string | null
+          id: string
+          notes: string | null
+          title: string
+          type: Database["public"]["Enums"]["resource_type"]
+          url: string | null
+        }
+        Insert: {
+          case_id: string
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+          title: string
+          type?: Database["public"]["Enums"]["resource_type"]
+          url?: string | null
+        }
+        Update: {
+          case_id?: string
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+          title?: string
+          type?: Database["public"]["Enums"]["resource_type"]
+          url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "resources_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "medical_cases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -41,7 +266,9 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      diagnosis_status: "confirmed" | "differential" | "ruled_out"
+      gender_type: "male" | "female" | "other"
+      resource_type: "guideline" | "textbook" | "article" | "video" | "other"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -156,6 +383,10 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      diagnosis_status: ["confirmed", "differential", "ruled_out"],
+      gender_type: ["male", "female", "other"],
+      resource_type: ["guideline", "textbook", "article", "video", "other"],
+    },
   },
 } as const

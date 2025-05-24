@@ -4,13 +4,14 @@ import { MedicalCase } from "@/types/case";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { memo } from "react";
 
 interface CaseCardProps {
   medicalCase: MedicalCase;
   className?: string;
 }
 
-export function CaseCard({ medicalCase, className }: CaseCardProps) {
+export const CaseCard = memo<CaseCardProps>(({ medicalCase, className }) => {
   const primaryDiagnosis = medicalCase.diagnoses && medicalCase.diagnoses.length > 0
     ? (medicalCase.diagnoses.find(d => d.status === "confirmed") || medicalCase.diagnoses[0])
     : null;
@@ -85,4 +86,6 @@ export function CaseCard({ medicalCase, className }: CaseCardProps) {
       </CardContent>
     </Card>
   );
-}
+});
+
+CaseCard.displayName = "CaseCard";
