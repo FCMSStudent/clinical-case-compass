@@ -13,7 +13,7 @@ export interface CaseTag {
   color: string;
 }
 
-export type DiagnosisStatus = "confirmed" | "provisional" | "differential";
+export type DiagnosisStatus = "confirmed" | "differential" | "ruled_out";
 
 export interface Diagnosis {
   id: string;
@@ -97,3 +97,21 @@ export const SPECIALTIES = [
   { id: "urology", name: "Urology" },
   { id: "vascular", name: "Vascular Medicine" }
 ];
+
+// API Error types
+export interface ApiError {
+  message: string;
+  code?: string;
+  details?: any;
+}
+
+// Form state types
+export interface FormErrors {
+  [key: string]: string | undefined;
+}
+
+export interface LoadingState {
+  isLoading: boolean;
+  isSubmitting: boolean;
+  isDeleting: boolean;
+}
