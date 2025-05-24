@@ -12,30 +12,21 @@ interface AppLayoutProps {
 }
 
 export function AppLayout({ children }: AppLayoutProps) {
-  // Use localStorage to persist sidebar state
   const [isSidebarOpen, setIsSidebarOpen] = useLocalStorage("sidebar:open", true);
-  // Separate state for mobile sidebar
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const { theme, setTheme } = useTheme();
 
-  const handleCloseSidebar = () => {
-    setIsMobileSidebarOpen(false);
-  };
-
-  const handleToggleMobileSidebar = () => {
-    setIsMobileSidebarOpen((prev) => !prev);
-  };
-
-  const handleToggleSidebar = () => {
-    setIsSidebarOpen((prev) => !prev);
-  };
+  const toggleMobileSidebar = () => setIsMobileSidebarOpen(prev => !prev);
+  const toggleSidebar = () => setIsSidebarOpen(prev => !prev);
+  const closeMobileSidebar = () => setIsMobileSidebarOpen(false);
+  const toggleTheme = () => setTheme(theme === 'dark' ? 'light' : 'dark');
 
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar 
         isOpen={isMobileSidebarOpen} 
         isDesktopOpen={isSidebarOpen}
-        onClose={handleCloseSidebar} 
+        onClose={closeMobileSidebar} 
       />
       
       <div className="flex-1 transition-all duration-300">
@@ -44,7 +35,7 @@ export function AppLayout({ children }: AppLayoutProps) {
           <Button
             variant="outline"
             size="icon" 
-            onClick={handleToggleMobileSidebar}
+            onClick={toggleMobileSidebar}
             className="rounded-md"
             aria-label="Toggle sidebar"
           >
@@ -52,12 +43,12 @@ export function AppLayout({ children }: AppLayoutProps) {
           </Button>
         </div>
 
-        {/* Desktop toggle button */}
+        {/* Desktop controls */}
         <div className="fixed top-4 left-4 z-30 hidden md:flex gap-2">
           <Button
             variant="outline"
             size="icon"
-            onClick={handleToggleSidebar}
+            onClick={toggleSidebar}
             className="shadow-sm bg-background hover:bg-accent"
             aria-label={isSidebarOpen ? "Hide sidebar" : "Show sidebar"}
           >
@@ -66,7 +57,7 @@ export function AppLayout({ children }: AppLayoutProps) {
           <Button
             variant="outline"
             size="icon"
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            onClick={toggleTheme}
             className="shadow-sm bg-background hover:bg-accent"
             aria-label={theme === 'dark' ? "Switch to light mode" : "Switch to dark mode"}
           >
@@ -74,11 +65,11 @@ export function AppLayout({ children }: AppLayoutProps) {
           </Button>
         </div>
 
-        {/* Main content area */}
-        <main className={`px-4 py-6 md:px-6`}>
+        <main className="px-4 py-6 md:px-6">
           {children}
         </main>
       </div>
+      
       <Toaster position="top-right" richColors />
     </div>
   );

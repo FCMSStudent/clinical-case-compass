@@ -4,11 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link, useLocation } from "react-router-dom";
-import {
-  FileText,
-  PlusCircle,
-  X,
-} from "lucide-react";
+import { FileText, PlusCircle, X } from "lucide-react";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   isOpen: boolean;
@@ -16,24 +12,22 @@ interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   onClose: () => void;
 }
 
+const routes = [
+  {
+    label: "All Cases",
+    icon: FileText,
+    href: "/cases",
+  },
+  {
+    label: "New Case",
+    icon: PlusCircle,
+    href: "/cases/new",
+  }
+];
+
 export function Sidebar({ className, isOpen, isDesktopOpen = true, onClose, ...props }: SidebarProps) {
   const { pathname } = useLocation();
   const { user, signOut } = useAuth();
-
-  const routes = [
-    {
-      label: "All Cases",
-      icon: FileText,
-      href: "/cases",
-      active: pathname === "/cases",
-    },
-    {
-      label: "New Case",
-      icon: PlusCircle,
-      href: "/cases/new",
-      active: pathname === "/cases/new",
-    }
-  ];
 
   return (
     <>
@@ -58,6 +52,7 @@ export function Sidebar({ className, isOpen, isDesktopOpen = true, onClose, ...p
         )}
         {...props}
       >
+        {/* Header */}
         <div className="flex h-14 items-center border-b px-4">
           <Link
             to="/"
@@ -76,6 +71,8 @@ export function Sidebar({ className, isOpen, isDesktopOpen = true, onClose, ...p
             <X className="h-4 w-4" />
           </Button>
         </div>
+
+        {/* Navigation */}
         <ScrollArea className="flex-1 py-4">
           <nav className="grid gap-1 px-2">
             {routes.map((route) => (
@@ -85,7 +82,7 @@ export function Sidebar({ className, isOpen, isDesktopOpen = true, onClose, ...p
                 onClick={onClose}
                 className={cn(
                   "group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
-                  route.active ? "bg-accent text-accent-foreground" : "text-foreground"
+                  pathname === route.href ? "bg-accent text-accent-foreground" : "text-foreground"
                 )}
               >
                 <route.icon className="h-5 w-5" />
@@ -94,6 +91,8 @@ export function Sidebar({ className, isOpen, isDesktopOpen = true, onClose, ...p
             ))}
           </nav>
         </ScrollArea>
+
+        {/* User section */}
         {user && (
           <div className="border-t p-4">
             <div className="flex flex-col gap-2">
