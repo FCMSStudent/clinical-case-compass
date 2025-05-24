@@ -92,7 +92,10 @@ export function useSupabaseCases() {
       const { data: patientData, error: patientError } = await supabase
         .from('patients')
         .insert({
-          ...caseData.patient,
+          name: caseData.patient.name,
+          age: caseData.patient.age,
+          gender: caseData.patient.gender,
+          medical_record_number: caseData.patient.medicalRecordNumber,
           user_id: user.id
         })
         .select()
@@ -100,7 +103,7 @@ export function useSupabaseCases() {
 
       if (patientError) throw patientError;
 
-      // Create case
+      // Create case - using the exact fields that exist in the database
       const { data: caseDbData, error: caseError } = await supabase
         .from('medical_cases')
         .insert({
@@ -129,7 +132,9 @@ export function useSupabaseCases() {
           .from('diagnoses')
           .insert(
             caseData.diagnoses.map(diagnosis => ({
-              ...diagnosis,
+              name: diagnosis.name,
+              status: diagnosis.status,
+              notes: diagnosis.notes,
               case_id: caseDbData.id
             }))
           );
@@ -143,7 +148,10 @@ export function useSupabaseCases() {
           .from('resources')
           .insert(
             caseData.resources.map(resource => ({
-              ...resource,
+              title: resource.title,
+              type: resource.type,
+              url: resource.url,
+              notes: resource.notes,
               case_id: caseDbData.id
             }))
           );
