@@ -104,7 +104,7 @@ export function useSupabaseCases() {
 
       if (patientError) throw patientError;
 
-      // Create case - explicitly type the insert object
+      // Create case - explicitly type the insert object and cast arrays to Json
       const caseInsertData: DbCaseInsert = {
         title: caseData.case.title,
         chief_complaint: caseData.case.chiefComplaint,
@@ -115,8 +115,8 @@ export function useSupabaseCases() {
         vitals: caseData.case.vitals || {},
         symptoms: caseData.case.symptoms || {},
         urinary_symptoms: caseData.case.urinarySymptoms || [],
-        lab_tests: caseData.case.labTests || [],
-        radiology_exams: caseData.case.radiologyExams || [],
+        lab_tests: (caseData.case.labTests || []) as any,
+        radiology_exams: (caseData.case.radiologyExams || []) as any,
         user_id: user.id,
         patient_id: patientData.id
       };
