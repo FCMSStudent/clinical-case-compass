@@ -105,7 +105,7 @@ const Cases = () => {
         title="Clinical Cases" 
         description="Manage and browse your documented cases"
       >
-        <Button asChild className="bg-medical-600 hover:bg-medical-700 text-white">
+        <Button asChild>
           <Link to="/cases/new">
             <ClipboardList className="mr-2 h-4 w-4" /> 
             New Case
@@ -113,7 +113,7 @@ const Cases = () => {
         </Button>
       </PageHeader>
       
-      <Card className="border-medical-200 shadow-md p-6 mb-6">
+      <Card className="shadow-md p-6 mb-6">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -121,11 +121,11 @@ const Cases = () => {
               placeholder="Search cases by title, patient, complaint, or diagnosis..."
               value={searchTerm}
               onChange={handleSearch}
-              className="pl-10 border-medical-200 focus-visible:ring-medical-500"
+              className="pl-10 focus-visible:ring-ring"
             />
           </div>
           <Select value={selectedTag || "all"} onValueChange={handleTagChange}>
-            <SelectTrigger className="w-full md:w-[180px] border-medical-200 focus-visible:ring-medical-500">
+            <SelectTrigger className="w-full md:w-[180px] focus-visible:ring-ring">
               <SelectValue placeholder="Filter by specialty" />
             </SelectTrigger>
             <SelectContent>
@@ -141,7 +141,7 @@ const Cases = () => {
       </Card>
 
       {filteredCases.length === 0 ? (
-        <Card className="bg-background border-medical-200 shadow-md rounded-lg flex flex-col items-center justify-center py-16 px-4 text-center">
+        <Card className="bg-background shadow-md rounded-lg flex flex-col items-center justify-center py-16 px-4 text-center">
           <ClipboardList className="h-12 w-12 text-medical-400 mb-4" />
           <h3 className="text-lg font-medium mb-2">No cases found</h3>
           <p className="text-muted-foreground max-w-sm mb-6">
@@ -149,7 +149,7 @@ const Cases = () => {
               ? "Try adjusting your search filters or adding a new case"
               : "Start documenting your clinical cases to see them here"}
           </p>
-          <Button asChild className="bg-medical-600 hover:bg-medical-700 text-white">
+          <Button asChild>
             <Link to="/cases/new">Add New Case</Link>
           </Button>
         </Card>
@@ -157,7 +157,7 @@ const Cases = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 auto-rows-fr">
           {filteredCases.map((medCase) => (
             <div key={medCase.id} className="flex">
-              <CaseCard medicalCase={medCase} className="border-medical-200 shadow-md flex-1" />
+              <CaseCard medicalCase={medCase} className="shadow-md flex-1" />
             </div>
           ))}
         </div>
