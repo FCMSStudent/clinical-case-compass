@@ -77,8 +77,10 @@ const App = () => {
                     <PrivateRoute>
                       <AppLayout>
                         <ErrorBoundary>
-                          <Cases />
-                          <UserProfileDisplay />
+                          <>
+                            <Cases />
+                            <UserProfileDisplay />
+                          </>
                         </ErrorBoundary>
                       </AppLayout>
                     </PrivateRoute>
@@ -90,8 +92,10 @@ const App = () => {
                     <PrivateRoute>
                       <AppLayout>
                         <ErrorBoundary>
-                          <CaseNew />
-                          <UserProfileDisplay />
+                          <>
+                            <CaseNew />
+                            <UserProfileDisplay />
+                          </>
                         </ErrorBoundary>
                       </AppLayout>
                     </PrivateRoute>
@@ -103,8 +107,10 @@ const App = () => {
                     <PrivateRoute>
                       <AppLayout>
                         <ErrorBoundary>
-                          <CaseEdit />
-                          <UserProfileDisplay />
+                          <>
+                            <CaseEdit />
+                            <UserProfileDisplay />
+                          </>
                         </ErrorBoundary>
                       </AppLayout>
                     </PrivateRoute>
@@ -116,8 +122,10 @@ const App = () => {
                     <PrivateRoute>
                       <AppLayout>
                         <ErrorBoundary>
-                          <CaseDetail />
-                          <UserProfileDisplay />
+                          <>
+                            <CaseDetail />
+                            <UserProfileDisplay />
+                          </>
                         </ErrorBoundary>
                       </AppLayout>
                     </PrivateRoute>
