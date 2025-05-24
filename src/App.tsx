@@ -14,7 +14,6 @@ import CaseEdit from "./pages/CaseEdit";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import { PrivateRoute } from "./components/auth/PrivateRoute";
-import { UserProfileDisplay } from "./components/auth/UserProfileDisplay";
 import { useEffect } from "react";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
@@ -77,10 +76,7 @@ const App = () => {
                     <PrivateRoute>
                       <AppLayout>
                         <ErrorBoundary>
-                          <>
-                            <Cases />
-                            <UserProfileDisplay />
-                          </>
+                          <Cases />
                         </ErrorBoundary>
                       </AppLayout>
                     </PrivateRoute>
@@ -92,10 +88,7 @@ const App = () => {
                     <PrivateRoute>
                       <AppLayout>
                         <ErrorBoundary>
-                          <>
-                            <CaseNew />
-                            <UserProfileDisplay />
-                          </>
+                          <CaseNew />
                         </ErrorBoundary>
                       </AppLayout>
                     </PrivateRoute>
@@ -107,10 +100,7 @@ const App = () => {
                     <PrivateRoute>
                       <AppLayout>
                         <ErrorBoundary>
-                          <>
-                            <CaseEdit />
-                            <UserProfileDisplay />
-                          </>
+                          <CaseEdit />
                         </ErrorBoundary>
                       </AppLayout>
                     </PrivateRoute>
@@ -122,10 +112,7 @@ const App = () => {
                     <PrivateRoute>
                       <AppLayout>
                         <ErrorBoundary>
-                          <>
-                            <CaseDetail />
-                            <UserProfileDisplay />
-                          </>
+                          <CaseDetail />
                         </ErrorBoundary>
                       </AppLayout>
                     </PrivateRoute>
