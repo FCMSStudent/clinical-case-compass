@@ -2,7 +2,7 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner"; // Changed import from useToast to sonner
 
 type AuthContextType = {
   session: Session | null;
@@ -20,7 +20,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const { toast } = useToast();
+  // const { toast } = useToast(); // Removed useToast hook
 
   useEffect(() => {
     // Set up auth state listener first
@@ -30,15 +30,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(currentSession?.user ?? null);
         
         if (event === 'SIGNED_IN') {
-          toast({
-            title: "Signed in successfully",
+          toast.success("Signed in successfully", {
             description: "Welcome to Medical Case Manager",
           });
         }
         
         if (event === 'SIGNED_OUT') {
-          toast({
-            title: "Signed out",
+          toast("Signed out", { // Using default toast type for info
             description: "You have been signed out",
           });
         }
@@ -55,16 +53,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => {
       subscription.unsubscribe();
     };
-  }, [toast]);
+  }, []); // Removed toast from dependency array as sonner's toast is stable
 
   const signIn = async (email: string, password: string) => {
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
+      // Sonner doesn't typically show a success toast on sign-in by default in examples
+      // but if desired, it can be added here:
+      // toast.success("Signed in successfully"); 
     } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Sign in failed",
+      toast.error("Sign in failed", {
         description: error.message || "An error occurred during sign in",
       });
       throw error;
@@ -73,8 +72,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signUp = async (email: string, password: string, fullName?: string) => {
     try {
-      const { error } = await supabase.auth.signUp({ 
-        email, 
+      const { error } = await supabase.auth.signUp({
+        email,
         password,
         options: {
           data: { full_name: fullName }
@@ -82,14 +81,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
       if (error) throw error;
       
-      toast({
-        title: "Account created",
+      toast("Account created", { // Using default toast type for info
         description: "Please check your email to verify your account",
       });
     } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Sign up failed",
+      toast.error("Sign up failed", {
         description: error.message || "An error occurred during sign up",
       });
       throw error;
@@ -99,10 +95,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signOut = async () => {
     try {
       await supabase.auth.signOut();
+      // Sonner doesn't typically show a success toast on sign-out by default
+      // but if desired, it can be added here:
+      // toast("Signed out");
     } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Sign out failed",
+      toast.error("Sign out failed", {
         description: error.message || "An error occurred during sign out",
       });
     }
@@ -116,14 +113,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       if (error) throw error;
       
-      toast({
-        title: "Profile updated",
+      toast.success("Profile updated", {
         description: "Your profile has been updated successfully",
       });
     } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Profile update failed",
+      toast.error("Profile update failed", {
         description: error.message || "An error occurred while updating your profile",
       });
       throw error;
