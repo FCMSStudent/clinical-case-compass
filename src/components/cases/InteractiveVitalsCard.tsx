@@ -48,9 +48,9 @@ const VitalSlider = memo(({
 }) => {
   // Status color and classes for the value display
   const getStatusColor = (value: number, range: VitalRange): string => {
-    if (value < range.min) return "text-blue-500";
-    if (value > range.max) return "text-red-500";
-    return "text-green-500";
+    if (value < range.min) return "text-blue-500"; // Kept for now
+    if (value > range.max) return "text-destructive";
+    return "text-primary";
   };
 
   const getStatusIcon = (value: number, range: VitalRange) => {
@@ -87,11 +87,11 @@ const VitalSlider = memo(({
   const pulseAnimation = vital.name === "heartRate" ? "animate-pulse" : "";
 
   return (
-    <div key={vital.name} className="p-3 bg-gray-50 rounded-lg border border-gray-100 transition-all hover:shadow-sm">
+    <div key={vital.name} className="p-3 bg-muted/50 rounded-lg border border-border transition-all hover:shadow-sm">
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
           {vital.icon && (
-            <span className={cn("text-medical-600", pulseAnimation)}>
+            <span className={cn("text-primary", pulseAnimation)}>
               {vital.icon}
             </span>
           )}
@@ -116,15 +116,15 @@ const VitalSlider = memo(({
               <div className="space-y-1">
                 <p className="font-medium">Normal range: {vital.range.min}-{vital.range.max} {vital.unit}</p>
                 {vital.value < vital.range.min && (
-                  <p className="text-blue-600">Below normal range</p>
+                  <p className="text-blue-600">Below normal range</p> // Kept for now
                 )}
                 {vital.value > vital.range.max && (
-                  <p className="text-red-600">Above normal range</p>
+                  <p className="text-destructive">Above normal range</p>
                 )}
                 {vital.value >= vital.range.min && vital.value <= vital.range.max && (
-                  <p className="text-green-600">Within normal range</p>
+                  <p className="text-primary">Within normal range</p>
                 )}
-                {vital.info && <p className="text-xs text-gray-600">{vital.info}</p>}
+                {vital.info && <p className="text-xs text-muted-foreground">{vital.info}</p>}
               </div>
             </TooltipContent>
           </Tooltip>
@@ -132,7 +132,7 @@ const VitalSlider = memo(({
       </div>
       
       <div className="relative pt-1">
-        <div className="overflow-hidden h-2 mb-1 text-xs flex bg-gray-200 rounded">
+        <div className="overflow-hidden h-2 mb-1 text-xs flex bg-muted rounded">
           <div className="h-2 rounded absolute" style={rangeIndicatorStyle.lowRange}></div>
           <div className="h-2 rounded absolute" style={rangeIndicatorStyle.normalRange}></div>
           <div className="h-2 rounded absolute" style={rangeIndicatorStyle.highRange}></div>
@@ -148,14 +148,14 @@ const VitalSlider = memo(({
             "[&_.relative.h-2]:bg-transparent",
             "[&_[role=slider]]:h-5 [&_[role=slider]]:w-5",
             "[&_[role=slider]]:transition-all [&_[role=slider]]:duration-200",
-            vital.value < vital.range.min && "[&_[role=slider]]:bg-blue-500 [&_[role=slider]]:border-blue-500",
-            vital.value > vital.range.max && "[&_[role=slider]]:bg-red-500 [&_[role=slider]]:border-red-500",
-            vital.value >= vital.range.min && vital.value <= vital.range.max && "[&_[role=slider]]:bg-green-500 [&_[role=slider]]:border-green-500"
+            vital.value < vital.range.min && "[&_[role=slider]]:bg-blue-500 [&_[role=slider]]:border-blue-500", // Kept for now
+            vital.value > vital.range.max && "[&_[role=slider]]:bg-destructive [&_[role=slider]]:border-destructive",
+            vital.value >= vital.range.min && vital.value <= vital.range.max && "[&_[role=slider]]:bg-primary [&_[role=slider]]:border-primary"
           )}
         />
-        <div className="flex justify-between text-xs text-gray-500 mt-1">
+        <div className="flex justify-between text-xs text-muted-foreground mt-1">
           <span>{vital.min}</span>
-          <div className="text-center text-xs font-medium text-gray-600">{vital.range.min} - {vital.range.max}</div>
+          <div className="text-center text-xs font-medium text-muted-foreground">{vital.range.min} - {vital.range.max}</div>
           <span>{vital.max}</span>
         </div>
       </div>
@@ -386,10 +386,10 @@ export function InteractiveVitalsCard({
   }, [normalRanges]);
 
   return (
-    <Card className="shadow-sm border-medical-200">
-      <CardHeader className="pb-2 pt-4 bg-medical-50/70">
+    <Card className="shadow-sm border-border">
+      <CardHeader className="pb-2 pt-4 bg-muted/50">
         <div className="flex justify-between items-center">
-          <CardTitle className="text-lg text-medical-800">Vital Signs</CardTitle>
+          <CardTitle className="text-lg">Vital Signs</CardTitle>
           <div className="flex gap-1.5">
             <TooltipProvider>
               <Tooltip>
@@ -397,7 +397,7 @@ export function InteractiveVitalsCard({
                   <Button 
                     variant="outline" 
                     size="sm"
-                    className="h-7 text-xs border-medical-300 bg-white"
+                    className="h-7 text-xs"
                     onClick={() => applyPreset("normal")}
                   >
                     Normal
@@ -413,7 +413,7 @@ export function InteractiveVitalsCard({
                   <Button 
                     variant="outline" 
                     size="sm"
-                    className="h-7 text-xs border-medical-300 bg-white"
+                    className="h-7 text-xs"
                     onClick={() => applyPreset("fever")}
                   >
                     Fever
@@ -429,7 +429,7 @@ export function InteractiveVitalsCard({
                   <Button 
                     variant="outline" 
                     size="sm"
-                    className="h-7 text-xs border-medical-300 bg-white"
+                    className="h-7 text-xs"
                     onClick={() => applyPreset("hypotension")}
                   >
                     Shock
