@@ -7,6 +7,7 @@ import { MedicalCase, Patient, Diagnosis, Resource, CaseTag } from '@/types/case
 import { Database } from '@/integrations/supabase/types';
 
 type DbCase = Database['public']['Tables']['medical_cases']['Row'];
+type DbCaseInsert = Database['public']['Tables']['medical_cases']['Insert'];
 type DbPatient = Database['public']['Tables']['patients']['Row'];
 type DbDiagnosis = Database['public']['Tables']['diagnoses']['Row'];
 type DbResource = Database['public']['Tables']['resources']['Row'];
@@ -103,24 +104,26 @@ export function useSupabaseCases() {
 
       if (patientError) throw patientError;
 
-      // Create case - using the exact fields that exist in the database
+      // Create case - explicitly type the insert object
+      const caseInsertData: DbCaseInsert = {
+        title: caseData.case.title,
+        chief_complaint: caseData.case.chiefComplaint,
+        chief_complaint_analysis: caseData.case.chiefComplaintAnalysis,
+        history: caseData.case.history,
+        physical_exam: caseData.case.physicalExam,
+        learning_points: caseData.case.learningPoints,
+        vitals: caseData.case.vitals || {},
+        symptoms: caseData.case.symptoms || {},
+        urinary_symptoms: caseData.case.urinarySymptoms || [],
+        lab_tests: caseData.case.labTests || [],
+        radiology_exams: caseData.case.radiologyExams || [],
+        user_id: user.id,
+        patient_id: patientData.id
+      };
+
       const { data: caseDbData, error: caseError } = await supabase
         .from('medical_cases')
-        .insert({
-          title: caseData.case.title,
-          chief_complaint: caseData.case.chiefComplaint,
-          chief_complaint_analysis: caseData.case.chiefComplaintAnalysis,
-          history: caseData.case.history,
-          physical_exam: caseData.case.physicalExam,
-          learning_points: caseData.case.learningPoints,
-          vitals: caseData.case.vitals || {},
-          symptoms: caseData.case.symptoms || {},
-          urinary_symptoms: caseData.case.urinarySymptoms || [],
-          lab_tests: caseData.case.labTests || [],
-          radiology_exams: caseData.case.radiologyExams || [],
-          user_id: user.id,
-          patient_id: patientData.id
-        })
+        .insert(caseInsertData)
         .select()
         .single();
 
