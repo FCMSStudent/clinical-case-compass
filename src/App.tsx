@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AppLayout } from "./components/layout/AppLayout";
 import { AuthProvider } from "./contexts/AuthContext";
+import { ThemeProvider } from "./contexts/ThemeContext";
 import { ErrorBoundary } from "./components/error/ErrorBoundary";
 import Cases from "./pages/Cases";
 import CaseDetail from "./pages/CaseDetail";
@@ -63,57 +64,59 @@ const App = () => {
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
-          <AuthProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <Routes>
-                <Route path="/auth" element={<Auth />} />
-                <Route path="/" element={<Navigate to="/cases" replace />} />
-                <Route 
-                  path="/cases" 
-                  element={
-                    <PrivateRoute>
-                      <AppLayout>
-                        <Cases />
-                      </AppLayout>
-                    </PrivateRoute>
-                  } 
-                />
-                <Route 
-                  path="/cases/new" 
-                  element={
-                    <PrivateRoute>
-                      <AppLayout>
-                        <CaseNew />
-                      </AppLayout>
-                    </PrivateRoute>
-                  } 
-                />
-                <Route 
-                  path="/cases/edit/:id" 
-                  element={
-                    <PrivateRoute>
-                      <AppLayout>
-                        <CaseEdit />
-                      </AppLayout>
-                    </PrivateRoute>
-                  } 
-                />
-                <Route 
-                  path="/cases/:id" 
-                  element={
-                    <PrivateRoute>
-                      <AppLayout>
-                        <CaseDetail />
-                      </AppLayout>
-                    </PrivateRoute>
-                  } 
-                />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </BrowserRouter>
-          </AuthProvider>
+          <ThemeProvider>
+            <AuthProvider>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
+                <Routes>
+                  <Route path="/auth" element={<Auth />} />
+                  <Route path="/" element={<Navigate to="/cases" replace />} />
+                  <Route 
+                    path="/cases" 
+                    element={
+                      <PrivateRoute>
+                        <AppLayout>
+                          <Cases />
+                        </AppLayout>
+                      </PrivateRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/cases/new" 
+                    element={
+                      <PrivateRoute>
+                        <AppLayout>
+                          <CaseNew />
+                        </AppLayout>
+                      </PrivateRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/cases/edit/:id" 
+                    element={
+                      <PrivateRoute>
+                        <AppLayout>
+                          <CaseEdit />
+                        </AppLayout>
+                      </PrivateRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/cases/:id" 
+                    element={
+                      <PrivateRoute>
+                        <AppLayout>
+                          <CaseDetail />
+                        </AppLayout>
+                      </PrivateRoute>
+                    } 
+                  />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </BrowserRouter>
+            </AuthProvider>
+          </ThemeProvider>
         </TooltipProvider>
       </QueryClientProvider>
     </ErrorBoundary>
