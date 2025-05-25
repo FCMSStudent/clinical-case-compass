@@ -484,7 +484,7 @@ const CaseNew = () => {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <div className="grid gap-4 md:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-2">
               <FormField
                 control={form.control}
                 name="title"
@@ -525,7 +525,7 @@ const CaseNew = () => {
                 control={form.control}
                 name="tags"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="md:col-span-2">
                     <FormLabel className="text-sm font-medium">Specialty</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
