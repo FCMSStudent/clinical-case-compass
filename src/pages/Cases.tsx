@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -19,58 +20,86 @@ import { useLocalStorage } from "@/hooks/use-local-storage";
 import { MedicalCase, SPECIALTIES } from "@/types/case";
 
 const Cases = () => {
+  console.log("Cases component starting to render");
+  
   // Use location to detect navigation changes
   const location = useLocation();
+  console.log("Location:", location);
   
   // Get cases from local storage first, then fallback to mock data
   const [storedCases, setStoredCases] = useLocalStorage<MedicalCase[]>("medical-cases", []);
+  console.log("Local storage hook initialized");
+  
   const [cases, setCases] = useState<MedicalCase[]>([]);
-  const allTags = getAllTags();
+  console.log("Cases state initialized");
+  
+  let allTags;
+  try {
+    allTags = getAllTags();
+    console.log("getAllTags() called successfully");
+  } catch (error) {
+    console.error("Error calling getAllTags():", error);
+    allTags = [];
+  }
+  
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
 
+  console.log("All state initialized");
+
   // Effect to handle navigation and local storage changes
   useEffect(() => {
+    console.log("Navigation effect running");
     // Force a refresh when navigating back to the cases page
     setRefreshKey(prev => prev + 1);
   }, [location.key]);
 
   // Effect to combine stored cases with mock data
   useEffect(() => {
-    // Combine stored cases with mock data, avoiding duplicates by ID
-    const mockCases = getAllCases();
-    const allCaseIds = new Set();
-    const combinedCases: MedicalCase[] = [];
-    
-    // Add stored cases first
-    if (storedCases && Array.isArray(storedCases)) {
-      storedCases.forEach(storedCase => {
-        if (storedCase && storedCase.id) {
-          allCaseIds.add(storedCase.id);
-          combinedCases.push(storedCase);
+    console.log("Cases combination effect running");
+    try {
+      // Combine stored cases with mock data, avoiding duplicates by ID
+      const mockCases = getAllCases();
+      console.log("Mock cases retrieved:", mockCases);
+      
+      const allCaseIds = new Set();
+      const combinedCases: MedicalCase[] = [];
+      
+      // Add stored cases first
+      if (storedCases && Array.isArray(storedCases)) {
+        storedCases.forEach(storedCase => {
+          if (storedCase && storedCase.id) {
+            allCaseIds.add(storedCase.id);
+            combinedCases.push(storedCase);
+          }
+        });
+      }
+      
+      // Add mock cases that don't exist in stored cases
+      mockCases.forEach(mockCase => {
+        if (!allCaseIds.has(mockCase.id)) {
+          combinedCases.push(mockCase);
         }
       });
+      
+      // Sort cases by createdAt date (newest first)
+      combinedCases.sort((a, b) => 
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+      
+      setCases(combinedCases);
+      console.log("Cases set successfully");
+      
+      // Debug information
+      console.log('Stored cases:', storedCases);
+      console.log('Combined cases:', combinedCases);
+    } catch (error) {
+      console.error("Error in cases combination effect:", error);
     }
-    
-    // Add mock cases that don't exist in stored cases
-    mockCases.forEach(mockCase => {
-      if (!allCaseIds.has(mockCase.id)) {
-        combinedCases.push(mockCase);
-      }
-    });
-    
-    // Sort cases by createdAt date (newest first)
-    combinedCases.sort((a, b) => 
-      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
-    
-    setCases(combinedCases);
-    
-    // Debug information
-    console.log('Stored cases:', storedCases);
-    console.log('Combined cases:', combinedCases);
   }, [storedCases, refreshKey]);
+
+  console.log("About to filter cases");
 
   // Filter cases based on search term and selected tag
   const filteredCases = cases.filter((medCase) => {
@@ -91,6 +120,8 @@ const Cases = () => {
     return matchesSearch && matchesTag;
   });
 
+  console.log("Cases filtered successfully");
+
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
@@ -98,6 +129,8 @@ const Cases = () => {
   const handleTagChange = (value: string) => {
     setSelectedTag(value === "all" ? null : value);
   };
+
+  console.log("About to render JSX");
 
   return (
     <div className="max-w-7xl mx-auto pb-12">
