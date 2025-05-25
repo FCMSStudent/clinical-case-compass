@@ -102,9 +102,6 @@ export function VitalsCard({ onVitalsChange, initialVitals = {} }: VitalsCardPro
 
   return (
     <Card className="border-medical-200 shadow-sm">
-      <CardHeader className="pb-2 pt-4 px-4 bg-medical-50/70">
-        <CardTitle className="text-sm font-medium text-medical-800">Vital Signs</CardTitle>
-      </CardHeader>
       <CardContent className="p-4 space-y-1">
         <VitalSign
           id="temperature"

@@ -116,9 +116,6 @@ export function LabResultsCard({ onLabResultsChange, initialResults = [] }: LabR
 
   return (
     <Card className="border-medical-200 shadow-sm">
-      <CardHeader className="pb-2 pt-4 px-4 bg-medical-50/70">
-        <CardTitle className="text-sm font-medium text-medical-800">Laboratory Results</CardTitle>
-      </CardHeader>
       <CardContent className="p-4 space-y-3">
         {labResults.length === 0 ? (
           <div className="text-sm text-medical-500 italic">No lab tests added yet</div>
