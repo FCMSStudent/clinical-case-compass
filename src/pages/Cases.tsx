@@ -1,6 +1,6 @@
 
 import React, { useState, useMemo } from 'react';
-import { Search, Plus, Filter, Grid, List, Eye, Edit, Trash2 } from 'lucide-react';
+import { Search, Plus, Filter, Grid, List, Eye, Edit, Trash2, X } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSupabaseCases } from '@/hooks/use-supabase-cases';
 import { SPECIALTIES } from '@/types/case';
@@ -203,14 +203,36 @@ const Cases = () => {
               <div className="flex items-center gap-2 mt-4"> {/* Adjusted margin for spacing */}
                 <span className="text-sm text-gray-600">Active filters:</span>
                 {searchTerm && (
-                  <Badge variant="secondary">
-                    Search: "{searchTerm}"
-                  </Badge>
+                  <div className="flex items-center gap-1">
+                    <Badge variant="secondary" className="pl-3 pr-1 py-1"> {/* Adjusted padding if button is 'inside' */}
+                      Search: "{searchTerm}"
+                    </Badge>
+                    <Button
+                      variant="ghost"
+                      size="sm" // Using "sm" for a slightly larger click area than just icon size
+                      className="p-1 h-auto" // Adjust padding to make the button compact
+                      onClick={() => setSearchTerm('')}
+                      aria-label="Clear search term"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
                 )}
                 {selectedSpecialty !== 'all' && (
-                  <Badge variant="secondary">
-                    {SPECIALTIES.find(s => s.id === selectedSpecialty)?.name}
-                  </Badge>
+                  <div className="flex items-center gap-1">
+                    <Badge variant="secondary" className="pl-3 pr-1 py-1"> {/* Adjusted padding */}
+                      {SPECIALTIES.find(s => s.id === selectedSpecialty)?.name}
+                    </Badge>
+                    <Button
+                      variant="ghost"
+                      size="sm" // Using "sm" for a slightly larger click area
+                      className="p-1 h-auto" // Adjust padding for a compact button
+                      onClick={() => setSelectedSpecialty('all')}
+                      aria-label="Clear specialty filter"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
                 )}
                 <Button
                   variant="outline"
