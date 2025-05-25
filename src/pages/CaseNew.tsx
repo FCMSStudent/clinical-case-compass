@@ -366,20 +366,63 @@ const CaseNew = () => {
 
   const handleTabChange = useCallback((value: string) => {
     const targetTab = value as TabId;
+    const currentIndex = TAB_CONFIG.findIndex(tab => tab.id === activeTab);
+    const targetIndex = TAB_CONFIG.findIndex(tab => tab.id === targetTab);
+
     if (canNavigateToTab(targetTab)) {
       setActiveTab(targetTab);
     } else {
       toast.error("Please complete required fields before proceeding");
+      // If it's a forward navigation attempt that failed
+      if (targetIndex > currentIndex) {
+        let fieldsForFocus: (keyof FormValues)[] = [];
+        if (activeTab === 'case-info') {
+          fieldsForFocus = ['title', 'chiefComplaint', 'tags'];
+        } else if (activeTab === 'patient-info') {
+          fieldsForFocus = ['patientName', 'patientAge', 'patientGender'];
+        }
+        
+        const currentErrors = form.formState.errors;
+        for (const field of fieldsForFocus) {
+          if (currentErrors[field]) {
+            form.setFocus(field as keyof FormValues);
+            return; 
+          }
+        }
+      }
     }
-  }, [canNavigateToTab]);
+  }, [activeTab, canNavigateToTab, form, setActiveTab]);
 
-  const goToNextTab = useCallback(() => {
+  const goToNextTab = useCallback(async () => {
     const currentIndex = TAB_CONFIG.findIndex(tab => tab.id === activeTab);
     if (currentIndex < TAB_CONFIG.length - 1) {
-      const nextTab = TAB_CONFIG[currentIndex + 1].id;
-      handleTabChange(nextTab);
+      const nextTabId = TAB_CONFIG[currentIndex + 1].id;
+      
+      // `canNavigateToTab` checks if the *current* tab (activeTab) is valid to proceed FROM to the nextTabId.
+      if (!canNavigateToTab(nextTabId)) { 
+        toast.error("Please complete required fields before proceeding");
+        
+        let fieldsForFocus: (keyof FormValues)[] = [];
+        if (activeTab === 'case-info') {
+          fieldsForFocus = ['title', 'chiefComplaint', 'tags'];
+        } else if (activeTab === 'patient-info') {
+          fieldsForFocus = ['patientName', 'patientAge', 'patientGender'];
+        }
+
+        // No need to call form.trigger here if mode: 'onChange' is sufficient
+        // and canNavigateToTab relies on the latest form.formState.errors
+        const currentErrors = form.formState.errors;
+        for (const field of fieldsForFocus) {
+          if (currentErrors[field]) {
+            form.setFocus(field as keyof FormValues);
+            return; 
+          }
+        }
+        return; 
+      }
+      setActiveTab(nextTabId); 
     }
-  }, [activeTab, handleTabChange]);
+  }, [activeTab, form, canNavigateToTab, setActiveTab]);
 
   const goToPreviousTab = useCallback(() => {
     const currentIndex = TAB_CONFIG.findIndex(tab => tab.id === activeTab);
@@ -425,6 +468,17 @@ const CaseNew = () => {
 
   // Current tab config
   const currentTabConfig = TAB_CONFIG.find(tab => tab.id === activeTab);
+
+  // Validation status for tabs
+  const { formState: { errors } } = form;
+
+  const isCaseInfoTabValid = useMemo(() => {
+    return !errors.title && !errors.chiefComplaint && !errors.tags;
+  }, [errors.title, errors.chiefComplaint, errors.tags]);
+
+  const isPatientInfoTabValid = useMemo(() => {
+    return !errors.patientName && !errors.patientAge && !errors.patientGender;
+  }, [errors.patientName, errors.patientAge, errors.patientGender]);
 
   return (
     <>
@@ -635,6 +689,7 @@ const CaseNew = () => {
                     type="button"
                     onClick={goToNextTab}
                     className="bg-medical-600 hover:bg-medical-700 text-white"
+                    disabled={!isCaseInfoTabValid}
                   >
                     Next <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
@@ -751,6 +806,7 @@ const CaseNew = () => {
                     type="button"
                     onClick={goToNextTab}
                     className="bg-medical-600 hover:bg-medical-700 text-white"
+                    disabled={!isPatientInfoTabValid}
                   >
                     Next <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
@@ -760,6 +816,27 @@ const CaseNew = () => {
               {/* Clinical Details Tab */}
               <TabsContent value="clinical-details" className="p-0 m-0">
                 <CardContent className="space-y-6 pt-6">
+                  {/* Top Navigation Buttons */}
+                  <div className="flex justify-between items-center mb-6">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={goToPreviousTab}
+                      className="border-medical-300 hover:bg-medical-50"
+                    >
+                      <ArrowLeft className="mr-2 h-4 w-4" /> Previous
+                    </Button>
+                    <Button
+                      type="button"
+                      onClick={goToNextTab}
+                      className="bg-medical-600 hover:bg-medical-700 text-white"
+                      // No disabled attribute based on validation for clinical-details for now
+                      // as its fields are optional and do not block progression.
+                    >
+                      Next <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </div>
+
                   {/* History Section */}
                   <div className="space-y-4">
                     <div className="flex items-center gap-2">
