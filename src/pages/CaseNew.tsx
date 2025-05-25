@@ -69,6 +69,7 @@ import { LabResultsCard, LabTest } from "@/components/cases/LabResultsCard";
 import { RadiologyCard, RadiologyExam } from "@/components/cases/RadiologyCard";
 import { InteractiveBodyDiagram } from "@/components/cases/InteractiveBodyDiagram";
 import { VitalsCard } from "@/components/cases/VitalsCard";
+import { ErrorSummary } from "@/components/ui/ErrorSummary";
 
 // Enhanced form schema with better validation
 const formSchema = z.object({
@@ -147,6 +148,14 @@ const TAB_CONFIG = [
 ] as const;
 
 type TabId = typeof TAB_CONFIG[number]['id'];
+
+// Field-to-Tab Mapping
+const TAB_FIELD_MAPPING: Record<TabId, (keyof FormValues)[]> = {
+  "case-info": ["title", "chiefComplaint", "tags", "chiefComplaintAnalysis"],
+  "patient-info": ["patientName", "patientAge", "patientGender", "patientMRN"],
+  "clinical-details": ["history", "physicalExam", "systemSymptoms", "vitals", "labTests", "radiologyExams"], // Assuming these might have errors reported at top level if schema changes
+  "learning": ["learningPoints"],
+};
 
 const CaseNew = () => {
   const navigate = useNavigate();
@@ -366,12 +375,38 @@ const CaseNew = () => {
 
   const handleTabChange = useCallback((value: string) => {
     const targetTab = value as TabId;
+    const currentIndex = TAB_CONFIG.findIndex(tab => tab.id === activeTab);
+    const targetIndex = TAB_CONFIG.findIndex(tab => tab.id === targetTab);
+
     if (canNavigateToTab(targetTab)) {
       setActiveTab(targetTab);
     } else {
       toast.error("Please complete required fields before proceeding");
+      // Focus on error if navigating forward and validation fails
+      if (targetIndex > currentIndex) {
+        const errors = form.formState.errors;
+        const errorFieldNames = Object.keys(errors);
+        if (errorFieldNames.length > 0) {
+          const firstErrorField = errorFieldNames[0] as keyof FormValues;
+          form.setFocus(firstErrorField);
+          // Attempt to scroll the element into view
+          // We need to wait for the focus to be set, then scroll.
+          setTimeout(() => {
+            const fieldElement = document.getElementsByName(firstErrorField)[0] || document.getElementById(firstErrorField);
+            if (fieldElement) {
+              fieldElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+              // Fallback for complex fields or if ID/name is not directly on the input
+              const formItem = document.getElementById(`${firstErrorField}-form-item`);
+              if (formItem) {
+                formItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              }
+            }
+          }, 50); // Small delay to ensure focus has been applied
+        }
+      }
     }
-  }, [canNavigateToTab]);
+  }, [activeTab, canNavigateToTab, form]);
 
   const goToNextTab = useCallback(() => {
     const currentIndex = TAB_CONFIG.findIndex(tab => tab.id === activeTab);
@@ -426,6 +461,13 @@ const CaseNew = () => {
   // Current tab config
   const currentTabConfig = TAB_CONFIG.find(tab => tab.id === activeTab);
 
+  // Helper function to check for errors in a tab
+  const checkTabForErrors = useCallback((tabId: TabId, errors: typeof form.formState.errors): boolean => {
+    const fieldsForTab = TAB_FIELD_MAPPING[tabId];
+    if (!fieldsForTab) return false;
+    return fieldsForTab.some(field => !!errors[field]);
+  }, []);
+
   return (
     <>
       {/* Header with navigation and save status */}
@@ -472,6 +514,15 @@ const CaseNew = () => {
       )}
 
       <div className="max-w-5xl mx-auto w-full px-4"> {/* New wrapper starts here */}
+        {/* Error Summary */}
+        {form.formState.isSubmitted && !form.formState.isValid && Object.keys(form.formState.errors).length > 0 && (
+          <ErrorSummary
+            errors={form.formState.errors}
+            setFocus={form.setFocus as (name: string) => void} // Cast setFocus to match ErrorSummaryProps
+            className="mb-6"
+            formId="case-new-form" // Optional: Added for potentially more specific scrolling
+          />
+        )}
         
         {/* Quick overview card */}
         <Card className="border-medical-200 shadow-md mb-6 bg-gradient-to-r from-medical-50/50 to-blue-50/30">
@@ -569,7 +620,7 @@ const CaseNew = () => {
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(handleSubmit)} id="case-new-form" className="space-y-8">
           <Card className="border-medical-200 shadow-md">
             <Tabs
               value={activeTab}
@@ -578,17 +629,21 @@ const CaseNew = () => {
             >
               <div className="bg-gradient-to-r from-medical-50 to-medical-100 p-4 rounded-t-lg">
                 <TabsList className={`grid w-full ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
-                  {TAB_CONFIG.map(({ id, label, icon: Icon }) => (
-                    <TabsTrigger
-                      key={id}
-                      value={id}
-                      className="data-[state=active]:bg-white"
-                      disabled={!canNavigateToTab(id)}
-                    >
-                      <Icon className="h-4 w-4 mr-2" />
-                      <span className={isMobile ? "text-xs" : "hidden sm:inline"}>{label}</span>
-                    </TabsTrigger>
-                  ))}
+                  {TAB_CONFIG.map(({ id, label, icon: Icon }) => {
+                    const hasError = checkTabForErrors(id, form.formState.errors);
+                    return (
+                      <TabsTrigger
+                        key={id}
+                        value={id}
+                        className="data-[state=active]:bg-white"
+                        disabled={!canNavigateToTab(id)}
+                        hasError={hasError}
+                      >
+                        <Icon className="h-4 w-4 mr-2" />
+                        <span className={isMobile ? "text-xs" : "hidden sm:inline"}>{label}</span>
+                      </TabsTrigger>
+                    );
+                  })}
                 </TabsList>
               </div>
 
