@@ -19,7 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { PageHeader } from "@/components/ui/page-header";
-import { ChevronLeft, Save } from "lucide-react";
+import { ChevronLeft, Save, HeartPulse, TestTube, Scan } from "lucide-react";
 import { toast } from "sonner";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { InteractiveVitalsCard } from "@/components/cases/InteractiveVitalsCard";
@@ -307,22 +307,28 @@ const CaseEdit = () => {
             />
           </div>
           
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            <InteractiveVitalsCard 
-              onVitalsChange={setVitals} 
-              initialVitals={vitals} 
-              patientAge={form.watch("patientAge")}
-            />
-            <UrinaryReviewCard 
-              onSelectionChange={setUrinarySymptoms} 
-              initialSelections={urinarySymptoms}
-            />
-            <div className="bg-white p-4 rounded-lg shadow-sm border">
-              <h3 className="font-medium text-sm mb-2">Other Symptoms</h3>
-              <SymptomChecklist 
-                onSelectionChange={handleSymptomSelectionChange}
-                initialSelections={systemSymptoms}
+          <div>
+            <h3 className="text-xl font-semibold text-medical-700 mb-3 flex items-center">
+              <HeartPulse className="mr-2 h-6 w-6" />
+              Vital Signs
+            </h3>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <InteractiveVitalsCard 
+                onVitalsChange={setVitals} 
+                initialVitals={vitals} 
+                patientAge={form.watch("patientAge")}
               />
+              <UrinaryReviewCard 
+                onSelectionChange={setUrinarySymptoms} 
+                initialSelections={urinarySymptoms}
+              />
+              <div className="bg-white p-4 rounded-lg shadow-sm border">
+                <h3 className="font-medium text-sm mb-2">Other Symptoms</h3>
+                <SymptomChecklist 
+                  onSelectionChange={handleSymptomSelectionChange}
+                  initialSelections={systemSymptoms}
+                />
+              </div>
             </div>
           </div>
           
@@ -367,14 +373,26 @@ const CaseEdit = () => {
           </div>
           
           <div className="grid gap-6 md:grid-cols-2">
-            <LabResultsCard 
-              onLabResultsChange={setLabResults} 
-              initialResults={labResults}
-            />
-            <RadiologyCard 
-              onRadiologyChange={setRadiologyExams}
-              initialResults={radiologyExams}
-            />
+            <div> {/* Column 1: Lab Results Title + Card */}
+              <h3 className="text-xl font-semibold text-medical-700 mb-3 flex items-center">
+                <TestTube className="mr-2 h-6 w-6" />
+                Laboratory Results
+              </h3>
+              <LabResultsCard 
+                onLabResultsChange={setLabResults} 
+                initialResults={labResults}
+              />
+            </div>
+            <div> {/* Column 2: Radiology Exams Title + Card */}
+              <h3 className="text-xl font-semibold text-medical-700 mb-3 flex items-center">
+                <Scan className="mr-2 h-6 w-6" />
+                Radiology Exams
+              </h3>
+              <RadiologyCard 
+                onRadiologyChange={setRadiologyExams}
+                initialResults={radiologyExams}
+              />
+            </div>
           </div>
           
           <FormField

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -75,9 +75,6 @@ export function RadiologyCard({ onRadiologyChange, initialResults = [] }: Radiol
 
   return (
     <Card className="border-medical-200 shadow-sm">
-      <CardHeader className="pb-2 pt-4 px-4 bg-medical-50/70">
-        <CardTitle className="text-sm font-medium text-medical-800">Radiology Exams</CardTitle>
-      </CardHeader>
       <CardContent className="p-4 space-y-3">
         {radiologyExams.length === 0 ? (
           <div className="text-sm text-medical-500 italic">No radiology exams added yet</div>
@@ -130,10 +127,10 @@ export function RadiologyCard({ onRadiologyChange, initialResults = [] }: Radiol
           type="button"
           variant="outline"
           size="sm"
-          className="w-full mt-2 text-xs border-dashed border-medical-300 hover:bg-medical-50"
+          className="w-full mt-2 text-xs border-dashed border-medical-300 hover:bg-medical-50 text-medical-600 hover:text-medical-700"
           onClick={handleAddExam}
         >
-          <Plus className="h-3 w-3 mr-1" /> Add Imaging Exam
+          <Plus className="h-3 w-3 mr-1 text-medical-600" /> Add Imaging Exam
         </Button>
       </CardContent>
     </Card>
