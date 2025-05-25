@@ -642,6 +642,7 @@ const CaseNew = () => {
               {/* Patient Information Tab */}
               <TabsContent value="patient-info" className="p-0 m-0">
                 <CardContent className="space-y-6 pt-6">
+                  <h3 className="text-lg font-semibold mb-4 text-gray-900">Patient Identification</h3>
                   <div className="grid gap-6 md:grid-cols-2">
                     <FormField
                       control={form.control}
@@ -680,6 +681,9 @@ const CaseNew = () => {
                     />
                   </div>
 
+                  <Separator className="my-6" />
+                  <h3 className="text-lg font-semibold mb-4 text-gray-900">Patient Demographics</h3>
+                  
                   <div className="grid gap-6 md:grid-cols-2">
                     <FormField
                       control={form.control}
