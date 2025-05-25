@@ -81,20 +81,19 @@ const Cases = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <LoadingSpinner size="lg" className="mx-auto mb-4" />
-          <p className="text-gray-600">Loading cases...</p>
-        </div>
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center text-center">
+        {/* The inner div className="text-center" can be removed if desired, or kept. For this change, let's assume its content is directly under the main div. */}
+        <LoadingSpinner size="lg" className="mx-auto mb-4" />
+        <p className="text-gray-600">Loading cases...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Card className="max-w-md mx-auto">
-          <CardContent className="text-center p-6">
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center text-center">
+        <Card className="max-w-md mx-auto"> {/* mx-auto is fine to keep */}
+          <CardContent className="text-center p-6"> {/* CardContent already has text-center which is good */}
             <p className="text-red-600 mb-4">Failed to load cases</p>
             <Button onClick={() => window.location.reload()}>
               Try Again
@@ -255,11 +254,11 @@ const Cases = () => {
 
         {/* Cases Display */}
         {filteredAndSortedCases.length === 0 ? (
-          <Card className="text-center p-12">
+          <Card className="text-center p-16">
             <CardContent>
               <div className="max-w-sm mx-auto">
-                <div className="h-12 w-12 text-gray-400 mx-auto mb-4">
-                  <Filter className="h-12 w-12" />
+                <div className="h-16 w-16 text-gray-400 mx-auto mb-4"> {/* Container div also updated */}
+                  <Filter className="h-16 w-16" /> {/* Icon itself updated */}
                 </div>
                 <h3 className="text-lg font-medium text-gray-900 mb-2">No cases found</h3>
                 <p className="text-gray-600 mb-6">
