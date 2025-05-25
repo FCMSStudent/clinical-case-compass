@@ -785,7 +785,7 @@ const CaseNew = () => {
                         <h4 className="text-sm font-medium text-muted-foreground">
                           Select areas of interest on the body diagram or use the checklist below
                         </h4>
-                        <InteractiveBodyDiagram />
+                        <InteractiveBodyDiagram onBodyPartSelected={handleBodyPartSelected} />
                       </div>
                       <div>
                         <SymptomChecklist

@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { CaseCard } from '@/components/cases/CaseCard';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
@@ -135,7 +136,14 @@ const Cases = () => {
               </div>
             </div>
           </CardHeader>
-          
+          {/* Main header card's CardContent is removed as it's now empty */}
+        </Card>
+
+        {/* New Card for Filters */}
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle className="text-lg">Filter & Sort Cases</CardTitle>
+          </CardHeader>
           <CardContent>
             {/* Filters and Search */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
@@ -152,38 +160,46 @@ const Cases = () => {
                 </div>
               </div>
               
-              <div>
-                <select
-                  value={selectedSpecialty}
-                  onChange={(e) => setSelectedSpecialty(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value="all">All Specialties</option>
-                  {SPECIALTIES.map((specialty) => (
-                    <option key={specialty.id} value={specialty.id}>
-                      {specialty.name}
-                    </option>
-                  ))}
-                </select>
+              <div> {/* Added a div for label and select grouping */}
+                <label htmlFor="specialty-select" className="block text-sm font-medium text-gray-700 mb-1">
+                  Filter by Specialty
+                </label>
+                <Select value={selectedSpecialty} onValueChange={setSelectedSpecialty}>
+                  <SelectTrigger id="specialty-select" className="w-full">
+                    <SelectValue placeholder="All Specialties" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Specialties</SelectItem>
+                    {SPECIALTIES.map((specialty) => (
+                      <SelectItem key={specialty.id} value={specialty.id}>
+                        {specialty.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
-              <div>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as SortOption)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value="newest">Newest First</option>
-                  <option value="oldest">Oldest First</option>
-                  <option value="patient">Patient Name</option>
-                  <option value="title">Case Title</option>
-                </select>
+              <div> {/* Added a div for label and select grouping */}
+                <label htmlFor="sortby-select" className="block text-sm font-medium text-gray-700 mb-1">
+                  Sort by
+                </label>
+                <Select value={sortBy} onValueChange={(value) => setSortBy(value as SortOption)}>
+                  <SelectTrigger id="sortby-select" className="w-full">
+                    <SelectValue placeholder="Newest First" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="newest">Newest First</SelectItem>
+                    <SelectItem value="oldest">Oldest First</SelectItem>
+                    <SelectItem value="patient">Patient Name</SelectItem>
+                    <SelectItem value="title">Case Title</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 
             {/* Active filters */}
             {(searchTerm || selectedSpecialty !== 'all') && (
-              <div className="flex items-center gap-2 mb-4">
+              <div className="flex items-center gap-2 mt-4"> {/* Adjusted margin for spacing */}
                 <span className="text-sm text-gray-600">Active filters:</span>
                 {searchTerm && (
                   <Badge variant="secondary">
@@ -196,10 +212,9 @@ const Cases = () => {
                   </Badge>
                 )}
                 <Button
-                  variant="link"
+                  variant="outline"
                   size="sm"
                   onClick={clearFilters}
-                  className="h-auto p-0 text-xs"
                 >
                   Clear all
                 </Button>
