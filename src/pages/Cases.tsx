@@ -1,6 +1,6 @@
 
 import React, { useState, useMemo } from 'react';
-import { Search, Plus, Filter, Grid, List, Eye, Edit, Trash2 } from 'lucide-react';
+import { Search, Plus, Filter, Grid, List, Eye, Edit, Trash2, X } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSupabaseCases } from '@/hooks/use-supabase-cases';
 import { SPECIALTIES } from '@/types/case';
@@ -81,20 +81,19 @@ const Cases = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <LoadingSpinner size="lg" className="mx-auto mb-4" />
-          <p className="text-gray-600">Loading cases...</p>
-        </div>
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center text-center">
+        {/* The inner div className="text-center" can be removed if desired, or kept. For this change, let's assume its content is directly under the main div. */}
+        <LoadingSpinner size="lg" className="mx-auto mb-4" />
+        <p className="text-gray-600">Loading cases...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Card className="max-w-md mx-auto">
-          <CardContent className="text-center p-6">
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center text-center">
+        <Card className="max-w-md mx-auto"> {/* mx-auto is fine to keep */}
+          <CardContent className="text-center p-6"> {/* CardContent already has text-center which is good */}
             <p className="text-red-600 mb-4">Failed to load cases</p>
             <Button onClick={() => window.location.reload()}>
               Try Again
@@ -203,14 +202,36 @@ const Cases = () => {
               <div className="flex items-center gap-2 mt-4"> {/* Adjusted margin for spacing */}
                 <span className="text-sm text-gray-600">Active filters:</span>
                 {searchTerm && (
-                  <Badge variant="secondary">
-                    Search: "{searchTerm}"
-                  </Badge>
+                  <div className="flex items-center gap-1">
+                    <Badge variant="secondary" className="pl-3 pr-1 py-1"> {/* Adjusted padding if button is 'inside' */}
+                      Search: "{searchTerm}"
+                    </Badge>
+                    <Button
+                      variant="ghost"
+                      size="sm" // Using "sm" for a slightly larger click area than just icon size
+                      className="p-1 h-auto" // Adjust padding to make the button compact
+                      onClick={() => setSearchTerm('')}
+                      aria-label="Clear search term"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
                 )}
                 {selectedSpecialty !== 'all' && (
-                  <Badge variant="secondary">
-                    {SPECIALTIES.find(s => s.id === selectedSpecialty)?.name}
-                  </Badge>
+                  <div className="flex items-center gap-1">
+                    <Badge variant="secondary" className="pl-3 pr-1 py-1"> {/* Adjusted padding */}
+                      {SPECIALTIES.find(s => s.id === selectedSpecialty)?.name}
+                    </Badge>
+                    <Button
+                      variant="ghost"
+                      size="sm" // Using "sm" for a slightly larger click area
+                      className="p-1 h-auto" // Adjust padding for a compact button
+                      onClick={() => setSelectedSpecialty('all')}
+                      aria-label="Clear specialty filter"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
                 )}
                 <Button
                   variant="outline"
@@ -233,11 +254,11 @@ const Cases = () => {
 
         {/* Cases Display */}
         {filteredAndSortedCases.length === 0 ? (
-          <Card className="text-center p-12">
+          <Card className="text-center p-16">
             <CardContent>
               <div className="max-w-sm mx-auto">
-                <div className="h-12 w-12 text-gray-400 mx-auto mb-4">
-                  <Filter className="h-12 w-12" />
+                <div className="h-16 w-16 text-gray-400 mx-auto mb-4"> {/* Container div also updated */}
+                  <Filter className="h-16 w-16" /> {/* Icon itself updated */}
                 </div>
                 <h3 className="text-lg font-medium text-gray-900 mb-2">No cases found</h3>
                 <p className="text-gray-600 mb-6">
