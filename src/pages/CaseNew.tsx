@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
@@ -786,14 +785,12 @@ const CaseNew = () => {
                         <h4 className="text-sm font-medium text-muted-foreground">
                           Select areas of interest on the body diagram or use the checklist below
                         </h4>
-                        <InteractiveBodyDiagram
-                          highlightedSystems={Object.keys(systemSymptoms)}
-                        />
+                        <InteractiveBodyDiagram />
                       </div>
                       <div>
                         <SymptomChecklist
                           highlightedSymptoms={highlightedSymptoms}
-                          onChange={handleSymptomChange}
+                          onSelectionChange={handleSymptomChange}
                         />
                       </div>
                     </div>

@@ -116,5 +116,5 @@ export interface LoadingState {
   isDeleting: boolean;
 }
 
-// Save status type for autosave functionality
+// Save status type for autosave functionality - updated to include error
 export type SaveStatus = "saving" | "saved" | "idle" | "error";

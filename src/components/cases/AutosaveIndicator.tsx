@@ -1,9 +1,9 @@
 
 import React, { useState, useEffect } from "react";
 import { format } from "date-fns";
-import { CheckCheck, Save } from "lucide-react";
+import { CheckCheck, Save, AlertCircle } from "lucide-react";
 
-type SaveStatus = "saving" | "saved" | "idle";
+type SaveStatus = "saving" | "saved" | "idle" | "error";
 
 interface AutosaveIndicatorProps {
   status: SaveStatus;
@@ -18,9 +18,9 @@ export function AutosaveIndicator({
 }: AutosaveIndicatorProps) {
   const [visible, setVisible] = useState(status !== "idle");
 
-  // Make the "Saved" status visible briefly after saving
+  // Make the "Saved" and "Error" status visible briefly after saving
   useEffect(() => {
-    if (status === "saved") {
+    if (status === "saved" || status === "error") {
       setVisible(true);
       const timer = setTimeout(() => {
         setVisible(false);
@@ -46,6 +46,11 @@ export function AutosaveIndicator({
           <span className="text-green-600">
             Saved {lastSaved ? format(lastSaved, "h:mm a") : ""}
           </span>
+        </>
+      ) : status === "error" ? (
+        <>
+          <AlertCircle className="mr-1 h-3 w-3 text-red-600" />
+          <span className="text-red-600">Save failed</span>
         </>
       ) : null}
     </div>
