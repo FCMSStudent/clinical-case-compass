@@ -471,8 +471,10 @@ const CaseNew = () => {
         </Alert>
       )}
 
-      {/* Quick overview card */}
-      <Card className="border-medical-200 shadow-md mb-6 bg-gradient-to-r from-medical-50/50 to-blue-50/30">
+      <div className="max-w-5xl mx-auto w-full px-4"> {/* New wrapper starts here */}
+        
+        {/* Quick overview card */}
+        <Card className="border-medical-200 shadow-md mb-6 bg-gradient-to-r from-medical-50/50 to-blue-50/30">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <FileText className="h-5 w-5 text-medical-600" />
@@ -751,7 +753,7 @@ const CaseNew = () => {
 
               {/* Clinical Details Tab */}
               <TabsContent value="clinical-details" className="p-0 m-0">
-                <CardContent className="space-y-8 pt-6">
+                <CardContent className="space-y-6 pt-6">
                   {/* History Section */}
                   <div className="space-y-4">
                     <div className="flex items-center gap-2">
@@ -776,7 +778,7 @@ const CaseNew = () => {
                     />
                   </div>
 
-                  <Separator className="my-8" />
+                  <Separator className="my-6" />
 
                   {/* System Review & Body Diagram Section */}
                   <div className="space-y-6">
@@ -800,7 +802,7 @@ const CaseNew = () => {
                     </div>
                   </div>
 
-                  <Separator className="my-8" />
+                  <Separator className="my-6" />
 
                   {/* Vitals Section */}
                   <div className="space-y-6">
@@ -814,7 +816,7 @@ const CaseNew = () => {
                     />
                   </div>
 
-                  <Separator className="my-8" />
+                  <Separator className="my-6" />
 
                   {/* Physical Exam Section */}
                   <div className="space-y-4">
@@ -840,7 +842,7 @@ const CaseNew = () => {
                     />
                   </div>
 
-                  <Separator className="my-8" />
+                  <Separator className="my-6" />
 
                   {/* Lab Results Section */}
                   <div className="space-y-6">
@@ -854,7 +856,7 @@ const CaseNew = () => {
                     />
                   </div>
 
-                  <Separator className="my-8" />
+                  <Separator className="my-6" />
 
                   {/* Radiology Section */}
                   <div className="space-y-6">
@@ -965,6 +967,8 @@ const CaseNew = () => {
           </Card>
         </form>
       </Form>
+
+      </div> {/* New wrapper ends here */}
     </>
   );
 };
