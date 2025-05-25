@@ -191,6 +191,23 @@ const CaseNew = () => {
     mode: "onChange", // Enable real-time validation
   });
 
+  // Auto-focus on tab change
+  useEffect(() => {
+    // Adding a timeout to ensure the field is rendered before focusing
+    const timer = setTimeout(() => {
+      if (activeTab === "case-info") {
+        form.setFocus("chiefComplaintAnalysis");
+      } else if (activeTab === "patient-info") {
+        form.setFocus("patientName");
+      } else if (activeTab === "clinical-details") {
+        form.setFocus("history");
+      } else if (activeTab === "learning") {
+        form.setFocus("learningPoints");
+      }
+    }, 100); // 100ms delay, adjust if needed
+    return () => clearTimeout(timer);
+  }, [activeTab, form]);
+
   // Memoized form steps for progress indicator
   const formSteps = useMemo(() =>
     TAB_CONFIG.map(({ id, label }) => ({
