@@ -492,7 +492,7 @@ const CaseNew = () => {
                 name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm font-medium">Case Title</FormLabel>
+                    <FormLabel className="text-md font-medium">Case Title<span className="text-red-500 ml-1">*</span></FormLabel>
                     <FormControl>
                       <Input
                         placeholder="e.g., Acute Appendicitis..."
@@ -510,7 +510,7 @@ const CaseNew = () => {
                 name="chiefComplaint"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm font-medium">Chief Complaint</FormLabel>
+                    <FormLabel className="text-md font-medium">Chief Complaint<span className="text-red-500 ml-1">*</span></FormLabel>
                     <FormControl>
                       <Input
                         placeholder="e.g., Severe abdominal pain"
@@ -528,7 +528,7 @@ const CaseNew = () => {
                 name="tags"
                 render={({ field }) => (
                   <FormItem className="md:col-span-2">
-                    <FormLabel className="text-sm font-medium">Specialty</FormLabel>
+                    <FormLabel className="text-md font-medium">Specialty<span className="text-red-500 ml-1">*</span></FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger className="border-medical-200 focus-visible:ring-medical-500">
@@ -601,7 +601,7 @@ const CaseNew = () => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-md font-medium flex items-center">
-                          Chief Complaint Analysis
+                          Chief Complaint Analysis (optional)
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger asChild>
@@ -659,6 +659,12 @@ const CaseNew = () => {
                               className="border-medical-200 focus-visible:ring-medical-500"
                             />
                           </FormControl>
+                          <FormDescription>
+                            Provide details about past medical history, relevant family history, social history, and current medications.
+                          </FormDescription>
+                          <FormDescription>
+                            Document general appearance, system-specific examination findings (e.g., cardiovascular, respiratory, abdominal), and any relevant measurements.
+                          </FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -669,7 +675,7 @@ const CaseNew = () => {
                       name="patientMRN"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-md font-medium">Medical Record Number</FormLabel>
+                          <FormLabel className="text-md font-medium">Medical Record Number (optional)</FormLabel>
                           <FormControl>
                             <Input
                               placeholder="MRN (optional)"
@@ -758,7 +764,7 @@ const CaseNew = () => {
                   <div className="space-y-4">
                     <div className="flex items-center gap-2">
                       <FileText className="h-5 w-5 text-medical-600" />
-                      <h3 className="text-lg font-medium text-medical-700">Patient History</h3>
+                      <h3 className="text-lg font-medium text-medical-700">Patient History (optional)</h3>
                     </div>
                     <FormField
                       control={form.control}
@@ -772,6 +778,9 @@ const CaseNew = () => {
                               {...field}
                             />
                           </FormControl>
+                          <FormDescription>
+                            Provide details about past medical history, relevant family history, social history, and current medications.
+                          </FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -822,7 +831,7 @@ const CaseNew = () => {
                   <div className="space-y-4">
                     <div className="flex items-center gap-2">
                       <UserCircle className="h-5 w-5 text-medical-600" />
-                      <h3 className="text-lg font-medium text-medical-700">Physical Examination</h3>
+                      <h3 className="text-lg font-medium text-medical-700">Physical Examination (optional)</h3>
                     </div>
                     <FormField
                       control={form.control}
@@ -836,6 +845,9 @@ const CaseNew = () => {
                               {...field}
                             />
                           </FormControl>
+                          <FormDescription>
+                            Document general appearance, system-specific examination findings (e.g., cardiovascular, respiratory, abdominal), and any relevant measurements.
+                          </FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -898,7 +910,7 @@ const CaseNew = () => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-md font-medium flex items-center">
-                          Key Learning Points
+                          Key Learning Points (optional)
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger asChild>
