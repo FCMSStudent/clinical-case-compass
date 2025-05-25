@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useCallback, memo, useMemo } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import {
@@ -48,9 +48,9 @@ const VitalSlider = memo(({
 }) => {
   // Status color and classes for the value display
   const getStatusColor = (value: number, range: VitalRange): string => {
-    if (value < range.min) return "text-blue-500"; // Kept for now
-    if (value > range.max) return "text-destructive";
-    return "text-primary";
+    if (value < range.min) return "text-blue-500"; 
+    if (value > range.max) return "text-red-500"; // Changed from text-destructive
+    return "text-green-600"; // Changed from text-primary
   };
 
   const getStatusIcon = (value: number, range: VitalRange) => {
@@ -65,19 +65,19 @@ const VitalSlider = memo(({
     const lowRange = {
       width: `${((vital.range.min - vital.min) / (vital.max - vital.min)) * 100}%`,
       left: 0,
-      backgroundColor: "rgba(59, 130, 246, 0.2)" // blue for too low
+      // backgroundColor: "rgba(59, 130, 246, 0.2)" // Replaced by Tailwind below
     };
     
     const normalRange = {
       width: `${((vital.range.max - vital.range.min) / (vital.max - vital.min)) * 100}%`,
       left: `${((vital.range.min - vital.min) / (vital.max - vital.min)) * 100}%`,
-      backgroundColor: "rgba(22, 163, 74, 0.2)" // green for normal
+      // backgroundColor: "rgba(22, 163, 74, 0.2)" // Replaced by Tailwind below
     };
     
     const highRange = {
       width: `${((vital.max - vital.range.max) / (vital.max - vital.min)) * 100}%`,
       left: `${((vital.range.max - vital.min) / (vital.max - vital.min)) * 100}%`,
-      backgroundColor: "rgba(220, 38, 38, 0.2)" // red for too high
+      // backgroundColor: "rgba(220, 38, 38, 0.2)" // Replaced by Tailwind below
     };
     
     return { lowRange, normalRange, highRange };
@@ -87,11 +87,11 @@ const VitalSlider = memo(({
   const pulseAnimation = vital.name === "heartRate" ? "animate-pulse" : "";
 
   return (
-    <div key={vital.name} className="p-3 bg-muted/50 rounded-lg border border-border transition-all hover:shadow-sm">
+    <div key={vital.name} className="p-3 bg-medical-50 rounded-lg border border-border transition-all hover:shadow-sm"> {/* Changed bg-muted/50 to bg-medical-50 */}
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
           {vital.icon && (
-            <span className={cn("text-primary", pulseAnimation)}>
+            <span className={cn("text-medical-600", pulseAnimation)}> {/* Changed text-primary to text-medical-600 */}
               {vital.icon}
             </span>
           )}
@@ -116,13 +116,13 @@ const VitalSlider = memo(({
               <div className="space-y-1">
                 <p className="font-medium">Normal range: {vital.range.min}-{vital.range.max} {vital.unit}</p>
                 {vital.value < vital.range.min && (
-                  <p className="text-blue-600">Below normal range</p> // Kept for now
+                  <p className="text-blue-500">Below normal range</p> // Kept text-blue-500 (was text-blue-600)
                 )}
                 {vital.value > vital.range.max && (
-                  <p className="text-destructive">Above normal range</p>
+                  <p className="text-red-500">Above normal range</p> // Changed from text-destructive
                 )}
                 {vital.value >= vital.range.min && vital.value <= vital.range.max && (
-                  <p className="text-primary">Within normal range</p>
+                  <p className="text-green-600">Within normal range</p> // Changed from text-primary
                 )}
                 {vital.info && <p className="text-xs text-muted-foreground">{vital.info}</p>}
               </div>
@@ -133,9 +133,9 @@ const VitalSlider = memo(({
       
       <div className="relative pt-1">
         <div className="overflow-hidden h-2 mb-1 text-xs flex bg-muted rounded">
-          <div className="h-2 rounded absolute" style={rangeIndicatorStyle.lowRange}></div>
-          <div className="h-2 rounded absolute" style={rangeIndicatorStyle.normalRange}></div>
-          <div className="h-2 rounded absolute" style={rangeIndicatorStyle.highRange}></div>
+          <div className="h-2 rounded absolute bg-blue-500/20" style={rangeIndicatorStyle.lowRange}></div> {/* Added bg-blue-500/20 */}
+          <div className="h-2 rounded absolute bg-green-500/20" style={rangeIndicatorStyle.normalRange}></div> {/* Added bg-green-500/20 */}
+          <div className="h-2 rounded absolute bg-red-500/20" style={rangeIndicatorStyle.highRange}></div> {/* Added bg-red-500/20 */}
         </div>
         <Slider
           id={`slider-${vital.name}`}
@@ -148,9 +148,9 @@ const VitalSlider = memo(({
             "[&_.relative.h-2]:bg-transparent",
             "[&_[role=slider]]:h-5 [&_[role=slider]]:w-5",
             "[&_[role=slider]]:transition-all [&_[role=slider]]:duration-200",
-            vital.value < vital.range.min && "[&_[role=slider]]:bg-blue-500 [&_[role=slider]]:border-blue-500", // Kept for now
-            vital.value > vital.range.max && "[&_[role=slider]]:bg-destructive [&_[role=slider]]:border-destructive",
-            vital.value >= vital.range.min && vital.value <= vital.range.max && "[&_[role=slider]]:bg-primary [&_[role=slider]]:border-primary"
+            vital.value < vital.range.min && "[&_[role=slider]]:bg-blue-500 [&_[role=slider]]:border-blue-600", 
+            vital.value > vital.range.max && "[&_[role=slider]]:bg-red-500 [&_[role=slider]]:border-red-600", 
+            vital.value >= vital.range.min && vital.value <= vital.range.max && "[&_[role=slider]]:bg-green-600 [&_[role=slider]]:border-green-700"
           )}
         />
         <div className="flex justify-between text-xs text-muted-foreground mt-1">
@@ -386,62 +386,57 @@ export function InteractiveVitalsCard({
   }, [normalRanges]);
 
   return (
-    <Card className="shadow-sm border-border">
-      <CardHeader className="pb-2 pt-4 bg-muted/50">
-        <div className="flex justify-between items-center">
-          <CardTitle className="text-lg">Vital Signs</CardTitle>
-          <div className="flex gap-1.5">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    className="h-7 text-xs"
-                    onClick={() => applyPreset("normal")}
-                  >
-                    Normal
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Apply normal vital signs</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    className="h-7 text-xs"
-                    onClick={() => applyPreset("fever")}
-                  >
-                    Fever
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Apply febrile vital signs</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    className="h-7 text-xs"
-                    onClick={() => applyPreset("hypotension")}
-                  >
-                    Shock
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Apply shock/hypotension vital signs</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
-        </div>
-      </CardHeader>
+    <Card className="shadow-sm border-medical-200"> {/* Changed border-border to border-medical-200 */}
       <CardContent className="pt-4">
+        <div className="flex justify-end gap-1.5 mb-4"> {/* Moved preset buttons here */}
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="h-7 text-xs text-medical-600 border-medical-300 hover:bg-medical-50 hover:text-medical-700" // Added classes
+                  onClick={() => applyPreset("normal")}
+                >
+                  Normal
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Apply normal vital signs</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="h-7 text-xs text-medical-600 border-medical-300 hover:bg-medical-50 hover:text-medical-700" // Added classes
+                  onClick={() => applyPreset("fever")}
+                >
+                  Fever
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Apply febrile vital signs</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="h-7 text-xs text-medical-600 border-medical-300 hover:bg-medical-50 hover:text-medical-700" // Added classes
+                  onClick={() => applyPreset("hypotension")}
+                >
+                  Shock
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Apply shock/hypotension vital signs</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {vitalSigns.map((vital, index) => (
             <VitalSlider 
