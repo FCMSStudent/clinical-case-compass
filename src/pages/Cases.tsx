@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { CaseCard } from '@/components/cases/CaseCard';
+import { CaseListItem } from '@/components/cases/CaseListItem';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -266,50 +267,11 @@ const Cases = () => {
                   medicalCase={medicalCase}
                 />
               ) : (
-                <Card key={medicalCase.id} className="hover:shadow-md transition-shadow">
-                  <CardContent className="p-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-lg truncate">
-                          {medicalCase.title}
-                        </h3>
-                        <p className="text-sm text-gray-600 mb-2">
-                          {medicalCase.patient.name}, {medicalCase.patient.age} y/o {medicalCase.patient.gender}
-                        </p>
-                        <p className="text-sm text-gray-500 truncate">
-                          {medicalCase.chiefComplaint}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-1 ml-4">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          asChild
-                        >
-                          <Link to={`/cases/${medicalCase.id}`}>
-                            <Eye className="h-4 w-4" />
-                          </Link>
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          asChild
-                        >
-                          <Link to={`/cases/edit/${medicalCase.id}`}>
-                            <Edit className="h-4 w-4" />
-                          </Link>
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDeleteCase(medicalCase.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                <CaseListItem
+                  key={medicalCase.id}
+                  medicalCase={medicalCase}
+                  onDelete={handleDeleteCase}
+                />
               )
             ))}
           </div>
