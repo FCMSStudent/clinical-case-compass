@@ -115,3 +115,6 @@ export interface LoadingState {
   isSubmitting: boolean;
   isDeleting: boolean;
 }
+
+// Save status type for autosave functionality
+export type SaveStatus = "saving" | "saved" | "idle" | "error";

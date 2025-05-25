@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
@@ -7,7 +8,7 @@ import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { v4 as uuidv4 } from "uuid";
 import { useLocalStorage } from "@/hooks/use-local-storage";
-import { MedicalCase, Patient, CaseTag, Diagnosis, SPECIALTIES } from "@/types/case";
+import { MedicalCase, Patient, CaseTag, Diagnosis, SPECIALTIES, SaveStatus } from "@/types/case";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -68,7 +69,7 @@ import { SymptomChecklist } from "@/components/cases/SymptomChecklist";
 import { LabResultsCard, LabTest } from "@/components/cases/LabResultsCard";
 import { RadiologyCard, RadiologyExam } from "@/components/cases/RadiologyCard";
 import { InteractiveBodyDiagram } from "@/components/cases/InteractiveBodyDiagram";
-import { InteractiveVitalsCard } from "@/components/cases/InteractiveVitalsCard";
+import { VitalsCard } from "@/components/cases/VitalsCard";
 
 // Enhanced form schema with better validation
 const formSchema = z.object({
@@ -98,7 +99,7 @@ const formSchema = z.object({
   learningPoints: z.string().max(3000).optional(),
   systemSymptoms: z.record(z.string(), z.array(z.string())).optional(),
   vitals: z.record(z.string(), z.string()).optional(),
-  labResults: z.array(z.object({
+  labTests: z.array(z.object({
     id: z.string(),
     name: z.string(),
     value: z.string(),
@@ -166,7 +167,7 @@ const CaseNew = () => {
   const [radiologyExams, setRadiologyExams] = useState<RadiologyExam[]>([]);
 
   // Save state
-  const [saveStatus, setSaveStatus] = useState<"saving" | "saved" | "idle" | "error">("idle");
+  const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
 
   const form = useForm<FormValues>({
@@ -185,7 +186,7 @@ const CaseNew = () => {
       learningPoints: "",
       systemSymptoms: {},
       vitals: {},
-      labResults: [],
+      labTests: [],
       radiologyExams: [],
     },
     mode: "onChange", // Enable real-time validation
@@ -193,10 +194,9 @@ const CaseNew = () => {
 
   // Memoized form steps for progress indicator
   const formSteps = useMemo(() =>
-    TAB_CONFIG.map(({ id, label, icon: Icon }) => ({
+    TAB_CONFIG.map(({ id, label }) => ({
       id,
       label,
-      icon: Icon,
     })),
     []
   );
@@ -324,10 +324,10 @@ const CaseNew = () => {
         ],
         resources: [],
         learningPoints: values.learningPoints?.trim() || undefined,
-        // Include clinical data
+        // Include clinical data - using correct property names
         systemSymptoms: Object.keys(clinicalData.systemSymptoms).length > 0 ? clinicalData.systemSymptoms : undefined,
         vitals: Object.keys(clinicalData.vitals).length > 0 ? clinicalData.vitals : undefined,
-        labResults: clinicalData.labResults.length > 0 ? clinicalData.labResults : undefined,
+        labTests: clinicalData.labResults.length > 0 ? clinicalData.labResults : undefined,
         radiologyExams: clinicalData.radiologyExams.length > 0 ? clinicalData.radiologyExams : undefined,
       };
 
@@ -787,14 +787,12 @@ const CaseNew = () => {
                           Select areas of interest on the body diagram or use the checklist below
                         </h4>
                         <InteractiveBodyDiagram
-                          onSelectionChange={handleBodyPartSelected}
                           highlightedSystems={Object.keys(systemSymptoms)}
                         />
                       </div>
                       <div>
                         <SymptomChecklist
                           highlightedSymptoms={highlightedSymptoms}
-                          selectedSymptoms={systemSymptoms}
                           onChange={handleSymptomChange}
                         />
                       </div>
@@ -809,9 +807,9 @@ const CaseNew = () => {
                       <Stethoscope className="h-5 w-5 text-medical-600" />
                       <h3 className="text-lg font-medium text-medical-700">Vital Signs</h3>
                     </div>
-                    <InteractiveVitalsCard
-                      vitals={vitals}
-                      onChange={handleVitalsChange}
+                    <VitalsCard
+                      onVitalsChange={handleVitalsChange}
+                      initialVitals={vitals}
                     />
                   </div>
 
@@ -850,8 +848,8 @@ const CaseNew = () => {
                       <h3 className="text-lg font-medium text-medical-700">Laboratory Results</h3>
                     </div>
                     <LabResultsCard
-                      results={labResults}
-                      onChange={handleLabResultsChange}
+                      onLabResultsChange={handleLabResultsChange}
+                      initialResults={labResults}
                     />
                   </div>
 
@@ -864,8 +862,8 @@ const CaseNew = () => {
                       <h3 className="text-lg font-medium text-medical-700">Radiology Exams</h3>
                     </div>
                     <RadiologyCard
-                      exams={radiologyExams}
-                      onChange={handleRadiologyExamsChange}
+                      onRadiologyChange={handleRadiologyExamsChange}
+                      initialResults={radiologyExams}
                     />
                   </div>
                 </CardContent>
