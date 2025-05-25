@@ -383,27 +383,38 @@ const CaseNew = () => {
     } else {
       toast.error("Please complete required fields before proceeding");
       // Focus on error if navigating forward and validation fails
-      if (targetIndex > currentIndex) {
+      if (targetIndex > currentIndex) { // Check if it's a forward navigation
         const errors = form.formState.errors;
         const errorFieldNames = Object.keys(errors);
-        if (errorFieldNames.length > 0) {
-          const firstErrorField = errorFieldNames[0] as keyof FormValues;
-          form.setFocus(firstErrorField);
+
+        // Assuming TAB_FIELD_MAPPING is defined in this file, like:
+        // const TAB_FIELD_MAPPING: Record<TabId, (keyof FormValues)[]> = { ... };
+        // And activeTab is the current active tab ID.
+        const fieldsForCurrentTab = TAB_FIELD_MAPPING[activeTab] || [];
+        
+        const firstErrorFieldOnCurrentTab = errorFieldNames.find(fieldName =>
+          fieldsForCurrentTab.includes(fieldName as keyof FormValues) && errors[fieldName as keyof FormValues]
+        ) as keyof FormValues | undefined;
+
+        if (firstErrorFieldOnCurrentTab) {
+          form.setFocus(firstErrorFieldOnCurrentTab);
           // Attempt to scroll the element into view
-          // We need to wait for the focus to be set, then scroll.
           setTimeout(() => {
-            const fieldElement = document.getElementsByName(firstErrorField)[0] || document.getElementById(firstErrorField);
+            const fieldElement = document.getElementsByName(firstErrorFieldOnCurrentTab)[0] || document.getElementById(firstErrorFieldOnCurrentTab);
             if (fieldElement) {
               fieldElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
             } else {
               // Fallback for complex fields or if ID/name is not directly on the input
-              const formItem = document.getElementById(`${firstErrorField}-form-item`);
+              const formItem = document.getElementById(`${firstErrorFieldOnCurrentTab}-form-item`);
               if (formItem) {
                 formItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
               }
             }
           }, 50); // Small delay to ensure focus has been applied
         }
+        // The toast message "Please complete required fields..." is likely handled
+        // by the part of the code that calls canNavigateToTab or is immediately after this block.
+        // Ensure that part is still present and functional.
       }
     }
   }, [activeTab, canNavigateToTab, form]);
