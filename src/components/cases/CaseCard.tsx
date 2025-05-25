@@ -1,7 +1,9 @@
 
 import { format } from "date-fns";
+import { User, ClipboardText, Stethoscope, Tag } from 'lucide-react';
 import { MedicalCase } from "@/types/case";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { memo } from "react";
@@ -17,7 +19,7 @@ export const CaseCard = memo<CaseCardProps>(({ medicalCase, className }) => {
     : null;
   
   return (
-    <Card className={cn("transition-all duration-200 hover:shadow-lg flex flex-col h-full", className)}>
+    <Card className={cn("transition-all duration-200 hover:shadow-lg hover:scale-[1.02] flex flex-col h-full", className)}>
       <CardHeader className="pb-3 flex-shrink-0">
         <div className="flex justify-between items-start gap-3">
           <CardTitle className="text-lg line-clamp-2 leading-tight">
@@ -27,15 +29,19 @@ export const CaseCard = memo<CaseCardProps>(({ medicalCase, className }) => {
             {format(new Date(medicalCase.createdAt), "MMM d, yyyy")}
           </div>
         </div>
-        <div className="text-sm text-muted-foreground">
-          {medicalCase.patient.name}, {medicalCase.patient.age} y/o{" "}
-          {medicalCase.patient.gender}
+        <div className="text-sm text-muted-foreground flex items-center">
+          <User className="h-4 w-4 mr-2 flex-shrink-0" />
+          <span>{medicalCase.patient.name}, {medicalCase.patient.age} y/o{" "}
+          {medicalCase.patient.gender}</span>
         </div>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col">
         <div className="space-y-3 flex-1">
           <div>
-            <div className="text-sm font-medium text-primary mb-1">Chief Complaint</div>
+            <div className="text-sm font-medium text-primary mb-1 flex items-center">
+              <ClipboardText className="h-4 w-4 mr-2 flex-shrink-0" />
+              Chief Complaint
+            </div>
             <p className="text-sm text-muted-foreground line-clamp-2">
               {medicalCase.chiefComplaint}
             </p>
@@ -43,7 +49,10 @@ export const CaseCard = memo<CaseCardProps>(({ medicalCase, className }) => {
           
           {primaryDiagnosis && (
             <div>
-              <div className="text-sm font-medium text-primary mb-1">Diagnosis</div>
+              <div className="text-sm font-medium text-primary mb-1 flex items-center">
+                <Stethoscope className="h-4 w-4 mr-2 flex-shrink-0" />
+                Diagnosis
+              </div>
               <p className="text-sm text-muted-foreground line-clamp-2">
                 {primaryDiagnosis.name}
                 {primaryDiagnosis.status !== "confirmed" && (
@@ -55,32 +64,35 @@ export const CaseCard = memo<CaseCardProps>(({ medicalCase, className }) => {
         </div>
         
         <div className="mt-4 pt-3 border-t border-medical-100">
+          <div className="text-sm font-medium text-primary mb-1 flex items-center">
+            <Tag className="h-4 w-4 mr-2 flex-shrink-0" />
+            Tags
+          </div>
           <div className="flex flex-wrap gap-2 mb-3">
-            {medicalCase.tags && medicalCase.tags.slice(0, 2).map((tag) => (
+            {medicalCase.tags && medicalCase.tags.slice(0, medicalCase.tags.length > 3 ? 2 : medicalCase.tags.length).map((tag) => (
               <span
                 key={tag.id}
                 className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
                 style={{
-                  backgroundColor: `${tag.color}20`,
+                  backgroundColor: `${tag.color}20`, // Ensure good contrast
                   color: tag.color,
                 }}
               >
                 {tag.name}
               </span>
             ))}
-            {medicalCase.tags && medicalCase.tags.length > 2 && (
+            {medicalCase.tags && medicalCase.tags.length > 3 && (
               <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground">
                 +{medicalCase.tags.length - 2}
               </span>
             )}
           </div>
           <div className="flex justify-end">
-            <Link 
-              to={`/cases/${medicalCase.id}`} 
-              className="text-xs font-medium text-primary hover:underline transition-colors"
-            >
-              View details →
-            </Link>
+            <Button asChild variant="outline" size="sm">
+              <Link to={`/cases/${medicalCase.id}`}>
+                View Details
+              </Link>
+            </Button>
           </div>
         </div>
       </CardContent>
