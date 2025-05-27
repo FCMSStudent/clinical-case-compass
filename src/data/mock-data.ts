@@ -21,6 +21,7 @@ export const mockCases: MedicalCase[] = [
   {
     id: "case1",
     title: "Acute Chest Pain with ECG Changes",
+    priority: "high",
     patient: {
       id: "p1",
       name: "John Doe",
@@ -61,6 +62,7 @@ export const mockCases: MedicalCase[] = [
   {
     id: "case2",
     title: "Acute Onset Hemiparesis",
+    priority: "high",
     patient: {
       id: "p2",
       name: "Jane Smith",
@@ -95,6 +97,7 @@ export const mockCases: MedicalCase[] = [
   {
     id: "case3",
     title: "Progressive Dyspnea with Cough",
+    priority: "medium",
     patient: {
       id: "p3",
       name: "Robert Johnson",
