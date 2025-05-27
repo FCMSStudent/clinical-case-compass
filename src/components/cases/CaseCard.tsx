@@ -1,6 +1,6 @@
 
 import { format } from "date-fns";
-import { User, ClipboardText, Stethoscope, Tag } from 'lucide-react';
+import { User, Clipboard, Stethoscope, Tag } from 'lucide-react';
 import { MedicalCase } from "@/types/case";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -39,7 +39,7 @@ export const CaseCard = memo<CaseCardProps>(({ medicalCase, className }) => {
         <div className="space-y-3 flex-1">
           <div>
             <div className="text-sm font-medium text-primary mb-1 flex items-center">
-              <ClipboardText className="h-4 w-4 mr-2 flex-shrink-0" />
+              <Clipboard className="h-4 w-4 mr-2 flex-shrink-0" />
               Chief Complaint
             </div>
             <p className="text-sm text-muted-foreground line-clamp-2">

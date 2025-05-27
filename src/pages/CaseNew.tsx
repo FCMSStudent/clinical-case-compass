@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -18,7 +19,7 @@ import {
 } from "@/components/ui/form";
 import { toast } from "@/components/ui/use-toast";
 import { useMutation } from "@tanstack/react-query";
-import { createCase } from "@/lib/api/cases";
+import { createCase, CreateCaseRequest } from "@/lib/api/cases";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   Select,
@@ -58,8 +59,8 @@ const CaseNew = () => {
     },
   });
 
-  const { mutate: createNewCase, isLoading } = useMutation({
-    mutationFn: createCase,
+  const { mutate: createNewCase, isPending } = useMutation({
+    mutationFn: (data: CreateCaseRequest) => createCase(data),
     onSuccess: () => {
       toast({
         title: "Case created successfully!",
@@ -202,8 +203,8 @@ const CaseNew = () => {
                 Previous
               </Button>
             )}
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Creating..." : "Create Case"}
+            <Button type="submit" disabled={isPending}>
+              {isPending ? "Creating..." : "Create Case"}
             </Button>
           </div>
         </form>
