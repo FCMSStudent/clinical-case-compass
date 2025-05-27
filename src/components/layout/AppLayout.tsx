@@ -30,36 +30,36 @@ export function AppLayout({ children }: AppLayoutProps) {
       />
       
       <div className="flex-1 transition-all duration-300">
-        {/* Fixed Mobile Header */}
-        <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-background border-b md:hidden">
+        {/* Enhanced mobile header */}
+        <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-background/80 backdrop-blur-md border-b border-border/50 md:hidden">
           <Button
             variant="outline"
             size="icon" 
             onClick={toggleMobileSidebar}
-            className="rounded-md"
+            className="rounded-xl shadow-sm hover:shadow-md transition-all hover:scale-105"
             aria-label="Toggle sidebar"
           >
-            <Menu className="h-6 w-6" />
+            <Menu className="h-5 w-5" />
           </Button>
           
           <Button
             variant="outline"
             size="icon"
             onClick={toggleTheme}
-            className="rounded-md"
+            className="rounded-xl shadow-sm hover:shadow-md transition-all hover:scale-105"
             aria-label={theme === 'dark' ? "Switch to light mode" : "Switch to dark mode"}
           >
             {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button>
         </div>
 
-        {/* Desktop controls */}
-        <div className="fixed top-4 left-4 z-30 hidden md:flex gap-2">
+        {/* Enhanced desktop controls */}
+        <div className="fixed top-6 left-6 z-30 hidden md:flex gap-3">
           <Button
             variant="outline"
             size="icon"
             onClick={toggleSidebar}
-            className="shadow-sm bg-background hover:bg-accent"
+            className="rounded-xl shadow-lg bg-background/80 backdrop-blur-md hover:shadow-xl transition-all hover:scale-105 border-border/50"
             aria-label={isSidebarOpen ? "Hide sidebar" : "Show sidebar"}
           >
             {isSidebarOpen ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
@@ -68,7 +68,7 @@ export function AppLayout({ children }: AppLayoutProps) {
             variant="outline"
             size="icon"
             onClick={toggleTheme}
-            className="shadow-sm bg-background hover:bg-accent"
+            className="rounded-xl shadow-lg bg-background/80 backdrop-blur-md hover:shadow-xl transition-all hover:scale-105 border-border/50"
             aria-label={theme === 'dark' ? "Switch to light mode" : "Switch to dark mode"}
           >
             {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
