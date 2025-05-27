@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link, useLocation } from "react-router-dom";
-import { FileText, PlusCircle, X, Stethoscope } from "lucide-react";
+import { FileText, PlusCircle, X, Stethoscope, FileEdit, UserSquare, Settings as SettingsIcon } from "lucide-react";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   isOpen: boolean;
@@ -20,10 +20,22 @@ const routes = [
     description: "View and manage all medical cases"
   },
   {
-    label: "New Case",
-    icon: PlusCircle,
-    href: "/cases/new",
-    description: "Create a new medical case"
+    label: "My Cases",
+    icon: UserSquare,
+    href: "/cases/my",
+    description: "Access cases assigned to you"
+  },
+  {
+    label: "Drafts",
+    icon: FileEdit,
+    href: "/cases/drafts",
+    description: "Manage your saved case drafts"
+  },
+  {
+    label: "Settings",
+    icon: SettingsIcon,
+    href: "/settings",
+    description: "Configure application settings"
   }
 ];
 
