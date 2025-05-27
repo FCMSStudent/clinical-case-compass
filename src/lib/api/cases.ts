@@ -28,11 +28,12 @@ export const createCase = async (data: CreateCaseRequest): Promise<MedicalCase> 
       id: "patient-1",
       name: "Sample Patient",
       age: 30,
-      gender: "M"
+      gender: "male"
     },
     chiefComplaint: "Sample chief complaint",
     diagnoses: [],
-    tags: []
+    tags: [],
+    resources: []
   };
 
   return newCase;

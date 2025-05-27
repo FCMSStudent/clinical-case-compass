@@ -85,11 +85,15 @@ const CaseNew = () => {
       return;
     }
 
-    createNewCase({
-      ...values,
+    const requestData: CreateCaseRequest = {
+      title: values.title,
+      description: values.description,
+      priority: values.priority,
       userId: user.email,
       bodySelection: bodySelection,
-    });
+    };
+
+    createNewCase(requestData);
   };
 
   return (
