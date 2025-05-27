@@ -1,33 +1,25 @@
 
-import { useState } from "react";
 import { Sidebar } from "./Sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Menu, Moon, Sun } from "lucide-react";
-import { useLocalStorage } from "@/hooks/use-local-storage";
 import { useTheme } from "../../contexts/ThemeContext";
+import { SidebarProvider, useSidebar } from "@/components/ui/sidebar";
 
 interface AppLayoutProps {
   children: React.ReactNode;
 }
 
-export function AppLayout({ children }: AppLayoutProps) {
-  const [isSidebarOpen, setIsSidebarOpen] = useLocalStorage("sidebar:open", true);
-  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+function AppLayoutContent({ children }: AppLayoutProps) {
   const { theme, setTheme } = useTheme();
+  const { toggleSidebar, state, isMobile } = useSidebar();
 
-  const toggleMobileSidebar = () => setIsMobileSidebarOpen(prev => !prev);
-  const toggleSidebar = () => setIsSidebarOpen(prev => !prev);
-  const closeMobileSidebar = () => setIsMobileSidebarOpen(false);
   const toggleTheme = () => setTheme(theme === 'dark' ? 'light' : 'dark');
+  const isDesktopSidebarOpen = state === 'expanded' && !isMobile;
 
   return (
     <div className="flex min-h-screen bg-background">
-      <Sidebar 
-        isOpen={isMobileSidebarOpen} 
-        isDesktopOpen={isSidebarOpen}
-        onClose={closeMobileSidebar} 
-      />
+      <Sidebar />
       
       <div className="flex-1 transition-all duration-300">
         {/* Enhanced mobile header */}
@@ -35,7 +27,7 @@ export function AppLayout({ children }: AppLayoutProps) {
           <Button
             variant="outline"
             size="icon" 
-            onClick={toggleMobileSidebar}
+            onClick={toggleSidebar} // Use combined toggleSidebar from hook
             className="rounded-xl shadow-sm hover:shadow-md transition-all hover:scale-105"
             aria-label="Toggle sidebar"
           >
@@ -58,11 +50,11 @@ export function AppLayout({ children }: AppLayoutProps) {
           <Button
             variant="outline"
             size="icon"
-            onClick={toggleSidebar}
+            onClick={toggleSidebar} // Use combined toggleSidebar from hook
             className="rounded-xl shadow-lg bg-background/80 backdrop-blur-md hover:shadow-xl transition-all hover:scale-105 border-border/50"
-            aria-label={isSidebarOpen ? "Hide sidebar" : "Show sidebar"}
+            aria-label={isDesktopSidebarOpen ? "Hide sidebar" : "Show sidebar"}
           >
-            {isSidebarOpen ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+            {isDesktopSidebarOpen ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
           </Button>
           <Button
             variant="outline"
@@ -82,5 +74,16 @@ export function AppLayout({ children }: AppLayoutProps) {
       
       <Toaster position="top-right" richColors />
     </div>
+  );
+}
+
+export function AppLayout({ children }: AppLayoutProps) {
+  // Default to open if not explicitly set to "false" in localStorage, or if not present
+  const initialSidebarState = typeof window !== 'undefined' ? localStorage.getItem("sidebar:state") !== "false" : true;
+
+  return (
+    <SidebarProvider defaultOpen={initialSidebarState}>
+      <AppLayoutContent>{children}</AppLayoutContent>
+    </SidebarProvider>
   );
 }
