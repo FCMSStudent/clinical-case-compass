@@ -46,6 +46,7 @@ export interface RadiologyExam {
 export interface MedicalCase {
   id: string;
   title: string;
+  priority: "low" | "medium" | "high";
   patient: Patient;
   createdAt: string;
   updatedAt: string;
