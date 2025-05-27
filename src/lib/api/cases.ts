@@ -20,7 +20,6 @@ export const createCase = async (data: CreateCaseRequest): Promise<MedicalCase> 
   const newCase: MedicalCase = {
     id: Date.now().toString(),
     title: data.title,
-    description: data.description || "",
     priority: data.priority,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
