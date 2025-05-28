@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -6,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Form,
@@ -32,9 +30,7 @@ import { InteractiveBodyDiagram } from "@/components/body-diagram/InteractiveBod
 import { SymptomChecklist } from "@/components/symptoms/SymptomChecklist";
 
 const caseSchema = z.object({
-  title: z.string().min(3, {
-    message: "Title must be at least 3 characters.",
-  }),
+  title: z.string().min(3, { message: "Title must be at least 3 characters." }),
   description: z.string().optional(),
   priority: z.enum(["low", "medium", "high"]).default("medium"),
 });
@@ -46,8 +42,8 @@ const CaseNew = () => {
   const { user } = useAuth();
   const [activeStep, setActiveStep] = useState<"case-details" | "clinical-details">("case-details");
   const [bodySelection, setBodySelection] = useState({
-    selectedBodyParts: [],
-    relatedSystems: [],
+    selectedBodyParts: [] as string[],
+    relatedSystems: [] as string[],
   });
 
   const form = useForm<CaseSchemaType>({
@@ -62,9 +58,7 @@ const CaseNew = () => {
   const { mutate: createNewCase, isPending } = useMutation({
     mutationFn: (data: CreateCaseRequest) => createCase(data),
     onSuccess: () => {
-      toast({
-        title: "Case created successfully!",
-      });
+      toast({ title: "Case created successfully!" });
       navigate("/cases");
     },
     onError: (error: any) => {
@@ -78,10 +72,7 @@ const CaseNew = () => {
 
   const onSubmit = (values: CaseSchemaType) => {
     if (!user?.email) {
-      toast({
-        title: "You must be logged in to create a case.",
-        variant: "destructive",
-      });
+      toast({ title: "You must be logged in to create a case.", variant: "destructive" });
       return;
     }
 
@@ -90,7 +81,7 @@ const CaseNew = () => {
       description: values.description,
       priority: values.priority,
       userId: user.email,
-      bodySelection: bodySelection,
+      bodySelection,
     };
 
     createNewCase(requestData);
@@ -130,8 +121,7 @@ const CaseNew = () => {
                       <Input placeholder="Enter case title" {...field} />
                     </FormControl>
                     <FormDescription>
-                      This is the title of the case that will be displayed in
-                      the list.
+                      This is the title of the case that will be displayed in the list.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -145,15 +135,9 @@ const CaseNew = () => {
                   <FormItem>
                     <FormLabel>Description</FormLabel>
                     <FormControl>
-                      <Textarea
-                        placeholder="Enter case description"
-                        className="resize-none"
-                        {...field}
-                      />
+                      <Textarea placeholder="Enter case description" className="resize-none" {...field} />
                     </FormControl>
-                    <FormDescription>
-                      Write a brief description of the case.
-                    </FormDescription>
+                    <FormDescription>Write a brief description of the case.</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -177,9 +161,7 @@ const CaseNew = () => {
                         <SelectItem value="high">High</SelectItem>
                       </SelectContent>
                     </Select>
-                    <FormDescription>
-                      Set the priority of the case.
-                    </FormDescription>
+                    <FormDescription>Set the priority of the case.</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -190,12 +172,12 @@ const CaseNew = () => {
           {activeStep === "clinical-details" && (
             <div className="space-y-6">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <InteractiveBodyDiagram 
-                  onBodyPartSelected={(part) => console.log('Body part selected:', part)}
+                <InteractiveBodyDiagram
+                  onBodyPartSelected={(part) => console.log("Body part selected:", part)}
                   highlightedSystems={bodySelection.relatedSystems}
                 />
-                <SymptomChecklist 
-                  onSymptomsSelected={(symptoms) => console.log('Symptoms selected:', symptoms)}
+                <SymptomChecklist
+                  onSymptomsSelected={(symptoms) => console.log("Symptoms selected:", symptoms)}
                 />
               </div>
             </div>

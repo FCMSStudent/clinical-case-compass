@@ -1,6 +1,7 @@
 import * as React from "react"
 import * as LabelPrimitive from "@radix-ui/react-label"
 import { Slot } from "@radix-ui/react-slot"
+import { AlertCircleIcon } from "lucide-react"
 import {
   Controller,
   ControllerProps,
@@ -107,6 +108,9 @@ const FormControl = React.forwardRef<
 >(({ ...props }, ref) => {
   const { error, formItemId, formDescriptionId, formMessageId } = useFormField()
 
+  // Ensure children is a single element before trying to clone it
+  const child = React.Children.only(props.children) as React.ReactElement;
+
   return (
     <Slot
       ref={ref}
@@ -117,8 +121,10 @@ const FormControl = React.forwardRef<
           : `${formDescriptionId} ${formMessageId}`
       }
       aria-invalid={!!error}
-      {...props}
-    />
+      {...props} // Original props
+    >
+      {React.cloneElement(child, { error: !!error })}
+    </Slot>
   )
 })
 FormControl.displayName = "FormControl"
@@ -158,6 +164,7 @@ const FormMessage = React.forwardRef<
       className={cn("text-sm font-medium text-destructive", className)}
       {...props}
     >
+      <AlertCircleIcon className="inline h-4 w-4 mr-1" />
       {body}
     </p>
   )

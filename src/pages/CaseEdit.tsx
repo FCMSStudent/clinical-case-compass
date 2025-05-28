@@ -29,6 +29,7 @@ import { LabResultsCard, LabTest } from "@/components/cases/LabResultsCard";
 import { RadiologyCard, RadiologyExam } from "@/components/cases/RadiologyCard";
 import { getCaseById } from "@/data/mock-data";
 import { MedicalCase, Patient, Diagnosis, CaseTag, Resource } from "@/types/case";
+import { ErrorSummary } from "@/components/ui/ErrorSummary";
 
 // Define the form schema
 const formSchema = z.object({
@@ -74,6 +75,7 @@ const CaseEdit = () => {
       physicalExam: "",
       learningPoints: "",
     },
+    mode: "onChange", // Enable real-time validation
   });
   
   // Load case data
@@ -208,9 +210,19 @@ const CaseEdit = () => {
       </div>
       
       <PageHeader title="Edit Case" description="Update an existing medical case" />
+
+      {/* Error Summary */}
+      {form.formState.isSubmitted && !form.formState.isValid && Object.keys(form.formState.errors).length > 0 && (
+        <ErrorSummary
+          errors={form.formState.errors}
+          setFocus={form.setFocus as (name: string) => void} // Cast setFocus
+          className="mb-6"
+          formId="case-edit-form"
+        />
+      )}
       
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(onSubmit)} id="case-edit-form" className="space-y-8">
           <div className="grid gap-6 md:grid-cols-2">
             <FormField
               control={form.control}
