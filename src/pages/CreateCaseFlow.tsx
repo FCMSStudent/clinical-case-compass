@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { useForm, SubmitHandler, FieldValues, Path, PathValue } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -6,8 +7,9 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { FormProgressIndicator } from "@/components/cases/FormProgressIndicator";
 import { PageHeader } from "@/components/ui/page-header";
-import { FileText, User, Stethoscope, Lightbulb, AlertTriangle } from "lucide-react";
-import { Form } from "@/components/ui/form"; // Import the RHF-compatible Form component
+import { FileText, User, Stethoscope, Lightbulb, AlertTriangle, Save } from "lucide-react";
+import { Form } from "@/components/ui/form";
+import { toast } from "sonner";
 
 // Step Components and Schemas
 import CaseInfoStep, { caseInfoSchema, CaseInfoFormData } from "@/components/cases/create/CaseInfoStep";
@@ -15,7 +17,6 @@ import PatientStep, { patientStepSchema, PatientStepFormData } from "@/component
 import ClinicalDetailStep, { clinicalDetailStepSchema, ClinicalDetailFormData } from "@/components/cases/create/ClinicalDetailStep";
 import LearningPointsStep, { learningPointsStepSchema, LearningPointsFormData } from "@/components/cases/create/LearningPointsStep";
 import { Card, CardContent } from "@/components/ui/card";
-
 
 // Combine Schemas
 const combinedCaseSchema = caseInfoSchema
@@ -34,26 +35,35 @@ const STEPS: { id: StepId; label: string; icon: JSX.Element; fields: Path<Combin
   { id: "learning", label: "Learning", icon: <Lightbulb className="h-5 w-5" />, fields: Object.keys(learningPointsStepSchema.shape) as Path<CombinedCaseFormData>[] },
 ];
 
+const DRAFT_STORAGE_KEY = "medical-case-draft";
+
 const CreateCaseFlow = () => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [highestValidatedStep, setHighestValidatedStep] = useState(-1);
-
+  const [isDraftSaving, setIsDraftSaving] = useState(false);
 
   const form = useForm<CombinedCaseFormData>({
     resolver: zodResolver(combinedCaseSchema),
-    mode: "onChange", // Validate on change for better UX, can also be "onBlur" or "onSubmit"
+    mode: "onChange",
     defaultValues: {
       // CaseInfoStep
       caseTitle: "",
       chiefComplaint: "",
       specialty: "",
       // PatientStep
-      patientAge: undefined, // Or "" if your input handles it
+      patientName: "",
+      medicalRecordNumber: "",
+      patientAge: undefined,
       patientSex: undefined,
       medicalHistory: "",
       // ClinicalDetailStep
+      patientHistory: "",
       selectedBodyParts: [],
-      symptoms: [],
+      systemSymptoms: {},
+      vitals: {},
+      physicalExam: "",
+      labResults: [],
+      radiologyExams: [],
       relatedSystemsNotes: "",
       vitalsNotes: "",
       labResultsNotes: "",
@@ -65,11 +75,71 @@ const CreateCaseFlow = () => {
     },
   });
 
-  const { control, trigger, handleSubmit, setValue, watch, getValues }_ = form;
+  const { control, trigger, handleSubmit, setValue, watch, getValues } = form;
+
+  // Load draft on component mount
+  useEffect(() => {
+    const savedDraft = localStorage.getItem(DRAFT_STORAGE_KEY);
+    if (savedDraft) {
+      try {
+        const draftData = JSON.parse(savedDraft);
+        Object.keys(draftData).forEach((key) => {
+          setValue(key as Path<CombinedCaseFormData>, draftData[key]);
+        });
+        toast.success("Draft loaded successfully");
+      } catch (error) {
+        console.error("Error loading draft:", error);
+        localStorage.removeItem(DRAFT_STORAGE_KEY);
+      }
+    }
+  }, [setValue]);
+
+  // Auto-save draft functionality
+  useEffect(() => {
+    const subscription = watch((data) => {
+      // Debounce the save operation
+      const timeoutId = setTimeout(() => {
+        saveDraft(data);
+      }, 2000);
+
+      return () => clearTimeout(timeoutId);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [watch]);
+
+  const saveDraft = async (data: any) => {
+    try {
+      setIsDraftSaving(true);
+      localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(data));
+      // Don't show toast for auto-save to avoid spam
+    } catch (error) {
+      console.error("Error saving draft:", error);
+    } finally {
+      setIsDraftSaving(false);
+    }
+  };
+
+  const saveDraftManually = async () => {
+    try {
+      setIsDraftSaving(true);
+      const currentData = getValues();
+      localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(currentData));
+      toast.success("Draft saved successfully");
+    } catch (error) {
+      console.error("Error saving draft:", error);
+      toast.error("Failed to save draft");
+    } finally {
+      setIsDraftSaving(false);
+    }
+  };
+
+  const clearDraft = () => {
+    localStorage.removeItem(DRAFT_STORAGE_KEY);
+  };
 
   const handleNext = async () => {
     const fieldsToValidate = STEPS[currentStepIndex].fields;
-    // Ensure fieldsToValidate is not empty and contains valid field names
     if (fieldsToValidate.length > 0) {
         const isValid = await trigger(fieldsToValidate);
         if (!isValid) {
@@ -82,10 +152,6 @@ const CreateCaseFlow = () => {
 
     if (currentStepIndex < STEPS.length - 1) {
       setCurrentStepIndex((prev) => prev + 1);
-    } else {
-      // This is the final step, actual submission is handled by the form's onSubmit
-      // console.log("Attempting final submission...");
-      // await handleSubmit(onSubmit)(); // This will be called by the submit button
     }
   };
 
@@ -97,16 +163,14 @@ const CreateCaseFlow = () => {
     const targetStepIndex = STEPS.findIndex(step => step.id === stepId);
     if (targetStepIndex < 0 || targetStepIndex === currentStepIndex) return;
 
-    // Allow navigation to any previous step or an already validated step
     if (targetStepIndex < currentStepIndex || targetStepIndex <= highestValidatedStep + 1) {
-        // If moving to a future unvalidated step, validate intermediate steps
         if (targetStepIndex > currentStepIndex && targetStepIndex > highestValidatedStep) {
             for (let i = currentStepIndex; i < targetStepIndex; i++) {
                 const fieldsToValidate = STEPS[i].fields;
                 if (fieldsToValidate.length > 0) {
                     const isValid = await trigger(fieldsToValidate);
                     if (!isValid) {
-                        setCurrentStepIndex(i); // Stay on the step that failed validation
+                        setCurrentStepIndex(i);
                         console.error("Validation failed when trying to jump to step:", STEPS[i].label, form.formState.errors);
                         return;
                     }
@@ -116,7 +180,6 @@ const CreateCaseFlow = () => {
         }
         setCurrentStepIndex(targetStepIndex);
     } else {
-        // Optionally, provide feedback that user needs to complete current/intermediate steps
         console.log("Please complete the current step before moving to a future unvalidated step.");
     }
   };
@@ -124,9 +187,8 @@ const CreateCaseFlow = () => {
   const onSubmit: SubmitHandler<CombinedCaseFormData> = (data) => {
     console.log("Form Submitted Successfully!");
     console.log("Data:", data);
-    // Here you would typically send the data to your backend
-    // e.g., await api.createCase(data);
-    alert("Case submitted! Check console for data.");
+    clearDraft(); // Clear draft after successful submission
+    toast.success("Case submitted successfully!");
   };
 
   const currentStepData = STEPS[currentStepIndex];
@@ -157,10 +219,21 @@ const CreateCaseFlow = () => {
 
   return (
     <div className="container mx-auto py-8 space-y-8 px-4 md:px-0">
-      <PageHeader 
-        title="Create New Clinical Case"
-        description={`Step ${currentStepIndex + 1} of ${STEPS.length}: ${currentStepData.label}`}
-      />
+      <div className="flex justify-between items-center">
+        <PageHeader 
+          title="Create New Clinical Case"
+          description={`Step ${currentStepIndex + 1} of ${STEPS.length}: ${currentStepData.label}`}
+        />
+        <Button
+          onClick={saveDraftManually}
+          disabled={isDraftSaving}
+          variant="outline"
+          size="sm"
+        >
+          <Save className="h-4 w-4 mr-2" />
+          {isDraftSaving ? "Saving..." : "Save Draft"}
+        </Button>
+      </div>
 
       <FormProgressIndicator
         currentStep={currentStepIndex + 1}
@@ -175,7 +248,7 @@ const CreateCaseFlow = () => {
         onStepClick={handleStepClick}
       />
       
-      <Form {...form}> {/* Spread RHF props to the Form component */}
+      <Form {...form}>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="p-6 border border-border rounded-lg min-h-[350px] bg-card shadow-sm">
             {renderStepContent()}

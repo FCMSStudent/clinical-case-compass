@@ -1,3 +1,4 @@
+
 import { Control } from "react-hook-form";
 import { z } from "zod";
 import {
@@ -10,23 +11,20 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 
-// 1. Zod Schema Definition
+// 1. Updated Zod Schema Definition
 export const patientStepSchema = z.object({
+  patientName: z.string().min(1, "Patient name is required."),
+  medicalRecordNumber: z.string().optional(),
   patientAge: z.coerce
     .number({ invalid_type_error: "Age must be a number." })
     .int("Age must be an integer.")
     .positive("Age must be a positive number.")
     .optional()
-    .or(z.literal("")), // Allow empty string, which will be coerced to undefined by optional()
-  patientSex: z.enum(["Male", "Female", "Other", "Prefer not to say"]).optional(),
+    .or(z.literal("")),
+  patientSex: z.enum(["Male", "Female", "Other"]).optional(),
   medicalHistory: z.string().optional(),
 });
 
@@ -35,15 +33,55 @@ export type PatientStepFormData = z.infer<typeof patientStepSchema>;
 
 // 2. Component Props
 interface PatientStepProps {
-  control: Control<any>; // Control object from react-hook-form
+  control: Control<any>;
 }
-
-const sexOptions = ["Male", "Female", "Other", "Prefer not to say"];
 
 // 3. Component Definition
 export const PatientStep: React.FC<PatientStepProps> = ({ control }) => {
   return (
     <div className="space-y-6 py-2">
+      {/* Patient Name Field */}
+      <FormField
+        control={control}
+        name="patientName"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Patient Name *</FormLabel>
+            <FormControl>
+              <Input 
+                placeholder="e.g., John Doe" 
+                {...field} 
+              />
+            </FormControl>
+            <FormDescription>
+              Full name of the patient.
+            </FormDescription>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      {/* Medical Record Number Field */}
+      <FormField
+        control={control}
+        name="medicalRecordNumber"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Medical Record Number (Optional)</FormLabel>
+            <FormControl>
+              <Input 
+                placeholder="e.g., MRN123456" 
+                {...field} 
+              />
+            </FormControl>
+            <FormDescription>
+              Patient's medical record number or hospital ID.
+            </FormDescription>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
       {/* Patient Age Field */}
       <FormField
         control={control}
@@ -68,29 +106,35 @@ export const PatientStep: React.FC<PatientStepProps> = ({ control }) => {
         )}
       />
 
-      {/* Patient Sex Field */}
+      {/* Patient Gender Field */}
       <FormField
         control={control}
         name="patientSex"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Patient Sex (Optional)</FormLabel>
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
-              <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select patient's sex" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                {sexOptions.map((option) => (
-                  <SelectItem key={option} value={option}>
-                    {option}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <FormLabel>Gender (Optional)</FormLabel>
+            <FormControl>
+              <RadioGroup
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                className="flex flex-col space-y-2"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Male" id="male" />
+                  <Label htmlFor="male">Male</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Female" id="female" />
+                  <Label htmlFor="female">Female</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Other" id="other" />
+                  <Label htmlFor="other">Other</Label>
+                </div>
+              </RadioGroup>
+            </FormControl>
             <FormDescription>
-              The patient's biological sex or gender identity.
+              Patient's gender identity.
             </FormDescription>
             <FormMessage />
           </FormItem>
@@ -122,5 +166,4 @@ export const PatientStep: React.FC<PatientStepProps> = ({ control }) => {
   );
 };
 
-// 4. Export the component and schema
 export default PatientStep;

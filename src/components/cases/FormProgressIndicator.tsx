@@ -10,6 +10,8 @@ interface FormProgressIndicatorProps {
     id: string;
     label: string;
     icon?: React.ReactNode;
+    isCompleted?: boolean;
+    isNavigable?: boolean;
   }[];
   onStepClick?: (stepId: string) => void;
   className?: string;
@@ -44,17 +46,19 @@ export function FormProgressIndicator({
       <div className="flex justify-between mt-2">
         {steps.map((step, index) => {
           const isActive = index + 1 === currentStep;
-          const isCompleted = index + 1 < currentStep;
+          const isCompleted = step.isCompleted || index + 1 < currentStep;
+          const isNavigable = step.isNavigable !== false;
           
           return (
             <button
               key={step.id}
-              onClick={() => onStepClick?.(step.id)}
-              disabled={!onStepClick}
+              onClick={() => isNavigable && onStepClick?.(step.id)}
+              disabled={!isNavigable || !onStepClick}
               className={cn(
                 "flex flex-col items-center space-y-1 px-1 transition-colors",
                 isActive ? "text-medical-700" : isCompleted ? "text-medical-500" : "text-medical-300",
-                onStepClick && "cursor-pointer hover:text-medical-800"
+                isNavigable && onStepClick && "cursor-pointer hover:text-medical-800",
+                !isNavigable && "cursor-not-allowed opacity-50"
               )}
             >
               <div className={cn(

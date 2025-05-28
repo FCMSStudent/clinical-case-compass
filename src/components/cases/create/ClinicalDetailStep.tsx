@@ -1,3 +1,4 @@
+
 import { Control, UseFormSetValue, UseFormWatch } from "react-hook-form";
 import { z } from "zod";
 import {
@@ -10,13 +11,30 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { InteractiveBodyDiagram } from "@/components/body-diagram/InteractiveBodyDiagram";
-import { SymptomChecklist } from "@/components/symptoms/SymptomChecklist";
+import { SystemReviewChecklist } from "@/components/cases/SystemReviewChecklist";
+import { VitalsCard } from "@/components/cases/VitalsCard";
+import { LabResultsCard } from "@/components/cases/LabResultsCard";
+import { RadiologyCard } from "@/components/cases/RadiologyCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-// 1. Zod Schema Definition
+// 1. Updated Zod Schema Definition
 export const clinicalDetailStepSchema = z.object({
+  patientHistory: z.string().optional(),
   selectedBodyParts: z.array(z.string()).optional().default([]),
-  symptoms: z.array(z.string()).optional().default([]),
+  systemSymptoms: z.record(z.array(z.string())).optional().default({}),
+  vitals: z.record(z.string()).optional().default({}),
+  physicalExam: z.string().optional(),
+  labResults: z.array(z.object({
+    id: z.string(),
+    name: z.string(),
+    value: z.string(),
+    unit: z.string(),
+  })).optional().default([]),
+  radiologyExams: z.array(z.object({
+    id: z.string(),
+    modality: z.string(),
+    findings: z.string(),
+  })).optional().default([]),
   relatedSystemsNotes: z.string().optional(),
   vitalsNotes: z.string().optional(),
   labResultsNotes: z.string().optional(),
@@ -44,13 +62,57 @@ export const ClinicalDetailStep: React.FC<ClinicalDetailStepProps> = ({ control,
     setValue("selectedBodyParts", updatedSelectedParts, { shouldValidate: true });
   };
 
-  const handleSymptomsSelected = (symptoms: string[]) => {
-    setValue("symptoms", symptoms, { shouldValidate: true });
+  const handleSystemSymptomsChange = (systemSymptoms: Record<string, string[]>) => {
+    setValue("systemSymptoms", systemSymptoms, { shouldValidate: true });
+  };
+
+  const handleVitalsChange = (vitals: Record<string, string>) => {
+    setValue("vitals", vitals, { shouldValidate: true });
+  };
+
+  const handleLabResultsChange = (labResults: any[]) => {
+    setValue("labResults", labResults, { shouldValidate: true });
+  };
+
+  const handleRadiologyChange = (radiologyExams: any[]) => {
+    setValue("radiologyExams", radiologyExams, { shouldValidate: true });
   };
 
   return (
     <div className="space-y-6 py-2">
+      {/* Patient History */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Patient History</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <FormField
+            control={control}
+            name="patientHistory"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>History of Present Illness</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Describe the patient's current illness, timeline, associated symptoms, and relevant history..."
+                    className="min-h-[120px]"
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Document the chronological development of the patient's current condition.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </CardContent>
+      </Card>
+
+      {/* System Review & Body Diagram */}
       <div className="grid md:grid-cols-2 gap-6">
+        <SystemReviewChecklist onSystemSymptomsChange={handleSystemSymptomsChange} />
+        
         <Card>
           <CardHeader>
             <CardTitle>Affected Body Parts</CardTitle>
@@ -58,12 +120,11 @@ export const ClinicalDetailStep: React.FC<ClinicalDetailStepProps> = ({ control,
           <CardContent>
             <InteractiveBodyDiagram
               onBodyPartSelected={handleBodyPartSelected}
-              highlightedSystems={currentSelectedBodyParts} // Use current selection to highlight
+              highlightedSystems={currentSelectedBodyParts}
             />
             <FormDescription className="mt-2">
               Click on body parts to select/deselect. Selected: {currentSelectedBodyParts.join(", ") || "None"}
             </FormDescription>
-             {/* Hidden FormField to register 'selectedBodyParts' with RHF and show validation errors */}
             <FormField
               control={control}
               name="selectedBodyParts"
@@ -75,30 +136,50 @@ export const ClinicalDetailStep: React.FC<ClinicalDetailStepProps> = ({ control,
             />
           </CardContent>
         </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Reported Symptoms</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <SymptomChecklist onSymptomsSelected={handleSymptomsSelected} />
-             {/* Hidden FormField to register 'symptoms' with RHF and show validation errors */}
-             <FormField
-              control={control}
-              name="symptoms"
-              render={() => (
-                <FormItem>
-                  <FormMessage className="mt-2" />
-                </FormItem>
-              )}
-            />
-          </CardContent>
-        </Card>
       </div>
 
+      {/* Vital Signs */}
+      <VitalsCard onVitalsChange={handleVitalsChange} />
+
+      {/* Physical Examination */}
       <Card>
         <CardHeader>
-          <CardTitle>Clinical Notes</CardTitle>
+          <CardTitle>Physical Examination</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <FormField
+            control={control}
+            name="physicalExam"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Physical Examination Findings</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Document physical examination findings including general appearance, vital signs interpretation, and system-specific findings..."
+                    className="min-h-[120px]"
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Record objective findings from the physical examination.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </CardContent>
+      </Card>
+
+      {/* Laboratory Results */}
+      <div className="grid md:grid-cols-2 gap-6">
+        <LabResultsCard onLabResultsChange={handleLabResultsChange} />
+        <RadiologyCard onRadiologyChange={handleRadiologyChange} />
+      </div>
+
+      {/* Additional Clinical Notes */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Additional Clinical Notes</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           <FormField
@@ -109,14 +190,11 @@ export const ClinicalDetailStep: React.FC<ClinicalDetailStepProps> = ({ control,
                 <FormLabel>Related Systems & Initial Observations</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="Describe any related physiological systems, initial observations, or differential diagnoses considerations based on body parts and symptoms..."
-                    className="min-h-[100px]"
+                    placeholder="Describe any related physiological systems, initial observations, or differential diagnoses considerations..."
+                    className="min-h-[80px]"
                     {...field}
                   />
                 </FormControl>
-                <FormDescription>
-                  Note down observations about systems potentially involved (e.g., Cardiovascular, Respiratory).
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -127,17 +205,14 @@ export const ClinicalDetailStep: React.FC<ClinicalDetailStepProps> = ({ control,
             name="vitalsNotes"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Vitals & Physical Examination Notes</FormLabel>
+                <FormLabel>Vitals Interpretation Notes</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="Record key vital signs (e.g., BP, HR, Temp, RR, SpO2) and physical examination findings..."
-                    className="min-h-[100px]"
+                    placeholder="Interpret vital signs and note any abnormal findings or trends..."
+                    className="min-h-[80px]"
                     {...field}
                   />
                 </FormControl>
-                <FormDescription>
-                  Include any relevant measurements and observations from the physical exam.
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -148,17 +223,14 @@ export const ClinicalDetailStep: React.FC<ClinicalDetailStepProps> = ({ control,
             name="labResultsNotes"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Laboratory Results Notes</FormLabel>
+                <FormLabel>Laboratory Results Interpretation</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="Summarize significant lab findings (e.g., CBC, BMP, specific markers)..."
-                    className="min-h-[100px]"
+                    placeholder="Interpret laboratory results and note significant findings..."
+                    className="min-h-[80px]"
                     {...field}
                   />
                 </FormControl>
-                <FormDescription>
-                  Note abnormal values or results that influence the case.
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -169,17 +241,14 @@ export const ClinicalDetailStep: React.FC<ClinicalDetailStepProps> = ({ control,
             name="radiologyNotes"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Radiology & Imaging Notes</FormLabel>
+                <FormLabel>Radiology Interpretation</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="Describe findings from X-rays, CT scans, MRIs, ultrasounds, etc..."
-                    className="min-h-[100px]"
+                    placeholder="Interpret imaging results and note key findings..."
+                    className="min-h-[80px]"
                     {...field}
                   />
                 </FormControl>
-                <FormDescription>
-                  Summarize key imaging results and their interpretations.
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -190,5 +259,4 @@ export const ClinicalDetailStep: React.FC<ClinicalDetailStepProps> = ({ control,
   );
 };
 
-// 4. Export the component and schema
 export default ClinicalDetailStep;
