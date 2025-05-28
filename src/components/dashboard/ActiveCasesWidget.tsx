@@ -1,4 +1,5 @@
-import { StatCard } from "@/components/shared/StatCard";
+
+import { StatCard } from "@/components/dashboard/StatCard";
 import { Briefcase } from "lucide-react";
 
 export function ActiveCasesWidget() {
