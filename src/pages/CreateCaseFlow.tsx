@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react"; // Added useEffect
 import { useForm, SubmitHandler, FieldValues, Path, PathValue } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useToast } from "@/components/ui/use-toast"; // Added useToast
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,8 @@ const combinedCaseSchema = caseInfoSchema
 
 export type CombinedCaseFormData = z.infer<typeof combinedCaseSchema>;
 
+const DRAFT_STORAGE_KEY = "clinicalCaseDraft"; // Added Local Storage Key
+
 type StepId = "caseInfo" | "patient" | "clinical" | "learning";
 
 const STEPS: { id: StepId; label: string; icon: JSX.Element; fields: Path<CombinedCaseFormData>[]; }[] = [
@@ -37,35 +40,84 @@ const STEPS: { id: StepId; label: string; icon: JSX.Element; fields: Path<Combin
 const CreateCaseFlow = () => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [highestValidatedStep, setHighestValidatedStep] = useState(-1);
-
+  const { toast } = useToast(); // Added toast hook
 
   const form = useForm<CombinedCaseFormData>({
     resolver: zodResolver(combinedCaseSchema),
-    mode: "onChange", // Validate on change for better UX, can also be "onBlur" or "onSubmit"
+    mode: "onChange", 
     defaultValues: {
       // CaseInfoStep
       caseTitle: "",
       chiefComplaint: "",
       specialty: "",
       // PatientStep
-      patientAge: undefined, // Or "" if your input handles it
-      patientSex: undefined,
-      medicalHistory: "",
+      patientName: "",
+      medicalRecordNumber: "",
+      age: undefined, 
+      gender: undefined, 
       // ClinicalDetailStep
       selectedBodyParts: [],
-      symptoms: [],
-      relatedSystemsNotes: "",
-      vitalsNotes: "",
-      labResultsNotes: "",
-      radiologyNotes: "",
+      patientHistory: "",
+      physicalExamination: "",
+      vitalSigns: { 
+        temperature: "", 
+        heartRate: "", 
+        bloodPressure: "", 
+        respiratoryRate: "", 
+        spo2: "" 
+      },
+      laboratoryResults: [],
+      radiologyExams: [],
+      systemReview: { 
+        cardiovascular: [], 
+        respiratory: [], 
+        gastrointestinal: [], 
+        neurological: [], 
+        musculoskeletal: [], 
+        urinary: [] 
+      },
       // LearningPointsStep
       learningPoints: "",
-      generalNotes: "",
-      resourceLinks: [],
     },
   });
 
-  const { control, trigger, handleSubmit, setValue, watch, getValues }_ = form;
+  const { control, trigger, handleSubmit, setValue, watch, getValues, reset } = form; // Added reset
+
+  // Load draft from local storage on mount
+  useEffect(() => {
+    const savedDraftJson = localStorage.getItem(DRAFT_STORAGE_KEY);
+    if (savedDraftJson) {
+      try {
+        const savedDraft = JSON.parse(savedDraftJson);
+        // Validate if savedDraft structure is somewhat compatible, could be more robust
+        if (savedDraft && typeof savedDraft === 'object' && savedDraft.caseTitle !== undefined) {
+          toast({
+            title: "Draft Found",
+            description: "You have a previously saved draft. Would you like to load it?",
+            action: (
+              <Button variant="outline" size="sm" onClick={() => {
+                reset(savedDraft); 
+                // Attempt to restore step progress if applicable, might need more sophisticated logic
+                // For now, just resetting values is the primary goal and user can navigate.
+                // Consider if highestValidatedStep should be stored and restored too.
+                toast({ title: "Draft Loaded!", description: "Your saved progress has been loaded." });
+              }}>
+                Load Draft
+              </Button>
+            ),
+            duration: 8000, 
+          });
+        } else {
+          console.warn("Found incompatible draft in local storage.", savedDraft);
+          localStorage.removeItem(DRAFT_STORAGE_KEY); // Clear incompatible draft
+        }
+      } catch (error) {
+        console.error("Error parsing saved draft:", error);
+        localStorage.removeItem(DRAFT_STORAGE_KEY); // Clear corrupted draft
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reset]); // Added `reset` to dependency array as per exhaustive-deps, toast is stable
 
   const handleNext = async () => {
     const fieldsToValidate = STEPS[currentStepIndex].fields;
@@ -182,20 +234,50 @@ const CreateCaseFlow = () => {
           </div>
 
           <div className="flex justify-between items-center pt-4 border-t border-border">
-            <Button
-              type="button"
-              onClick={handlePrevious}
-              disabled={currentStepIndex === 0}
-              variant="outline"
-            >
-              Previous
-            </Button>
-            <div className="text-sm text-muted-foreground">
-              Step {currentStepIndex + 1} of {STEPS.length}
+            <div>
+              <Button
+                type="button"
+                onClick={handlePrevious}
+                disabled={currentStepIndex === 0}
+                variant="outline"
+              >
+                Previous
+              </Button>
             </div>
-            <Button type={isLastStep ? "submit" : "button"} onClick={!isLastStep ? handleNext : undefined} variant="default">
-              {isLastStep ? "Submit Case" : "Next"}
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  localStorage.removeItem(DRAFT_STORAGE_KEY);
+                  reset(form.formState.defaultValues); // Reset to initial default values
+                  toast({ title: "Draft Cleared!", description: "Your saved draft has been removed and form reset." });
+                }}
+              >
+                Clear Draft
+              </Button>
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  const currentValues = getValues();
+                  localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(currentValues));
+                  toast({ title: "Draft Saved!", description: "Your case progress has been saved locally." });
+                }}
+              >
+                Save Draft
+              </Button>
+              <div className="text-sm text-muted-foreground hidden md:block">
+                Step {currentStepIndex + 1} of {STEPS.length}
+              </div>
+            </div>
+            <div>
+              <Button type={isLastStep ? "submit" : "button"} onClick={!isLastStep ? handleNext : undefined} variant="default">
+                {isLastStep ? "Submit Case" : "Next"}
+              </Button>
+            </div>
           </div>
         </form>
       </Form>

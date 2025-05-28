@@ -1,4 +1,4 @@
-import { Control, useFieldArray } from "react-hook-form";
+import { Control } from "react-hook-form"; // useFieldArray removed
 import { z } from "zod";
 import {
   FormField,
@@ -8,24 +8,16 @@ import {
   FormDescription,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+// Input import removed
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
+// Button import removed
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Trash2, PlusCircle } from "lucide-react";
+// Trash2, PlusCircle imports removed
 
 // 1. Zod Schema Definition
 export const learningPointsStepSchema = z.object({
   learningPoints: z.string().optional(),
-  generalNotes: z.string().optional(),
-  resourceLinks: z
-    .array(
-      z.object({
-        url: z.string().url("Invalid URL format.").min(1, "URL cannot be empty."),
-        description: z.string().optional(),
-      })
-    )
-    .optional().default([]),
+  // generalNotes and resourceLinks removed
 });
 
 // Optional: Define a type for the form data based on the schema
@@ -38,10 +30,7 @@ interface LearningPointsStepProps {
 
 // 3. Component Definition
 export const LearningPointsStep: React.FC<LearningPointsStepProps> = ({ control }) => {
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "resourceLinks",
-  });
+  // useFieldArray hook for resourceLinks removed
 
   return (
     <div className="space-y-6 py-2">
@@ -49,122 +38,31 @@ export const LearningPointsStep: React.FC<LearningPointsStepProps> = ({ control 
         <CardHeader>
           <CardTitle>Educational Takeaways</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent> {/* Removed space-y-6 from here as only one field remains */}
           <FormField
             control={control}
             name="learningPoints"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Key Learning Points</FormLabel>
+                <FormLabel>Key Learning Points (Differential, Management, Follow-up, Pearls)</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="e.g., - Importance of early ECG in suspected MI.&#10;- Differential diagnosis for acute chest pain.&#10;- Management protocol for STEMI."
-                    className="min-h-[120px]"
+                    placeholder="e.g.,&#10;- Differential diagnoses considered: ...&#10;- Key management decisions: ...&#10;- Important follow-up actions: ...&#10;- Take-home pearls: ..."
+                    className="min-h-[150px]" // Increased min-height for more content
                     {...field}
                   />
                 </FormControl>
                 <FormDescription>
-                  Summarize the main educational insights or lessons learned from this case. Use bullet points for clarity.
+                  Summarize differential diagnoses, management strategies, follow-up considerations, and key take-home pearls from this case.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
-
-          <FormField
-            control={control}
-            name="generalNotes"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>General Reflections & Notes</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Any other thoughts, reflections, areas for further study, or personal notes related to this case..."
-                    className="min-h-[100px]"
-                    {...field}
-                  />
-                </FormControl>
-                <FormDescription>
-                  Optional space for additional reflections or miscellaneous notes.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {/* FormField for generalNotes removed */}
         </CardContent>
       </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Supporting Resources</CardTitle>
-          <FormDescription>
-            Add links to relevant articles, guidelines, studies, or other educational materials.
-          </FormDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {fields.map((item, index) => (
-            <Card key={item.id} className="p-4 bg-muted/30 shadow-sm">
-              <div className="flex flex-col md:flex-row gap-4">
-                <FormField
-                  control={control}
-                  name={`resourceLinks.${index}.url`}
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>URL</FormLabel>
-                      <FormControl>
-                        <Input placeholder="https://example.com/article" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={control}
-                  name={`resourceLinks.${index}.description`}
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Description (Optional)</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g., AHA Guidelines for STEMI" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <div className="pt-1 md:pt-6">
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    size="icon"
-                    onClick={() => remove(index)}
-                    aria-label="Remove resource link"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </Card>
-          ))}
-           {/* FormField to show array-level errors for resourceLinks if any */}
-           <FormField
-            control={control}
-            name="resourceLinks"
-            render={() => (
-              <FormItem>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => append({ url: "", description: "" })}
-            className="mt-2"
-          >
-            <PlusCircle className="mr-2 h-4 w-4" /> Add Resource Link
-          </Button>
-        </CardContent>
-      </Card>
+      {/* Supporting Resources Card removed */}
     </div>
   );
 };

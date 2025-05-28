@@ -9,25 +9,19 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 // 1. Zod Schema Definition
 export const patientStepSchema = z.object({
-  patientAge: z.coerce
+  patientName: z.string().min(1, "Patient name is required."),
+  medicalRecordNumber: z.string().optional(),
+  age: z.coerce
     .number({ invalid_type_error: "Age must be a number." })
     .int("Age must be an integer.")
     .positive("Age must be a positive number.")
     .optional()
     .or(z.literal("")), // Allow empty string, which will be coerced to undefined by optional()
-  patientSex: z.enum(["Male", "Female", "Other", "Prefer not to say"]).optional(),
-  medicalHistory: z.string().optional(),
+  gender: z.enum(["Male", "Female", "Other"], { required_error: "Gender is required." }),
 });
 
 // Optional: Define a type for the form data based on the schema
@@ -38,24 +32,61 @@ interface PatientStepProps {
   control: Control<any>; // Control object from react-hook-form
 }
 
-const sexOptions = ["Male", "Female", "Other", "Prefer not to say"];
+const genderOptions = [
+  { value: "Male", label: "Male" },
+  { value: "Female", label: "Female" },
+  { value: "Other", label: "Other" },
+];
 
 // 3. Component Definition
 export const PatientStep: React.FC<PatientStepProps> = ({ control }) => {
   return (
     <div className="space-y-6 py-2">
-      {/* Patient Age Field */}
+      {/* Patient Name Field */}
       <FormField
         control={control}
-        name="patientAge"
+        name="patientName"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Patient Age (Optional)</FormLabel>
+            <FormLabel>Patient Name</FormLabel>
             <FormControl>
-              <Input 
-                type="number" 
-                placeholder="e.g., 35" 
-                {...field} 
+              <Input placeholder="e.g., John Doe" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      {/* Medical Record Number Field */}
+      <FormField
+        control={control}
+        name="medicalRecordNumber"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Medical Record Number (Optional)</FormLabel>
+            <FormControl>
+              <Input placeholder="e.g., MRN12345" {...field} />
+            </FormControl>
+            <FormDescription>
+              Patient's unique medical identifier, if available.
+            </FormDescription>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      {/* Age Field */}
+      <FormField
+        control={control}
+        name="age"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Age</FormLabel>
+            <FormControl>
+              <Input
+                type="number"
+                placeholder="e.g., 35"
+                {...field}
                 onChange={e => field.onChange(e.target.value === '' ? '' : Number(e.target.value))}
                 value={field.value === undefined || field.value === null ? '' : String(field.value)}
               />
@@ -68,51 +99,33 @@ export const PatientStep: React.FC<PatientStepProps> = ({ control }) => {
         )}
       />
 
-      {/* Patient Sex Field */}
+      {/* Gender Field */}
       <FormField
         control={control}
-        name="patientSex"
+        name="gender"
         render={({ field }) => (
-          <FormItem>
-            <FormLabel>Patient Sex (Optional)</FormLabel>
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
-              <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select patient's sex" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                {sexOptions.map((option) => (
-                  <SelectItem key={option} value={option}>
-                    {option}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <FormDescription>
-              The patient's biological sex or gender identity.
-            </FormDescription>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      {/* Relevant Medical History Field */}
-      <FormField
-        control={control}
-        name="medicalHistory"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Relevant Medical History (Optional)</FormLabel>
+          <FormItem className="space-y-3">
+            <FormLabel>Gender</FormLabel>
             <FormControl>
-              <Textarea
-                placeholder="e.g., Hypertension, Type 2 Diabetes, Previous MI..."
-                className="min-h-[100px]"
-                {...field}
-              />
+              <RadioGroup
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                className="flex flex-col space-y-1"
+              >
+                {genderOptions.map((option) => (
+                  <FormItem key={option.value} className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value={option.value} />
+                    </FormControl>
+                    <FormLabel className="font-normal">
+                      {option.label}
+                    </FormLabel>
+                  </FormItem>
+                ))}
+              </RadioGroup>
             </FormControl>
             <FormDescription>
-              A brief summary of the patient's relevant past medical conditions or surgeries.
+              Select the patient's gender.
             </FormDescription>
             <FormMessage />
           </FormItem>
