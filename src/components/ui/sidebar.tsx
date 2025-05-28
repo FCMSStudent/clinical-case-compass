@@ -153,6 +153,7 @@ const SidebarProvider = forwardRef<
               className
             )}
             ref={ref}
+            data-state={state} // Expose state for group-data variants
             {...props}
           >
             {children}
