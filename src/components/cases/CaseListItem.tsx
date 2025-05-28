@@ -1,9 +1,10 @@
+
 import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
 import { MedicalCase } from '@/types/case';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { User, ClipboardText, Eye, Edit, Trash2, Tag as TagIcon, CalendarDays } from 'lucide-react'; // Added CalendarDays
+import { User, Clipboard, Eye, Edit, Trash2, Tag as TagIcon, CalendarDays } from 'lucide-react'; // Changed ClipboardText to Clipboard
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils'; // For optional className
 
@@ -38,7 +39,7 @@ export const CaseListItem = memo<CaseListItemProps>(({ medicalCase, className, o
             </div>
 
             <div className="flex items-start text-sm text-muted-foreground" title={`Complaint: ${medicalCase.chiefComplaint}`}>
-              <ClipboardText className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" /> {/* mt-0.5 for better alignment with text */}
+              <Clipboard className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" /> {/* Changed ClipboardText to Clipboard */}
               <p className="truncate">
                 {medicalCase.chiefComplaint}
               </p>
