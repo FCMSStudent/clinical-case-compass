@@ -7,7 +7,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { FormProgressIndicator } from "@/components/cases/FormProgressIndicator";
 import { PageHeader } from "@/components/ui/page-header";
-import { FileText, User, Stethoscope, Lightbulb, AlertTriangle, Save } from "lucide-react";
+import { FileText, User, Stethoscope, Lightbulb, AlertTriangle, Save, CheckCircle } from "lucide-react";
 import { Form } from "@/components/ui/form";
 import { toast } from "sonner";
 
@@ -41,6 +41,7 @@ const CreateCaseFlow = () => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [highestValidatedStep, setHighestValidatedStep] = useState(-1);
   const [isDraftSaving, setIsDraftSaving] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<CombinedCaseFormData>({
     resolver: zodResolver(combinedCaseSchema),
@@ -75,7 +76,7 @@ const CreateCaseFlow = () => {
     },
   });
 
-  const { control, trigger, handleSubmit, setValue, watch, getValues } = form;
+  const { control, trigger, handleSubmit, setValue, watch, getValues, formState } = form;
 
   // Load draft on component mount
   useEffect(() => {
@@ -86,7 +87,9 @@ const CreateCaseFlow = () => {
         Object.keys(draftData).forEach((key) => {
           setValue(key as Path<CombinedCaseFormData>, draftData[key]);
         });
-        toast.success("Draft loaded successfully");
+        toast.success("Draft loaded successfully", {
+          description: "Your previous work has been restored"
+        });
       } catch (error) {
         console.error("Error loading draft:", error);
         localStorage.removeItem(DRAFT_STORAGE_KEY);
@@ -100,7 +103,7 @@ const CreateCaseFlow = () => {
       // Debounce the save operation
       const timeoutId = setTimeout(() => {
         saveDraft(data);
-      }, 2000);
+      }, 3000); // Increased to 3 seconds for better UX
 
       return () => clearTimeout(timeoutId);
     });
@@ -125,7 +128,9 @@ const CreateCaseFlow = () => {
       setIsDraftSaving(true);
       const currentData = getValues();
       localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(currentData));
-      toast.success("Draft saved successfully");
+      toast.success("Draft saved", {
+        description: "Your progress has been saved"
+      });
     } catch (error) {
       console.error("Error saving draft:", error);
       toast.error("Failed to save draft");
@@ -143,7 +148,9 @@ const CreateCaseFlow = () => {
     if (fieldsToValidate.length > 0) {
         const isValid = await trigger(fieldsToValidate);
         if (!isValid) {
-        console.error("Validation failed for step:", STEPS[currentStepIndex].label, form.formState.errors);
+        toast.error("Please fix the errors before proceeding", {
+          description: "Some required fields are missing or invalid"
+        });
         return;
         }
     }
@@ -152,6 +159,7 @@ const CreateCaseFlow = () => {
 
     if (currentStepIndex < STEPS.length - 1) {
       setCurrentStepIndex((prev) => prev + 1);
+      toast.success(`Step ${currentStepIndex + 1} completed`);
     }
   };
 
@@ -171,7 +179,7 @@ const CreateCaseFlow = () => {
                     const isValid = await trigger(fieldsToValidate);
                     if (!isValid) {
                         setCurrentStepIndex(i);
-                        console.error("Validation failed when trying to jump to step:", STEPS[i].label, form.formState.errors);
+                        toast.error(`Please complete step ${i + 1} before proceeding`);
                         return;
                     }
                     setHighestValidatedStep(Math.max(highestValidatedStep, i));
@@ -180,19 +188,39 @@ const CreateCaseFlow = () => {
         }
         setCurrentStepIndex(targetStepIndex);
     } else {
-        console.log("Please complete the current step before moving to a future unvalidated step.");
+        toast.warning("Please complete the current step first");
     }
   };
   
-  const onSubmit: SubmitHandler<CombinedCaseFormData> = (data) => {
-    console.log("Form Submitted Successfully!");
-    console.log("Data:", data);
-    clearDraft(); // Clear draft after successful submission
-    toast.success("Case submitted successfully!");
+  const onSubmit: SubmitHandler<CombinedCaseFormData> = async (data) => {
+    try {
+      setIsSubmitting(true);
+      console.log("Form Submitted Successfully!");
+      console.log("Data:", data);
+      
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      clearDraft();
+      toast.success("Case submitted successfully!", {
+        description: "Your clinical case has been saved",
+        action: {
+          label: "View Cases",
+          onClick: () => console.log("Navigate to cases")
+        }
+      });
+    } catch (error) {
+      toast.error("Failed to submit case", {
+        description: "Please try again"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const currentStepData = STEPS[currentStepIndex];
   const isLastStep = currentStepIndex === STEPS.length - 1;
+  const completionPercentage = Math.round(((currentStepIndex + 1) / STEPS.length) * 100);
 
   const renderStepContent = () => {
     switch (STEPS[currentStepIndex].id) {
@@ -218,60 +246,103 @@ const CreateCaseFlow = () => {
   };
 
   return (
-    <div className="container mx-auto py-8 space-y-8 px-4 md:px-0">
-      <div className="flex justify-between items-center">
-        <PageHeader 
-          title="Create New Clinical Case"
-          description={`Step ${currentStepIndex + 1} of ${STEPS.length}: ${currentStepData.label}`}
-        />
-        <Button
-          onClick={saveDraftManually}
-          disabled={isDraftSaving}
-          variant="outline"
-          size="sm"
-        >
-          <Save className="h-4 w-4 mr-2" />
-          {isDraftSaving ? "Saving..." : "Save Draft"}
-        </Button>
-      </div>
-
-      <FormProgressIndicator
-        currentStep={currentStepIndex + 1}
-        totalSteps={STEPS.length}
-        steps={STEPS.map((step, index) => ({ 
-            id: step.id, 
-            label: step.label, 
-            icon: step.icon,
-            isCompleted: index <= highestValidatedStep,
-            isNavigable: index <= highestValidatedStep + 1 || index < currentStepIndex,
-        }))}
-        onStepClick={handleStepClick}
-      />
-      
-      <Form {...form}>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <div className="p-6 border border-border rounded-lg min-h-[350px] bg-card shadow-sm">
-            {renderStepContent()}
-          </div>
-
-          <div className="flex justify-between items-center pt-4 border-t border-border">
-            <Button
-              type="button"
-              onClick={handlePrevious}
-              disabled={currentStepIndex === 0}
-              variant="outline"
-            >
-              Previous
-            </Button>
-            <div className="text-sm text-muted-foreground">
-              Step {currentStepIndex + 1} of {STEPS.length}
+    <div className="min-h-screen bg-gradient-to-br from-medical-50 to-white">
+      <div className="container mx-auto py-8 space-y-8 px-4 md:px-0 max-w-4xl">
+        <div className="flex justify-between items-start">
+          <div>
+            <PageHeader 
+              title="Create New Clinical Case"
+              description={`Step ${currentStepIndex + 1} of ${STEPS.length}: ${currentStepData.label}`}
+            />
+            <div className="mt-2 flex items-center space-x-4 text-sm text-muted-foreground">
+              <span className="flex items-center">
+                <CheckCircle className="h-4 w-4 mr-1 text-green-500" />
+                {completionPercentage}% Complete
+              </span>
+              {isDraftSaving && (
+                <span className="flex items-center">
+                  <div className="h-2 w-2 bg-blue-500 rounded-full animate-pulse mr-1" />
+                  Auto-saving...
+                </span>
+              )}
             </div>
-            <Button type={isLastStep ? "submit" : "button"} onClick={!isLastStep ? handleNext : undefined} variant="default">
-              {isLastStep ? "Submit Case" : "Next"}
-            </Button>
           </div>
-        </form>
-      </Form>
+          <Button
+            onClick={saveDraftManually}
+            disabled={isDraftSaving}
+            variant="outline"
+            size="sm"
+            className="flex-shrink-0"
+          >
+            <Save className="h-4 w-4 mr-2" />
+            {isDraftSaving ? "Saving..." : "Save Draft"}
+          </Button>
+        </div>
+
+        <FormProgressIndicator
+          currentStep={currentStepIndex + 1}
+          totalSteps={STEPS.length}
+          steps={STEPS.map((step, index) => ({ 
+              id: step.id, 
+              label: step.label, 
+              icon: step.icon,
+              isCompleted: index <= highestValidatedStep,
+              isNavigable: index <= highestValidatedStep + 1 || index < currentStepIndex,
+          }))}
+          onStepClick={handleStepClick}
+        />
+        
+        <Form {...form}>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <CardContent className="p-8">
+                <div className="min-h-[400px]">
+                  {renderStepContent()}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-sm bg-white/60 backdrop-blur-sm">
+              <CardContent className="p-6">
+                <div className="flex justify-between items-center">
+                  <Button
+                    type="button"
+                    onClick={handlePrevious}
+                    disabled={currentStepIndex === 0}
+                    variant="outline"
+                    size="lg"
+                  >
+                    Previous
+                  </Button>
+                  
+                  <div className="text-sm text-muted-foreground text-center">
+                    <div>Step {currentStepIndex + 1} of {STEPS.length}</div>
+                    <div className="text-xs mt-1">{currentStepData.label}</div>
+                  </div>
+                  
+                  <Button 
+                    type={isLastStep ? "submit" : "button"} 
+                    onClick={!isLastStep ? handleNext : undefined} 
+                    variant="default"
+                    size="lg"
+                    disabled={isSubmitting}
+                    className="min-w-[120px]"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                        Submitting...
+                      </>
+                    ) : (
+                      isLastStep ? "Submit Case" : "Next"
+                    )}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </form>
+        </Form>
+      </div>
     </div>
   );
 };
