@@ -1,4 +1,10 @@
-import { Control, useFieldArray } from "react-hook-form";
+import React, { memo } from "react";
+import {
+  Control,
+  FieldValues,
+  Path,
+  useFieldArray,
+} from "react-hook-form";
 import { z } from "zod";
 import {
   FormField,
@@ -13,38 +19,115 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Trash2, PlusCircle } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-// 1. Zod Schema Definition
+/**
+ * ────────────────────────────────────────────────────────────────────────────────
+ * SCHEMA
+ * ────────────────────────────────────────────────────────────────────────────────
+ */
 export const learningPointsStepSchema = z.object({
   learningPoints: z.string().optional(),
   generalNotes: z.string().optional(),
   resourceLinks: z
     .array(
       z.object({
-        url: z.string().url("Invalid URL format.").min(1, "URL cannot be empty."),
+        url: z.string().url({ message: "Invalid URL format" }),
         description: z.string().optional(),
-      })
+      }),
     )
-    .optional().default([]),
+    .default([]),
 });
-
-// Optional: Define a type for the form data based on the schema
 export type LearningPointsFormData = z.infer<typeof learningPointsStepSchema>;
 
-// 2. Component Props
-interface LearningPointsStepProps {
-  control: Control<any>; // Control object from react-hook-form
+/**
+ * ────────────────────────────────────────────────────────────────────────────────
+ * PROPS
+ * ────────────────────────────────────────────────────────────────────────────────
+ */
+export interface LearningPointsStepProps<
+  T extends FieldValues = LearningPointsFormData,
+> {
+  control: Control<T>;
+  className?: string;
+  /** Optional limit for resource links. */
+  maxLinks?: number;
 }
 
-// 3. Component Definition
-export const LearningPointsStep: React.FC<LearningPointsStepProps> = ({ control }) => {
+/**
+ * Row component for each resource link form group.
+ */
+const ResourceRow = <T extends FieldValues>({
+  control,
+  index,
+  onRemove,
+}: {
+  control: Control<T>;
+  index: number;
+  onRemove: () => void;
+}) => (
+  <Card className="bg-muted/30 p-4 shadow-sm">
+    <div className="flex flex-col gap-4 md:flex-row">
+      {/* URL */}
+      <FormField
+        control={control}
+        name={`resourceLinks.${index}.url` as Path<T>}
+        render={({ field }) => (
+          <FormItem className="flex-1">
+            <FormLabel>URL</FormLabel>
+            <FormControl>
+              <Input placeholder="https://example.com/article" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      {/* Description */}
+      <FormField
+        control={control}
+        name={`resourceLinks.${index}.description` as Path<T>}
+        render={({ field }) => (
+          <FormItem className="flex-1">
+            <FormLabel>Description (optional)</FormLabel>
+            <FormControl>
+              <Input placeholder="e.g., AHA Guidelines for STEMI" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      {/* Remove */}
+      <div className="pt-1 md:pt-6">
+        <Button
+          type="button"
+          variant="destructive"
+          size="icon"
+          onClick={onRemove}
+          aria-label="Remove resource link"
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      </div>
+    </div>
+  </Card>
+);
+
+/**
+ * ────────────────────────────────────────────────────────────────────────────────
+ * COMPONENT
+ * ────────────────────────────────────────────────────────────────────────────────
+ */
+export const LearningPointsStep = memo(function LearningPointsStep<
+  T extends FieldValues = LearningPointsFormData,
+>({ control, className, maxLinks = 8 }: LearningPointsStepProps<T>) {
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "resourceLinks",
+    name: "resourceLinks" as Path<T>,
   });
 
   return (
-    <div className="space-y-6 py-2">
+    <section className={cn("space-y-6", className)}>
+      {/* --------------------------------- Takeaways + Notes --------------------------------- */}
       <Card>
         <CardHeader>
           <CardTitle>Educational Takeaways</CardTitle>
@@ -52,19 +135,19 @@ export const LearningPointsStep: React.FC<LearningPointsStepProps> = ({ control 
         <CardContent className="space-y-6">
           <FormField
             control={control}
-            name="learningPoints"
+            name={"learningPoints" as Path<T>}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Key Learning Points</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="e.g., - Importance of early ECG in suspected MI.&#10;- Differential diagnosis for acute chest pain.&#10;- Management protocol for STEMI."
-                    className="min-h-[120px]"
+                    placeholder="• Importance of early ECG in suspected MI\n• Differential diagnosis for acute chest pain\n• Management protocol for STEMI"
+                    className="min-h-[120px] text-sm"
                     {...field}
                   />
                 </FormControl>
                 <FormDescription>
-                  Summarize the main educational insights or lessons learned from this case. Use bullet points for clarity.
+                  Summarise the main educational insights or lessons learned from this case. Use bullet points for clarity.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -73,14 +156,14 @@ export const LearningPointsStep: React.FC<LearningPointsStepProps> = ({ control 
 
           <FormField
             control={control}
-            name="generalNotes"
+            name={"generalNotes" as Path<T>}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>General Reflections & Notes</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="Any other thoughts, reflections, areas for further study, or personal notes related to this case..."
-                    className="min-h-[100px]"
+                    placeholder="Any other thoughts, reflections, areas for further study, or personal notes…"
+                    className="min-h-[100px] text-sm"
                     {...field}
                   />
                 </FormControl>
@@ -94,80 +177,49 @@ export const LearningPointsStep: React.FC<LearningPointsStepProps> = ({ control 
         </CardContent>
       </Card>
 
+      {/* --------------------------------- Resource Links --------------------------------- */}
       <Card>
         <CardHeader>
           <CardTitle>Supporting Resources</CardTitle>
           <FormDescription>
-            Add links to relevant articles, guidelines, studies, or other educational materials.
+            Add links to relevant articles, guidelines, or other educational material.
           </FormDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          {fields.map((item, index) => (
-            <Card key={item.id} className="p-4 bg-muted/30 shadow-sm">
-              <div className="flex flex-col md:flex-row gap-4">
-                <FormField
-                  control={control}
-                  name={`resourceLinks.${index}.url`}
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>URL</FormLabel>
-                      <FormControl>
-                        <Input placeholder="https://example.com/article" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={control}
-                  name={`resourceLinks.${index}.description`}
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Description (Optional)</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g., AHA Guidelines for STEMI" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <div className="pt-1 md:pt-6">
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    size="icon"
-                    onClick={() => remove(index)}
-                    aria-label="Remove resource link"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </Card>
+          {/* Dynamic link rows */}
+          {fields.map((field, index) => (
+            <ResourceRow
+              key={field.id}
+              control={control}
+              index={index}
+              onRemove={() => remove(index)}
+            />
           ))}
-           {/* FormField to show array-level errors for resourceLinks if any */}
-           <FormField
+
+          {/* Array-level validation */}
+          <FormField
             control={control}
-            name="resourceLinks"
+            name={"resourceLinks" as Path<T>}
             render={() => (
               <FormItem>
                 <FormMessage />
               </FormItem>
             )}
           />
+
+          {/* Add new link */}
           <Button
             type="button"
             variant="outline"
-            onClick={() => append({ url: "", description: "" })}
-            className="mt-2"
+            onClick={() => append({ url: "", description: "" } as any)}
+            disabled={fields.length >= maxLinks}
           >
             <PlusCircle className="mr-2 h-4 w-4" /> Add Resource Link
           </Button>
         </CardContent>
       </Card>
-    </div>
+    </section>
   );
-};
+});
 
-// 4. Export the component and schema
-export default LearningPointsStep;
+LearningPointsStep.displayName = "LearningPointsStep";
