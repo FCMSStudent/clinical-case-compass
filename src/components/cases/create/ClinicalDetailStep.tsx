@@ -18,6 +18,7 @@ import { RadiologyCard } from "@/components/cases/RadiologyCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   FileText, 
   Stethoscope, 
@@ -26,10 +27,12 @@ import {
   Scan,
   User,
   Heart,
-  Brain
+  Brain,
+  ClipboardList,
+  Microscope
 } from "lucide-react";
 
-// 1. Updated Zod Schema Definition
+// Updated Zod Schema Definition
 export const clinicalDetailStepSchema = z.object({
   patientHistory: z.string().optional(),
   selectedBodyParts: z.array(z.string()).optional().default([]),
@@ -51,19 +54,18 @@ export const clinicalDetailStepSchema = z.object({
   vitalsNotes: z.string().optional(),
   labResultsNotes: z.string().optional(),
   radiologyNotes: z.string().optional(),
+  clinicalImpression: z.string().optional(),
+  differentialDiagnosis: z.string().optional(),
 });
 
-// Optional: Define a type for the form data based on the schema
 export type ClinicalDetailFormData = z.infer<typeof clinicalDetailStepSchema>;
 
-// 2. Component Props
 interface ClinicalDetailStepProps {
   control: Control<any>;
   setValue: UseFormSetValue<any>;
   watch: UseFormWatch<any>;
 }
 
-// 3. Component Definition
 export const ClinicalDetailStep: React.FC<ClinicalDetailStepProps> = ({ control, setValue, watch }) => {
   const currentSelectedBodyParts = watch("selectedBodyParts", []);
 
@@ -91,293 +93,324 @@ export const ClinicalDetailStep: React.FC<ClinicalDetailStepProps> = ({ control,
   };
 
   return (
-    <div className="space-y-8 py-2">
-      {/* Section 1: Patient History & Initial Assessment */}
-      <div className="space-y-4">
-        <div className="flex items-center space-x-2 mb-4">
-          <div className="h-8 w-8 rounded-full bg-medical-100 flex items-center justify-center">
-            <User className="h-4 w-4 text-medical-600" />
-          </div>
-          <h3 className="text-lg font-semibold text-medical-800">Patient History & Initial Assessment</h3>
-        </div>
-
-        <Card className="border-medical-200 shadow-sm">
-          <CardHeader className="pb-4 bg-gradient-to-r from-medical-50 to-blue-50">
-            <CardTitle className="flex items-center space-x-2 text-medical-800">
-              <FileText className="h-5 w-5" />
-              <span>History of Present Illness</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-4">
-            <FormField
-              control={control}
-              name="patientHistory"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-medical-700">Clinical History</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Describe the patient's current illness, timeline of symptoms, associated factors, and relevant medical history. Include onset, duration, character, radiation, alleviating/aggravating factors..."
-                      className="min-h-[140px] border-medical-200 focus:ring-medical-500 focus:border-medical-500"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription className="text-medical-600">
-                    Provide a detailed chronological account of the patient's current condition and relevant background.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </CardContent>
-        </Card>
+    <div className="space-y-6 py-2">
+      {/* Header */}
+      <div className="text-center space-y-2">
+        <h2 className="text-2xl font-bold text-medical-800">Clinical Assessment & Documentation</h2>
+        <p className="text-medical-600">Comprehensive clinical evaluation and diagnostic workup</p>
       </div>
 
-      <Separator className="my-6" />
+      <Tabs defaultValue="history" className="w-full">
+        <TabsList className="grid w-full grid-cols-4 mb-6">
+          <TabsTrigger value="history" className="flex items-center space-x-2">
+            <User className="h-4 w-4" />
+            <span>History & Exam</span>
+          </TabsTrigger>
+          <TabsTrigger value="systems" className="flex items-center space-x-2">
+            <Brain className="h-4 w-4" />
+            <span>Systems Review</span>
+          </TabsTrigger>
+          <TabsTrigger value="diagnostics" className="flex items-center space-x-2">
+            <TestTube className="h-4 w-4" />
+            <span>Diagnostics</span>
+          </TabsTrigger>
+          <TabsTrigger value="assessment" className="flex items-center space-x-2">
+            <ClipboardList className="h-4 w-4" />
+            <span>Assessment</span>
+          </TabsTrigger>
+        </TabsList>
 
-      {/* Section 2: System Review & Physical Assessment */}
-      <div className="space-y-4">
-        <div className="flex items-center space-x-2 mb-4">
-          <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
-            <Brain className="h-4 w-4 text-blue-600" />
-          </div>
-          <h3 className="text-lg font-semibold text-blue-800">System Review & Physical Assessment</h3>
-        </div>
-
-        <div className="grid lg:grid-cols-2 gap-6">
-          <div className="space-y-4">
-            <SystemReviewChecklist onSystemSymptomsChange={handleSystemSymptomsChange} />
-          </div>
-          
-          <Card className="border-blue-200 shadow-sm">
-            <CardHeader className="pb-4 bg-gradient-to-r from-blue-50 to-indigo-50">
-              <CardTitle className="flex items-center space-x-2 text-blue-800">
-                <Stethoscope className="h-5 w-5" />
-                <span>Body Systems & Affected Areas</span>
+        {/* Tab 1: History & Physical Examination */}
+        <TabsContent value="history" className="space-y-6">
+          <Card className="border-medical-200 shadow-sm">
+            <CardHeader className="bg-gradient-to-r from-medical-50 to-blue-50">
+              <CardTitle className="flex items-center space-x-2 text-medical-800">
+                <FileText className="h-5 w-5" />
+                <span>History of Present Illness</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="pt-4">
-              <InteractiveBodyDiagram
-                onBodyPartSelected={handleBodyPartSelected}
-                highlightedSystems={currentSelectedBodyParts}
-              />
-              <div className="mt-3 flex items-center justify-between">
-                <FormDescription className="text-blue-600">
-                  Click on body parts to mark affected areas
-                </FormDescription>
-                {currentSelectedBodyParts.length > 0 && (
-                  <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
-                    {currentSelectedBodyParts.length} selected
-                  </Badge>
+            <CardContent className="pt-6">
+              <FormField
+                control={control}
+                name="patientHistory"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-medical-700 text-base font-medium">Clinical History</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Document the patient's presenting complaint, timeline of symptoms, associated factors, and relevant medical history. Include:
+• Onset and duration of symptoms
+• Character and quality of symptoms
+• Radiation and location
+• Alleviating and aggravating factors
+• Associated symptoms
+• Previous similar episodes
+• Relevant past medical history"
+                        className="min-h-[160px] border-medical-200 focus:ring-medical-500 focus:border-medical-500 text-sm"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription className="text-medical-600">
+                      Provide a detailed chronological account of the patient's current condition and relevant background.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
                 )}
+              />
+            </CardContent>
+          </Card>
+
+          <Card className="border-blue-200 shadow-sm">
+            <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50">
+              <CardTitle className="flex items-center space-x-2 text-blue-800">
+                <Stethoscope className="h-5 w-5" />
+                <span>Physical Examination</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-6">
+              <FormField
+                control={control}
+                name="physicalExam"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-blue-700 text-base font-medium">Examination Findings</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Document systematic physical examination findings:
+
+GENERAL APPEARANCE: Alert, oriented, appears comfortable/distressed
+VITAL SIGNS: [Reference vitals section]
+HEENT: Head, eyes, ears, nose, throat examination
+CARDIOVASCULAR: Heart rate, rhythm, murmurs, peripheral pulses
+RESPIRATORY: Breath sounds, respiratory effort, chest expansion
+ABDOMINAL: Inspection, palpation, percussion, auscultation
+NEUROLOGICAL: Mental status, cranial nerves, motor, sensory, reflexes
+MUSCULOSKELETAL: Joint examination, range of motion, deformities
+SKIN: Color, temperature, lesions, rashes"
+                        className="min-h-[160px] border-blue-200 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription className="text-blue-600">
+                      Record objective findings from systematic examination of all relevant body systems.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Tab 2: Systems Review */}
+        <TabsContent value="systems" className="space-y-6">
+          <div className="grid lg:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2 mb-4">
+                <Brain className="h-5 w-5 text-blue-600" />
+                <h3 className="text-lg font-semibold text-blue-800">Review of Systems</h3>
               </div>
-              {currentSelectedBodyParts.length > 0 && (
-                <div className="mt-2 flex flex-wrap gap-1">
-                  {currentSelectedBodyParts.map((part: string) => (
-                    <Badge key={part} variant="secondary" className="text-xs bg-blue-100 text-blue-800">
-                      {part}
-                    </Badge>
-                  ))}
-                </div>
-              )}
-              <FormField
-                control={control}
-                name="selectedBodyParts"
-                render={() => (
-                  <FormItem>
-                    <FormMessage className="mt-2" />
-                  </FormItem>
-                )}
-              />
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Physical Examination */}
-        <Card className="border-blue-200 shadow-sm">
-          <CardHeader className="pb-4 bg-gradient-to-r from-blue-50 to-purple-50">
-            <CardTitle className="flex items-center space-x-2 text-blue-800">
-              <Stethoscope className="h-5 w-5" />
-              <span>Physical Examination Findings</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-4">
-            <FormField
-              control={control}
-              name="physicalExam"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-blue-700">Examination Results</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Document comprehensive physical examination findings including:
-• General appearance and mental status
-• Vital signs interpretation
-• Head, eyes, ears, nose, throat (HEENT)
-• Cardiovascular examination
-• Respiratory examination
-• Abdominal examination
-• Neurological assessment
-• Musculoskeletal examination
-• Skin and extremities"
-                      className="min-h-[140px] border-blue-200 focus:ring-blue-500 focus:border-blue-500"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription className="text-blue-600">
-                    Record objective findings from systematic physical examination of all relevant body systems.
+              <SystemReviewChecklist onSystemSymptomsChange={handleSystemSymptomsChange} />
+            </div>
+            
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2 mb-4">
+                <User className="h-5 w-5 text-blue-600" />
+                <h3 className="text-lg font-semibold text-blue-800">Affected Body Areas</h3>
+              </div>
+              <Card className="border-blue-200 shadow-sm">
+                <CardHeader className="pb-4 bg-gradient-to-r from-blue-50 to-indigo-50">
+                  <CardTitle className="flex items-center justify-between">
+                    <span className="text-blue-800 text-base">Body Systems Diagram</span>
+                    {currentSelectedBodyParts.length > 0 && (
+                      <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                        {currentSelectedBodyParts.length} selected
+                      </Badge>
+                    )}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pt-4">
+                  <InteractiveBodyDiagram
+                    onBodyPartSelected={handleBodyPartSelected}
+                    highlightedSystems={currentSelectedBodyParts}
+                  />
+                  <FormDescription className="text-blue-600 mt-3">
+                    Click on body parts to mark affected areas
                   </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </CardContent>
-        </Card>
-      </div>
-
-      <Separator className="my-6" />
-
-      {/* Section 3: Vital Signs & Measurements */}
-      <div className="space-y-4">
-        <div className="flex items-center space-x-2 mb-4">
-          <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center">
-            <Heart className="h-4 w-4 text-green-600" />
-          </div>
-          <h3 className="text-lg font-semibold text-green-800">Vital Signs & Physiological Measurements</h3>
-        </div>
-
-        <VitalsCard onVitalsChange={handleVitalsChange} />
-      </div>
-
-      <Separator className="my-6" />
-
-      {/* Section 4: Diagnostic Studies */}
-      <div className="space-y-4">
-        <div className="flex items-center space-x-2 mb-4">
-          <div className="h-8 w-8 rounded-full bg-purple-100 flex items-center justify-center">
-            <TestTube className="h-4 w-4 text-purple-600" />
-          </div>
-          <h3 className="text-lg font-semibold text-purple-800">Laboratory & Imaging Studies</h3>
-        </div>
-
-        <div className="grid lg:grid-cols-2 gap-6">
-          <div className="space-y-4">
-            <div className="flex items-center space-x-2 mb-2">
-              <TestTube className="h-4 w-4 text-purple-600" />
-              <h4 className="font-medium text-purple-700">Laboratory Results</h4>
+                  {currentSelectedBodyParts.length > 0 && (
+                    <div className="mt-3 flex flex-wrap gap-1">
+                      {currentSelectedBodyParts.map((part: string) => (
+                        <Badge key={part} variant="secondary" className="text-xs bg-blue-100 text-blue-800">
+                          {part}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+                  <FormField
+                    control={control}
+                    name="selectedBodyParts"
+                    render={() => (
+                      <FormItem>
+                        <FormMessage className="mt-2" />
+                      </FormItem>
+                    )}
+                  />
+                </CardContent>
+              </Card>
             </div>
-            <LabResultsCard onLabResultsChange={handleLabResultsChange} />
           </div>
-          
+
+          {/* Vital Signs */}
           <div className="space-y-4">
-            <div className="flex items-center space-x-2 mb-2">
-              <Scan className="h-4 w-4 text-purple-600" />
-              <h4 className="font-medium text-purple-700">Imaging Studies</h4>
+            <div className="flex items-center space-x-2">
+              <Heart className="h-5 w-5 text-green-600" />
+              <h3 className="text-lg font-semibold text-green-800">Vital Signs & Physiological Parameters</h3>
             </div>
-            <RadiologyCard onRadiologyChange={handleRadiologyChange} />
+            <VitalsCard onVitalsChange={handleVitalsChange} />
           </div>
-        </div>
-      </div>
+        </TabsContent>
 
-      <Separator className="my-6" />
-
-      {/* Section 5: Clinical Analysis & Notes */}
-      <div className="space-y-4">
-        <div className="flex items-center space-x-2 mb-4">
-          <div className="h-8 w-8 rounded-full bg-amber-100 flex items-center justify-center">
-            <Activity className="h-4 w-4 text-amber-600" />
+        {/* Tab 3: Diagnostic Studies */}
+        <TabsContent value="diagnostics" className="space-y-6">
+          <div className="grid lg:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <Microscope className="h-5 w-5 text-purple-600" />
+                <h3 className="text-lg font-semibold text-purple-800">Laboratory Studies</h3>
+              </div>
+              <LabResultsCard onLabResultsChange={handleLabResultsChange} />
+            </div>
+            
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <Scan className="h-5 w-5 text-purple-600" />
+                <h3 className="text-lg font-semibold text-purple-800">Imaging Studies</h3>
+              </div>
+              <RadiologyCard onRadiologyChange={handleRadiologyChange} />
+            </div>
           </div>
-          <h3 className="text-lg font-semibold text-amber-800">Clinical Analysis & Interpretation</h3>
-        </div>
+        </TabsContent>
 
-        <div className="grid md:grid-cols-2 gap-6">
-          <Card className="border-amber-200 shadow-sm">
-            <CardHeader className="pb-3 bg-gradient-to-r from-amber-50 to-orange-50">
-              <CardTitle className="text-sm font-medium text-amber-800">System Analysis</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-3 space-y-4">
-              <FormField
-                control={control}
-                name="relatedSystemsNotes"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-xs font-medium text-amber-700">Related Systems & Differential Considerations</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Analyze related physiological systems, initial diagnostic impressions, and differential diagnosis considerations..."
-                        className="min-h-[80px] text-sm border-amber-200 focus:ring-amber-500"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+        {/* Tab 4: Clinical Assessment */}
+        <TabsContent value="assessment" className="space-y-6">
+          <div className="grid md:grid-cols-2 gap-6">
+            <Card className="border-amber-200 shadow-sm">
+              <CardHeader className="bg-gradient-to-r from-amber-50 to-orange-50">
+                <CardTitle className="flex items-center space-x-2 text-amber-800">
+                  <Activity className="h-5 w-5" />
+                  <span>Clinical Impression</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-4 space-y-4">
+                <FormField
+                  control={control}
+                  name="clinicalImpression"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-amber-700 font-medium">Primary Clinical Impression</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Summarize your primary clinical impression based on history, examination, and initial findings. What is your leading diagnosis or working hypothesis?"
+                          className="min-h-[100px] text-sm border-amber-200 focus:ring-amber-500"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                control={control}
-                name="vitalsNotes"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-xs font-medium text-amber-700">Vital Signs Interpretation</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Interpret vital signs, note trends, and identify abnormal findings or patterns..."
-                        className="min-h-[80px] text-sm border-amber-200 focus:ring-amber-500"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </CardContent>
-          </Card>
+                <FormField
+                  control={control}
+                  name="differentialDiagnosis"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-amber-700 font-medium">Differential Diagnosis</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="List and briefly discuss alternative diagnoses to consider:
+1. Most likely alternative diagnosis
+2. Less likely but important to rule out
+3. Rare but serious conditions to consider
 
-          <Card className="border-amber-200 shadow-sm">
-            <CardHeader className="pb-3 bg-gradient-to-r from-amber-50 to-yellow-50">
-              <CardTitle className="text-sm font-medium text-amber-800">Diagnostic Interpretation</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-3 space-y-4">
-              <FormField
-                control={control}
-                name="labResultsNotes"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-xs font-medium text-amber-700">Laboratory Analysis</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Interpret laboratory results, highlight significant findings, and note correlations with clinical presentation..."
-                        className="min-h-[80px] text-sm border-amber-200 focus:ring-amber-500"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+Include reasoning for each differential."
+                          className="min-h-[120px] text-sm border-amber-200 focus:ring-amber-500"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+            </Card>
 
-              <FormField
-                control={control}
-                name="radiologyNotes"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-xs font-medium text-amber-700">Imaging Interpretation</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Interpret imaging results, describe key findings, and correlate with clinical symptoms..."
-                        className="min-h-[80px] text-sm border-amber-200 focus:ring-amber-500"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+            <Card className="border-amber-200 shadow-sm">
+              <CardHeader className="bg-gradient-to-r from-amber-50 to-yellow-50">
+                <CardTitle className="flex items-center space-x-2 text-amber-800">
+                  <ClipboardList className="h-5 w-5" />
+                  <span>Clinical Notes & Analysis</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-4 space-y-4">
+                <FormField
+                  control={control}
+                  name="vitalsNotes"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-amber-700 font-medium">Vital Signs Analysis</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Interpret vital signs, identify abnormal patterns, and note clinical significance..."
+                          className="min-h-[80px] text-sm border-amber-200 focus:ring-amber-500"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={control}
+                  name="labResultsNotes"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-amber-700 font-medium">Laboratory Interpretation</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Analyze lab results, highlight significant findings, and correlate with clinical presentation..."
+                          className="min-h-[80px] text-sm border-amber-200 focus:ring-amber-500"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={control}
+                  name="radiologyNotes"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-amber-700 font-medium">Imaging Analysis</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Interpret imaging findings, describe key abnormalities, and relate to clinical symptoms..."
+                          className="min-h-[80px] text-sm border-amber-200 focus:ring-amber-500"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
