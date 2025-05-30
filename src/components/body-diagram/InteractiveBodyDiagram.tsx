@@ -1,35 +1,80 @@
-
 import React from "react";
+import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
-interface InteractiveBodyDiagramProps {
-  onBodyPartSelected: (part: string) => void;
-  highlightedSystems?: string[];
+/**
+ * All supported body parts.
+ * Using `as const` keeps the tuple literal type so we can derive an exact union type.
+ */
+const BODY_PARTS = [
+  "Head",
+  "Neck",
+  "Chest",
+  "Abdomen",
+  "Arms",
+  "Legs",
+] as const;
+
+/**
+ * A union type that represents every item in `BODY_PARTS`.
+ */
+export type BodyPart = typeof BODY_PARTS[number];
+
+export interface InteractiveBodyDiagramProps {
+  /**
+   * Callback when the user selects a body part.
+   */
+  onBodyPartSelected: (part: BodyPart) => void;
+  /**
+   * Parts to highlight as already selected or relevant.
+   */
+  highlightedSystems?: BodyPart[];
+  /**
+   * Optional extra class names for the outer wrapper.
+   */
+  className?: string;
 }
 
-export const InteractiveBodyDiagram: React.FC<InteractiveBodyDiagramProps> = ({
-  onBodyPartSelected,
-  highlightedSystems = []
-}) => {
-  const bodyParts = [
-    "Head", "Neck", "Chest", "Abdomen", "Arms", "Legs"
-  ];
+/**
+ * Renders an interactive list of body parts with smooth hover/tap animations
+ * and theme‑aware styling via `shadcn/ui` primitives.
+ */
+export const InteractiveBodyDiagram: React.FC<InteractiveBodyDiagramProps> = React.memo(
+  ({ onBodyPartSelected, highlightedSystems = [], className }) => {
+    return (
+      <div
+        className={cn(
+          "space-y-4 rounded-2xl border p-6 shadow-sm bg-background/50 backdrop-blur",
+          className
+        )}
+      >
+        <h3 className="text-xl font-bold">Body Diagram</h3>
 
-  return (
-    <div className="p-4 border rounded-lg">
-      <h3 className="text-lg font-semibold mb-4">Body Diagram</h3>
-      <div className="grid grid-cols-2 gap-2">
-        {bodyParts.map((part) => (
-          <button
-            key={part}
-            onClick={() => onBodyPartSelected(part)}
-            className={`p-3 border rounded hover:bg-primary/10 transition-colors ${
-              highlightedSystems.includes(part) ? "bg-primary/20 border-primary" : ""
-            }`}
-          >
-            {part}
-          </button>
-        ))}
+        <div className="grid grid-cols-2 gap-3">
+          {BODY_PARTS.map((part) => {
+            const isActive = highlightedSystems.includes(part);
+            return (
+              <motion.div key={part} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  variant={isActive ? "secondary" : "outline"}
+                  className={cn(
+                    "w-full justify-center capitalize",
+                    isActive &&
+                      "border-primary bg-primary/10 text-primary-foreground shadow-inner"
+                  )}
+                  aria-pressed={isActive}
+                  onClick={() => onBodyPartSelected(part)}
+                >
+                  {part}
+                </Button>
+              </motion.div>
+            );
+          })}
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+);
+
+InteractiveBodyDiagram.displayName = "InteractiveBodyDiagram";
