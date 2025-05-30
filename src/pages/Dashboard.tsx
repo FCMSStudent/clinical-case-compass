@@ -1,50 +1,75 @@
+import React, { memo } from "react";
+import { UserRound } from "lucide-react";
+
 import { PageHeader } from "@/components/ui/page-header";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { SearchBar } from "@/components/dashboard/SearchBar";
 import { ActiveCasesWidget } from "@/components/dashboard/ActiveCasesWidget";
 import { DraftsWidget } from "@/components/dashboard/DraftsWidget";
 import { CompletedWidget } from "@/components/dashboard/CompletedWidget";
-import { RecentActivity } from "@/components/dashboard/RecentActivity";
-import { SearchBar } from "@/components/dashboard/SearchBar";
 import { QuickStartPanel } from "@/components/dashboard/QuickStartPanel";
-import { UserRound } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { RecentActivity } from "@/components/dashboard/RecentActivity";
+import { cn } from "@/lib/utils";
 
-const Dashboard = () => {
-  return (
-    <div className="space-y-6">
-      {/* Welcome Alert - Can be kept or modified as per overall design */}
-      <Alert className="border-primary/20 bg-primary/5">
-        <UserRound className="h-5 w-5 text-primary" />
-        <AlertDescription className="text-primary">
-          Welcome back! This is your central hub for managing clinical cases.
-        </AlertDescription>
-      </Alert>
+/**
+ * Optional props so we can customise the dashboard (e.g., hide the alert when
+ * embedding, pass a custom title, etc.).
+ */
+export interface DashboardProps {
+  /** Logged-in user’s display name for a friendlier greeting. */
+  userName?: string;
+  /** Hide the welcome alert entirely. */
+  hideWelcome?: boolean;
+  /** Extra class names for the outer wrapper. */
+  className?: string;
+}
 
-      <PageHeader 
-        title="Dashboard" 
-        description="Overview of your clinical case activities."
-      />
-      
-      <div className="mb-6">
-        <SearchBar />
-      </div>
-      
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-6">
-        <ActiveCasesWidget />
-        <DraftsWidget />
-        <CompletedWidget />
-      </div>
-      
-      <div className="grid gap-6 lg:grid-cols-3">
-        {/* Main Content Area: QuickStartPanel (taking 2/3 width) and RecentActivity (taking 1/3 width) */}
-        <div className="lg:col-span-2">
-          <QuickStartPanel />
+/**
+ * Data for the KPI widget grid – change order / add more in one place.
+ */
+const KPI_WIDGETS = [ActiveCasesWidget, DraftsWidget, CompletedWidget] as const;
+
+export const Dashboard: React.FC<DashboardProps> = memo(
+  ({ userName, hideWelcome = false, className }) => {
+    const greeting = userName ? `Welcome back, ${userName}!` : "Welcome back!";
+
+    return (
+      <section className={cn("space-y-6", className)}>
+        {/* ——— Welcome alert ——— */}
+        {!hideWelcome && (
+          <Alert className="border-primary/20 bg-primary/5" role="status">
+            <UserRound className="h-5 w-5 text-primary" aria-hidden />
+            <AlertDescription className="text-primary">
+              {greeting} This is your central hub for managing clinical cases.
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {/* ——— Header & search ——— */}
+        <PageHeader title="Dashboard" description="Overview of your clinical case activities." />
+        <div>
+          <SearchBar />
         </div>
-        <div className="lg:col-span-1">
-          <RecentActivity />
-        </div>
-      </div>
-    </div>
-  );
-};
 
-export default Dashboard;
+        {/* ——— KPI widgets ——— */}
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {KPI_WIDGETS.map((Widget, i) => (
+            <Widget key={i} />
+          ))}
+        </div>
+
+        {/* ——— Quick start & recent activity ——— */}
+        <div className="grid gap-6 lg:grid-cols-3">
+          <div className="lg:col-span-2">
+            <QuickStartPanel />
+          </div>
+          <div>
+            <RecentActivity />
+          </div>
+        </div>
+      </section>
+    );
+  },
+);
+
+Dashboard.displayName = "Dashboard";
