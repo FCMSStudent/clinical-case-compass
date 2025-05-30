@@ -1,10 +1,10 @@
 import { PageHeader } from "@/components/ui/page-header";
-import { ActiveCasesWidget } from "@/components/dashboard/ActiveCasesWidget";
-import { DraftsWidget } from "@/components/dashboard/DraftsWidget";
-import { CompletedWidget } from "@/components/dashboard/CompletedWidget";
-import { RecentActivity } from "@/components/dashboard/RecentActivity";
-import { SearchBar } from "@/components/dashboard/SearchBar";
-import { QuickStartPanel } from "@/components/dashboard/QuickStartPanel";
+import { ActiveCasesWidget } from "@/components/DashboardCombined";
+import { DraftsWidget } from "@/components/DashboardCombined";
+import { CompletedWidget } from "@/components/DashboardCombined";
+import { RecentActivity } from "@/components/DashboardCombined";
+import { SearchBar } from "@/components/DashboardCombined";
+import { QuickStartPanel } from "@/components/DashboardCombined";
 import { UserRound } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
