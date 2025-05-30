@@ -23,7 +23,6 @@ import { ChevronLeft, Save, HeartPulse, TestTube, Scan } from "lucide-react";
 import { toast } from "sonner";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { InteractiveVitalsCard } from "@/components/cases/InteractiveVitalsCard";
-import { UrinaryReviewCard } from "@/components/cases/UrinaryReviewCard";
 import { SymptomChecklist } from "@/components/cases/SymptomChecklist";
 import { LabResultsCard, LabTest } from "@/components/cases/LabResultsCard";
 import { RadiologyCard, RadiologyExam } from "@/components/cases/RadiologyCard";
@@ -55,8 +54,8 @@ const CaseEdit = () => {
   
   // State for specialized inputs
   const [vitals, setVitals] = useState<Record<string, string>>({});
-  const [urinarySymptoms, setUrinarySymptoms] = useState<string[]>([]);
-  const [symptoms, setSymptoms] = useState<Record<string, boolean>>({});
+  // const [urinarySymptoms, setUrinarySymptoms] = useState<string[]>([]); // Removed, use systemSymptoms.Urinary
+  const [symptoms, setSymptoms] = useState<Record<string, boolean>>({}); // For backward compatibility during save
   const [systemSymptoms, setSystemSymptoms] = useState<Record<string, string[]>>({});
   const [labResults, setLabResults] = useState<LabTest[]>([]);
   const [radiologyExams, setRadiologyExams] = useState<RadiologyExam[]>([]);
@@ -119,14 +118,33 @@ const CaseEdit = () => {
     if (foundCase.vitals) {
       setVitals(foundCase.vitals);
     }
-    
-    if (foundCase.urinarySymptoms) {
-      setUrinarySymptoms(foundCase.urinarySymptoms);
+
+    // Initialize systemSymptoms with data from foundCase
+    const initialSystemSymptoms: Record<string, string[]> = {};
+    if (foundCase.urinarySymptoms && foundCase.urinarySymptoms.length > 0) {
+      initialSystemSymptoms["Urinary"] = foundCase.urinarySymptoms;
+      // setUrinarySymptoms(foundCase.urinarySymptoms); // Removed
     }
-    
+
     if (foundCase.symptoms) {
-      setSymptoms(foundCase.symptoms);
+      // Convert Record<string, boolean> to Record<string, string[]>
+      for (const key in foundCase.symptoms) {
+        if (foundCase.symptoms[key]) {
+          const [system, ...symptomParts] = key.split("-");
+          const symptom = symptomParts.join('-');
+          if (system && symptom) {
+            if (!initialSystemSymptoms[system]) {
+              initialSystemSymptoms[system] = [];
+            }
+            if (!initialSystemSymptoms[system].includes(symptom)) {
+              initialSystemSymptoms[system].push(symptom);
+            }
+          }
+        }
+      }
+      setSymptoms(foundCase.symptoms); // Keep this for backward compatibility if needed elsewhere
     }
+    setSystemSymptoms(initialSystemSymptoms);
     
     if (foundCase.labTests) {
       setLabResults(foundCase.labTests);
@@ -160,8 +178,14 @@ const CaseEdit = () => {
           medicalRecordNumber: values.patientMRN || undefined,
         },
         vitals: vitals,
-        urinarySymptoms: urinarySymptoms,
-        symptoms: symptoms,
+        // Derive urinarySymptoms and symptoms from systemSymptoms
+        urinarySymptoms: systemSymptoms["Urinary"] || [],
+        symptoms: Object.entries(systemSymptoms).reduce((acc, [system, symptomList]) => {
+          symptomList.forEach(symptom => {
+            acc[`${system}-${symptom}`] = true;
+          });
+          return acc;
+        }, {} as Record<string, boolean>),
         labTests: labResults,
         radiologyExams: radiologyExams,
       };
@@ -186,6 +210,7 @@ const CaseEdit = () => {
   // Convert boolean record format to system-based string arrays
   const handleSymptomSelectionChange = (selections: Record<string, string[]>) => {
     setSystemSymptoms(selections);
+    // setUrinarySymptoms(selections["Urinary"] || []); // Removed
     
     // Also update the old format for backward compatibility
     const booleanFormat: Record<string, boolean> = {};
@@ -329,10 +354,6 @@ const CaseEdit = () => {
                 onVitalsChange={setVitals} 
                 initialVitals={vitals} 
                 patientAge={form.watch("patientAge")}
-              />
-              <UrinaryReviewCard 
-                onSelectionChange={setUrinarySymptoms} 
-                initialSelections={urinarySymptoms}
               />
               <div className="bg-white p-4 rounded-lg shadow-sm border">
                 <h3 className="font-medium text-sm mb-2">Other Symptoms</h3>
