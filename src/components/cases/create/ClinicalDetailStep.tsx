@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { InteractiveBodyDiagram } from "@/components/body-diagram/InteractiveBodyDiagram";
-import { SystemReviewChecklist } from "@/components/cases/SystemReviewChecklist";
+import { SymptomChecklist } from "@/components/cases/SymptomChecklist";
 import { VitalsCard } from "@/components/cases/VitalsCard";
 import { LabResultsCard } from "@/components/cases/LabResultsCard";
 import { RadiologyCard } from "@/components/cases/RadiologyCard";
@@ -305,7 +305,7 @@ export const ClinicalDetailStep = memo(function ClinicalDetailStep<
               <h3 className="flex items-center gap-2 text-lg font-semibold text-blue-800">
                 <BrainIcon className="h-5 w-5 text-blue-600" /> Review of Systems
               </h3>
-              <SystemReviewChecklist onSystemSymptomsChange={setSystemSymptoms} />
+              <SymptomChecklist onSelectionChange={setSystemSymptoms} />
             </div>
 
             {/* Body Diagram */}
