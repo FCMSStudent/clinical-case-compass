@@ -1,103 +1,148 @@
-
+import React, { memo, useMemo } from "react";
+import { Link } from "react-router-dom";
 import { format } from "date-fns";
-import { User, Clipboard, Stethoscope, Tag } from 'lucide-react';
-import { MedicalCase } from "@/types/case";
+import { Clipboard, Stethoscope, Tag, User } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { memo } from "react";
+import { MedicalCase } from "@/types/case";
 
-interface CaseCardProps {
+/**
+ * ────────────────────────────────────────────────────────────────────────────────
+ * CONSTANTS & HELPERS
+ * ────────────────────────────────────────────────────────────────────────────────
+ */
+const VISIBLE_TAGS = 2;
+
+function getPrimaryDiagnosis(caseData: MedicalCase) {
+  if (!caseData.diagnoses?.length) return null;
+  return (
+    caseData.diagnoses.find((d) => d.status === "confirmed") ||
+    caseData.diagnoses[0]
+  );
+}
+
+function TagPill({ tag }: { tag: MedicalCase["tags"][number] }) {
+  return (
+    <span
+      key={tag.id}
+      className="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium"
+      style={{
+        backgroundColor: `${tag.color}20`, // subtle tint
+        color: tag.color,
+      }}
+    >
+      {tag.name}
+    </span>
+  );
+}
+
+/**
+ * ────────────────────────────────────────────────────────────────────────────────
+ * PROPS
+ * ────────────────────────────────────────────────────────────────────────────────
+ */
+export interface CaseCardProps {
   medicalCase: MedicalCase;
   className?: string;
 }
 
-export const CaseCard = memo<CaseCardProps>(({ medicalCase, className }) => {
-  const primaryDiagnosis = medicalCase.diagnoses && medicalCase.diagnoses.length > 0
-    ? (medicalCase.diagnoses.find(d => d.status === "confirmed") || medicalCase.diagnoses[0])
-    : null;
-  
-  return (
-    <Card className={cn("transition-all duration-200 hover:shadow-lg hover:scale-[1.02] flex flex-col h-full", className)}>
-      <CardHeader className="pb-3 flex-shrink-0">
-        <div className="flex justify-between items-start gap-3">
-          <CardTitle className="text-lg line-clamp-2 leading-tight">
-            {medicalCase.title}
-          </CardTitle>
-          <div className="text-xs text-muted-foreground whitespace-nowrap flex-shrink-0">
-            {format(new Date(medicalCase.createdAt), "MMM d, yyyy")}
+/**
+ * Compact card summarising a clinical case.
+ */
+export const CaseCard: React.FC<CaseCardProps> = memo(
+  ({ medicalCase, className }) => {
+    const primaryDx = useMemo(() => getPrimaryDiagnosis(medicalCase), [medicalCase]);
+
+    const createdDate = useMemo(
+      () => format(new Date(medicalCase.createdAt), "MMM d, yyyy"),
+      [medicalCase.createdAt],
+    );
+
+    const visibleTags = medicalCase.tags?.slice(0, VISIBLE_TAGS) ?? [];
+    const hiddenTagCount = (medicalCase.tags?.length ?? 0) - visibleTags.length;
+
+    return (
+      <Card
+        className={cn(
+          "flex h-full flex-col transition-all duration-200 hover:scale-[1.02] hover:shadow-lg",
+          className,
+        )}
+      >
+        {/* — Header — */}
+        <CardHeader className="flex-shrink-0 pb-3">
+          <div className="flex items-start justify-between gap-3">
+            <CardTitle className="line-clamp-2 text-lg leading-tight" title={medicalCase.title}>
+              {medicalCase.title}
+            </CardTitle>
+            <time
+              dateTime={new Date(medicalCase.createdAt).toISOString()}
+              className="flex-shrink-0 whitespace-nowrap text-xs text-muted-foreground"
+            >
+              {createdDate}
+            </time>
           </div>
-        </div>
-        <div className="text-sm text-muted-foreground flex items-center">
-          <User className="h-4 w-4 mr-2 flex-shrink-0" />
-          <span>{medicalCase.patient.name}, {medicalCase.patient.age} y/o{" "}
-          {medicalCase.patient.gender}</span>
-        </div>
-      </CardHeader>
-      <CardContent className="flex-1 flex flex-col">
-        <div className="space-y-3 flex-1">
-          <div>
-            <div className="text-sm font-medium text-primary mb-1 flex items-center">
-              <Clipboard className="h-4 w-4 mr-2 flex-shrink-0" />
-              Chief Complaint
-            </div>
-            <p className="text-sm text-muted-foreground line-clamp-2">
-              {medicalCase.chiefComplaint}
-            </p>
+
+          <div className="mt-1 flex items-center text-sm text-muted-foreground">
+            <User className="mr-2 h-4 w-4 flex-shrink-0" aria-hidden />
+            {medicalCase.patient.name}, {medicalCase.patient.age} y/o {medicalCase.patient.gender}
           </div>
-          
-          {primaryDiagnosis && (
-            <div>
-              <div className="text-sm font-medium text-primary mb-1 flex items-center">
-                <Stethoscope className="h-4 w-4 mr-2 flex-shrink-0" />
-                Diagnosis
-              </div>
-              <p className="text-sm text-muted-foreground line-clamp-2">
-                {primaryDiagnosis.name}
-                {primaryDiagnosis.status !== "confirmed" && (
-                  <span className="ml-1 text-xs">({primaryDiagnosis.status})</span>
-                )}
+        </CardHeader>
+
+        {/* — Body — */}
+        <CardContent className="flex flex-1 flex-col">
+          <div className="flex-1 space-y-3">
+            {/* Chief complaint */}
+            <section>
+              <h4 className="mb-1 flex items-center text-sm font-medium text-primary">
+                <Clipboard className="mr-2 h-4 w-4 flex-shrink-0" aria-hidden /> Chief Complaint
+              </h4>
+              <p className="line-clamp-2 text-sm text-muted-foreground" title={medicalCase.chiefComplaint}>
+                {medicalCase.chiefComplaint}
               </p>
-            </div>
-          )}
-        </div>
-        
-        <div className="mt-4 pt-3 border-t border-medical-100">
-          <div className="text-sm font-medium text-primary mb-1 flex items-center">
-            <Tag className="h-4 w-4 mr-2 flex-shrink-0" />
-            Tags
-          </div>
-          <div className="flex flex-wrap gap-2 mb-3">
-            {medicalCase.tags && medicalCase.tags.slice(0, medicalCase.tags.length > 3 ? 2 : medicalCase.tags.length).map((tag) => (
-              <span
-                key={tag.id}
-                className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
-                style={{
-                  backgroundColor: `${tag.color}20`, // Ensure good contrast
-                  color: tag.color,
-                }}
-              >
-                {tag.name}
-              </span>
-            ))}
-            {medicalCase.tags && medicalCase.tags.length > 3 && (
-              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground">
-                +{medicalCase.tags.length - 2}
-              </span>
+            </section>
+
+            {/* Diagnosis */}
+            {primaryDx && (
+              <section>
+                <h4 className="mb-1 flex items-center text-sm font-medium text-primary">
+                  <Stethoscope className="mr-2 h-4 w-4 flex-shrink-0" aria-hidden /> Diagnosis
+                </h4>
+                <p className="line-clamp-2 text-sm text-muted-foreground" title={primaryDx.name}>
+                  {primaryDx.name}
+                  {primaryDx.status !== "confirmed" && (
+                    <span className="ml-1 text-xs">({primaryDx.status})</span>
+                  )}
+                </p>
+              </section>
             )}
           </div>
-          <div className="flex justify-end">
-            <Button asChild variant="outline" size="sm">
-              <Link to={`/cases/${medicalCase.id}`}>
-                View Details
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-});
+
+          {/* Tags & action */}
+          <footer className="mt-4 border-t border-medical-100 pt-3">
+            <h4 className="mb-1 flex items-center text-sm font-medium text-primary">
+              <Tag className="mr-2 h-4 w-4 flex-shrink-0" aria-hidden /> Tags
+            </h4>
+            <div className="mb-3 flex flex-wrap gap-2">
+              {visibleTags.map((tag) => (
+                <TagPill key={tag.id} tag={tag} />
+              ))}
+              {hiddenTagCount > 0 && (
+                <span className="inline-flex items-center rounded-full bg-muted px-2 py-1 text-xs font-medium text-muted-foreground">
+                  +{hiddenTagCount}
+                </span>
+              )}
+            </div>
+            <div className="flex justify-end">
+              <Button asChild size="sm" variant="outline">
+                <Link to={`/cases/${medicalCase.id}`}>View Details</Link>
+              </Button>
+            </div>
+          </footer>
+        </CardContent>
+      </Card>
+    );
+  },
+);
 
 CaseCard.displayName = "CaseCard";
