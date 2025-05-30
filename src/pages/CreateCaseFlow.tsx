@@ -1,21 +1,22 @@
-
 import { useState, useEffect } from "react";
-import { useForm, SubmitHandler, FieldValues, Path, PathValue, UseFormSetValue } from "react-hook-form";
+import { useForm, SubmitHandler, FieldValues, Path, UseFormSetValue } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
-import { Button } from "@/components/ui/button";
-import { FormProgressIndicator } from "@/components/cases/FormProgressIndicator";
-import { PageHeader } from "@/components/ui/page-header";
-import { FileText, User, Stethoscope, Lightbulb, AlertTriangle, Save, CheckCircle } from "lucide-react";
+import { FileText, User, Stethoscope, Lightbulb, AlertTriangle } from "lucide-react";
 import { Form } from "@/components/ui/form";
 import { toast } from "sonner";
 
 // Step Components and Schemas
-import CaseInfoStep, { caseInfoSchema, CaseInfoFormData } from "@/components/cases/create/CaseInfoStep";
-import PatientStep, { patientStepSchema, PatientStepFormData } from "@/components/cases/create/PatientStep";
-import ClinicalDetailStep, { clinicalDetailStepSchema, ClinicalDetailFormData } from "@/components/cases/create/ClinicalDetailStep";
-import LearningPointsStep, { learningPointsStepSchema, LearningPointsFormData } from "@/components/cases/create/LearningPointsStep";
+import CaseInfoStep, { caseInfoSchema } from "@/components/cases/create/CaseInfoStep";
+import PatientStep, { patientStepSchema } from "@/components/cases/create/PatientStep";
+import ClinicalDetailStep, { clinicalDetailStepSchema } from "@/components/cases/create/ClinicalDetailStep";
+import LearningPointsStep, { learningPointsStepSchema } from "@/components/cases/create/LearningPointsStep";
+
+// New Components
+import { FormHeader } from "@/components/cases/create/FormHeader";
+import { FormNavigation } from "@/components/cases/create/FormNavigation";
+import { FormContainer } from "@/components/cases/create/FormContainer";
 import { Card, CardContent } from "@/components/ui/card";
 
 // Combine Schemas
@@ -76,7 +77,7 @@ const CreateCaseFlow = () => {
     },
   });
 
-  const { control, trigger, handleSubmit, setValue, watch, getValues, formState } = form;
+  const { control, trigger, handleSubmit, setValue, watch, getValues } = form;
 
   // Load draft on component mount
   useEffect(() => {
@@ -248,98 +249,41 @@ const CreateCaseFlow = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-medical-50 to-white">
       <div className="container mx-auto py-8 space-y-8 px-4 md:px-0 max-w-4xl">
-        <div className="flex justify-between items-start">
-          <div>
-            <PageHeader 
-              title="Create New Clinical Case"
-              description={`Step ${currentStepIndex + 1} of ${STEPS.length}: ${currentStepData.label}`}
-            />
-            <div className="mt-2 flex items-center space-x-4 text-sm text-muted-foreground">
-              <span className="flex items-center">
-                <CheckCircle className="h-4 w-4 mr-1 text-green-500" />
-                {completionPercentage}% Complete
-              </span>
-              {isDraftSaving && (
-                <span className="flex items-center">
-                  <div className="h-2 w-2 bg-blue-500 rounded-full animate-pulse mr-1" />
-                  Auto-saving...
-                </span>
-              )}
-            </div>
-          </div>
-          <Button
-            onClick={saveDraftManually}
-            disabled={isDraftSaving}
-            variant="outline"
-            size="sm"
-            className="flex-shrink-0"
-          >
-            <Save className="h-4 w-4 mr-2" />
-            {isDraftSaving ? "Saving..." : "Save Draft"}
-          </Button>
-        </div>
-
-        <FormProgressIndicator
+        <FormHeader
           currentStep={currentStepIndex + 1}
           totalSteps={STEPS.length}
-          steps={STEPS.map((step, index) => ({ 
-              id: step.id, 
-              label: step.label, 
-              icon: step.icon,
-              isCompleted: index <= highestValidatedStep,
-              isNavigable: index <= highestValidatedStep + 1 || index < currentStepIndex,
-          }))}
-          onStepClick={handleStepClick}
+          completionPercentage={completionPercentage}
+          isDraftSaving={isDraftSaving}
+          onSaveDraft={saveDraftManually}
+          currentStepLabel={currentStepData.label}
         />
         
         <Form {...form}>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-8">
-                <div className="min-h-[400px]">
-                  {renderStepContent()}
-                </div>
-              </CardContent>
-            </Card>
+            <FormContainer
+              currentStep={currentStepIndex + 1}
+              totalSteps={STEPS.length}
+              steps={STEPS.map((step, index) => ({ 
+                  id: step.id, 
+                  label: step.label, 
+                  icon: step.icon,
+                  isCompleted: index <= highestValidatedStep,
+                  isNavigable: index <= highestValidatedStep + 1 || index < currentStepIndex,
+              }))}
+              onStepClick={handleStepClick}
+            >
+              {renderStepContent()}
+            </FormContainer>
 
-            <Card className="border-0 shadow-sm bg-white/60 backdrop-blur-sm">
-              <CardContent className="p-6">
-                <div className="flex justify-between items-center">
-                  <Button
-                    type="button"
-                    onClick={handlePrevious}
-                    disabled={currentStepIndex === 0}
-                    variant="outline"
-                    size="lg"
-                  >
-                    Previous
-                  </Button>
-                  
-                  <div className="text-sm text-muted-foreground text-center">
-                    <div>Step {currentStepIndex + 1} of {STEPS.length}</div>
-                    <div className="text-xs mt-1">{currentStepData.label}</div>
-                  </div>
-                  
-                  <Button 
-                    type={isLastStep ? "submit" : "button"} 
-                    onClick={!isLastStep ? handleNext : undefined} 
-                    variant="default"
-                    size="lg"
-                    disabled={isSubmitting}
-                    className="min-w-[120px]"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                        Submitting...
-                      </>
-                    ) : (
-                      isLastStep ? "Submit Case" : "Next"
-                    )}
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+            <FormNavigation
+              currentStep={currentStepIndex + 1}
+              totalSteps={STEPS.length}
+              currentStepLabel={currentStepData.label}
+              isLastStep={isLastStep}
+              isSubmitting={isSubmitting}
+              onPrevious={handlePrevious}
+              onNext={handleNext}
+            />
           </form>
         </Form>
       </div>
