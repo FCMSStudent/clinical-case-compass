@@ -1,5 +1,5 @@
-
-import { Control } from "react-hook-form";
+import React, { memo } from "react";
+import { Control, FieldValues, Path } from "react-hook-form";
 import { z } from "zod";
 import {
   FormField,
@@ -19,26 +19,36 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileText, MessageSquare, Stethoscope } from "lucide-react";
+import {
+  FileText as FileTextIcon,
+  MessageSquare as MessageSquareIcon,
+  Stethoscope as StethoscopeIcon,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
-// 1. Zod Schema Definition
+/**
+ * ────────────────────────────────────────────────────────────────────────────────
+ * SCHEMA
+ * ────────────────────────────────────────────────────────────────────────────────
+ */
 export const caseInfoSchema = z.object({
-  caseTitle: z.string().min(5, "Title must be at least 5 characters long."),
-  chiefComplaint: z.string().min(10, "Chief complaint must be at least 10 characters long."),
-  specialty: z.string().min(1, "Medical specialty is required."),
+  caseTitle: z
+    .string()
+    .min(5, { message: "Title must be at least 5 characters long" }),
+  chiefComplaint: z
+    .string()
+    .min(10, { message: "Chief complaint must be at least 10 characters long" }),
+  specialty: z.string().min(1, { message: "Medical specialty is required" }),
 });
 
-// Optional: Define a type for the form data based on the schema
 export type CaseInfoFormData = z.infer<typeof caseInfoSchema>;
 
-// 2. Component Props
-interface CaseInfoStepProps {
-  control: Control<any>; // Control object from react-hook-form
-}
-
-const specialties = [
+/**
+ * Specialty options – update here to surface everywhere.
+ */
+export const SPECIALTIES = [
   "Cardiology",
-  "Neurology", 
+  "Neurology",
   "Pediatrics",
   "Orthopedics",
   "General Medicine",
@@ -56,125 +66,153 @@ const specialties = [
   "Ophthalmology",
   "ENT (Otolaryngology)",
   "Urology",
-  "Obstetrics & Gynecology"
-];
+  "Obstetrics & Gynecology",
+] as const;
 
-// 3. Component Definition
-export const CaseInfoStep: React.FC<CaseInfoStepProps> = ({ control }) => {
+/**
+ * ────────────────────────────────────────────────────────────────────────────────
+ * PROPS
+ * ────────────────────────────────────────────────────────────────────────────────
+ */
+export interface CaseInfoStepProps<T extends FieldValues = CaseInfoFormData> {
+  /**
+   * `react‑hook‑form` control for the parent form.
+   */
+  control: Control<T>;
+  /**
+   * Extra class names for the wrapper.
+   */
+  className?: string;
+}
+
+/**
+ * Utility to wrap a `<Card>` with common header aesthetics.
+ */
+function FieldCard({
+  icon: Icon,
+  title,
+  children,
+}: {
+  icon: React.ElementType;
+  title: string;
+  children: React.ReactNode;
+}) {
   return (
-    <div className="space-y-6 py-2">
-      <div className="mb-6">
-        <h3 className="text-lg font-semibold text-medical-800 mb-2 flex items-center">
-          <FileText className="h-5 w-5 mr-2" />
+    <Card className="border-medical-200">
+      <CardHeader className="pb-3">
+        <CardTitle className="flex items-center text-base text-medical-700">
+          <Icon className="mr-2 h-4 w-4" />
+          {title}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>{children}</CardContent>
+    </Card>
+  );
+}
+
+/**
+ * ────────────────────────────────────────────────────────────────────────────────
+ * COMPONENT
+ * ────────────────────────────────────────────────────────────────────────────────
+ */
+export const CaseInfoStep = memo(function CaseInfoStep<
+  T extends FieldValues = CaseInfoFormData,
+>({ control, className }: CaseInfoStepProps<T>) {
+  /* ------------------------------------------------------------------------- */
+  return (
+    <section className={cn("space-y-6", className)}>
+      <header className="mb-6 space-y-1">
+        <h3 className="flex items-center text-lg font-semibold text-medical-800">
+          <FileTextIcon className="mr-2 h-5 w-5" />
           Case Overview
         </h3>
         <p className="text-sm text-muted-foreground">
           Provide the basic information about this clinical case.
         </p>
-      </div>
+      </header>
 
-      {/* Case Title Field */}
-      <Card className="border-medical-200">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base text-medical-700 flex items-center">
-            <FileText className="h-4 w-4 mr-2" />
-            Case Title
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <FormField
-            control={control}
-            name="caseTitle"
-            render={({ field }) => (
-              <FormItem>
+      {/* — Case Title — */}
+      <FieldCard icon={FileTextIcon} title="Case Title">
+        <FormField
+          control={control}
+          name={"caseTitle" as Path<T>}
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input
+                  placeholder="e.g., Acute Myocardial Infarction in a 65‑year‑old Male"
+                  className="text-base focus:border-medical-500"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>
+                A concise and descriptive title that summarises the case. Include
+                key details like condition, patient demographics, or unique
+                aspects.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </FieldCard>
+
+      {/* — Chief Complaint — */}
+      <FieldCard icon={MessageSquareIcon} title="Chief Complaint">
+        <FormField
+          control={control}
+          name={"chiefComplaint" as Path<T>}
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Textarea
+                  placeholder="e.g., Patient presents with severe chest pain that started 2 hours ago, described as crushing and radiating to the left arm…"
+                  className="min-h-[120px] resize-y focus:border-medical-500"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>
+                The primary reason the patient sought medical attention, ideally
+                in the patient’s own words. Include onset, duration, and key
+                characteristics.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </FieldCard>
+
+      {/* — Specialty — */}
+      <FieldCard icon={StethoscopeIcon} title="Medical Specialty">
+        <FormField
+          control={control}
+          name={"specialty" as Path<T>}
+          render={({ field }) => (
+            <FormItem>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
-                  <Input 
-                    placeholder="e.g., Acute Myocardial Infarction in a 65-year-old Male" 
-                    className="border-medical-200 focus:border-medical-500 text-base"
-                    {...field} 
-                  />
+                  <SelectTrigger className="focus:border-medical-500">
+                    <SelectValue placeholder="Select the primary medical specialty" />
+                  </SelectTrigger>
                 </FormControl>
-                <FormDescription>
-                  A concise and descriptive title that summarizes the case. Include key details like condition, patient demographics, or unique aspects.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </CardContent>
-      </Card>
-
-      {/* Chief Complaint Field */}
-      <Card className="border-medical-200">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base text-medical-700 flex items-center">
-            <MessageSquare className="h-4 w-4 mr-2" />
-            Chief Complaint
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <FormField
-            control={control}
-            name="chiefComplaint"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Textarea
-                    placeholder="e.g., Patient presents with severe chest pain that started 2 hours ago, described as crushing and radiating to the left arm..."
-                    className="min-h-[120px] border-medical-200 focus:border-medical-500"
-                    {...field}
-                  />
-                </FormControl>
-                <FormDescription>
-                  The primary reason the patient sought medical attention, preferably in the patient's own words. Include onset, duration, and key characteristics.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </CardContent>
-      </Card>
-
-      {/* Specialty Field */}
-      <Card className="border-medical-200">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base text-medical-700 flex items-center">
-            <Stethoscope className="h-4 w-4 mr-2" />
-            Medical Specialty
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <FormField
-            control={control}
-            name="specialty"
-            render={({ field }) => (
-              <FormItem>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger className="border-medical-200 focus:border-medical-500">
-                      <SelectValue placeholder="Select the primary medical specialty" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent className="max-h-60">
-                    {specialties.map((specialty) => (
-                      <SelectItem key={specialty} value={specialty}>
-                        {specialty}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormDescription>
-                  The primary medical specialty most relevant to this case. This helps categorize and route the case appropriately.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </CardContent>
-      </Card>
-    </div>
+                <SelectContent className="max-h-60">
+                  {SPECIALTIES.map((spec) => (
+                    <SelectItem key={spec} value={spec}>
+                      {spec}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormDescription>
+                The primary medical specialty most relevant to this case. This
+                helps categorise and route the case appropriately.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </FieldCard>
+    </section>
   );
-};
+});
 
-// 4. Export the component and schema
-export default CaseInfoStep;
+CaseInfoStep.displayName = "CaseInfoStep";
