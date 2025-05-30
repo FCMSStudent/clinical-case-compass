@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { memo, useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useMutation } from "@tanstack/react-query";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -15,10 +17,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { toast } from "@/components/ui/use-toast";
-import { useMutation } from "@tanstack/react-query";
-import { createCase, CreateCaseRequest } from "@/lib/api/cases";
-import { useAuth } from "@/contexts/AuthContext";
 import {
   Select,
   SelectContent,
@@ -28,34 +26,53 @@ import {
 } from "@/components/ui/select";
 import { InteractiveBodyDiagram } from "@/components/body-diagram/InteractiveBodyDiagram";
 import { SymptomChecklist } from "@/components/symptoms/SymptomChecklist";
+import { toast } from "@/components/ui/use-toast";
+import { createCase, CreateCaseRequest } from "@/lib/api/cases";
+import { useAuth } from "@/contexts/AuthContext";
+import { cn } from "@/lib/utils";
 
-const caseSchema = z.object({
+/**
+ * ────────────────────────────────────────────────────────────────────────────────
+ * SCHEMA & TYPES
+ * ────────────────────────────────────────────────────────────────────────────────
+ */
+const detailsSchema = z.object({
   title: z.string().min(3, { message: "Title must be at least 3 characters." }),
   description: z.string().optional(),
-  priority: z.enum(["low", "medium", "high"]).default("medium"),
+  priority: z.enum(["low", "medium", "high"]),
 });
 
-type CaseSchemaType = z.infer<typeof caseSchema>;
+/**
+ * Combine clinical selection in a nested object so we can hand everything to the
+ * back-end in a single payload.
+ */
+const clinicalSchema = z.object({
+  selectedBodyParts: z.array(z.string()).default([]),
+  relatedSystems: z.array(z.string()).default([]),
+  symptoms: z.record(z.array(z.string())).default({}),
+});
 
-const CaseNew = () => {
+type DetailsForm = z.infer<typeof detailsSchema>;
+export type ClinicalSelection = z.infer<typeof clinicalSchema>;
+
+enum Step {
+  DETAILS = "details",
+  CLINICAL = "clinical",
+}
+
+/**
+ * ────────────────────────────────────────────────────────────────────────────────
+ * COMPONENT
+ * ────────────────────────────────────────────────────────────────────────────────
+ */
+export const CaseNew: React.FC = memo(() => {
+  /** Router / auth / react-query hooks */
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [activeStep, setActiveStep] = useState<"case-details" | "clinical-details">("case-details");
-  const [bodySelection, setBodySelection] = useState({
-    selectedBodyParts: [] as string[],
-    relatedSystems: [] as string[],
-  });
-
-  const form = useForm<CaseSchemaType>({
-    resolver: zodResolver(caseSchema),
-    defaultValues: {
-      title: "",
-      description: "",
-      priority: "medium",
-    },
-  });
-
-  const { mutate: createNewCase, isPending } = useMutation({
+  const {
+    mutate: createNewCase,
+    isPending: isSubmitting,
+  } = useMutation({
     mutationFn: (data: CreateCaseRequest) => createCase(data),
     onSuccess: () => {
       toast({ title: "Case created successfully!" });
@@ -70,133 +87,162 @@ const CaseNew = () => {
     },
   });
 
-  const onSubmit = (values: CaseSchemaType) => {
+  /** Form hooks */
+  const detailsForm = useForm<DetailsForm>({
+    resolver: zodResolver(detailsSchema),
+    defaultValues: { title: "", description: "", priority: "medium" },
+  });
+
+  /** Clinical selection state (simple since it’s mostly clicks) */
+  const [clinicalSel, setClinicalSel] = useState<ClinicalSelection>({
+    selectedBodyParts: [],
+    relatedSystems: [],
+    symptoms: {},
+  });
+
+  const [step, setStep] = useState<Step>(Step.DETAILS);
+
+  /** ———————————— Handlers ———————————— */
+  const nextStep = useCallback(() => setStep(Step.CLINICAL), []);
+  const prevStep = useCallback(() => setStep(Step.DETAILS), []);
+
+  const handleBodySelect = useCallback((part: string) => {
+    setClinicalSel((prev) => {
+      const exists = prev.selectedBodyParts.includes(part);
+      const parts = exists ? prev.selectedBodyParts.filter((p) => p !== part) : [...prev.selectedBodyParts, part];
+      return { ...prev, selectedBodyParts: parts };
+    });
+  }, []);
+
+  const handleSymptoms = useCallback((symptoms: Record<string, string[]>) => {
+    setClinicalSel((prev) => ({ ...prev, symptoms }));
+  }, []);
+
+  const submitDetails: SubmitHandler<DetailsForm> = (values) => {
     if (!user?.email) {
       toast({ title: "You must be logged in to create a case.", variant: "destructive" });
       return;
     }
 
-    const requestData: CreateCaseRequest = {
-      title: values.title,
-      description: values.description,
-      priority: values.priority,
+    // Merge both steps into one payload
+    const payload: CreateCaseRequest = {
+      ...values,
       userId: user.email,
-      bodySelection,
-    };
+      bodySelection: clinicalSel,
+    } as CreateCaseRequest;
 
-    createNewCase(requestData);
+    createNewCase(payload);
   };
 
+  /** ———————————— Render ———————————— */
   return (
-    <div className="container max-w-4xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Create New Case</h1>
+    <div className="container mx-auto max-w-4xl p-4">
+      <h1 className="mb-4 text-2xl font-bold">Create New Case</h1>
 
-      <div className="mb-4">
-        <Button
-          variant={activeStep === "case-details" ? "default" : "outline"}
-          onClick={() => setActiveStep("case-details")}
-        >
+      {/* Step selector buttons */}
+      <div className="mb-6 flex gap-2">
+        <Button variant={step === Step.DETAILS ? "default" : "outline"} onClick={prevStep}>
           Case Details
         </Button>
-        <Button
-          variant={activeStep === "clinical-details" ? "default" : "outline"}
-          onClick={() => setActiveStep("clinical-details")}
-          className="ml-2"
-        >
+        <Button variant={step === Step.CLINICAL ? "default" : "outline"} onClick={nextStep}>
           Clinical Details
         </Button>
       </div>
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          {activeStep === "case-details" && (
-            <div className="space-y-6">
-              <FormField
-                control={form.control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Title</FormLabel>
+      {/* DETAILS FORM */}
+      {step === Step.DETAILS && (
+        <Form {...detailsForm}>
+          <form onSubmit={detailsForm.handleSubmit(submitDetails)} className="space-y-8">
+            {/* Title */}
+            <FormField
+              control={detailsForm.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Title</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter case title" {...field} />
+                  </FormControl>
+                  <FormDescription>Displayed title in the case list.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/* Description */}
+            <FormField
+              control={detailsForm.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="Brief case description" className="resize-none" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/* Priority */}
+            <FormField
+              control={detailsForm.control}
+              name="priority"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Priority</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <Input placeholder="Enter case title" {...field} />
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select priority" />
+                      </SelectTrigger>
                     </FormControl>
-                    <FormDescription>
-                      This is the title of the case that will be displayed in the list.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                    <SelectContent>
+                      <SelectItem value="low">Low</SelectItem>
+                      <SelectItem value="medium">Medium</SelectItem>
+                      <SelectItem value="high">High</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Description</FormLabel>
-                    <FormControl>
-                      <Textarea placeholder="Enter case description" className="resize-none" {...field} />
-                    </FormControl>
-                    <FormDescription>Write a brief description of the case.</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="priority"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Priority</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a priority" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="low">Low</SelectItem>
-                        <SelectItem value="medium">Medium</SelectItem>
-                        <SelectItem value="high">High</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormDescription>Set the priority of the case.</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-          )}
-
-          {activeStep === "clinical-details" && (
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <InteractiveBodyDiagram
-                  onBodyPartSelected={(part) => console.log("Body part selected:", part)}
-                  highlightedSystems={bodySelection.relatedSystems}
-                />
-                <SymptomChecklist
-                  onSymptomsSelected={(symptoms) => console.log("Symptoms selected:", symptoms)}
-                />
-              </div>
-            </div>
-          )}
-
-          <div className="flex justify-between">
-            {activeStep === "clinical-details" && (
-              <Button variant="secondary" onClick={() => setActiveStep("case-details")}>
-                Previous
+            {/* Actions */}
+            <div className="flex justify-end gap-2">
+              <Button type="button" variant="secondary" onClick={nextStep}>
+                Next
               </Button>
-            )}
-            <Button type="submit" disabled={isPending}>
-              {isPending ? "Creating..." : "Create Case"}
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? "Creating…" : "Create Case"}
+              </Button>
+            </div>
+          </form>
+        </Form>
+      )}
+
+      {/* CLINICAL STEP */}
+      {step === Step.CLINICAL && (
+        <div className="space-y-6">
+          <div className="grid gap-6 lg:grid-cols-2">
+            <InteractiveBodyDiagram
+              onBodyPartSelected={handleBodySelect}
+              highlightedSystems={clinicalSel.selectedBodyParts}
+            />
+            <SymptomChecklist onSymptomsSelected={handleSymptoms} />
+          </div>
+
+          {/* Actions */}
+          <div className="flex justify-between gap-2">
+            <Button variant="secondary" onClick={prevStep}>
+              Previous
+            </Button>
+            <Button onClick={detailsForm.handleSubmit(submitDetails)} disabled={isSubmitting}>
+              {isSubmitting ? "Creating…" : "Create Case"}
             </Button>
           </div>
-        </form>
-      </Form>
+        </div>
+      )}
     </div>
   );
-};
+});
 
-export default CaseNew;
+CaseNew.displayName = "CaseNew";
