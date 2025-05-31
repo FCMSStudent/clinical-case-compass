@@ -83,7 +83,7 @@ const CaseNew = () => {
       priority: values.priority,
       userId: user.email,
       bodySelection: {
-        selectedBodyParts: bodySelection.selectedBodyParts as string[],
+        selectedBodyParts: bodySelection.selectedBodyParts,
         relatedSystems: bodySelection.relatedSystems,
       },
     };
