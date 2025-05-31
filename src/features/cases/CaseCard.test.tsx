@@ -1,3 +1,4 @@
+
 /** @vitest-environment jsdom */
 import React from 'react';
 import { render, screen, cleanup } from '@testing-library/react';
@@ -17,7 +18,7 @@ const mockMedicalCase: MedicalCase = {
     id: 'p1',
     name: 'John Doe',
     age: 30,
-    gender: 'Male',
+    gender: 'male', // Fixed: changed from 'Male' to 'male'
   },
   chiefComplaint: 'Test chief complaint',
   summary: 'Test summary',
@@ -50,7 +51,7 @@ describe('CaseCard', () => {
     // For example, the title of the case
     expect(screen.getByText('Test Case Title')).toBeInTheDocument();
     // Or the patient's name
-    expect(screen.getByText(/John Doe, 30 y\/o Male/i)).toBeInTheDocument();
+    expect(screen.getByText(/John Doe, 30 y\/o male/i)).toBeInTheDocument();
     // Or chief complaint
     expect(screen.getByText('Test chief complaint')).toBeInTheDocument();
   });
@@ -61,7 +62,7 @@ describe('CaseCard', () => {
         <CaseCard medicalCase={mockMedicalCase} />
       </BrowserRouter>
     );
-    expect(screen.getByText('John Doe, 30 y/o Male')).toBeInTheDocument();
+    expect(screen.getByText('John Doe, 30 y/o male')).toBeInTheDocument();
   });
 
   it('renders chief complaint correctly', () => {
@@ -98,7 +99,7 @@ describe('CaseCard', () => {
   it('renders primary diagnosis if provided', () => {
     const caseWithDx: MedicalCase = {
       ...mockMedicalCase,
-      diagnoses: [{ id: 'd1', name: 'Flu', status: 'confirmed', icd10Code: 'J11' }],
+      diagnoses: [{ id: 'd1', name: 'Flu', status: 'confirmed' }], // Fixed: removed icd10Code
     };
     render(
       <BrowserRouter>

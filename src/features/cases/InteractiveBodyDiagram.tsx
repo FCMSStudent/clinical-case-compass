@@ -125,11 +125,9 @@ export const MEDICAL_SYSTEMS: Record<string, SystemData> = {
 } as const;
 
 /**
- * ...BASIC BODY_PARTS LARGE OBJECT FROM ORIGINAL MESSAGE HERE (omitted for brevity)
+ * Import the body parts data
  */
-// NOTE: To keep this file concise, the BODY_PARTS constant is assumed to be
-// defined exactly as shared in the user prompt.
-import { BODY_PARTS } from "./bodyParts.data"; // 👉 Move the giant object into its own file for readability.
+import { BODY_PARTS } from "./bodyParts.data";
 
 export interface InteractiveBodyDiagramProps {
   onBodyPartSelected: (selection: BodyPartSelection) => void;
