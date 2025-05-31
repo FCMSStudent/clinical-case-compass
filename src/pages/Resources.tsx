@@ -40,7 +40,7 @@ const ResourceItem = ({
 
 const Resources = () => {
   return (
-    <div>
+    <div className="container">
       <PageHeader
         title="Study Resources"
         description="Organize and access your learning materials"

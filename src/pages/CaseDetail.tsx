@@ -96,7 +96,7 @@ const CaseDetail = () => {
   };
 
   return (
-    <div>
+    <div className="container">
       <div className="mb-6">
         <Link
           to="/cases"

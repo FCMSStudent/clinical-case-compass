@@ -10,7 +10,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const Dashboard = () => {
   return (
-    <div className="space-y-6">
+    <div className="container space-y-6">
       {/* Welcome Alert - Can be kept or modified as per overall design */}
       <Alert className="border-primary/20 bg-primary/5">
         <UserRound className="h-5 w-5 text-primary" />

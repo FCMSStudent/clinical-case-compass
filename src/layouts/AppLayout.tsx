@@ -67,7 +67,7 @@ function AppLayoutContent({ children }: AppLayoutProps) {
           </Button>
         </div>
 
-        <main className="px-4 py-6 md:px-6 pt-20 md:pt-6">
+        <main className="container py-6 pt-20 md:pt-6">
           {children}
         </main>
       </div>

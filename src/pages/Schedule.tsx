@@ -21,7 +21,7 @@ import { Clock, Plus } from "lucide-react";
 
 const Schedule = () => {
   return (
-    <div>
+    <div className="container">
       <PageHeader
         title="Schedule"
         description="Manage your rotations and study sessions"
