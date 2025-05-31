@@ -18,8 +18,8 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children, className }) => 
         "flex flex-col",
         className
       )}>
-        <div className="flex-1 p-4 lg:p-6 xl:p-8">
-          <div className="mx-auto max-w-7xl space-y-6">
+        <div className="flex-1">
+          <div className="container space-y-6">
             {children}
           </div>
         </div>
