@@ -1,13 +1,15 @@
 
 import { MedicalCase } from "@/types/case";
 
+type BodyPart = "Head" | "Neck" | "Chest" | "Abdomen" | "Arms" | "Legs";
+
 export interface CreateCaseRequest {
   title: string;
   description?: string;
   priority: "low" | "medium" | "high";
   userId: string;
   bodySelection?: {
-    selectedBodyParts: string[];
+    selectedBodyParts: BodyPart[];
     relatedSystems: string[];
   };
 }
