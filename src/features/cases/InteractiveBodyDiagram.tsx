@@ -1,3 +1,4 @@
+
 import React, {
   useCallback,
   useMemo,
@@ -27,8 +28,11 @@ const ZOOM_STEP = 10;
 
 export type ViewType = "anterior" | "posterior";
 
+// Define the body part IDs as a union type first
+export type BodyPartId = "head" | "chest" | "abdomen" | "pelvis" | "leftArm" | "rightArm" | "leftLeg" | "rightLeg" | "back";
+
 export interface BodyPartSelection {
-  id: BodyPart;
+  id: BodyPartId;
   name: string;
   relatedSystems: readonly string[];
   relatedSymptoms: Record<string, readonly string[]>;
@@ -37,7 +41,7 @@ export interface BodyPartSelection {
 /**
  * Body parts meta-data. Declared with `as const` so we can infer literal types.
  */
-export const BODY_PARTS = {
+export const BODY_PARTS: Record<BodyPartId, BodyPartSelection> = {
   head: {
     id: "head",
     name: "Head",
@@ -174,9 +178,7 @@ export const BODY_PARTS = {
       ],
     },
   },
-} as const satisfies Record<string, BodyPartSelection>;
-
-export type BodyPart = keyof typeof BODY_PARTS;
+};
 
 export interface InteractiveBodyDiagramProps {
   /**
@@ -198,13 +200,13 @@ export const InteractiveBodyDiagram: React.FC<InteractiveBodyDiagramProps> = (
   { onBodyPartSelected, className },
 ) => {
   // ——— STATE ————————————————————————————————————————————————————————
-  const [selectedPart, setSelectedPart] = useState<BodyPart | null>(null);
+  const [selectedPart, setSelectedPart] = useState<BodyPartId | null>(null);
   const [zoom, setZoom] = useState(100);
   const [viewType, setViewType] = useState<ViewType>("anterior");
 
   // ——— CALLBACKS ————————————————————————————————————————————————————
   const handleSelect = useCallback(
-    (part: BodyPart) => {
+    (part: BodyPartId) => {
       const data = BODY_PARTS[part];
       setSelectedPart(part);
       onBodyPartSelected(data);
@@ -223,7 +225,7 @@ export const InteractiveBodyDiagram: React.FC<InteractiveBodyDiagramProps> = (
 
   // Utility hot-keys (Enter/Space) handler shared between shapes.
   const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent, part: BodyPart) => {
+    (e: React.KeyboardEvent, part: BodyPartId) => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
         handleSelect(part);
@@ -237,7 +239,7 @@ export const InteractiveBodyDiagram: React.FC<InteractiveBodyDiagramProps> = (
 
   // ——— INTERNAL RENDER UTILS ——————————————————————————————————————
   const renderBodyShape = useCallback(
-    (part: BodyPart, shape: JSX.Element) => {
+    (part: BodyPartId, shape: JSX.Element) => {
       const isActive = part === selectedPart;
       return React.cloneElement(shape, {
         key: part,

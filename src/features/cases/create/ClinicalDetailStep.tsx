@@ -1,3 +1,4 @@
+
 import React, {
   memo,
   useCallback,
@@ -155,7 +156,7 @@ export const ClinicalDetailStep = memo(function ClinicalDetailStep<
   /**
    * FORM STATE SELECTORS
    */
-  const selectedBodyParts = watch("selectedBodyParts", []) as string[];
+  const selectedBodyParts = (watch("selectedBodyParts" as Path<T>) as string[]) || [];
 
   /**
    * ─────────── Handlers ————————————————————————————————————————————————

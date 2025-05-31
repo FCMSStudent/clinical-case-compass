@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useForm, SubmitHandler, FieldValues, Path, UseFormSetValue } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,10 +9,10 @@ import { Form } from "@/components/ui/form";
 import { toast } from "sonner";
 
 // Step Components and Schemas
-import CaseInfoStep, { caseInfoSchema } from "@/features/cases/create/CaseInfoStep";
-import PatientStep, { patientStepSchema } from "@/features/cases/create/PatientStep";
-import ClinicalDetailStep, { clinicalDetailStepSchema } from "@/features/cases/create/ClinicalDetailStep";
-import LearningPointsStep, { learningPointsStepSchema } from "@/features/cases/create/LearningPointsStep";
+import { CaseInfoStep, caseInfoSchema } from "@/features/cases/create/CaseInfoStep";
+import { PatientStep, patientStepSchema } from "@/features/cases/create/PatientStep";
+import { ClinicalDetailStep, clinicalDetailStepSchema } from "@/features/cases/create/ClinicalDetailStep";
+import { LearningPointsStep, learningPointsStepSchema } from "@/features/cases/create/LearningPointsStep";
 
 // New Components
 import { FormHeader } from "@/features/cases/create/FormHeader";
