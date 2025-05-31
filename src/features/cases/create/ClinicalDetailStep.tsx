@@ -20,7 +20,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import { InteractiveBodyDiagram } from "@/components/body-diagram/InteractiveBodyDiagram";
+import { InteractiveBodyDiagram } from "@/features/cases/InteractiveBodyDiagram";
 import { SystemReviewChecklist } from "@/features/cases/SystemReviewChecklist";
 import { VitalsCard } from "@/features/cases/VitalsCard";
 import { LabResultsCard } from "@/features/cases/LabResultsCard";
@@ -160,13 +160,14 @@ export const ClinicalDetailStep = memo(function ClinicalDetailStep<
   /**
    * ─────────── Handlers ————————————————————————————————————————————————
    */
-  const toggleBodyPart = useCallback(
-    (part: string) => {
+  const handleBodyPartSelected = useCallback(
+    (selection: any) => {
+      const partName = selection.name || selection.id;
       setValue(
         "selectedBodyParts" as Path<T>,
-        selectedBodyParts.includes(part)
-          ? (selectedBodyParts.filter((p) => p !== part) as any)
-          : ([...selectedBodyParts, part] as any),
+        selectedBodyParts.includes(partName)
+          ? (selectedBodyParts.filter((p) => p !== partName) as any)
+          : ([...selectedBodyParts, partName] as any),
         { shouldValidate: true },
       );
     },
@@ -319,8 +320,7 @@ export const ClinicalDetailStep = memo(function ClinicalDetailStep<
                 headerClass="bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-800"
               >
                 <InteractiveBodyDiagram
-                  onBodyPartSelected={toggleBodyPart}
-                  highlightedSystems={selectedBodyParts}
+                  onBodyPartSelected={handleBodyPartSelected}
                 />
                 <FormDescription className="mt-3 text-blue-600">
                   Click on body parts to mark affected areas
