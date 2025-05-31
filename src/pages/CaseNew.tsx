@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -81,7 +82,10 @@ const CaseNew = () => {
       description: values.description,
       priority: values.priority,
       userId: user.email,
-      bodySelection,
+      bodySelection: {
+        selectedBodyParts: bodySelection.selectedBodyParts as string[],
+        relatedSystems: bodySelection.relatedSystems,
+      },
     };
 
     createNewCase(requestData);

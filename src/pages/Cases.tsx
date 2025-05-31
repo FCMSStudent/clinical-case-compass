@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Plus, Search, Filter, Grid, List } from "lucide-react";
@@ -25,6 +26,11 @@ const Cases = () => {
       caseItem.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [cases, searchQuery]);
+
+  const handleDelete = (caseId: string) => {
+    console.log("Delete case:", caseId);
+    // TODO: Implement delete functionality
+  };
 
   if (isLoading) {
     return <div>Loading cases...</div>;
@@ -79,11 +85,11 @@ const Cases = () => {
         <div className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" : ""}>
           {viewMode === "grid" ? (
             filteredCases.map((caseItem) => (
-              <CaseCard key={caseItem.id} caseItem={caseItem} />
+              <CaseCard key={caseItem.id} medicalCase={caseItem} />
             ))
           ) : (
             filteredCases.map((caseItem) => (
-              <CaseListItem key={caseItem.id} caseItem={caseItem} />
+              <CaseListItem key={caseItem.id} medicalCase={caseItem} onDelete={handleDelete} />
             ))
           )}
         </div>

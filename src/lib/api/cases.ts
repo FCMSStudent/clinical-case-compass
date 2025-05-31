@@ -12,6 +12,15 @@ export interface CreateCaseRequest {
   };
 }
 
+export const getCases = async (searchQuery?: string): Promise<MedicalCase[]> => {
+  // For now, return mock data since we don't have a real API
+  // In a real app, this would make an API call with the search query
+  console.log("Getting cases with search query:", searchQuery);
+  
+  // Return empty array for now as the component will handle the empty state
+  return [];
+};
+
 export const createCase = async (data: CreateCaseRequest): Promise<MedicalCase> => {
   // For now, return a mock response since we don't have a real API
   // In a real app, this would make an API call

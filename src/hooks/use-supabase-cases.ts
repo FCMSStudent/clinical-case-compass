@@ -1,9 +1,10 @@
+
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/app/AuthContext';
 import { toast } from '@/components/ui/use-toast';
 import { useErrorHandler } from './use-error-handler';
-import { MedicalCase, Patient, Diagnosis, Resource, CaseTag } from '@/types/case';
+import { MedicalCase, Patient, Diagnosis, Resource, CaseTag, LabTest as ComponentLabTest, RadiologyExam as ComponentRadiologyExam, DiagnosisStatus as ComponentDiagnosisStatus } from '@/types/case';
 import { Database } from '@/integrations/supabase/types';
 
 type DbCase = Database['public']['Tables']['medical_cases']['Row'];
@@ -132,8 +133,8 @@ export function useSupabaseCases() {
         vitals: caseData.case.vitals || {},
         symptoms: caseData.case.symptoms || {},
         urinary_symptoms: caseData.case.urinarySymptoms || [],
-        lab_tests: caseData.case.labTests || [],
-        radiology_exams: caseData.case.radiologyExams || [],
+        lab_tests: (caseData.case.labTests || []) as unknown as Database['public']['Tables']['medical_cases']['Insert']['lab_tests'],
+        radiology_exams: (caseData.case.radiologyExams || []) as unknown as Database['public']['Tables']['medical_cases']['Insert']['radiology_exams'],
         user_id: user.id,
         patient_id: patientData.id
       };
@@ -260,12 +261,21 @@ function transformDbCaseToMedicalCase(dbCase: Record<string, unknown>): MedicalC
     vitals: (dbCase.vitals || {}) as Record<string, string>,
     symptoms: (dbCase.symptoms || {}) as Record<string, boolean>,
     urinarySymptoms: (dbCase.urinary_symptoms || []) as string[],
-    labTests: (dbCase.lab_tests || []) as unknown as LabTest[], // Assuming LabTest structure matches
-    radiologyExams: (dbCase.radiology_exams || []) as unknown as RadiologyExam[], // Assuming RadiologyExam structure matches
+    labTests: ((dbCase.lab_tests || []) as any[]).map((test: any) => ({
+      id: test.id || `lab-${Date.now()}-${Math.random()}`,
+      name: test.name || '',
+      value: test.value || '',
+      unit: test.unit || ''
+    })) as ComponentLabTest[],
+    radiologyExams: ((dbCase.radiology_exams || []) as any[]).map((exam: any) => ({
+      id: exam.id || `rad-${Date.now()}-${Math.random()}`,
+      modality: exam.modality || exam.type || '',
+      findings: exam.findings || ''
+    })) as ComponentRadiologyExam[],
     diagnoses: ((dbCase.diagnoses as DbDiagnosis[]) || []).map((d: DbDiagnosis) => ({
       id: d.id,
       name: d.name,
-      status: d.status as DiagnosisStatus,
+      status: d.status as ComponentDiagnosisStatus,
       notes: d.notes
     })),
     resources: ((dbCase.resources as DbResource[]) || []).map((r: DbResource) => ({
