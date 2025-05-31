@@ -1,4 +1,3 @@
-
 export interface Patient {
   id: string;
   name: string;
@@ -119,3 +118,5 @@ export interface LoadingState {
 
 // Save status type for autosave functionality - updated to include error
 export type SaveStatus = "saving" | "saved" | "idle" | "error";
+
+export type BodyPart = "Head" | "Neck" | "Chest" | "Abdomen" | "Arms" | "Legs";

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -29,6 +28,7 @@ import {
 } from "@/components/ui/select";
 import { InteractiveBodyDiagram } from "@/components/body-diagram/InteractiveBodyDiagram";
 import { SymptomChecklist } from "@/features/symptoms/SymptomChecklist";
+import { BodyPart } from "@/types/case";
 
 const caseSchema = z.object({
   title: z.string().min(3, { message: "Title must be at least 3 characters." }),
@@ -38,15 +38,13 @@ const caseSchema = z.object({
 
 type CaseSchemaType = z.infer<typeof caseSchema>;
 
-type BodyPart = "Head" | "Neck" | "Chest" | "Abdomen" | "Arms" | "Legs";
-
 const CaseNew = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [activeStep, setActiveStep] = useState<"case-details" | "clinical-details">("case-details");
   const [bodySelection, setBodySelection] = useState({
     selectedBodyParts: [] as BodyPart[],
-    relatedSystems: [] as string[],
+    relatedSystems: [] as BodyPart[],
   });
 
   const form = useForm<CaseSchemaType>({

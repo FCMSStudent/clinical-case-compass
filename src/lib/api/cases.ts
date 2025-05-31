@@ -1,7 +1,4 @@
-
-import { MedicalCase } from "@/types/case";
-
-type BodyPart = "Head" | "Neck" | "Chest" | "Abdomen" | "Arms" | "Legs";
+import { MedicalCase, BodyPart } from "@/types/case";
 
 export interface CreateCaseRequest {
   title: string;

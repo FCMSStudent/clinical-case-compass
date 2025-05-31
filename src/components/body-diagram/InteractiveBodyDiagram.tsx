@@ -1,13 +1,15 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { BodyPart } from "@/types/case";
 
 /**
  * All supported body parts.
  * Using `as const` keeps the tuple literal type so we can derive an exact union type.
  */
-const BODY_PARTS = [
+const BODY_PARTS: readonly BodyPart[] = [
   "Head",
   "Neck",
   "Chest",
@@ -15,11 +17,6 @@ const BODY_PARTS = [
   "Arms",
   "Legs",
 ] as const;
-
-/**
- * A union type that represents every item in `BODY_PARTS`.
- */
-export type BodyPart = typeof BODY_PARTS[number];
 
 export interface InteractiveBodyDiagramProps {
   /**
