@@ -66,10 +66,6 @@ const CreateCaseFlow = () => {
       physicalExam: "",
       labResults: [],
       radiologyExams: [],
-      relatedSystemsNotes: "",
-      vitalsNotes: "",
-      labResultsNotes: "",
-      radiologyNotes: "",
       // LearningPointsStep
       learningPoints: "",
       generalNotes: "",

@@ -73,12 +73,6 @@ export const clinicalDetailStepSchema = z.object({
       }),
     )
     .default([]),
-  relatedSystemsNotes: z.string().optional(),
-  vitalsNotes: z.string().optional(),
-  labResultsNotes: z.string().optional(),
-  radiologyNotes: z.string().optional(),
-  clinicalImpression: z.string().optional(),
-  differentialDiagnosis: z.string().optional(),
 });
 export type ClinicalDetailFormData = z.infer<typeof clinicalDetailStepSchema>;
 
@@ -102,11 +96,6 @@ const TAB_ITEMS = [
     value: "diagnostics",
     label: "Diagnostics",
     icon: TestTubeIcon,
-  },
-  {
-    value: "assessment",
-    label: "Assessment",
-    icon: ClipboardIcon,
   },
 ] as const;
 export type TabValue = (typeof TAB_ITEMS)[number]["value"];
@@ -365,82 +354,6 @@ export const ClinicalDetailStep = memo(function ClinicalDetailStep<
               </h3>
               <RadiologyCard onRadiologyChange={setRadiology} />
             </div>
-          </div>
-        </TabsContent>
-
-        {/* ——————————— Tab: Assessment ——————————— */}
-        <TabsContent value="assessment" className="space-y-6">
-          <div className="grid gap-6 md:grid-cols-2">
-            {/* Clinical Impression */}
-            <SectionCard
-              icon={ActivityIcon}
-              title="Clinical Impression"
-              headerClass="bg-gradient-to-r from-amber-50 to-orange-50 text-amber-800"
-            >
-              <FormField
-                control={control}
-                name={"clinicalImpression" as Path<T>}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Primary Clinical Impression</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Summarise your primary clinical impression…"
-                        className="min-h-[100px] text-sm"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={control}
-                name={"differentialDiagnosis" as Path<T>}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Differential Diagnosis</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="List and discuss alternative diagnoses…"
-                        className="min-h-[120px] text-sm"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </SectionCard>
-
-            {/* Clinical Notes */}
-            <SectionCard
-              icon={ClipboardIcon}
-              title="Clinical Notes & Analysis"
-              headerClass="bg-gradient-to-r from-amber-50 to-yellow-50 text-amber-800"
-            >
-              {([
-                ["vitalsNotes", "Vital Signs Analysis"],
-                ["labResultsNotes", "Laboratory Interpretation"],
-                ["radiologyNotes", "Imaging Analysis"],
-              ] as const).map(([name, label]) => (
-                <FormField
-                  key={name}
-                  control={control}
-                  name={name as Path<T>}
-                  render={({ field }) => (
-                    <FormItem className="mb-4 last:mb-0">
-                      <FormLabel>{label}</FormLabel>
-                      <FormControl>
-                        <Textarea className="min-h-[80px] text-sm" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              ))}
-            </SectionCard>
           </div>
         </TabsContent>
       </Tabs>
