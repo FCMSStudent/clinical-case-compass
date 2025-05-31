@@ -26,7 +26,7 @@ function TagPill({ tag }: { tag: MedicalCase["tags"][number] }) {
   return (
     <span
       key={tag.id}
-      className="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium"
+      className="inline-flex items-center rounded-full px-2 py-1 text-xs md:text-sm font-medium"
       style={{
         backgroundColor: `${tag.color}20`, // subtle tint
         color: tag.color,
@@ -72,18 +72,18 @@ export const CaseCard: React.FC<CaseCardProps> = memo(
         {/* — Header — */}
         <CardHeader className="flex-shrink-0 pb-3">
           <div className="flex items-start justify-between gap-3">
-            <CardTitle className="line-clamp-2 text-lg leading-tight" title={medicalCase.title}>
+            <CardTitle className="line-clamp-2 text-lg md:text-xl leading-tight" title={medicalCase.title}>
               {medicalCase.title}
             </CardTitle>
             <time
               dateTime={new Date(medicalCase.createdAt).toISOString()}
-              className="flex-shrink-0 whitespace-nowrap text-xs text-muted-foreground"
+              className="flex-shrink-0 whitespace-nowrap text-xs md:text-sm text-muted-foreground"
             >
               {createdDate}
             </time>
           </div>
 
-          <div className="mt-1 flex items-center text-sm text-muted-foreground">
+          <div className="mt-2 flex items-center text-sm md:text-base text-muted-foreground">
             <User className="mr-2 h-4 w-4 flex-shrink-0" aria-hidden />
             {medicalCase.patient.name}, {medicalCase.patient.age} y/o {medicalCase.patient.gender}
           </div>
@@ -94,10 +94,10 @@ export const CaseCard: React.FC<CaseCardProps> = memo(
           <div className="flex-1 space-y-3">
             {/* Chief complaint */}
             <section>
-              <h4 className="mb-1 flex items-center text-sm font-medium text-primary">
+              <h4 className="mb-1 flex items-center text-sm md:text-base font-medium text-primary">
                 <Clipboard className="mr-2 h-4 w-4 flex-shrink-0" aria-hidden /> Chief Complaint
               </h4>
-              <p className="line-clamp-2 text-sm text-muted-foreground" title={medicalCase.chiefComplaint}>
+              <p className="line-clamp-2 text-sm md:text-base text-muted-foreground" title={medicalCase.chiefComplaint}>
                 {medicalCase.chiefComplaint}
               </p>
             </section>
@@ -105,13 +105,13 @@ export const CaseCard: React.FC<CaseCardProps> = memo(
             {/* Diagnosis */}
             {primaryDx && (
               <section>
-                <h4 className="mb-1 flex items-center text-sm font-medium text-primary">
+                <h4 className="mb-1 flex items-center text-sm md:text-base font-medium text-primary">
                   <Stethoscope className="mr-2 h-4 w-4 flex-shrink-0" aria-hidden /> Diagnosis
                 </h4>
-                <p className="line-clamp-2 text-sm text-muted-foreground" title={primaryDx.name}>
+                <p className="line-clamp-2 text-sm md:text-base text-muted-foreground" title={primaryDx.name}>
                   {primaryDx.name}
                   {primaryDx.status !== "confirmed" && (
-                    <span className="ml-1 text-xs">({primaryDx.status})</span>
+                    <span className="ml-1 text-xs md:text-sm">({primaryDx.status})</span>
                   )}
                 </p>
               </section>
@@ -120,7 +120,7 @@ export const CaseCard: React.FC<CaseCardProps> = memo(
 
           {/* Tags & action */}
           <footer className="mt-4 border-t border-medical-100 pt-3">
-            <h4 className="mb-1 flex items-center text-sm font-medium text-primary">
+            <h4 className="mb-1 flex items-center text-sm md:text-base font-medium text-primary">
               <Tag className="mr-2 h-4 w-4 flex-shrink-0" aria-hidden /> Tags
             </h4>
             <div className="mb-3 flex flex-wrap gap-2">
@@ -128,7 +128,7 @@ export const CaseCard: React.FC<CaseCardProps> = memo(
                 <TagPill key={tag.id} tag={tag} />
               ))}
               {hiddenTagCount > 0 && (
-                <span className="inline-flex items-center rounded-full bg-muted px-2 py-1 text-xs font-medium text-muted-foreground">
+                <span className="inline-flex items-center rounded-full bg-muted px-2 py-1 text-xs md:text-sm font-medium text-muted-foreground">
                   +{hiddenTagCount}
                 </span>
               )}
