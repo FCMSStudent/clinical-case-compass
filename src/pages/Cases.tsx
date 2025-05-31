@@ -28,7 +28,7 @@ const Cases = () => {
 
   // Filter and sort cases
   const filteredAndSortedCases = useMemo(() => {
-    let filtered = cases.filter((medCase) => {
+    const filtered = cases.filter((medCase) => {
       const matchesSearch = !searchTerm || 
         medCase.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         medCase.patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||

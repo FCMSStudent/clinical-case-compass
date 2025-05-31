@@ -107,8 +107,8 @@ vite_react_shadcn_ts/
 ├── src/                                # Source code
 │   ├── components/                     # React components
 │   │   ├── auth/                       # Authentication-related components (UserProfileDisplay, PrivateRoute)
-│   │   ├── cases/                      # Case simulation specific components (CaseCard, InteractiveBodyDiagram, etc.)
-│   │   ├── dashboard/                  # Dashboard specific components (RecentCasesList, StatCard)
+│   │   ├── cases/                      # Case specific components (e.g., CaseCard, SimpleBodyPartSelector, the complex SVG InteractiveBodyDiagram, SymptomChecklist)
+│   │   ├── dashboard/                  # Dashboard specific components (e.g., RecentCasesList, StatCard, DashboardSearchBar)
 │   │   ├── error/                      # Error handling (ErrorBoundary)
 │   │   ├── layout/                     # Layout components (AppLayout, Sidebar)
 │   │   └── ui/                         # Core UI components from Shadcn/ui (Button, Card, Input, etc.)
@@ -140,6 +140,11 @@ vite_react_shadcn_ts/
 ├── vite.config.ts                      # Vite build tool configuration
 └── README.md                           # This file
 ```
+
+**Note on Body Diagram Components:**
+The `src/components/cases/` directory contains two distinct components for body part interaction:
+*   `InteractiveBodyDiagram.tsx`: A complex, SVG-based visual diagram with features like zoom and anterior/posterior views.
+*   `SimpleBodyPartSelector.tsx`: A lightweight component that provides a list of buttons for selecting general body regions.
 
 ## Contributing
 
