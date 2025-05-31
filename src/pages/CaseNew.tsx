@@ -38,12 +38,14 @@ const caseSchema = z.object({
 
 type CaseSchemaType = z.infer<typeof caseSchema>;
 
+type BodyPart = "Head" | "Neck" | "Chest" | "Abdomen" | "Arms" | "Legs";
+
 const CaseNew = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [activeStep, setActiveStep] = useState<"case-details" | "clinical-details">("case-details");
   const [bodySelection, setBodySelection] = useState({
-    selectedBodyParts: [] as ("Head" | "Neck" | "Chest" | "Abdomen" | "Arms" | "Legs")[],
+    selectedBodyParts: [] as BodyPart[],
     relatedSystems: [] as string[],
   });
 
