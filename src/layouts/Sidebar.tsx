@@ -88,18 +88,18 @@ const setCookieValue = (name: string, value: boolean): void => {
 // Custom hook
 /**
  * Hook to access the sidebar context.
- * Must be used within a SidebarProvider.
+ * Must be used within a Sidebar.
  * 
  * @returns The sidebar context value
- * @throws Error if used outside of SidebarProvider
+ * @throws Error if used outside of Sidebar
  */
 export function useSidebar(): SidebarContextValue {
   const context = useContext(SidebarContext);
   
   if (!context) {
     throw new Error(
-      "useSidebar must be used within a SidebarProvider. " +
-      "Make sure to wrap your component with <SidebarProvider>."
+      "useSidebar must be used within a Sidebar. " +
+      "Make sure to wrap your component with <Sidebar>."
     );
   }
   
@@ -111,8 +111,8 @@ export function useSidebar(): SidebarContextValue {
  * Provides context for sidebar components, managing state and mobile behavior.
  * Supports both controlled and uncontrolled usage patterns.
  */
-export const SidebarProvider = forwardRef<HTMLDivElement, SidebarProviderProps>(
-  function SidebarProvider(
+export const Sidebar = forwardRef<HTMLDivElement, SidebarProviderProps>(
+  function Sidebar(
     {
       defaultOpen = true,
       open: openProp,
@@ -230,4 +230,4 @@ export const SidebarProvider = forwardRef<HTMLDivElement, SidebarProviderProps>(
   }
 );
 
-SidebarProvider.displayName = "SidebarProvider";
+Sidebar.displayName = "Sidebar";
