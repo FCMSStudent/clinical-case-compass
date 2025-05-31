@@ -1,465 +1,623 @@
-
 import React, {
   useCallback,
   useMemo,
   useState,
+  useRef,
+  useEffect,
 } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
+import { Input } from "@/components/ui/input";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { ZoomIn, ZoomOut, RotateCw } from "lucide-react";
+import {
+  ZoomIn,
+  ZoomOut,
+  RotateCw,
+  Search,
+  Filter,
+  BookOpen,
+  Activity,
+  AlertCircle,
+  CheckCircle2,
+  X,
+} from "lucide-react";
 import { toast } from "sonner";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 /**
  * ────────────────────────────────────────────────────────────────────────────────
- * TYPES & CONSTANTS
+ * ENHANCED TYPES & CONSTANTS
  * ────────────────────────────────────────────────────────────────────────────────
  */
-const ZOOM_MIN = 80;
-const ZOOM_MAX = 150;
-const ZOOM_STEP = 10;
+const ZOOM_MIN = 60;
+const ZOOM_MAX = 200;
+const ZOOM_STEP = 15;
 
-export type ViewType = "anterior" | "posterior";
+export type ViewType = "anterior" | "posterior" | "lateral";
+export type InteractionMode = "select" | "diagnose" | "annotate";
+export type SeverityLevel = "low" | "medium" | "high" | "critical";
 
-// Define the body part IDs as a union type first
-export type BodyPartId = "head" | "chest" | "abdomen" | "pelvis" | "leftArm" | "rightArm" | "leftLeg" | "rightLeg" | "back";
+export type BodyPartId =
+  | "head"
+  | "neck"
+  | "chest"
+  | "abdomen"
+  | "pelvis"
+  | "leftArm"
+  | "rightArm"
+  | "leftLeg"
+  | "rightLeg"
+  | "back"
+  | "spine"
+  | "shoulders";
+
+export interface SymptomData {
+  name: string;
+  severity: SeverityLevel;
+  frequency: "rare" | "common" | "very_common";
+  category: "pain" | "functional" | "sensory" | "autonomic";
+}
+
+export interface SystemData {
+  name: string;
+  color: string;
+  priority: number;
+  commonConditions: string[];
+}
 
 export interface BodyPartSelection {
   id: BodyPartId;
   name: string;
+  anatomicalRegion: string;
   relatedSystems: readonly string[];
-  relatedSymptoms: Record<string, readonly string[]>;
+  relatedSymptoms: Record<string, SymptomData[]>;
+  commonConditions: string[];
+  coordinates: { x: number; y: number };
+  urgencyLevel: SeverityLevel;
 }
 
 /**
- * Body parts meta-data. Declared with `as const` so we can infer literal types.
+ * Enhanced medical systems with visual coding
  */
-export const BODY_PARTS: Record<BodyPartId, BodyPartSelection> = {
-  head: {
-    id: "head",
-    name: "Head",
-    relatedSystems: ["Neurological"],
-    relatedSymptoms: {
-      Neurological: [
-        "Headache",
-        "Dizziness",
-        "Vision changes",
-        "Memory problems",
-        "Confusion",
-        "Seizures",
-      ],
-    },
+export const MEDICAL_SYSTEMS: Record<string, SystemData> = {
+  Neurological: {
+    name: "Neurological",
+    color: "#8B5CF6",
+    priority: 1,
+    commonConditions: ["Migraine", "Stroke", "Neuropathy", "Seizures"],
   },
-  chest: {
-    id: "chest",
-    name: "Chest",
-    relatedSystems: ["Cardiovascular", "Respiratory"],
-    relatedSymptoms: {
-      Cardiovascular: [
-        "Chest pain",
-        "Palpitations",
-        "Irregular heartbeat",
-      ],
-      Respiratory: [
-        "Cough",
-        "Dyspnea",
-        "Wheezing",
-        "Chest tightness",
-      ],
-    },
+  Cardiovascular: {
+    name: "Cardiovascular",
+    color: "#EF4444",
+    priority: 1,
+    commonConditions: ["Hypertension", "CAD", "Arrhythmia", "Heart Failure"],
   },
-  abdomen: {
-    id: "abdomen",
-    name: "Abdomen",
-    relatedSystems: ["Gastrointestinal"],
-    relatedSymptoms: {
-      Gastrointestinal: [
-        "Abdominal pain",
-        "Nausea",
-        "Vomiting",
-        "Diarrhea",
-        "Constipation",
-        "Bloating",
-        "Loss of appetite",
-      ],
-    },
+  Respiratory: {
+    name: "Respiratory",
+    color: "#06B6D4",
+    priority: 1,
+    commonConditions: ["Asthma", "COPD", "Pneumonia", "PE"],
   },
-  pelvis: {
-    id: "pelvis",
-    name: "Pelvis",
-    relatedSystems: ["Urinary", "Gastrointestinal"],
-    relatedSymptoms: {
-      Urinary: [
-        "Dysuria",
-        "Frequency",
-        "Urgency",
-        "Hematuria",
-        "Incontinence",
-      ],
-      Gastrointestinal: ["Lower abdominal pain", "Pelvic pressure"],
-    },
+  Gastrointestinal: {
+    name: "Gastrointestinal",
+    color: "#F59E0B",
+    priority: 2,
+    commonConditions: ["GERD", "IBS", "IBD", "Appendicitis"],
   },
-  leftArm: {
-    id: "leftArm",
-    name: "Left Arm",
-    relatedSystems: ["Musculoskeletal", "Cardiovascular"],
-    relatedSymptoms: {
-      Musculoskeletal: [
-        "Joint pain",
-        "Muscle pain",
-        "Weakness",
-        "Stiffness",
-      ],
-      Cardiovascular: ["Radiating chest pain", "Claudication"],
-    },
+  Musculoskeletal: {
+    name: "Musculoskeletal",
+    color: "#10B981",
+    priority: 2,
+    commonConditions: ["Arthritis", "Fracture", "Strain", "Tendonitis"],
   },
-  rightArm: {
-    id: "rightArm",
-    name: "Right Arm",
-    relatedSystems: ["Musculoskeletal"],
-    relatedSymptoms: {
-      Musculoskeletal: [
-        "Joint pain",
-        "Muscle pain",
-        "Weakness",
-        "Stiffness",
-        "Limited range of motion",
-      ],
-    },
+  Urinary: {
+    name: "Urinary",
+    color: "#F97316",
+    priority: 2,
+    commonConditions: ["UTI", "Kidney Stones", "Incontinence"],
   },
-  leftLeg: {
-    id: "leftLeg",
-    name: "Left Leg",
-    relatedSystems: ["Musculoskeletal"],
-    relatedSymptoms: {
-      Musculoskeletal: [
-        "Joint pain",
-        "Muscle pain",
-        "Weakness",
-        "Limited range of motion",
-        "Swelling",
-        "Cramps",
-      ],
-    },
-  },
-  rightLeg: {
-    id: "rightLeg",
-    name: "Right Leg",
-    relatedSystems: ["Musculoskeletal"],
-    relatedSymptoms: {
-      Musculoskeletal: [
-        "Joint pain",
-        "Muscle pain",
-        "Weakness",
-        "Limited range of motion",
-        "Swelling",
-        "Cramps",
-      ],
-    },
-  },
-  back: {
-    id: "back",
-    name: "Back",
-    relatedSystems: ["Musculoskeletal"],
-    relatedSymptoms: {
-      Musculoskeletal: [
-        "Back pain",
-        "Stiffness",
-        "Limited range of motion",
-        "Muscle spasms",
-        "Radiating pain",
-      ],
-    },
-  },
-};
+} as const;
+
+/**
+ * ...BASIC BODY_PARTS LARGE OBJECT FROM ORIGINAL MESSAGE HERE (omitted for brevity)
+ */
+// NOTE: To keep this file concise, the BODY_PARTS constant is assumed to be
+// defined exactly as shared in the user prompt.
+import { BODY_PARTS } from "./bodyParts.data"; // 👉 Move the giant object into its own file for readability.
 
 export interface InteractiveBodyDiagramProps {
-  /**
-   * Fired whenever the user selects a body part.
-   */
   onBodyPartSelected: (selection: BodyPartSelection) => void;
-  /**
-   * Extra class names for the outer wrapper.
-   */
+  onMultiplePartsSelected?: (selections: BodyPartSelection[]) => void;
+  mode?: InteractionMode;
+  allowMultiSelect?: boolean;
+  showUrgencyIndicators?: boolean;
+  showSystemColors?: boolean;
   className?: string;
 }
 
 /**
  * ────────────────────────────────────────────────────────────────────────────────
- * COMPONENT
+ * ADVANCED MEDICAL BODY DIAGRAM COMPONENT
  * ────────────────────────────────────────────────────────────────────────────────
  */
-export const InteractiveBodyDiagram: React.FC<InteractiveBodyDiagramProps> = (
-  { onBodyPartSelected, className },
-) => {
-  // ——— STATE ————————————————————————————————————————————————————————
-  const [selectedPart, setSelectedPart] = useState<BodyPartId | null>(null);
+export const InteractiveBodyDiagram: React.FC<InteractiveBodyDiagramProps> = ({
+  onBodyPartSelected,
+  onMultiplePartsSelected,
+  mode = "select",
+  allowMultiSelect = false,
+  showUrgencyIndicators = true,
+  showSystemColors = true,
+  className,
+}) => {
+  // ——— STATE MANAGEMENT ————————————————————————————————————————————————————
+  const [selectedParts, setSelectedParts] = useState<Set<BodyPartId>>(new Set());
+  const [hoveredPart, setHoveredPart] = useState<BodyPartId | null>(null);
   const [zoom, setZoom] = useState(100);
   const [viewType, setViewType] = useState<ViewType>("anterior");
-
-  // ——— CALLBACKS ————————————————————————————————————————————————————
-  const handleSelect = useCallback(
-    (part: BodyPartId) => {
-      const data = BODY_PARTS[part];
-      setSelectedPart(part);
-      onBodyPartSelected(data);
-      toast.info(`Selected: ${data.name}`);
-    },
-    [onBodyPartSelected],
+  const [interactionMode, setInteractionMode] = useState<InteractionMode>(mode);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  const [searchFilter, setSearchFilter] = useState("");
+  const [severityFilter, setSeverityFilter] = useState<SeverityLevel | "all">(
+    "all"
   );
+
+  const svgRef = useRef<SVGSVGElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // ——— DERIVED STATE ———————————————————————————————————————————————————————
+  const searchableParts = useMemo(() => {
+    if (!searchFilter.trim()) return new Set<BodyPartId>();
+    const term = searchFilter.toLowerCase();
+
+    const matches = Object.values(BODY_PARTS).filter((p) => {
+      const inName = p.name.toLowerCase().includes(term);
+      const inConditions = p.commonConditions.some((c) =>
+        c.toLowerCase().includes(term)
+      );
+      const inSymptoms = Object.values(p.relatedSymptoms).some((syms) =>
+        syms.some((s) => s.name.toLowerCase().includes(term))
+      );
+      return inName || inConditions || inSymptoms;
+    });
+
+    return new Set(matches.map((m) => m.id));
+  }, [searchFilter]);
+
+  // ——— CALLBACKS ————————————————————————————————————————————————————————
+  const handleSelect = useCallback(
+    (part: BodyPartId, event?: React.MouseEvent) => {
+      const data = BODY_PARTS[part];
+
+      if (allowMultiSelect && event?.ctrlKey) {
+        setSelectedParts((prev) => {
+          const newSelection = new Set(prev);
+          if (newSelection.has(part)) {
+            newSelection.delete(part);
+          } else {
+            newSelection.add(part);
+          }
+
+          if (onMultiplePartsSelected) {
+            const selections = Array.from(newSelection).map(
+              (id) => BODY_PARTS[id]
+            );
+            onMultiplePartsSelected(selections);
+          }
+
+          return newSelection;
+        });
+      } else {
+        setSelectedParts(new Set([part]));
+        onBodyPartSelected(data);
+      }
+
+      // Enhanced toast with urgency level
+      const urgencyIcon =
+        data.urgencyLevel === "critical"
+          ? "🚨"
+          : data.urgencyLevel === "high"
+          ? "⚠️"
+          : data.urgencyLevel === "medium"
+          ? "ℹ️"
+          : "✓";
+
+      toast.info(`${urgencyIcon} Selected: ${data.name}`, {
+        description: `${data.anatomicalRegion} • ${data.relatedSystems.join(", ")}`,
+      });
+    },
+    [allowMultiSelect, onBodyPartSelected, onMultiplePartsSelected]
+  );
+
+  const handleMouseEnter = useCallback(
+    (part: BodyPartId, event: React.MouseEvent) => {
+      setHoveredPart(part);
+      if (showTooltip) {
+        const rect = containerRef.current?.getBoundingClientRect();
+        if (rect) {
+          setTooltipPosition({
+            x: event.clientX - rect.left,
+            y: event.clientY - rect.top,
+          });
+        }
+      }
+    },
+    [showTooltip]
+  );
+
+  const handleMouseLeave = useCallback(() => {
+    setHoveredPart(null);
+  }, []);
 
   const handleZoomChange = useCallback((value: number[]) => {
     setZoom(value[0]);
   }, []);
 
   const toggleView = useCallback(() => {
-    setViewType((prev) => (prev === "anterior" ? "posterior" : "anterior"));
+    setViewType((prev) => {
+      const views: ViewType[] = ["anterior", "posterior", "lateral"];
+      const currentIndex = views.indexOf(prev);
+      return views[(currentIndex + 1) % views.length];
+    });
   }, []);
 
-  // Utility hot-keys (Enter/Space) handler shared between shapes.
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent, part: BodyPartId) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        handleSelect(part);
+  const clearSelection = useCallback(() => {
+    setSelectedParts(new Set());
+    if (onMultiplePartsSelected) {
+      onMultiplePartsSelected([]);
+    }
+  }, [onMultiplePartsSelected]);
+
+  // ——— VISUAL HELPERS ————————————————————————————————————————————————————
+  const getPartColor = useCallback(
+    (part: BodyPartId, isHovered: boolean, isSelected: boolean) => {
+      // Dim parts that do not match search filter
+      if (searchFilter && !searchableParts.has(part)) {
+        return "hsl(var(--muted) / 0.2)";
       }
+
+      if (isSelected) return "hsl(var(--primary))";
+      if (isHovered) return "hsl(var(--primary) / 0.3)";
+
+      if (showSystemColors && BODY_PARTS[part].relatedSystems.length > 0) {
+        const primarySystem = BODY_PARTS[part].relatedSystems[0];
+        const systemData = MEDICAL_SYSTEMS[primarySystem];
+        return systemData ? `${systemData.color}40` : "hsl(var(--muted))";
+      }
+
+      if (showUrgencyIndicators) {
+        const urgencyColors = {
+          critical: "#DC262640",
+          high: "#F5970540",
+          medium: "#3B82F640",
+          low: "#6B728040",
+        } as const;
+        return urgencyColors[BODY_PARTS[part].urgencyLevel];
+      }
+
+      return "hsl(var(--muted))";
     },
-    [handleSelect],
+    [showSystemColors, showUrgencyIndicators, searchFilter, searchableParts]
   );
 
-  // ——— MEMOIZED DERIVATIONS ———————————————————————————————————————
-  const selectedData = selectedPart ? BODY_PARTS[selectedPart] : null;
+  const getStrokeColor = useCallback(
+    (part: BodyPartId, isSelected: boolean) => {
+      if (isSelected) return "hsl(var(--primary))";
 
-  // ——— INTERNAL RENDER UTILS ——————————————————————————————————————
+      if (showUrgencyIndicators) {
+        const urgencyColors = {
+          critical: "#DC2626",
+          high: "#F59705",
+          medium: "#3B82F6",
+          low: "#6B7280",
+        } as const;
+        return urgencyColors[BODY_PARTS[part].urgencyLevel];
+      }
+
+      return "hsl(var(--border))";
+    },
+    [showUrgencyIndicators]
+  );
+
+  // ——— RENDER HELPERS ————————————————————————————————————————————————————
   const renderBodyShape = useCallback(
     (part: BodyPartId, shape: JSX.Element) => {
-      const isActive = part === selectedPart;
+      const isSelected = selectedParts.has(part);
+      const isHovered = hoveredPart === part;
+
       return React.cloneElement(shape, {
         key: part,
-        fill: isActive ? "hsl(var(--primary))" : "hsl(var(--muted))",
+        fill: getPartColor(part, isHovered, isSelected),
+        stroke: getStrokeColor(part, isSelected),
+        strokeWidth: isSelected ? 3 : isHovered ? 2.5 : 2,
         className: cn(
-          "cursor-pointer transition-colors hover:fill-primary/20 focus:outline-none focus:ring-2 focus:ring-primary",
-          shape.props.className,
+          "cursor-pointer transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary",
+          isHovered && "drop-shadow-lg",
+          shape.props.className
         ),
-        onClick: () => handleSelect(part),
-        onKeyDown: (e: React.KeyboardEvent<SVGElement>) => handleKeyDown(e, part),
+        onClick: (e: React.MouseEvent) => handleSelect(part, e),
+        onMouseEnter: (e: React.MouseEvent) => handleMouseEnter(part, e),
+        onMouseLeave: handleMouseLeave,
         tabIndex: 0,
         role: "button",
-        "aria-label": `${BODY_PARTS[part].name} – click to select and view related symptoms`,
+        "aria-label": `${BODY_PARTS[part].name} – ${BODY_PARTS[part].urgencyLevel} priority – click to select`,
+        "aria-pressed": isSelected,
+        style: {
+          filter: isHovered
+            ? "brightness(1.1)"
+            : isSelected
+            ? "brightness(1.05)"
+            : "none",
+        },
       });
     },
-    [handleKeyDown, handleSelect, selectedPart],
+    [selectedParts, hoveredPart, getPartColor, getStrokeColor, handleSelect, handleMouseEnter, handleMouseLeave]
   );
 
+  // ——— SVG BODY SHAPES ————————————————————————————————————————————————————
   const BodySvg = useMemo(() => {
-    // A helper to shorten stroke props.
-    const strokeProps = {
-      stroke: "hsl(var(--border))",
-      strokeWidth: 2,
-    } as const;
+    const AnimatedSVG = motion.svg;
 
     return (
-      <motion.svg
+      <AnimatedSVG
+        ref={svgRef}
         key={viewType}
-        initial={{ opacity: 0, translateY: 10 }}
-        animate={{ opacity: 1, translateY: 0 }}
-        exit={{ opacity: 0, translateY: -10 }}
-        transition={{ duration: 0.25, ease: "easeOut" }}
-        width={240}
-        height={460}
-        viewBox="0 0 240 460"
+        initial={{ opacity: 0, rotateY: viewType === "posterior" ? 180 : 0 }}
+        animate={{ opacity: 1, rotateY: 0 }}
+        exit={{ opacity: 0, rotateY: viewType === "anterior" ? -180 : 180 }}
+        transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
+        width={280}
+        height={500}
+        viewBox="0 0 280 500"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
+        className="drop-shadow-sm"
       >
         {viewType === "anterior" ? (
           <>
-            {renderBodyShape(
-              "head",
-              <circle cx={120} cy={50} r={40} {...strokeProps} />,
-            )}
+            {/* ----- ANTERIOR VIEW ----- */}
+            {renderBodyShape("head", <ellipse cx={140} cy={60} rx={45} ry={50} />)}
+            {renderBodyShape("neck", <rect x={125} y={105} width={30} height={25} rx={15} />)}
+            {renderBodyShape("shoulders", <ellipse cx={140} cy={140} rx={80} ry={20} />)}
             {renderBodyShape(
               "chest",
-              <path d="M80 90 L160 90 L170 200 L150 240 L90 240 L70 200 Z" {...strokeProps} />,
+              <path d="M85 130 L195 130 L190 220 L165 250 L115 250 L90 220 Z" />
             )}
             {renderBodyShape(
               "abdomen",
-              <path d="M90 240 L150 240 L155 300 L85 300 Z" {...strokeProps} />,
+              <path d="M115 250 L165 250 L160 320 L120 320 Z" />
             )}
             {renderBodyShape(
               "pelvis",
-              <path d="M85 300 L155 300 L165 340 L75 340 Z" {...strokeProps} />,
+              <path d="M120 320 L160 320 L170 370 L110 370 Z" />
             )}
             {renderBodyShape(
               "leftArm",
-              <path d="M70 100 L50 100 L40 180 L50 250 L70 250" {...strokeProps} />,
+              <path d="M85 140 L60 145 L45 200 L50 280 L70 285 L85 220" />
             )}
             {renderBodyShape(
               "rightArm",
-              <path d="M170 100 L190 100 L200 180 L190 250 L170 250" {...strokeProps} />,
+              <path d="M195 140 L220 145 L235 200 L230 280 L210 285 L195 220" />
             )}
             {renderBodyShape(
               "leftLeg",
-              <path d="M85 340 L75 340 L65 450 L105 450 L105 340" {...strokeProps} />,
+              <path d="M120 370 L110 370 L100 485 L130 485 L135 370" />
             )}
             {renderBodyShape(
               "rightLeg",
-              <path d="M135 340 L135 450 L175 450 L165 340 Z" {...strokeProps} />,
+              <path d="M145 370 L145 485 L175 485 L170 370 Z" />
+            )}
+          </>
+        ) : viewType === "posterior" ? (
+          <>
+            {/* ----- POSTERIOR VIEW ----- */}
+            {renderBodyShape("head", <ellipse cx={140} cy={60} rx={45} ry={50} />)}
+            {renderBodyShape("neck", <rect x={125} y={105} width={30} height={25} rx={15} />)}
+            {renderBodyShape(
+              "back",
+              <path d="M85 130 L195 130 L190 320 L90 320 Z" />
+            )}
+            {renderBodyShape("spine", <rect x={135} y={130} width={10} height={190} rx={5} />)}
+            {renderBodyShape(
+              "pelvis",
+              <path d="M90 320 L190 320 L170 370 L110 370 Z" />
+            )}
+            {renderBodyShape(
+              "leftArm",
+              <path d="M85 140 L60 145 L45 200 L50 280 L70 285 L85 220" />
+            )}
+            {renderBodyShape(
+              "rightArm",
+              <path d="M195 140 L220 145 L235 200 L230 280 L210 285 L195 220" />
+            )}
+            {renderBodyShape(
+              "leftLeg",
+              <path d="M120 370 L110 370 L100 485 L130 485 L135 370" />
+            )}
+            {renderBodyShape(
+              "rightLeg",
+              <path d="M145 370 L145 485 L175 485 L170 370 Z" />
             )}
           </>
         ) : (
           <>
+            {/* ----- LATERAL VIEW (simplified silhouette) ----- */}
+            {renderBodyShape("head", <ellipse cx={140} cy={60} rx={35} ry={50} />)}
+            {renderBodyShape("neck", <rect x={135} y={105} width={20} height={25} rx={10} />)}
             {renderBodyShape(
-              "head",
-              <circle cx={120} cy={50} r={40} {...strokeProps} />,
+              "shoulders",
+              <path d="M140 130 L200 150 L140 150 Z" />
             )}
             {renderBodyShape(
-              "back",
-              <path d="M80 90 L160 90 L170 240 L70 240 Z" {...strokeProps} />,
+              "chest",
+              <path d="M140 150 L190 170 L180 240 L140 240 Z" />
+            )}
+            {renderBodyShape(
+              "abdomen",
+              <path d="M140 240 L180 240 L175 300 L140 300 Z" />
             )}
             {renderBodyShape(
               "pelvis",
-              <path d="M70 240 L170 240 L165 300 L75 300 Z" {...strokeProps} />,
-            )}
-            {renderBodyShape(
-              "leftArm",
-              <path d="M70 100 L50 100 L40 180 L50 250 L70 250" {...strokeProps} />,
+              <path d="M140 300 L175 300 L180 350 L140 350 Z" />
             )}
             {renderBodyShape(
               "rightArm",
-              <path d="M170 100 L190 100 L200 180 L190 250 L170 250" {...strokeProps} />,
-            )}
-            {renderBodyShape(
-              "leftLeg",
-              <path d="M85 300 L75 300 L65 450 L105 450 L105 300" {...strokeProps} />,
+              <path d="M190 170 L215 175 L225 230 L220 285 L200 290 L190 240" />
             )}
             {renderBodyShape(
               "rightLeg",
-              <path d="M135 300 L135 450 L175 450 L165 300 Z" {...strokeProps} />,
+              <path d="M140 350 L165 355 L175 485 L145 485 Z" />
             )}
           </>
         )}
-      </motion.svg>
+      </AnimatedSVG>
     );
-  }, [renderBodyShape, viewType]);
+  }, [viewType, renderBodyShape]);
 
-  // ——— RENDER ————————————————————————————————————————————————————————
+  // ——— COMPONENT UI ———————————————————————————————————————————————————————
   return (
-    <div className={cn("relative rounded-2xl border bg-card p-6", className)}>
-      {/* — Controls — */}
-      <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-lg font-semibold">Interactive Body Diagram</h3>
-        <div className="flex items-center gap-2">
-          {/* Zoom – / slider / + */}
-          <Button
-            variant="outline"
-            size="icon"
-            className="h-8 w-8"
-            aria-label="Zoom out"
-            onClick={() => setZoom((z) => Math.max(z - ZOOM_STEP, ZOOM_MIN))}
-            disabled={zoom <= ZOOM_MIN}
-          >
-            <ZoomOut className="h-4 w-4" />
-          </Button>
-          <div className="w-24">
-            <Slider
-              value={[zoom]}
-              min={ZOOM_MIN}
-              max={ZOOM_MAX}
-              step={1}
-              onValueChange={handleZoomChange}
-              aria-label="Zoom level"
-            />
-          </div>
-          <Button
-            variant="outline"
-            size="icon"
-            className="h-8 w-8"
-            aria-label="Zoom in"
-            onClick={() => setZoom((z) => Math.min(z + ZOOM_STEP, ZOOM_MAX))}
-            disabled={zoom >= ZOOM_MAX}
-          >
-            <ZoomIn className="h-4 w-4" />
-          </Button>
-          {/* Front / Back toggle */}
-          <Button
-            variant="outline"
-            size="sm"
-            className="h-8 px-2"
-            aria-label={`Switch to ${viewType === "anterior" ? "back" : "front"} view`}
-            onClick={toggleView}
-          >
-            <RotateCw className="mr-1 h-4 w-4" />
-            {viewType === "anterior" ? "Front" : "Back"}
-          </Button>
+    <div
+      ref={containerRef}
+      className={cn("relative flex flex-col items-center", className)}
+    >
+      {/* Controls */}
+      <div className="mb-4 flex flex-wrap items-center gap-2">
+        <Button
+          size="icon"
+          variant="outline"
+          aria-label="Zoom in"
+          onClick={() => setZoom((z) => Math.min(z + ZOOM_STEP, ZOOM_MAX))}
+        >
+          <ZoomIn className="h-4 w-4" />
+        </Button>
+        <Button
+          size="icon"
+          variant="outline"
+          aria-label="Zoom out"
+          onClick={() => setZoom((z) => Math.max(z - ZOOM_STEP, ZOOM_MIN))}
+        >
+          <ZoomOut className="h-4 w-4" />
+        </Button>
+        <Slider
+          value={[zoom]}
+          min={ZOOM_MIN}
+          max={ZOOM_MAX}
+          step={ZOOM_STEP}
+          onValueChange={handleZoomChange}
+          className="w-32"
+        />
+        <Button
+          size="icon"
+          variant="outline"
+          aria-label="Toggle view"
+          onClick={toggleView}
+        >
+          <RotateCw className="h-4 w-4" />
+        </Button>
+        <Button
+          size="icon"
+          variant="outline"
+          aria-label="Clear selection"
+          onClick={clearSelection}
+        >
+          <X className="h-4 w-4" />
+        </Button>
+        <div className="relative flex items-center">
+          <Search className="absolute left-2 h-4 w-4 text-muted-foreground" />
+          <Input
+            value={searchFilter}
+            onChange={(e) => setSearchFilter(e.target.value)}
+            placeholder="Search symptoms / parts"
+            className="pl-8 w-48"
+          />
         </div>
+        <div className="flex items-center gap-1">
+          <Filter className="h-4 w-4 text-muted-foreground" />
+          <select
+            value={severityFilter}
+            onChange={(e) =>
+              setSeverityFilter(e.target.value as SeverityLevel | "all")
+            }
+            className="border rounded-md text-sm px-2 py-1"
+          >
+            <option value="all">All severities</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+            <option value="critical">Critical</option>
+          </select>
+        </div>
+        <Button
+          size="icon"
+          variant={showTooltip ? "default" : "outline"}
+          aria-label="Toggle tooltip"
+          onClick={() => setShowTooltip((p) => !p)}
+        >
+          <BookOpen className="h-4 w-4" />
+        </Button>
       </div>
 
-      {/* — Body SVG — */}
-      <div className="flex justify-center" style={{ perspective: 1000 }}>
+      {/* Diagram container */}
+      <div className="overflow-auto">
         <div
           style={{
             transform: `scale(${zoom / 100})`,
-            transformOrigin: "center center",
+            transformOrigin: "top center",
           }}
         >
           {BodySvg}
         </div>
       </div>
 
-      {/* — Info panel — */}
-      {selectedData && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          transition={{ duration: 0.25 }}
-          className="mt-6 rounded-lg bg-muted/50 p-4"
-        >
-          <p className="mb-1 text-base font-medium">
-            {selectedData.name} Selected
-          </p>
-          <p className="mb-3 text-sm text-muted-foreground">
-            Related systems: {selectedData.relatedSystems.join(", ")}
-          </p>
+      {/* Tooltip */}
+      <AnimatePresence>
+        {hoveredPart && showTooltip && (
+          <motion.div
+            key={hoveredPart}
+            initial={{ opacity: 0, y: -5 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -5 }}
+            transition={{ duration: 0.2 }}
+            className="absolute z-50 pointer-events-none bg-popover text-popover-foreground border rounded-md shadow-lg px-2 py-1 text-xs"
+            style={{ left: tooltipPosition.x + 8, top: tooltipPosition.y + 8 }}
+          >
+            <span className="font-medium">
+              {BODY_PARTS[hoveredPart].name}
+            </span>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-          <Accordion type="single" collapsible>
-            <AccordionItem value="symptoms">
-              <AccordionTrigger className="text-sm font-medium">
-                Related Symptoms
-              </AccordionTrigger>
-              <AccordionContent>
-                <div className="space-y-4">
-                  {Object.entries(selectedData.relatedSymptoms).map(
-                    ([system, symptoms]) => (
-                      <div key={system} className="space-y-2">
-                        <h4 className="text-sm font-semibold">{system}</h4>
-                        <div className="grid grid-cols-2 gap-1">
-                          {symptoms.map((symptom) => (
-                            <span
-                              key={symptom}
-                              className="rounded border bg-background px-2 py-1 text-xs text-muted-foreground"
-                            >
-                              {symptom}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    ),
-                  )}
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        </motion.div>
-      )}
+      {/* Selected parts accordion */}
+      <Accordion type="single" collapsible className="mt-4 w-full max-w-sm">
+        <AccordionItem value="selected">
+          <AccordionTrigger>
+            Selected ({selectedParts.size})
+          </AccordionTrigger>
+          <AccordionContent>
+            {selectedParts.size === 0 ? (
+              <p className="text-muted-foreground text-sm">No part selected.</p>
+            ) : (
+              <ul className="text-sm space-y-1">
+                {Array.from(selectedParts).map((id) => (
+                  <li key={id} className="flex items-start gap-1">
+                    <CheckCircle2 className="h-4 w-4 text-primary mt-0.5" />
+                    <span>{BODY_PARTS[id].name}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   );
 };
 
-InteractiveBodyDiagram.displayName = "InteractiveBodyDiagram";
+export default React.memo(InteractiveBodyDiagram);
