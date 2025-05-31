@@ -3,7 +3,7 @@ import { Sidebar } from "./Sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Menu, Moon, Sun } from "lucide-react";
-import { useTheme } from "../../contexts/ThemeContext";
+import { useTheme } from "../app/ThemeContext";
 import { SidebarProvider, useSidebar } from "@/components/ui/sidebar";
 
 interface AppLayoutProps {

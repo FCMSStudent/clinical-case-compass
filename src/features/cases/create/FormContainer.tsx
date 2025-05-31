@@ -1,6 +1,6 @@
 import React, { memo, ReactNode } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { FormProgressIndicator } from "@/components/cases/FormProgressIndicator";
+import { FormProgressIndicator } from "@/features/cases/FormProgressIndicator";
 import { cn } from "@/lib/utils";
 
 /**

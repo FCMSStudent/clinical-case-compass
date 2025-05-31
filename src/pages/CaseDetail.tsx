@@ -34,7 +34,7 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { MedicalCase } from "@/types/case";
-import { InteractiveVitalsCard } from "@/components/cases/InteractiveVitalsCard";
+import { InteractiveVitalsCard } from "@/features/cases/InteractiveVitalsCard";
 
 const CaseDetail = () => {
   const { id } = useParams<{ id: string }>();

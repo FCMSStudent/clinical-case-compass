@@ -8,15 +8,15 @@ import { Form } from "@/components/ui/form";
 import { toast } from "sonner";
 
 // Step Components and Schemas
-import CaseInfoStep, { caseInfoSchema } from "@/components/cases/create/CaseInfoStep";
-import PatientStep, { patientStepSchema } from "@/components/cases/create/PatientStep";
-import ClinicalDetailStep, { clinicalDetailStepSchema } from "@/components/cases/create/ClinicalDetailStep";
-import LearningPointsStep, { learningPointsStepSchema } from "@/components/cases/create/LearningPointsStep";
+import CaseInfoStep, { caseInfoSchema } from "@/features/cases/create/CaseInfoStep";
+import PatientStep, { patientStepSchema } from "@/features/cases/create/PatientStep";
+import ClinicalDetailStep, { clinicalDetailStepSchema } from "@/features/cases/create/ClinicalDetailStep";
+import LearningPointsStep, { learningPointsStepSchema } from "@/features/cases/create/LearningPointsStep";
 
 // New Components
-import { FormHeader } from "@/components/cases/create/FormHeader";
-import { FormNavigation } from "@/components/cases/create/FormNavigation";
-import { FormContainer } from "@/components/cases/create/FormContainer";
+import { FormHeader } from "@/features/cases/create/FormHeader";
+import { FormNavigation } from "@/features/cases/create/FormNavigation";
+import { FormContainer } from "@/features/cases/create/FormContainer";
 import { Card, CardContent } from "@/components/ui/card";
 
 // Combine Schemas
