@@ -21,10 +21,10 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { InteractiveBodyDiagram } from "@/components/body-diagram/InteractiveBodyDiagram";
-import { SystemReviewChecklist } from "@/components/cases/SystemReviewChecklist";
-import { VitalsCard } from "@/components/cases/VitalsCard";
-import { LabResultsCard } from "@/components/cases/LabResultsCard";
-import { RadiologyCard } from "@/components/cases/RadiologyCard";
+import { SystemReviewChecklist } from "@/features/cases/SystemReviewChecklist";
+import { VitalsCard } from "@/features/cases/VitalsCard";
+import { LabResultsCard } from "@/features/cases/LabResultsCard";
+import { RadiologyCard } from "@/features/cases/RadiologyCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";

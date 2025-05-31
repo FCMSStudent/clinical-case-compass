@@ -18,7 +18,7 @@ import {
 import { toast } from "@/components/ui/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import { createCase, CreateCaseRequest } from "@/lib/api/cases";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/app/AuthContext";
 import {
   Select,
   SelectContent,
@@ -27,7 +27,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { InteractiveBodyDiagram } from "@/components/body-diagram/InteractiveBodyDiagram";
-import { SymptomChecklist } from "@/components/symptoms/SymptomChecklist";
+import { SymptomChecklist } from "@/features/symptoms/SymptomChecklist";
 
 const caseSchema = z.object({
   title: z.string().min(3, { message: "Title must be at least 3 characters." }),
