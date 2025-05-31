@@ -112,7 +112,7 @@ const CreateCaseFlow = () => {
     return () => subscription.unsubscribe();
   }, [watch]);
 
-  const saveDraft = async (data: any) => {
+  const saveDraft = async (data: CombinedCaseFormData) => {
     try {
       setIsDraftSaving(true);
       localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(data));

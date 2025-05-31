@@ -61,7 +61,7 @@ const CaseNew = () => {
       toast({ title: "Case created successfully!" });
       navigate("/cases");
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast({
         title: "Something went wrong.",
         description: error.message,

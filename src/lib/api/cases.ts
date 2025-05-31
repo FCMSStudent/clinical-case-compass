@@ -7,8 +7,8 @@ export interface CreateCaseRequest {
   priority: "low" | "medium" | "high";
   userId: string;
   bodySelection?: {
-    selectedBodyParts: any[];
-    relatedSystems: any[];
+    selectedBodyParts: string[];
+    relatedSystems: string[];
   };
 }
 

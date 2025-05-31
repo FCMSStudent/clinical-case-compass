@@ -49,7 +49,7 @@ export function useSupabaseCases() {
   });
 
   // Fetch single case
-  const getCaseQuery = (id: string) => useQuery({
+  const useGetCaseQuery = (id: string) => useQuery({
     queryKey: ['case', id],
     queryFn: async (): Promise<MedicalCase | null> => {
       if (!user) throw new Error('User not authenticated');
@@ -114,8 +114,8 @@ export function useSupabaseCases() {
         vitals: caseData.case.vitals || {},
         symptoms: caseData.case.symptoms || {},
         urinary_symptoms: caseData.case.urinarySymptoms || [],
-        lab_tests: (caseData.case.labTests || []) as any,
-        radiology_exams: (caseData.case.radiologyExams || []) as any,
+        lab_tests: caseData.case.labTests || [],
+        radiology_exams: caseData.case.radiologyExams || [],
         user_id: user.id,
         patient_id: patientData.id
       };
@@ -211,7 +211,7 @@ export function useSupabaseCases() {
     cases,
     isLoading,
     error,
-    getCaseQuery,
+    useGetCaseQuery,
     createCase: createCaseMutation.mutate,
     isCreating: createCaseMutation.isPending,
     availableTags,
@@ -220,47 +220,47 @@ export function useSupabaseCases() {
 }
 
 // Transform database case to MedicalCase type
-function transformDbCaseToMedicalCase(dbCase: any): MedicalCase {
+function transformDbCaseToMedicalCase(dbCase: Record<string, unknown>): MedicalCase {
   return {
-    id: dbCase.id,
-    title: dbCase.title,
+    id: dbCase.id as string,
+    title: dbCase.title as string,
     priority: "medium", // Default priority since it's not stored in database yet
     patient: {
-      id: dbCase.patient.id,
-      name: dbCase.patient.name,
-      age: dbCase.patient.age,
-      gender: dbCase.patient.gender,
-      medicalRecordNumber: dbCase.patient.medical_record_number
+      id: (dbCase.patient as DbPatient).id,
+      name: (dbCase.patient as DbPatient).name,
+      age: (dbCase.patient as DbPatient).age,
+      gender: (dbCase.patient as DbPatient).gender,
+      medicalRecordNumber: (dbCase.patient as DbPatient).medical_record_number
     },
-    createdAt: dbCase.created_at,
-    updatedAt: dbCase.updated_at,
-    chiefComplaint: dbCase.chief_complaint,
-    chiefComplaintAnalysis: dbCase.chief_complaint_analysis,
-    history: dbCase.history,
-    physicalExam: dbCase.physical_exam,
-    learningPoints: dbCase.learning_points,
-    vitals: dbCase.vitals || {},
-    symptoms: dbCase.symptoms || {},
-    urinarySymptoms: dbCase.urinary_symptoms || [],
-    labTests: dbCase.lab_tests || [],
-    radiologyExams: dbCase.radiology_exams || [],
-    diagnoses: dbCase.diagnoses?.map((d: DbDiagnosis) => ({
+    createdAt: dbCase.created_at as string,
+    updatedAt: dbCase.updated_at as string,
+    chiefComplaint: dbCase.chief_complaint as string,
+    chiefComplaintAnalysis: dbCase.chief_complaint_analysis as string | undefined,
+    history: dbCase.history as string | undefined,
+    physicalExam: dbCase.physical_exam as string | undefined,
+    learningPoints: dbCase.learning_points as string | undefined,
+    vitals: (dbCase.vitals || {}) as Record<string, string>,
+    symptoms: (dbCase.symptoms || {}) as Record<string, boolean>,
+    urinarySymptoms: (dbCase.urinary_symptoms || []) as string[],
+    labTests: (dbCase.lab_tests || []) as unknown as LabTest[], // Assuming LabTest structure matches
+    radiologyExams: (dbCase.radiology_exams || []) as unknown as RadiologyExam[], // Assuming RadiologyExam structure matches
+    diagnoses: ((dbCase.diagnoses as DbDiagnosis[]) || []).map((d: DbDiagnosis) => ({
       id: d.id,
       name: d.name,
-      status: d.status as any,
+      status: d.status as DiagnosisStatus,
       notes: d.notes
-    })) || [],
-    resources: dbCase.resources?.map((r: DbResource) => ({
+    })),
+    resources: ((dbCase.resources as DbResource[]) || []).map((r: DbResource) => ({
       id: r.id,
       title: r.title,
-      type: r.type as any,
+      type: r.type as Resource['type'],
       url: r.url,
       notes: r.notes
-    })) || [],
-    tags: dbCase.case_tag_assignments?.map((assignment: any) => ({
+    })),
+    tags: ((dbCase.case_tag_assignments as { case_tags: DbCaseTag }[]) || []).map((assignment: { case_tags: Pick<DbCaseTag, 'id' | 'name' | 'color'> }) => ({
       id: assignment.case_tags.id,
       name: assignment.case_tags.name,
       color: assignment.case_tags.color
-    })) || []
+    }))
   };
 }
