@@ -1,3 +1,4 @@
+
 import React, { memo } from "react";
 import {
   Control,
@@ -122,7 +123,7 @@ export const LearningPointsStep = memo(function LearningPointsStep<
 >({ control, className, maxLinks = 8 }: LearningPointsStepProps<T>) {
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "resourceLinks" as Path<T>,
+    name: "resourceLinks" as any, // Type assertion to resolve the complex type error
   });
 
   return (
@@ -141,7 +142,7 @@ export const LearningPointsStep = memo(function LearningPointsStep<
                 <FormLabel>Key Learning Points</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="• Importance of early ECG in suspected MI\n• Differential diagnosis for acute chest pain\n• Management protocol for STEMI"
+                    placeholder="• Importance of early ECG in suspected MI&#10;• Differential diagnosis for acute chest pain&#10;• Management protocol for STEMI"
                     className="min-h-[120px] text-sm"
                     {...field}
                   />

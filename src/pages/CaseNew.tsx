@@ -42,7 +42,7 @@ const CaseNew = () => {
   const { user } = useAuth();
   const [activeStep, setActiveStep] = useState<"case-details" | "clinical-details">("case-details");
   const [bodySelection, setBodySelection] = useState({
-    selectedBodyParts: [] as string[],
+    selectedBodyParts: [] as ("Head" | "Neck" | "Chest" | "Abdomen" | "Arms" | "Legs")[],
     relatedSystems: [] as string[],
   });
 

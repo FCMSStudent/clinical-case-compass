@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useForm, SubmitHandler, FieldValues, Path, UseFormSetValue } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -280,7 +279,6 @@ const CreateCaseFlow = () => {
               currentStep={currentStepIndex + 1}
               totalSteps={STEPS.length}
               currentStepLabel={currentStepData.label}
-              isLastStep={isLastStep}
               isSubmitting={isSubmitting}
               onPrevious={handlePrevious}
               onNext={handleNext}

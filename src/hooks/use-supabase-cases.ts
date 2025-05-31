@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/app/AuthContext';
+import { toast } from '@/components/ui/use-toast';
 import { useErrorHandler } from './use-error-handler';
 import { MedicalCase, Patient, Diagnosis, Resource, CaseTag } from '@/types/case';
 import { Database } from '@/integrations/supabase/types';
@@ -11,6 +12,23 @@ type DbPatient = Database['public']['Tables']['patients']['Row'];
 type DbDiagnosis = Database['public']['Tables']['diagnoses']['Row'];
 type DbResource = Database['public']['Tables']['resources']['Row'];
 type DbCaseTag = Database['public']['Tables']['case_tags']['Row'];
+
+interface LabTest {
+  name: string;
+  value: string;
+  unit?: string;
+  normalRange?: string;
+  [key: string]: any;
+}
+
+interface RadiologyExam {
+  type: string;
+  findings: string;
+  impression?: string;
+  [key: string]: any;
+}
+
+type DiagnosisStatus = 'pending' | 'confirmed' | 'ruled_out';
 
 export function useSupabaseCases() {
   const { user } = useAuth();

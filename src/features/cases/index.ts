@@ -1,4 +1,4 @@
-export * from './SimpleBodyPartSelector';
+
 export * from './InteractiveBodyDiagram';
 export * from './SymptomChecklist';
 export * from './SystemReviewChecklist';
