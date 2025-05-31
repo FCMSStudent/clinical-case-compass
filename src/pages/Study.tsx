@@ -24,7 +24,7 @@ const Study = () => {
   const allTags = getAllTags();
 
   return (
-    <div>
+    <div className="container">
       <PageHeader
         title="Study & Practice"
         description="Test your knowledge with case-based quizzes"

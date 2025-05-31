@@ -198,7 +198,7 @@ const CaseEdit = () => {
   };
 
   return (
-    <div>
+    <div className="container">
       <div className="mb-4">
         <Link
           to={`/cases/${id}`}
