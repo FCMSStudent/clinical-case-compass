@@ -2,7 +2,7 @@ import * as React from "react"
 import * as TabsPrimitive from "@radix-ui/react-tabs"
 import { AlertCircle } from "lucide-react" // Changed from AlertCircleIcon to AlertCircle as per lucide-react examples
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils"
 
 const Tabs = TabsPrimitive.Root
 

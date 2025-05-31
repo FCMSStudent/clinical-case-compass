@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 
 export interface FormNavigationProps {
   /** 1-based index of the active step. */

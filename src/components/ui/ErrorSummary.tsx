@@ -1,7 +1,7 @@
 // src/components/ui/ErrorSummary.tsx
 import React from 'react';
 import { FieldErrors, FieldValues, Path } from 'react-hook-form'; // Using Path for more type safety with setFocus
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils';
 
 interface ErrorSummaryProps<TFieldValues extends FieldValues = FieldValues> {
   errors: FieldErrors<TFieldValues>;

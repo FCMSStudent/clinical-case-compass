@@ -18,7 +18,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, Hash, User as UserIcon, Users } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 
 /**
  * ────────────────────────────────────────────────────────────────────────────────

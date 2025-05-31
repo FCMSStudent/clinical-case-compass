@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
-import { getCases } from "@/lib/api/cases";
+import { getCases } from "@/utils/api/cases";
 import { CaseCard } from "@/features/cases/CaseCard";
 import { CaseListItem } from "@/features/cases/CaseListItem";
 

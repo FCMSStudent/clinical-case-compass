@@ -1,6 +1,6 @@
 
 import { forwardRef } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils';
 import { Label } from '@/components/ui/label';
 
 interface FormFieldProps extends React.HTMLAttributes<HTMLDivElement> {

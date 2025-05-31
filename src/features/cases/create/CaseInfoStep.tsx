@@ -24,7 +24,7 @@ import {
   MessageSquare as MessageSquareIcon,
   Stethoscope as StethoscopeIcon,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 
 /**
  * ────────────────────────────────────────────────────────────────────────────────

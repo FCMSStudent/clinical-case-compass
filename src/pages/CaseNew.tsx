@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/form";
 import { toast } from "@/components/ui/use-toast";
 import { useMutation } from "@tanstack/react-query";
-import { createCase, CreateCaseRequest } from "@/lib/api/cases";
+import { createCase, CreateCaseRequest } from "@/utils/api/cases";
 import { useAuth } from "@/app/AuthContext";
 import {
   Select,

@@ -1,7 +1,7 @@
 import React, { memo, ReactNode } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { FormProgressIndicator } from "@/features/cases/FormProgressIndicator";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 
 /**
  * Lightweight meta-data contract for each form step.  

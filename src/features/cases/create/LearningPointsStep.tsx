@@ -20,7 +20,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Trash2, PlusCircle } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 
 /**
  * ────────────────────────────────────────────────────────────────────────────────

@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/page-header";
 import { CheckCircle, Loader2, Save } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 
 export interface FormHeaderProps {
   /** Current (1-based) step index. */

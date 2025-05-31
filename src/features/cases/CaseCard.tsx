@@ -4,7 +4,7 @@ import { format } from "date-fns";
 import { Clipboard, Stethoscope, Tag, User } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 import { MedicalCase } from "@/types/case";
 
 /**

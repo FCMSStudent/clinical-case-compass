@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { User, Clipboard, Eye, Edit, Trash2, Tag as TagIcon, CalendarDays } from 'lucide-react'; // Changed ClipboardText to Clipboard
 import { format } from 'date-fns';
-import { cn } from '@/lib/utils'; // For optional className
+import { cn } from '@/utils'; // For optional className
 
 interface CaseListItemProps {
   medicalCase: MedicalCase;

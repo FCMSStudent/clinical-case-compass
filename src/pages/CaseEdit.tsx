@@ -27,7 +27,7 @@ import { UrinaryReviewCard } from "@/features/cases/UrinaryReviewCard";
 import { SymptomChecklist } from "@/features/cases/SymptomChecklist";
 import { LabResultsCard, LabTest } from "@/features/cases/LabResultsCard";
 import { RadiologyCard, RadiologyExam } from "@/features/cases/RadiologyCard";
-import { getCaseById } from "@/data/mock-data";
+import { getCaseById } from "@/constants/mock-data";
 import { MedicalCase, Patient, Diagnosis, CaseTag, Resource } from "@/types/case";
 import { ErrorSummary } from "@/components/ui/ErrorSummary";
 

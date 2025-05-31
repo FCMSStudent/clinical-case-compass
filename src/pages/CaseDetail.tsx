@@ -1,6 +1,6 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
-import { getCaseById } from "@/data/mock-data";
+import { getCaseById } from "@/constants/mock-data";
 import { Button } from "@/components/ui/button";
 import {
   Card,

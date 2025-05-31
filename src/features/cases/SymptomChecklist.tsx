@@ -3,7 +3,7 @@ import React, { useState, useEffect, memo, useMemo } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { 
   Collapsible, 

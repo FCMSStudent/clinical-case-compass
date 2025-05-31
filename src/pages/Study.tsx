@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
-import { getAllTags } from "@/data/mock-data";
+import { getAllTags } from "@/constants/mock-data";
 import { Calendar } from "lucide-react";
 
 const Study = () => {
