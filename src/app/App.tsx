@@ -10,8 +10,8 @@ import { ThemeProvider } from "./ThemeContext";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 import Cases from "@/pages/Cases";
 import CaseDetail from "@/pages/CaseDetail";
-import CaseNew from "@/pages/CaseNew";
 import CaseEdit from "@/pages/CaseEdit";
+import CreateCaseFlow from "../pages/CreateCaseFlow";
 import Auth from "@/pages/Auth";
 import NotFound from "@/pages/NotFound";
 import { PrivateRoute } from "@/features/auth/PrivateRoute";
@@ -87,7 +87,7 @@ const App = () => {
                     element={
                       <PrivateRoute>
                         <AppLayout>
-                          <CaseNew />
+                          <CreateCaseFlow />
                         </AppLayout>
                       </PrivateRoute>
                     } 
