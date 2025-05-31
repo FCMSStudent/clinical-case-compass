@@ -103,7 +103,7 @@ export const SPECIALTIES = [
 export interface ApiError {
   message: string;
   code?: string;
-  details?: any;
+  details?: unknown;
 }
 
 // Form state types
