@@ -1,4 +1,4 @@
-# Clinical Case Simulation Platform
+# Clinical Case Compass
 
 ## Description
 
@@ -42,7 +42,7 @@ Follow these steps to get a local copy of the project up and running.
 
 ```bash
 git clone <repository_url>
-cd vite_react_shadcn_ts # Or your chosen directory name
+cd clinical-case-compass # Or your chosen directory name
 ```
 
 ### 2. Install Dependencies
@@ -101,7 +101,7 @@ If using Bun, replace `npm run` with `bun run`.
 ## Project Structure
 
 ```
-vite_react_shadcn_ts/
+clinical-case-compass/
 ├── .github/                            # GitHub Actions workflows (e.g., CI, summary.yml)
 ├── public/                             # Static assets (favicon, placeholder images, robots.txt)
 ├── src/                                # Source code
