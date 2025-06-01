@@ -13,6 +13,7 @@ import { MedicalCase } from '@/types/case';
 const mockMedicalCase: MedicalCase = {
   id: '1',
   title: 'Test Case Title',
+  priority: 'medium',
   patient: {
     id: 'p1',
     name: 'John Doe',
@@ -22,11 +23,9 @@ const mockMedicalCase: MedicalCase = {
   chiefComplaint: 'Test chief complaint',
   diagnoses: [],
   tags: [],
+  resources: [],
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
-  status: 'draft',
-  visibility: 'private',
-  userId: 'user1',
 };
 
 describe('CaseCard', () => {
