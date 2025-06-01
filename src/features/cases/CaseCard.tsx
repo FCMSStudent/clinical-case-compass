@@ -83,7 +83,7 @@ export const CaseCard: React.FC<CaseCardProps> = memo(
             </time>
           </div>
 
-          <div className="mt-2 flex items-center text-sm md:text-base text-muted-foreground">
+          <div className="mt-2 flex items-center text-sm md:text-base text-muted-foreground truncate">
             <User className="mr-2 h-4 w-4 flex-shrink-0" aria-hidden />
             {medicalCase.patient.name}, {medicalCase.patient.age} y/o {medicalCase.patient.gender}
           </div>

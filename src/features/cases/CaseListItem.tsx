@@ -25,7 +25,7 @@ export const CaseListItem = memo<CaseListItemProps>(({ medicalCase, className, o
   return (
     <Card className={cn("hover:shadow-md transition-shadow", className)}>
       <CardContent className="p-4">
-        <div className="flex items-start justify-between gap-4"> {/* Main flex container: items-start for alignment if content heights differ */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"> {/* Main flex container: items-start for alignment if content heights differ */}
           
           {/* Left Section: Main Info (takes up more space) */}
           <div className="flex-grow space-y-2 min-w-0"> {/* min-w-0 for proper truncation */}
@@ -52,7 +52,7 @@ export const CaseListItem = memo<CaseListItemProps>(({ medicalCase, className, o
           </div>
 
           {/* Right Section: Tags & Actions (fixed width or shrinks less) */}
-          <div className="flex-shrink-0 flex flex-col items-end space-y-2">
+          <div className="flex-shrink-0 flex flex-col items-start sm:items-end space-y-2 w-full sm:w-auto">
             {/* Tags */}
             <div className="flex items-center gap-2">
               {primaryTag && (
