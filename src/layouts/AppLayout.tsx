@@ -1,6 +1,5 @@
-
 import React from "react";
-import { Sidebar, useSidebar } from "@/layouts/Sidebar"; // Fixed: corrected import path, import useSidebar
+import { Sidebar, useSidebar } from "@/layouts/Sidebar";
 import { cn } from "@/lib/utils";
 
 interface AppLayoutProps {
@@ -9,7 +8,7 @@ interface AppLayoutProps {
 }
 
 export const AppLayout: React.FC<AppLayoutProps> = ({ children, className }) => {
-  const { state, isMobile } = useSidebar(); // Get sidebar state and isMobile
+  const { state, isMobile } = useSidebar();
 
   // Determine padding based on sidebar state and screen size
   const mainPaddingClass = isMobile
@@ -21,12 +20,14 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children, className }) => 
   return (
     <div className="min-h-screen bg-background">
       <Sidebar />
-      <main className={cn(
-        "transition-all duration-300 ease-in-out",
-        mainPaddingClass, // Apply dynamic padding
-        "flex flex-col",
-        className
-      )}>
+      <main
+        className={cn(
+          "transition-all duration-300 ease-in-out",
+          mainPaddingClass, // Apply dynamic padding based on sidebar state
+          "flex flex-col",
+          className
+        )}
+      >
         <div className="flex-1">
           <div className="container space-y-6">
             {children}
