@@ -4,7 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { Sidebar } from "@/layouts/Sidebar"; // Import Sidebar
+import { SidebarProvider } from "@/layouts/Sidebar";
 import { AppLayout } from "@/layouts/AppLayout";
 import { AuthProvider } from "./AuthContext";
 import { ThemeProvider } from "./ThemeContext";
@@ -69,55 +69,55 @@ const App = () => {
             <AuthProvider>
               <Toaster />
               <Sonner />
-              <Sidebar> {/* Wrap BrowserRouter with Sidebar */}
-                <BrowserRouter>
+              <BrowserRouter>
+                <SidebarProvider>
                   <Routes>
                     <Route path="/auth" element={<Auth />} />
                     <Route path="/" element={<Navigate to="/cases" replace />} />
-                  <Route 
-                    path="/cases" 
-                    element={
-                      <PrivateRoute>
-                        <AppLayout>
-                          <Cases />
-                        </AppLayout>
-                      </PrivateRoute>
-                    } 
-                  />
-                  <Route 
-                    path="/cases/new" 
-                    element={
-                      <PrivateRoute>
-                        <AppLayout>
-                          <CreateCaseFlow />
-                        </AppLayout>
-                      </PrivateRoute>
-                    } 
-                  />
-                  <Route 
-                    path="/cases/edit/:id" 
-                    element={
-                      <PrivateRoute>
-                        <AppLayout>
-                          <CaseEdit />
-                        </AppLayout>
-                      </PrivateRoute>
-                    } 
-                  />
-                  <Route 
-                    path="/cases/:id" 
-                    element={
-                      <PrivateRoute>
-                        <AppLayout>
-                          <CaseDetail />
-                        </AppLayout>
-                      </PrivateRoute>
-                    } 
-                  />
+                    <Route 
+                      path="/cases" 
+                      element={
+                        <PrivateRoute>
+                          <AppLayout>
+                            <Cases />
+                          </AppLayout>
+                        </PrivateRoute>
+                      } 
+                    />
+                    <Route 
+                      path="/cases/new" 
+                      element={
+                        <PrivateRoute>
+                          <AppLayout>
+                            <CreateCaseFlow />
+                          </AppLayout>
+                        </PrivateRoute>
+                      } 
+                    />
+                    <Route 
+                      path="/cases/edit/:id" 
+                      element={
+                        <PrivateRoute>
+                          <AppLayout>
+                            <CaseEdit />
+                          </AppLayout>
+                        </PrivateRoute>
+                      } 
+                    />
+                    <Route 
+                      path="/cases/:id" 
+                      element={
+                        <PrivateRoute>
+                          <AppLayout>
+                            <CaseDetail />
+                          </AppLayout>
+                        </PrivateRoute>
+                      } 
+                    />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
-                </BrowserRouter>
-              </Sidebar> {/* Close Sidebar */}
+                </SidebarProvider>
+              </BrowserRouter>
             </AuthProvider>
           </ThemeProvider>
         </TooltipProvider>

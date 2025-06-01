@@ -1,5 +1,6 @@
+
 import React from "react";
-import { Sidebar, useSidebar } from "@/layouts/Sidebar";
+import { Sidebar, SidebarTrigger, useSidebar } from "@/layouts/Sidebar";
 import { cn } from "@/lib/utils";
 
 interface AppLayoutProps {
@@ -23,13 +24,18 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children, className }) => 
       <main
         className={cn(
           "transition-all duration-300 ease-in-out",
-          mainPaddingClass, // Apply dynamic padding based on sidebar state
+          mainPaddingClass,
           "flex flex-col",
           className
         )}
       >
+        <div className="flex items-center justify-between p-4 md:hidden border-b">
+          <SidebarTrigger />
+          <h1 className="text-lg font-semibold">MedCase</h1>
+          <div className="w-8" /> {/* Spacer for centering */}
+        </div>
         <div className="flex-1">
-          <div className="container space-y-6">
+          <div className="container mx-auto p-6 space-y-6">
             {children}
           </div>
         </div>
