@@ -1,3 +1,4 @@
+
 import React, { memo, ReactNode } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { FormProgressIndicator } from "@/features/cases/FormProgressIndicator";
@@ -32,7 +33,7 @@ export interface FormContainerProps {
 
 /**
  * Generic, stylised wrapper that pairs a step-based progress indicator with a
- * frosted-glass card to house the active form section.
+ * clean card to house the active form section.
  */
 export const FormContainer: React.FC<FormContainerProps> = memo(
   ({ currentStep, totalSteps, steps, onStepClick, children, className }) => {
@@ -45,11 +46,11 @@ export const FormContainer: React.FC<FormContainerProps> = memo(
           onStepClick={onStepClick}
         />
 
-        <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-lg">
+        <Card className="border-border bg-card shadow-sm">
           <CardContent className="p-6">
-            {/* Reserve vertical space so the overall layout doesn't jump between   */}
-            {/* steps of varying height. Adjust `min-h` as needed for your design. */}
-            <div className="min-h-[60vh]">{children}</div>
+            <div className="w-full">
+              {children}
+            </div>
           </CardContent>
         </Card>
       </section>

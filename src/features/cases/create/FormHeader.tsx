@@ -1,6 +1,7 @@
+
 import React, { memo } from "react";
 import { Button } from "@/components/ui/button";
-import { PageHeader } from "@/components/ui/page-header";
+import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle, Loader2, Save } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -24,8 +25,7 @@ export interface FormHeaderProps {
 }
 
 /**
- * Header component for multi-step forms. Shows current step, % complete, and an
- * optional _Save Draft_ button with live autosave status.
+ * Compact header component for multi-step forms that integrates well with AppLayout.
  */
 export const FormHeader: React.FC<FormHeaderProps> = memo(
   ({
@@ -38,49 +38,55 @@ export const FormHeader: React.FC<FormHeaderProps> = memo(
     hideDraftButton = false,
     className,
   }) => {
-    const stepText = `Step ${currentStep} of ${totalSteps}: ${currentStepLabel}`;
     const showSave = !hideDraftButton && Boolean(onSaveDraft);
 
     return (
-      <header className={cn("flex flex-wrap items-start justify-between gap-4", className)}>
-        {/* — Title & progress — */}
-        <div className="space-y-2">
-          <PageHeader title="Create New Clinical Case" description={stepText} />
+      <Card className={cn("bg-muted/30 border-border", className)}>
+        <CardContent className="p-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            {/* Step Info */}
+            <div className="space-y-1">
+              <h2 className="text-xl font-semibold text-foreground">
+                Create New Clinical Case
+              </h2>
+              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                <span>
+                  Step {currentStep} of {totalSteps}: {currentStepLabel}
+                </span>
+                <span className="flex items-center gap-1">
+                  <CheckCircle className="h-4 w-4 text-primary" />
+                  {completionPercentage}% Complete
+                </span>
+                {isDraftSaving && (
+                  <span className="flex items-center gap-1 text-primary">
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                    Saving...
+                  </span>
+                )}
+              </div>
+            </div>
 
-          {/* Inline progress + autosave indicator */}
-          <div className="flex items-center gap-6 text-sm text-muted-foreground">
-            <span className="flex items-center gap-1">
-              <CheckCircle className="h-4 w-4 text-primary" aria-hidden />
-              {completionPercentage}% Complete
-            </span>
-
-            {isDraftSaving && (
-              <span className="flex items-center gap-1" aria-live="polite">
-                <Loader2 className="h-3 w-3 animate-spin text-primary" /> Saving…
-              </span>
+            {/* Save Draft Button */}
+            {showSave && (
+              <Button
+                type="button"
+                onClick={onSaveDraft}
+                disabled={isDraftSaving}
+                variant="outline"
+                size="sm"
+                className="flex-shrink-0"
+              >
+                {isDraftSaving ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <Save className="mr-2 h-4 w-4" />
+                )}
+                {isDraftSaving ? "Saving..." : "Save Draft"}
+              </Button>
             )}
           </div>
-        </div>
-
-        {/* — Save draft — */}
-        {showSave && (
-          <Button
-            type="button"
-            onClick={onSaveDraft}
-            disabled={isDraftSaving}
-            variant="outline"
-            size="sm"
-            className="flex-shrink-0"
-          >
-            {isDraftSaving ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            ) : (
-              <Save className="mr-2 h-4 w-4" />
-            )}
-            {isDraftSaving ? "Saving…" : "Save Draft"}
-          </Button>
-        )}
-      </header>
+        </CardContent>
+      </Card>
     );
   },
 );

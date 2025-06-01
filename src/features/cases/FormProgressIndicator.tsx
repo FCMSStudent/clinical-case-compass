@@ -27,12 +27,12 @@ export function FormProgressIndicator({
   const progressPercentage = Math.min(((currentStep) / totalSteps) * 100, 100);
 
   return (
-    <div className={cn("w-full space-y-2", className)}>
-      <div className="flex items-center justify-between mb-1">
-        <div className="text-sm font-medium text-primary">
+    <div className={cn("w-full space-y-4", className)}>
+      <div className="flex items-center justify-between">
+        <div className="text-sm font-medium text-foreground">
           Step {currentStep} of {totalSteps}
         </div>
-        <div className="text-sm text-primary">
+        <div className="text-sm text-muted-foreground">
           {Math.round(progressPercentage)}% Complete
         </div>
       </div>
@@ -43,7 +43,7 @@ export function FormProgressIndicator({
         indicatorClassName="bg-primary"
       />
       
-      <div className="flex justify-between flex-wrap mt-2">
+      <div className="flex justify-between flex-wrap gap-2">
         {steps.map((step, index) => {
           const isActive = index + 1 === currentStep;
           const isCompleted = step.isCompleted || index + 1 < currentStep;
@@ -55,21 +55,29 @@ export function FormProgressIndicator({
               onClick={() => isNavigable && onStepClick?.(step.id)}
               disabled={!isNavigable || !onStepClick}
               className={cn(
-                "flex flex-col items-center space-y-1 px-1 transition-colors",
-                isActive ? "text-primary" : isCompleted ? "text-muted-foreground" : "text-muted-foreground",
-                isNavigable && onStepClick && "cursor-pointer hover:text-primary",
+                "flex flex-col items-center space-y-2 px-2 py-1 rounded-lg transition-all",
+                "hover:bg-muted/50 focus:outline-none focus:ring-2 focus:ring-primary/20",
+                isActive && "bg-primary/5",
+                isNavigable && onStepClick && "cursor-pointer",
                 !isNavigable && "cursor-not-allowed opacity-50"
               )}
             >
               <div className={cn(
-                "w-8 h-8 rounded-full flex items-center justify-center",
-                isActive ? "bg-primary text-primary-foreground" :
-                isCompleted ? "bg-secondary text-primary" :
-                "bg-muted text-muted-foreground"
+                "w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors",
+                isActive 
+                  ? "bg-primary text-primary-foreground" 
+                  : isCompleted 
+                    ? "bg-primary/20 text-primary" 
+                    : "bg-muted text-muted-foreground"
               )}>
                 {step.icon ? step.icon : index + 1}
               </div>
-              <span className="text-xs font-medium hidden md:inline">{step.label}</span>
+              <span className={cn(
+                "text-xs font-medium text-center hidden sm:block",
+                isActive ? "text-primary" : "text-muted-foreground"
+              )}>
+                {step.label}
+              </span>
             </button>
           );
         })}

@@ -243,44 +243,44 @@ const CreateCaseFlow = () => {
   };
 
   return (
-    <>
+    <div className="space-y-6">
       <FormHeader
         currentStep={currentStepIndex + 1}
         totalSteps={STEPS.length}
-          completionPercentage={completionPercentage}
-          isDraftSaving={isDraftSaving}
-          onSaveDraft={saveDraftManually}
-          currentStepLabel={currentStepData.label}
-        />
+        completionPercentage={completionPercentage}
+        isDraftSaving={isDraftSaving}
+        onSaveDraft={saveDraftManually}
+        currentStepLabel={currentStepData.label}
+      />
         
-        <Form {...form}>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <FormContainer
-              currentStep={currentStepIndex + 1}
-              totalSteps={STEPS.length}
-              steps={STEPS.map((step, index) => ({ 
-                  id: step.id, 
-                  label: step.label, 
-                  icon: step.icon,
-                  isCompleted: index <= highestValidatedStep,
-                  isNavigable: index <= highestValidatedStep + 1 || index < currentStepIndex,
-              }))}
-              onStepClick={handleStepClick}
-            >
-              {renderStepContent()}
-            </FormContainer>
+      <Form {...form}>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <FormContainer
+            currentStep={currentStepIndex + 1}
+            totalSteps={STEPS.length}
+            steps={STEPS.map((step, index) => ({ 
+                id: step.id, 
+                label: step.label, 
+                icon: step.icon,
+                isCompleted: index <= highestValidatedStep,
+                isNavigable: index <= highestValidatedStep + 1 || index < currentStepIndex,
+            }))}
+            onStepClick={handleStepClick}
+          >
+            {renderStepContent()}
+          </FormContainer>
 
-            <FormNavigation
-              currentStep={currentStepIndex + 1}
-              totalSteps={STEPS.length}
-              currentStepLabel={currentStepData.label}
-              isSubmitting={isSubmitting}
-              onPrevious={handlePrevious}
-              onNext={handleNext}
-            />
-          </form>
-        </Form>
-    </>
+          <FormNavigation
+            currentStep={currentStepIndex + 1}
+            totalSteps={STEPS.length}
+            currentStepLabel={currentStepData.label}
+            isSubmitting={isSubmitting}
+            onPrevious={handlePrevious}
+            onNext={handleNext}
+          />
+        </form>
+      </Form>
+    </div>
   );
 };
 
