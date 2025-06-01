@@ -43,7 +43,7 @@ export function FormProgressIndicator({
         indicatorClassName="bg-primary"
       />
       
-      <div className="flex justify-between mt-2">
+      <div className="flex justify-between flex-wrap mt-2">
         {steps.map((step, index) => {
           const isActive = index + 1 === currentStep;
           const isCompleted = step.isCompleted || index + 1 < currentStep;
