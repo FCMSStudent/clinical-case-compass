@@ -69,7 +69,7 @@ export const FormNavigation: React.FC<FormNavigationProps> = memo(
                 <span className="mt-1 text-xs">{currentStepLabel}</span>
               )}
               {/* Linear progress bar */}
-              <div className="mt-2 h-1.5 w-40 overflow-hidden rounded bg-muted">
+              <div className="mt-2 h-1.5 w-full overflow-hidden rounded bg-muted">
                 <div
                   className="h-full bg-primary transition-all"
                   style={{ width: `${(currentStep / totalSteps) * 100}%` }}
