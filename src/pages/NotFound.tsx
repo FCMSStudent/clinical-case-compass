@@ -33,7 +33,7 @@ const NotFound = () => {
           <CardContent className="space-y-4">
             <div className="bg-muted/50 rounded-lg p-3 text-center">
               <p className="text-xs text-muted-foreground">
-                Requested path: <code className="bg-background px-1 py-0.5 rounded text-xs">{location.pathname}</code>
+                Requested path: <code className="bg-background px-1 py-1 rounded text-xs">{location.pathname}</code>
               </p>
             </div>
             

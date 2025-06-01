@@ -21,7 +21,7 @@ export function UserProfileDisplay() {
             <AvatarImage src="" />
             <AvatarFallback>{emailInitial}</AvatarFallback>
           </Avatar>
-          <div className="space-y-0.5">
+          <div className="space-y-1">
             <p className="text-sm font-medium">{user.email}</p>
           </div>
         </div>

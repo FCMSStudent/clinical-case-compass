@@ -112,7 +112,7 @@ const CaseDetail = () => {
           {medicalCase.tags && medicalCase.tags.map((tag) => (
             <span
               key={tag.id}
-              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+              className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
               style={{
                 backgroundColor: `${tag.color}20`,
                 color: tag.color,
