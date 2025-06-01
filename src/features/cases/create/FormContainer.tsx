@@ -46,10 +46,10 @@ export const FormContainer: React.FC<FormContainerProps> = memo(
         />
 
         <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-lg">
-          <CardContent className="p-8">
+          <CardContent className="p-6">
             {/* Reserve vertical space so the overall layout doesn't jump between   */}
             {/* steps of varying height. Adjust `min-h` as needed for your design. */}
-            <div className="min-h-[400px]">{children}</div>
+            <div>{children}</div>
           </CardContent>
         </Card>
       </section>

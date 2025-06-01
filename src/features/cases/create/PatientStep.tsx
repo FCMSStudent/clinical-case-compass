@@ -59,7 +59,7 @@ function FieldCard({
   return (
     <Card className={cn("shadow-sm", className)}>
       <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-base text-medical-700">
+        <CardTitle className="flex items-center gap-2 text-base text-foreground">
           <Icon className="h-4 w-4" /> {title}
         </CardTitle>
       </CardHeader>
@@ -90,8 +90,8 @@ export const PatientStep = memo(function PatientStep<
     <section className={cn("space-y-6", className)}>
       {/* Header */}
       <header className="mb-6 space-y-1">
-        <h3 className="flex items-center text-lg font-semibold text-medical-800">
-          <UserIcon className="mr-2 h-5 w-5" /> Patient Information
+        <h3 className="flex items-center text-lg font-semibold text-primary">
+          <UserIcon className="mr-2 h-5 w-5 text-primary" /> Patient Information
         </h3>
         <p className="text-sm text-muted-foreground">
           Enter the patient’s basic demographic and identification information.
@@ -190,7 +190,7 @@ export const PatientStep = memo(function PatientStep<
                         <RadioGroupItem
                           value={option}
                           id={`sex-${option}`}
-                          className="border-medical-300"
+                          className="border"
                         />
                         <Label
                           htmlFor={`sex-${option}`}

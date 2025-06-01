@@ -243,11 +243,10 @@ const CreateCaseFlow = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-medical-50 to-white">
-      <div className="container mx-auto py-8 space-y-8 px-4 md:px-0 max-w-4xl">
-        <FormHeader
-          currentStep={currentStepIndex + 1}
-          totalSteps={STEPS.length}
+    <>
+      <FormHeader
+        currentStep={currentStepIndex + 1}
+        totalSteps={STEPS.length}
           completionPercentage={completionPercentage}
           isDraftSaving={isDraftSaving}
           onSaveDraft={saveDraftManually}
@@ -281,8 +280,7 @@ const CreateCaseFlow = () => {
             />
           </form>
         </Form>
-      </div>
-    </div>
+    </>
   );
 };
 
