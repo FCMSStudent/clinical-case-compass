@@ -12,12 +12,15 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children, className }) => 
   return (
     <div className="min-h-screen bg-background">
       <Sidebar />
-      <main className={cn(
-        "transition-all duration-300 ease-in-out",
-        "lg:pl-64", // Always account for sidebar on large screens
-        "flex flex-col",
-        className
-      )}>
+      <main
+        className={cn(
+          "transition-all duration-300 ease-in-out",
+          // "lg:pl-64", // This line is removed
+          "flex flex-col",
+          className
+        )}
+        style={{ paddingLeft: 'var(--current-sidebar-offset, 0px)' }}
+      >
         <div className="flex-1">
           <div className="container space-y-6">
             {children}

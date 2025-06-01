@@ -200,10 +200,17 @@ export const Sidebar = forwardRef<HTMLDivElement, SidebarProviderProps>(
       [state, open, setOpen, isMobile, openMobile, toggleSidebar]
     );
 
+    const currentSidebarOffset = isMobile
+      ? "0px"
+      : open
+      ? SIDEBAR_CONFIG.WIDTH
+      : SIDEBAR_CONFIG.WIDTH_ICON;
+
     const cssVariables = {
       "--sidebar-width": SIDEBAR_CONFIG.WIDTH,
       "--sidebar-width-icon": SIDEBAR_CONFIG.WIDTH_ICON,
       "--sidebar-width-mobile": SIDEBAR_CONFIG.WIDTH_MOBILE,
+      "--current-sidebar-offset": currentSidebarOffset,
       ...style,
     } as React.CSSProperties;
 
