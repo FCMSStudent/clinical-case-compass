@@ -2,15 +2,14 @@
 /** @vitest-environment jsdom */
 import React from 'react';
 import { render, screen, cleanup } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom'; // Link component needs a router context
-import { describe, it, expect, afterEach } from 'vitest'; // Import Vitest globals
+import { BrowserRouter } from 'react-router-dom';
+import { describe, it, expect, afterEach } from 'vitest';
 import * as jestDomMatchers from '@testing-library/jest-dom/matchers';
-expect.extend(jestDomMatchers); // Extend Vitest's expect with jest-dom matchers
+expect.extend(jestDomMatchers);
 
 import { CaseCard } from './CaseCard';
 import { MedicalCase } from '@/types/case';
 
-// Minimal mock data for MedicalCase
 const mockMedicalCase: MedicalCase = {
   id: '1',
   title: 'Test Case Title',
@@ -18,21 +17,16 @@ const mockMedicalCase: MedicalCase = {
     id: 'p1',
     name: 'John Doe',
     age: 30,
-    gender: 'male', // Fixed: changed from 'Male' to 'male'
+    gender: 'male',
   },
   chiefComplaint: 'Test chief complaint',
-  summary: 'Test summary',
-  diagnoses: [], // Can be empty for a smoke test
-  tags: [], // Can be empty for a smoke test
+  diagnoses: [],
+  tags: [],
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
   status: 'draft',
   visibility: 'private',
   userId: 'user1',
-  // Add any other potentially required fields with default/mock values
-  // For example, if sections or learningPoints were non-optional
-  // sections: [],
-  // learningPoints: [],
 };
 
 describe('CaseCard', () => {
@@ -47,12 +41,8 @@ describe('CaseCard', () => {
       </BrowserRouter>
     );
 
-    // Check for a key element or text to confirm rendering
-    // For example, the title of the case
     expect(screen.getByText('Test Case Title')).toBeInTheDocument();
-    // Or the patient's name
     expect(screen.getByText(/John Doe, 30 y\/o male/i)).toBeInTheDocument();
-    // Or chief complaint
     expect(screen.getByText('Test chief complaint')).toBeInTheDocument();
   });
 
@@ -99,7 +89,7 @@ describe('CaseCard', () => {
   it('renders primary diagnosis if provided', () => {
     const caseWithDx: MedicalCase = {
       ...mockMedicalCase,
-      diagnoses: [{ id: 'd1', name: 'Flu', status: 'confirmed' }], // Fixed: removed icd10Code
+      diagnoses: [{ id: 'd1', name: 'Flu', status: 'confirmed' }],
     };
     render(
       <BrowserRouter>
