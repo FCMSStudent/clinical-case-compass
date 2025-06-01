@@ -39,14 +39,14 @@ export const CaseListItem = memo<CaseListItemProps>(({ medicalCase, className, o
             </div>
 
             <div className="flex items-start text-sm text-muted-foreground" title={`Complaint: ${medicalCase.chiefComplaint}`}>
-              <Clipboard className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" /> {/* Changed ClipboardText to Clipboard */}
+              <Clipboard className="h-4 w-4 mr-2 mt-1 flex-shrink-0" /> {/* Changed ClipboardText to Clipboard */}
               <p className="truncate">
                 {medicalCase.chiefComplaint}
               </p>
             </div>
             
             <div className="flex items-center text-xs text-muted-foreground pt-1">
-              <CalendarDays className="h-3.5 w-3.5 mr-1.5 flex-shrink-0" />
+              <CalendarDays className="h-3 w-3 mr-1 flex-shrink-0" />
               <span>Created: {format(new Date(medicalCase.createdAt), "MMM d, yyyy")}</span>
             </div>
           </div>
@@ -58,7 +58,7 @@ export const CaseListItem = memo<CaseListItemProps>(({ medicalCase, className, o
               {primaryTag && (
                 <span
                   key={primaryTag.id}
-                  className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                  className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
                   style={{
                     backgroundColor: `${primaryTag.color}20`, // Assuming hex color with alpha
                     color: primaryTag.color,
@@ -70,7 +70,7 @@ export const CaseListItem = memo<CaseListItemProps>(({ medicalCase, className, o
               )}
               {/* Add more tags or a "+N" badge if needed, similar to CaseCard */}
                {medicalCase.tags && medicalCase.tags.length > 1 && (
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-muted text-muted-foreground">
+                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground">
                     +{medicalCase.tags.length - 1}
                   </span>
                 )}

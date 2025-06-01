@@ -469,7 +469,7 @@ export function SymptomChecklist({
                 key={item.system} 
                 value={item.system}
                 className={cn(
-                  "text-xs py-1.5 px-3 flex-shrink-0 flex items-center gap-2",
+                  "text-xs py-1 px-3 flex-shrink-0 flex items-center gap-2",
                   "data-[state=active]:bg-white data-[state=active]:border-x data-[state=active]:border-t data-[state=active]:border-medical-200 data-[state=active]:border-b-0 data-[state=active]:rounded-b-none",
                   hasHighlights && "ring-2 ring-yellow-300"
                 )}

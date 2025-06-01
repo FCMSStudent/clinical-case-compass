@@ -605,7 +605,7 @@ export const InteractiveBodyDiagram: React.FC<InteractiveBodyDiagramProps> = ({
               <ul className="text-sm space-y-1">
                 {Array.from(selectedParts).map((id) => (
                   <li key={id} className="flex items-start gap-1">
-                    <CheckCircle2 className="h-4 w-4 text-primary mt-0.5" />
+                    <CheckCircle2 className="h-4 w-4 text-primary mt-1" />
                     <span>{BODY_PARTS[id].name}</span>
                   </li>
                 ))}
