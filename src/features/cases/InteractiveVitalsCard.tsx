@@ -388,7 +388,7 @@ export function InteractiveVitalsCard({
   return (
     <Card className="shadow-sm border-medical-200"> {/* Changed border-border to border-medical-200 */}
       <CardContent className="pt-4">
-        <div className="flex justify-end gap-1.5 mb-4"> {/* Moved preset buttons here */}
+        <div className="flex justify-end gap-1 mb-4"> {/* Moved preset buttons here */}
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
