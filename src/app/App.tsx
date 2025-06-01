@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Sidebar } from "@/layouts/Sidebar"; // Import Sidebar
 import { AppLayout } from "@/layouts/AppLayout";
 import { AuthProvider } from "./AuthContext";
 import { ThemeProvider } from "./ThemeContext";
@@ -68,10 +69,11 @@ const App = () => {
             <AuthProvider>
               <Toaster />
               <Sonner />
-              <BrowserRouter>
-                <Routes>
-                  <Route path="/auth" element={<Auth />} />
-                  <Route path="/" element={<Navigate to="/cases" replace />} />
+              <Sidebar> {/* Wrap BrowserRouter with Sidebar */}
+                <BrowserRouter>
+                  <Routes>
+                    <Route path="/auth" element={<Auth />} />
+                    <Route path="/" element={<Navigate to="/cases" replace />} />
                   <Route 
                     path="/cases" 
                     element={
@@ -112,9 +114,10 @@ const App = () => {
                       </PrivateRoute>
                     } 
                   />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </BrowserRouter>
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </BrowserRouter>
+              </Sidebar> {/* Close Sidebar */}
             </AuthProvider>
           </ThemeProvider>
         </TooltipProvider>
