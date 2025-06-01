@@ -50,13 +50,13 @@ export const FormHeader: React.FC<FormHeaderProps> = memo(
           {/* Inline progress + autosave indicator */}
           <div className="flex items-center gap-6 text-sm text-muted-foreground">
             <span className="flex items-center gap-1">
-              <CheckCircle className="h-4 w-4 text-green-500" aria-hidden />
+              <CheckCircle className="h-4 w-4 text-primary" aria-hidden />
               {completionPercentage}% Complete
             </span>
 
             {isDraftSaving && (
               <span className="flex items-center gap-1" aria-live="polite">
-                <Loader2 className="h-3 w-3 animate-spin text-blue-500" /> Saving…
+                <Loader2 className="h-3 w-3 animate-spin text-primary" /> Saving…
               </span>
             )}
           </div>

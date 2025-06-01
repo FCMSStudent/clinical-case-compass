@@ -29,18 +29,18 @@ export function FormProgressIndicator({
   return (
     <div className={cn("w-full space-y-2", className)}>
       <div className="flex items-center justify-between mb-1">
-        <div className="text-sm font-medium text-medical-700">
+        <div className="text-sm font-medium text-primary">
           Step {currentStep} of {totalSteps}
         </div>
-        <div className="text-sm text-medical-500">
+        <div className="text-sm text-primary">
           {Math.round(progressPercentage)}% Complete
         </div>
       </div>
       
       <Progress 
         value={progressPercentage} 
-        className="h-2 bg-medical-100"
-        indicatorClassName="bg-medical-500"
+        className="h-2 bg-muted"
+        indicatorClassName="bg-primary"
       />
       
       <div className="flex justify-between mt-2">
@@ -56,16 +56,16 @@ export function FormProgressIndicator({
               disabled={!isNavigable || !onStepClick}
               className={cn(
                 "flex flex-col items-center space-y-1 px-1 transition-colors",
-                isActive ? "text-medical-700" : isCompleted ? "text-medical-500" : "text-medical-300",
-                isNavigable && onStepClick && "cursor-pointer hover:text-medical-800",
+                isActive ? "text-primary" : isCompleted ? "text-muted-foreground" : "text-muted-foreground",
+                isNavigable && onStepClick && "cursor-pointer hover:text-primary",
                 !isNavigable && "cursor-not-allowed opacity-50"
               )}
             >
               <div className={cn(
                 "w-8 h-8 rounded-full flex items-center justify-center",
-                isActive ? "bg-medical-500 text-white" : 
-                isCompleted ? "bg-medical-200 text-medical-700" : 
-                "bg-medical-100 text-medical-400"
+                isActive ? "bg-primary text-primary-foreground" :
+                isCompleted ? "bg-secondary text-primary" :
+                "bg-muted text-muted-foreground"
               )}>
                 {step.icon ? step.icon : index + 1}
               </div>
