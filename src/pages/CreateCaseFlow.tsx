@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
 import { FileText, User, Stethoscope, Lightbulb, AlertTriangle } from "lucide-react";
-import { Form } from "@/shared/ui/form";
+import { Form } from "@/components/ui/form";
 import { toast } from "sonner";
 
 // Step Components and Schemas - updated imports
@@ -22,7 +22,7 @@ import {
   learningPointsStepSchema
 } from "@/features/cases/new";
 
-import { Card, CardContent } from "@/shared/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 
 // Combine Schemas
 const combinedCaseSchema = caseInfoSchema

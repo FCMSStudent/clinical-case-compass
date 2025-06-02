@@ -1,5 +1,5 @@
 
-import { PageHeader } from "@/shared/ui/page-header";
+import { PageHeader } from "@/components/ui/page-header";
 import { 
   ActiveCasesWidget,
   DraftsWidget,
@@ -9,7 +9,7 @@ import {
   QuickStartPanel
 } from "@/features/dashboard";
 import { UserRound } from "lucide-react";
-import { Alert, AlertDescription } from "@/shared/ui/alert";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const Dashboard = () => {
   return (

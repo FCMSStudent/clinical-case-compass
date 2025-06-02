@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { Search } from "lucide-react";
-import { Input } from "@/shared/ui/input";
-import { Card, CardContent } from "@/shared/ui/card";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
 
 export const SearchBar = () => {
   return (
