@@ -14,7 +14,7 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/shared/ui/sheet";
+} from "@/components/ui/sheet";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -23,7 +23,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
-} from "@/shared/ui/navigation-menu";
+} from "@/components/ui/navigation-menu";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,12 +31,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/shared/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@/shared/ui/avatar";
+} from "@/components/ui/avatar";
 import {
   Bell,
   Menu,
@@ -52,8 +52,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/shared/utils";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Button } from "@/shared/ui/button";
-import { AuthContext } from "@/app/AuthContext";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/app/AuthContext";
 
 const SidebarContext = createContext({
   state: "collapsed",
@@ -172,7 +172,7 @@ const navItems = [
 
 export const Sidebar = React.memo(function Sidebar() {
   const { state, isMobile } = useSidebar();
-  const { signOut } = useContext(AuthContext);
+  const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -200,10 +200,10 @@ export const Sidebar = React.memo(function Sidebar() {
           <DropdownMenuLabel className="font-normal">
             <div className="flex flex-col space-y-1">
               <span className="text-sm font-medium leading-none">
-                shadcn
+                {user?.displayName || "User"}
               </span>
               <span className="text-xs leading-none text-muted-foreground">
-                shad.cn@gmail.com
+                {user?.email || "user@example.com"}
               </span>
             </div>
           </DropdownMenuLabel>
@@ -221,7 +221,7 @@ export const Sidebar = React.memo(function Sidebar() {
             <span>Support</span>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem className="cursor-pointer" onClick={handleSignOut}>
+          <DropdownMenuItem className="cursor-pointer" onSelect={handleSignOut}>
             <LogOut className="mr-2 h-4 w-4" />
             <span>Log out</span>
           </DropdownMenuItem>

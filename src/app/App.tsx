@@ -1,14 +1,14 @@
 
-import { Toaster } from "@/shared/ui/toaster";
-import { Toaster as Sonner } from "@/shared/ui/sonner";
-import { TooltipProvider } from "@/shared/ui/tooltip";
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { SidebarProvider } from "@/features/navigation";
 import { AppLayout } from "@/features/navigation";
 import { AuthProvider } from "./AuthContext";
 import { ThemeProvider } from "./ThemeContext";
-import { ErrorBoundary } from "@/shared/ui/error-boundary";
+import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 import Dashboard from "@/pages/Dashboard";
 import Cases from "@/pages/Cases";
 import CaseDetail from "@/pages/CaseDetail";
