@@ -1,3 +1,4 @@
+
 import { PageHeader } from "@/components/ui/page-header";
 import { ActiveCasesWidget } from "@/components/DashboardCombined";
 import { DraftsWidget } from "@/components/DashboardCombined";
@@ -10,8 +11,8 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const Dashboard = () => {
   return (
-    <div className="container space-y-6">
-      {/* Welcome Alert - Can be kept or modified as per overall design */}
+    <div className="space-y-6">
+      {/* Welcome Alert */}
       <Alert className="border-primary/20 bg-primary/5">
         <UserRound className="h-5 w-5 text-primary" />
         <AlertDescription className="text-primary">
@@ -35,7 +36,6 @@ const Dashboard = () => {
       </div>
       
       <div className="grid gap-6 lg:grid-cols-3">
-        {/* Main Content Area: QuickStartPanel (taking 2/3 width) and RecentActivity (taking 1/3 width) */}
         <div className="lg:col-span-2">
           <QuickStartPanel />
         </div>

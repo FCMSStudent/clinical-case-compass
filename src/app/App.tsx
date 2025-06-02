@@ -9,6 +9,7 @@ import { AppLayout } from "@/layouts/AppLayout";
 import { AuthProvider } from "./AuthContext";
 import { ThemeProvider } from "./ThemeContext";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
+import Dashboard from "@/pages/Dashboard";
 import Cases from "@/pages/Cases";
 import CaseDetail from "@/pages/CaseDetail";
 import CaseEdit from "@/pages/CaseEdit";
@@ -73,7 +74,17 @@ const App = () => {
                 <SidebarProvider>
                   <Routes>
                     <Route path="/auth" element={<Auth />} />
-                    <Route path="/" element={<Navigate to="/cases" replace />} />
+                    <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                    <Route 
+                      path="/dashboard" 
+                      element={
+                        <PrivateRoute>
+                          <AppLayout>
+                            <Dashboard />
+                          </AppLayout>
+                        </PrivateRoute>
+                      } 
+                    />
                     <Route 
                       path="/cases" 
                       element={
