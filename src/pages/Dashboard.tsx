@@ -1,13 +1,15 @@
 
-import { PageHeader } from "@/components/ui/page-header";
-import { ActiveCasesWidget } from "@/components/DashboardCombined";
-import { DraftsWidget } from "@/components/DashboardCombined";
-import { CompletedWidget } from "@/components/DashboardCombined";
-import { RecentActivity } from "@/components/DashboardCombined";
-import { SearchBar } from "@/components/DashboardCombined";
-import { QuickStartPanel } from "@/components/DashboardCombined";
+import { PageHeader } from "@/shared/ui/page-header";
+import { 
+  ActiveCasesWidget,
+  DraftsWidget,
+  CompletedWidget,
+  RecentActivity,
+  SearchBar,
+  QuickStartPanel
+} from "@/features/dashboard";
 import { UserRound } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Alert, AlertDescription } from "@/shared/ui/alert";
 
 const Dashboard = () => {
   return (

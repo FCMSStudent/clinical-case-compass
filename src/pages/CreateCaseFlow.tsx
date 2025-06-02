@@ -4,20 +4,25 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
 import { FileText, User, Stethoscope, Lightbulb, AlertTriangle } from "lucide-react";
-import { Form } from "@/components/ui/form";
+import { Form } from "@/shared/ui/form";
 import { toast } from "sonner";
 
-// Step Components and Schemas
-import { CaseInfoStep, caseInfoSchema } from "@/features/cases/create/CaseInfoStep";
-import { PatientStep, patientStepSchema } from "@/features/cases/create/PatientStep";
-import { ClinicalDetailStep, clinicalDetailStepSchema } from "@/features/cases/create/ClinicalDetailStep";
-import { LearningPointsStep, learningPointsStepSchema } from "@/features/cases/create/LearningPointsStep";
+// Step Components and Schemas - updated imports
+import { 
+  CaseInfoStep, 
+  PatientStep, 
+  ClinicalDetailStep, 
+  LearningPointsStep,
+  FormHeader,
+  FormNavigation,
+  FormContainer,
+  caseInfoSchema,
+  patientStepSchema,
+  clinicalDetailStepSchema,
+  learningPointsStepSchema
+} from "@/features/cases/new";
 
-// New Components
-import { FormHeader } from "@/features/cases/create/FormHeader";
-import { FormNavigation } from "@/features/cases/create/FormNavigation";
-import { FormContainer } from "@/features/cases/create/FormContainer";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/shared/ui/card";
 
 // Combine Schemas
 const combinedCaseSchema = caseInfoSchema
