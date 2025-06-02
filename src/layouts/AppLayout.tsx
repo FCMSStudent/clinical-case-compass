@@ -25,7 +25,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children, className }) => 
         className={cn(
           "transition-all duration-300 ease-in-out",
           mainPaddingClass,
-          "flex flex-col",
+          "flex flex-col min-h-screen",
           className
         )}
       >
@@ -34,8 +34,8 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children, className }) => 
           <h1 className="text-lg font-semibold">MedCase</h1>
           <div className="w-8" />
         </div>
-        <div className="flex-1">
-          <div className="container mx-auto max-w-7xl p-6 space-y-6">
+        <div className="flex-1 flex justify-center">
+          <div className="w-full max-w-7xl p-6">
             {children}
           </div>
         </div>

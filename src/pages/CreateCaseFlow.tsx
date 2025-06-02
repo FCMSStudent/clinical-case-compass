@@ -216,7 +216,6 @@ const CreateCaseFlow = () => {
   };
 
   const currentStepData = STEPS[currentStepIndex];
-  const isLastStep = currentStepIndex === STEPS.length - 1;
   const completionPercentage = Math.round(((currentStepIndex + 1) / STEPS.length) * 100);
 
   const renderStepContent = () => {
@@ -243,7 +242,7 @@ const CreateCaseFlow = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="w-full max-w-5xl mx-auto space-y-6">
       <FormHeader
         currentStep={currentStepIndex + 1}
         totalSteps={STEPS.length}
