@@ -85,6 +85,29 @@ describe('CaseCard', () => {
     expect(screen.getByText('Urgent')).toBeInTheDocument();
   });
 
+  it('shows "+N" indicator when tag count exceeds the visible limit', () => {
+    const caseWithManyTags: MedicalCase = {
+      ...mockMedicalCase,
+      tags: [
+        { id: 't1', name: 'Urgent', color: '#FF0000' },
+        { id: 't2', name: 'Important', color: '#00FF00' },
+        { id: 't3', name: 'Emergency', color: '#0000FF' },
+      ],
+    };
+
+    render(
+      <BrowserRouter>
+        <CaseCard medicalCase={caseWithManyTags} />
+      </BrowserRouter>
+    );
+
+    // First two tags are visible
+    expect(screen.getByText('Urgent')).toBeInTheDocument();
+    expect(screen.getByText('Important')).toBeInTheDocument();
+    // The remaining tag count is displayed as +1
+    expect(screen.getByText('+1')).toBeInTheDocument();
+  });
+
   it('renders primary diagnosis if provided', () => {
     const caseWithDx: MedicalCase = {
       ...mockMedicalCase,
