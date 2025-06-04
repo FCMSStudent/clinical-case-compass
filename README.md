@@ -109,7 +109,8 @@ clinical-case-compass/
 ├── src/                                # Source code
 │   ├── components/                     # React components
 │   │   ├── auth/                       # Authentication-related components (UserProfileDisplay, PrivateRoute)
-│   │   ├── cases/                      # Case specific components (e.g., CaseCard, SimpleBodyPartSelector, the complex SVG InteractiveBodyDiagram, SymptomChecklist)
+│   │   ├── body-diagram/              # SimpleBodyPartSelector component
+│   │   ├── cases/                      # Case specific components (e.g., CaseCard, SymptomChecklist)
 │   │   ├── dashboard/                  # Dashboard specific components (e.g., RecentCasesList, StatCard, DashboardSearchBar)
 │   │   ├── error/                      # Error handling (ErrorBoundary)
 │   │   └── ui/                         # Core UI components from Shadcn/ui (Button, Card, Input, etc.)
@@ -144,9 +145,9 @@ clinical-case-compass/
 ```
 
 **Note on Body Diagram Components:**
-The `src/components/cases/` directory contains two distinct components for body part interaction:
-*   `InteractiveBodyDiagram.tsx`: A complex, SVG-based visual diagram with features like zoom and anterior/posterior views.
-*   `SimpleBodyPartSelector.tsx`: A lightweight component that provides a list of buttons for selecting general body regions.
+This project offers two components for selecting body regions:
+* `src/features/cases/InteractiveBodyDiagram.tsx` – a full SVG diagram with zoom and anterior/posterior views.
+* `src/components/body-diagram/SimpleBodyPartSelector.tsx` – a lightweight list of buttons for quick selection.
 
 ## Contributing
 
