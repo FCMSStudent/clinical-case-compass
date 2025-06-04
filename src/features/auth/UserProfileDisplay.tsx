@@ -2,7 +2,7 @@
 import { useAuth } from "@/app/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useSidebar } from "@/layouts/Sidebar";
+import { useSidebar } from "@/features/navigation";
 import { LogOut } from "lucide-react";
 import {
   Tooltip,
