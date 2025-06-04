@@ -84,7 +84,7 @@ Or using Bun:
 bun run dev
 ```
 
-This will start the development server, typically at `http://localhost:5173`.
+This will start the development server, typically at `http://localhost:8080`.
 
 ## Available Scripts
 
