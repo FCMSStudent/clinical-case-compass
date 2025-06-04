@@ -1,11 +1,9 @@
 
 import { PageHeader } from "@/components/ui/page-header";
-import { 
-  ActiveCasesWidget,
-  DraftsWidget,
-  CompletedWidget,
-  RecentActivity,
-  SearchBar,
+import {
+  StatCards,
+  RecentActivityList,
+  SearchPanel,
   QuickStartPanel
 } from "@/features/dashboard";
 import { UserRound } from "lucide-react";
@@ -28,13 +26,11 @@ const Dashboard = () => {
       />
       
       <div className="mb-6">
-        <SearchBar />
+        <SearchPanel />
       </div>
-      
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-6">
-        <ActiveCasesWidget />
-        <DraftsWidget />
-        <CompletedWidget />
+
+      <div className="mb-6">
+        <StatCards />
       </div>
       
       <div className="grid gap-6 lg:grid-cols-3">
@@ -42,7 +38,7 @@ const Dashboard = () => {
           <QuickStartPanel />
         </div>
         <div className="lg:col-span-1">
-          <RecentActivity />
+          <RecentActivityList />
         </div>
       </div>
     </div>
