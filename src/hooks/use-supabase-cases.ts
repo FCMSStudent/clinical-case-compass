@@ -2,7 +2,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/app/AuthContext';
-import { toast } from '@/components/ui/use-toast';
+import { toast } from '@/hooks/use-toast';
 import { useErrorHandler } from './use-error-handler';
 import { MedicalCase, Patient, Diagnosis, Resource, CaseTag, LabTest as ComponentLabTest, RadiologyExam as ComponentRadiologyExam, DiagnosisStatus as ComponentDiagnosisStatus } from '@/types/case';
 import { Database } from '@/integrations/supabase/types';
