@@ -75,7 +75,7 @@ const BODY_PART_CONFIG: Record<BodyPart, BodyPartConfig> = {
   }
 } as const;
 
-export interface InteractiveBodyDiagramProps {
+export interface SimpleBodyPartSelectorProps {
   /** Callback when body parts are selected/deselected */
   onSelectionChange: (selectedParts: BodyPart[]) => void;
   /** Initially selected body parts */
@@ -97,7 +97,7 @@ export interface InteractiveBodyDiagramProps {
 /**
  * Enhanced interactive body diagram with improved UX, accessibility, and functionality
  */
-export const InteractiveBodyDiagram: React.FC<InteractiveBodyDiagramProps> = React.memo(({
+export const SimpleBodyPartSelector: React.FC<SimpleBodyPartSelectorProps> = React.memo(({
   onSelectionChange,
   initialSelection = [],
   highlightedParts = [],
@@ -344,20 +344,20 @@ export const InteractiveBodyDiagram: React.FC<InteractiveBodyDiagramProps> = Rea
   );
 });
 
-InteractiveBodyDiagram.displayName = "InteractiveBodyDiagram";
+SimpleBodyPartSelector.displayName = "SimpleBodyPartSelector";
 
 // Usage examples:
 export const BodyDiagramExamples = {
   // Basic usage
   Basic: () => (
-    <InteractiveBodyDiagram 
+    <SimpleBodyPartSelector
       onSelectionChange={(parts) => console.log('Selected:', parts)}
     />
   ),
 
   // Single selection mode
   SingleSelect: () => (
-    <InteractiveBodyDiagram 
+    <SimpleBodyPartSelector
       onSelectionChange={(parts) => console.log('Selected:', parts)}
       multiSelect={false}
     />
@@ -365,7 +365,7 @@ export const BodyDiagramExamples = {
 
   // Compact mode
   Compact: () => (
-    <InteractiveBodyDiagram 
+    <SimpleBodyPartSelector
       onSelectionChange={(parts) => console.log('Selected:', parts)}
       compact={true}
     />
@@ -373,7 +373,7 @@ export const BodyDiagramExamples = {
 
   // With initial selection and highlights
   Advanced: () => (
-    <InteractiveBodyDiagram 
+    <SimpleBodyPartSelector
       onSelectionChange={(parts) => console.log('Selected:', parts)}
       initialSelection={["Head", "Chest"]}
       highlightedParts={["Arms", "Legs"]}
