@@ -5,3 +5,4 @@ export { CompletedWidget } from './components/CompletedWidget';
 export { RecentActivity } from './components/RecentActivity';
 export { SearchBar } from './components/SearchBar';
 export { QuickStartPanel } from './components/QuickStartPanel';
+export { useDashboardData } from './hooks/use-dashboard-data';
