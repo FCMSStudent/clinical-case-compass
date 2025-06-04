@@ -63,8 +63,13 @@ This project uses Supabase for its backend services. You will need to create a S
 1. Go to [Supabase](https://supabase.com/) and create a new project.
 2. Navigate to your project's settings: `Settings` -> `API`.
 3. Find your Project URL and anon key.
-4. Create a `.env` file in the root of your project directory.
-5. Add your Supabase credentials to the `.env` file like this:
+4. Copy the provided `.env.example` file to `.env` in the project root:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+5. Open `.env` and replace the placeholders with your Supabase credentials:
 
    ```env
    VITE_SUPABASE_URL=your_supabase_project_url
@@ -72,6 +77,8 @@ This project uses Supabase for its backend services. You will need to create a S
    ```
 
    **Note:** The `VITE_` prefix is important for Vite projects to expose these variables to the client-side code.
+
+6. Keep the `.env` file private. It is ignored by Git thanks to `.gitignore`, so do not commit it.
 
 ### 4. Run the Development Server
 
