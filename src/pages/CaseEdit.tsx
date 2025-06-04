@@ -127,6 +127,10 @@ const CaseEdit = () => {
     if (foundCase.symptoms) {
       setSymptoms(foundCase.symptoms);
     }
+
+    if (foundCase.systemSymptoms) {
+      setSystemSymptoms(foundCase.systemSymptoms);
+    }
     
     if (foundCase.labTests) {
       setLabResults(foundCase.labTests);
