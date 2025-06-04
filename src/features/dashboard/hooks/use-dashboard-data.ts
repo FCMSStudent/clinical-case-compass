@@ -1,5 +1,5 @@
 
-import { useSupabaseCases } from './use-supabase-cases';
+import { useSupabaseCases } from '@/hooks/use-supabase-cases';
 import { MedicalCase } from '@/types/case';
 
 export function useDashboardData() {
