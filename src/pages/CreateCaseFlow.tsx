@@ -20,7 +20,7 @@ import {
   patientStepSchema,
   clinicalDetailStepSchema,
   learningPointsStepSchema
-} from "@/features/cases/new";
+} from "@/features/cases";
 
 import { Card, CardContent } from "@/components/ui/card";
 
