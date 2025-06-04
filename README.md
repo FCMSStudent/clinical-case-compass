@@ -94,6 +94,7 @@ The `package.json` file defines the following scripts:
 - `npm run build`: Builds the application for production.
 - `npm run build:dev`: Builds the application for development (includes sourcemaps, etc.).
 - `npm run lint`: Lints the codebase using ESLint.
+- `npm test`: Runs the test suite with Vitest.
 - `npm run preview`: Serves the production build locally for preview.
 
 If using Bun, replace `npm run` with `bun run`.
