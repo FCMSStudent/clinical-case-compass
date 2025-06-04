@@ -77,6 +77,7 @@ This project uses Supabase for its backend services. You will need to create a S
    ```
 
    **Note:** The `VITE_` prefix is important for Vite projects to expose these variables to the client-side code.
+   The Supabase client now reads these values from `import.meta.env`.
 
 6. Keep the `.env` file private. It is ignored by Git thanks to `.gitignore`, so do not commit it.
 
