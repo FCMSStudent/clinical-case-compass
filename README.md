@@ -63,7 +63,7 @@ This project uses Supabase for its backend services. You will need to create a S
 1. Go to [Supabase](https://supabase.com/) and create a new project.
 2. Navigate to your project's settings: `Settings` -> `API`.
 3. Find your Project URL and anon key.
-4. Copy the provided `.env.example` file to `.env` in the project root:
+4. Copy the provided `.env.example` file (it includes placeholder values) to `.env` in the project root:
 
    ```bash
    cp .env.example .env
