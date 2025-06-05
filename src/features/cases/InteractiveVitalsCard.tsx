@@ -165,7 +165,7 @@ const VitalSlider = memo(({
 VitalSlider.displayName = "VitalSlider";
 
 // Define preset vital signs for quick selection
-const VITAL_PRESETS = {
+export const VITAL_PRESETS = {
   normal: {
     temperature: 37,
     heartRate: 70,
@@ -208,54 +208,64 @@ const VITAL_PRESETS = {
   }
 };
 
+// Clinical information for tooltips
+export const clinicalInfo = {
+  temperature:
+    "Body temperature is regulated by the hypothalamus. Fever may indicate infection, inflammation, or other conditions requiring investigation.",
+  heartRate:
+    "Heart rate varies with activity level, emotions, medications, and underlying conditions. Sustained tachycardia or bradycardia may require investigation.",
+  systolicBP:
+    "Systolic blood pressure reflects the pressure when the heart contracts. Elevated readings may indicate hypertension and cardiovascular risk.",
+  diastolicBP:
+    "Diastolic blood pressure represents the pressure when the heart relaxes. Elevated readings may indicate vascular resistance issues.",
+  respiratoryRate:
+    "Rate of breathing is controlled by the respiratory center in the medulla oblongata. Changes can indicate respiratory, metabolic, or neurological issues.",
+  oxygenSaturation:
+    "Oxygen saturation measures the percentage of hemoglobin binding sites occupied by oxygen. Low levels may indicate respiratory compromise."
+} as const;
+
+// Normal ranges based on patient age
+export function getNormalRanges(age: number) {
+  if (age < 12) {
+    // Child
+    return {
+      temperature: { min: 36.5, max: 37.5 },
+      heartRate: { min: 70, max: 120 },
+      systolicBP: { min: 90, max: 110 },
+      diastolicBP: { min: 55, max: 75 },
+      respiratoryRate: { min: 20, max: 30 },
+      oxygenSaturation: { min: 97, max: 100 }
+    };
+  }
+  if (age > 65) {
+    // Elderly
+    return {
+      temperature: { min: 36.0, max: 37.5 },
+      heartRate: { min: 60, max: 100 },
+      systolicBP: { min: 110, max: 140 },
+      diastolicBP: { min: 65, max: 90 },
+      respiratoryRate: { min: 12, max: 20 },
+      oxygenSaturation: { min: 95, max: 100 }
+    };
+  }
+  // Adult
+  return {
+    temperature: { min: 36.5, max: 37.5 },
+    heartRate: { min: 60, max: 100 },
+    systolicBP: { min: 100, max: 130 },
+    diastolicBP: { min: 60, max: 85 },
+    respiratoryRate: { min: 12, max: 18 },
+    oxygenSaturation: { min: 95, max: 100 }
+  };
+}
+
 export function InteractiveVitalsCard({ 
   onVitalsChange, 
   initialVitals = {},
   patientAge = 30
 }: InteractiveVitalsCardProps) {
-  // Define normal ranges based on age
-  const getNormalRanges = useCallback((age: number) => {
-    if (age < 12) { // Child
-      return {
-        temperature: { min: 36.5, max: 37.5 },
-        heartRate: { min: 70, max: 120 },
-        systolicBP: { min: 90, max: 110 },
-        diastolicBP: { min: 55, max: 75 },
-        respiratoryRate: { min: 20, max: 30 },
-        oxygenSaturation: { min: 97, max: 100 }
-      };
-    } else if (age > 65) { // Elderly
-      return {
-        temperature: { min: 36.0, max: 37.5 },
-        heartRate: { min: 60, max: 100 },
-        systolicBP: { min: 110, max: 140 },
-        diastolicBP: { min: 65, max: 90 },
-        respiratoryRate: { min: 12, max: 20 },
-        oxygenSaturation: { min: 95, max: 100 }
-      };
-    } else { // Adult
-      return {
-        temperature: { min: 36.5, max: 37.5 },
-        heartRate: { min: 60, max: 100 },
-        systolicBP: { min: 100, max: 130 },
-        diastolicBP: { min: 60, max: 85 },
-        respiratoryRate: { min: 12, max: 18 },
-        oxygenSaturation: { min: 95, max: 100 }
-      };
-    }
-  }, []);
-
-  const normalRanges = useMemo(() => getNormalRanges(patientAge), [patientAge, getNormalRanges]);
-
-  // Clinical information for tooltips
-  const clinicalInfo = {
-    temperature: "Body temperature is regulated by the hypothalamus. Fever may indicate infection, inflammation, or other conditions requiring investigation.",
-    heartRate: "Heart rate varies with activity level, emotions, medications, and underlying conditions. Sustained tachycardia or bradycardia may require investigation.",
-    systolicBP: "Systolic blood pressure reflects the pressure when the heart contracts. Elevated readings may indicate hypertension and cardiovascular risk.",
-    diastolicBP: "Diastolic blood pressure represents the pressure when the heart relaxes. Elevated readings may indicate vascular resistance issues.",
-    respiratoryRate: "Rate of breathing is controlled by the respiratory center in the medulla oblongata. Changes can indicate respiratory, metabolic, or neurological issues.",
-    oxygenSaturation: "Oxygen saturation measures the percentage of hemoglobin binding sites occupied by oxygen. Low levels may indicate respiratory compromise."
-  };
+  // Get normal ranges for the provided age
+  const normalRanges = useMemo(() => getNormalRanges(patientAge), [patientAge]);
 
   const [vitalSigns, setVitalSigns] = useState<VitalSign[]>([
     {
