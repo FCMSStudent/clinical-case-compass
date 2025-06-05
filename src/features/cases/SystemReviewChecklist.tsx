@@ -5,64 +5,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown, ChevronRight } from "lucide-react";
+import { systemSymptoms } from "./systemSymptoms";
 
 interface SystemReviewChecklistProps {
   onSystemSymptomsChange?: (systemSymptoms: Record<string, string[]>) => void;
   initialSystemSymptoms?: Record<string, string[]>;
 }
 
-const SYSTEM_SYMPTOMS = {
-  "Cardiovascular": [
-    "Chest pain",
-    "Palpitations", 
-    "Shortness of breath",
-    "Edema",
-    "Syncope",
-    "Claudication"
-  ],
-  "Gastrointestinal": [
-    "Nausea",
-    "Vomiting",
-    "Abdominal pain",
-    "Diarrhea",
-    "Constipation",
-    "Heartburn",
-    "Blood in stool"
-  ],
-  "Musculoskeletal": [
-    "Joint pain",
-    "Muscle pain",
-    "Stiffness",
-    "Weakness",
-    "Back pain",
-    "Swelling"
-  ],
-  "Neurological": [
-    "Headache",
-    "Dizziness",
-    "Seizures",
-    "Memory problems",
-    "Numbness",
-    "Tingling",
-    "Vision changes"
-  ],
-  "Respiratory": [
-    "Cough",
-    "Shortness of breath",
-    "Wheezing",
-    "Chest tightness",
-    "Sputum production",
-    "Hemoptysis"
-  ],
-  "Urinary": [
-    "Dysuria",
-    "Frequency",
-    "Urgency",
-    "Hematuria",
-    "Incontinence",
-    "Retention"
-  ]
-};
 
 export function SystemReviewChecklist({ onSystemSymptomsChange, initialSystemSymptoms = {} }: SystemReviewChecklistProps) {
   const [selectedSymptoms, setSelectedSymptoms] = useState<Record<string, string[]>>(initialSystemSymptoms);
@@ -106,7 +55,7 @@ export function SystemReviewChecklist({ onSystemSymptomsChange, initialSystemSym
         <CardTitle>System Review & Symptoms</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
-        {Object.entries(SYSTEM_SYMPTOMS).map(([system, symptoms]) => (
+        {systemSymptoms.map(({ system, symptoms }) => (
           <Collapsible
             key={system}
             open={expandedSystems[system]}
