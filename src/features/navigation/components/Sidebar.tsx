@@ -1,10 +1,5 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
 import { Menu, X, LayoutDashboard, BookOpen, Settings } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { ICON_SIZE } from "@/constants/ui";
-import { SIDEBAR_CONFIG, getInitialSidebarState, saveSidebarState } from "@/constants/sidebar";
 
 interface SidebarContextValue {
   open: boolean;
@@ -22,12 +17,39 @@ const SidebarContext = createContext<SidebarContextValue>({
   closeSidebar: () => {},
 });
 
+const SIDEBAR_CONFIG = {
+  WIDTH: '240px',
+  WIDTH_MOBILE: '280px',
+  KEYBOARD_SHORTCUT: 'b'
+};
+
+const ICON_SIZE = "w-5 h-5";
+
+const getInitialSidebarState = (defaultState: boolean) => {
+  try {
+    const saved = localStorage.getItem('sidebarOpen');
+    return saved ? JSON.parse(saved) : defaultState;
+  } catch {
+    return defaultState;
+  }
+};
+
+const saveSidebarState = (state: boolean) => {
+  try {
+    localStorage.setItem('sidebarOpen', JSON.stringify(state));
+  } catch {
+    // Ignore errors
+  }
+};
+
 interface SidebarProviderProps {
   children: React.ReactNode;
 }
 
 export const SidebarProvider: React.FC<SidebarProviderProps> = ({ children }) => {
-  const [open, setOpen] = useState(() => getInitialSidebarState(false));
+  const defaultOpen =
+    typeof window !== "undefined" && window.innerWidth >= 768 ? true : false;
+  const [open, setOpen] = useState(() => getInitialSidebarState(defaultOpen));
   const [isMobile, setIsMobile] = useState(false);
 
   const toggle = useCallback(() => setOpen((o) => !o), []);
@@ -89,15 +111,14 @@ export const useSidebar = () => useContext(SidebarContext);
 export const SidebarTrigger = () => {
   const { toggle } = useSidebar();
   return (
-    <Button
+    <button
       type="button"
-      variant="ghost"
-      size="sm"
+      className="p-2 hover:bg-gray-100 rounded-md"
       onClick={toggle}
       aria-label="Toggle sidebar"
     >
       <Menu className={ICON_SIZE} />
-    </Button>
+    </button>
   );
 };
 
@@ -107,26 +128,23 @@ const navItems = [
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
-export const Sidebar = React.memo(function Sidebar() {
+const Sidebar = React.memo(function Sidebar() {
   const { open, isMobile, closeSidebar } = useSidebar();
-  const location = useLocation();
+  const location = { pathname: window.location.pathname };
 
   const content = (
     <nav className="flex h-full flex-col p-4">
       <ul className="space-y-2">
         {navItems.map((item) => (
           <li key={item.href}>
-            <Link
-              to={item.href}
-              className={cn(
-                "flex items-center space-x-2 rounded-md p-2 text-sm hover:bg-accent",
-                location.pathname === item.href &&
-                  "bg-accent text-accent-foreground"
-              )}
+            <a
+              href={item.href}
+              className={`flex items-center space-x-2 rounded-md p-2 text-sm hover:bg-gray-100
+                ${location.pathname === item.href ? 'bg-gray-100' : ''}`}
             >
               <item.icon className={ICON_SIZE} />
               <span>{item.label}</span>
-            </Link>
+            </a>
           </li>
         ))}
       </ul>
@@ -135,18 +153,16 @@ export const Sidebar = React.memo(function Sidebar() {
 
   if (isMobile) {
     return (
-      <div className={cn("fixed inset-0 z-50 flex", open ? "visible" : "invisible")}>
+      <div className={`fixed inset-0 z-50 flex ${open ? 'visible' : 'invisible'}`}>
         <div className="absolute inset-0 bg-black/50" onClick={closeSidebar} />
-        <div className="relative h-full w-[var(--sidebar-width-mobile)] bg-background border-r shadow-lg">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="absolute right-2 top-2"
+        <div className="relative h-full w-[var(--sidebar-width-mobile)] bg-white border-r shadow-lg">
+          <button
+            className="absolute right-2 top-2 p-2 hover:bg-gray-100 rounded-md"
             onClick={closeSidebar}
             aria-label="Close sidebar"
           >
             <X className={ICON_SIZE} />
-          </Button>
+          </button>
           {content}
         </div>
       </div>
@@ -155,10 +171,8 @@ export const Sidebar = React.memo(function Sidebar() {
 
   return (
     <div
-      className={cn(
-        "fixed inset-y-0 left-0 z-40 w-[var(--sidebar-width)] -translate-x-full bg-background border-r shadow-sm transition-transform duration-300",
-        open && "translate-x-0"
-      )}
+      className={`fixed inset-y-0 left-0 z-40 w-[var(--sidebar-width)] -translate-x-full bg-white border-r shadow-sm transition-transform duration-300
+        ${open ? 'translate-x-0' : ''}`}
     >
       {content}
     </div>
