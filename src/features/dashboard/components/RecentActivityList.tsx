@@ -25,7 +25,7 @@ export const RecentActivityList = () => {
                   <p className="text-sm font-medium text-foreground truncate">
                     {item.description}
                   </p>
-                  <p className="text-xs text-muted-foreground">{item.time}</p>
+                  <p className="text-sm text-muted-foreground">{item.time}</p>
                 </div>
               </li>
             ))}
