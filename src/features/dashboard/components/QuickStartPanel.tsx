@@ -3,6 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus, BookOpen, Users, Settings } from "lucide-react";
+import { ICON_SIZE } from "@/constants/ui";
 import { useNavigate } from "react-router-dom";
 
 const quickActions = [
@@ -56,7 +57,7 @@ export const QuickStartPanel = () => {
                 onClick={() => navigate(action.action)}
               >
                 <div className="flex items-start space-x-3">
-                  <IconComponent className="h-5 w-5 mt-0.5 flex-shrink-0" />
+                  <IconComponent className={`${ICON_SIZE} mt-0.5 flex-shrink-0`} />
                   <div className="text-left">
                     <div className="font-medium">{action.title}</div>
                     <div className="text-sm text-muted-foreground mt-1">
