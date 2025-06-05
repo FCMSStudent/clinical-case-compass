@@ -67,17 +67,10 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <Card className="w-full max-w-md">
-        <div className="flex justify-center pt-6">
-          <img
-            src="/placeholder.svg"
-            alt="Application Logo"
-            className="h-16 w-16"
-          />
-        </div>
-        <CardHeader className="space-y-2 pt-4 pb-6 text-center">
-          <CardTitle className="text-3xl font-semibold">Medical Case Manager</CardTitle>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-medical-50 to-medical-200 dark:from-background dark:to-background py-12 px-4 sm:px-6 lg:px-8">
+      <Card className="w-full max-w-md shadow-lg">
+        <CardHeader className="space-y-2 pb-6 text-center">
+          <CardTitle className="text-3xl font-semibold">MedCase</CardTitle>
           <CardDescription className="text-sm text-muted-foreground">
             Sign in or create an account to manage your medical cases
           </CardDescription>
