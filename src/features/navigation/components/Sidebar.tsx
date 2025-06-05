@@ -192,7 +192,7 @@ export const SidebarTrigger = () => {
       className="md:hidden"
       aria-label="Toggle sidebar"
     >
-      <Menu className="h-4 w-4" />
+      <Menu className="h-5 w-5" />
     </Button>
   );
 };
@@ -260,7 +260,7 @@ export const Sidebar = React.memo(function Sidebar() {
         data-active={location.pathname === item.href}
         ref={index === 0 ? firstLinkRef : undefined}
       >
-        <item.icon className="h-4 w-4" aria-hidden="true" />
+        <item.icon className="h-5 w-5" aria-hidden="true" />
         <span>{item.label}</span>
       </Link>
     </li>
@@ -278,7 +278,7 @@ export const Sidebar = React.memo(function Sidebar() {
               className="md:hidden"
               aria-label="Open sidebar"
             >
-              <Menu className="h-4 w-4" />
+              <Menu className="h-5 w-5" />
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="w-[var(--sidebar-width-mobile)]">
@@ -362,7 +362,7 @@ export const Sidebar = React.memo(function Sidebar() {
           {state === "expanded" && (
             <div className="p-4">
               <Button variant="outline" className="w-full" onClick={() => navigate("/cases/new")}>
-                <Plus className="mr-2 h-4 w-4" /> New Case
+                <Plus className="mr-2 h-5 w-5" /> New Case
               </Button>
             </div>
           )}
