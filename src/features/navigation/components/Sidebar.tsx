@@ -240,7 +240,7 @@ export const Sidebar = React.memo(function Sidebar() {
       <TooltipTrigger asChild>
         <Link
           to={item.href}
-          className="group flex h-[70px] w-[70px] flex-col items-center justify-center rounded-md text-muted-foreground outline-none data-[active=true]:bg-accent data-[active=true]:text-accent-foreground"
+          className="group flex h-[var(--sidebar-width-icon)] w-[var(--sidebar-width-icon)] flex-col items-center justify-center rounded-md text-muted-foreground outline-none data-[active=true]:bg-accent data-[active=true]:text-accent-foreground"
           data-active={location.pathname === item.href}
           aria-label={item.label}
           ref={index === 0 ? firstLinkRef : undefined}
