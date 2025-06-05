@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronRight } from "lucide-react";
 
 interface SystemReviewChecklistProps {
@@ -93,6 +94,23 @@ export function SystemReviewChecklist({ onSystemSymptomsChange, initialSystemSym
     }
   };
 
+  const handleSelectAll = (system: string) => {
+    const allSymptoms = (SYSTEM_SYMPTOMS as Record<string, string[]>)[system] || [];
+    const updated = {
+      ...selectedSymptoms,
+      [system]: [...allSymptoms],
+    };
+    setSelectedSymptoms(updated);
+    onSystemSymptomsChange?.(updated);
+  };
+
+  const handleClearAll = (system: string) => {
+    const updated = { ...selectedSymptoms };
+    delete updated[system];
+    setSelectedSymptoms(updated);
+    onSystemSymptomsChange?.(updated);
+  };
+
   const toggleSystem = (system: string) => {
     setExpandedSystems(prev => ({
       ...prev,
@@ -128,6 +146,14 @@ export function SystemReviewChecklist({ onSystemSymptomsChange, initialSystemSym
               </div>
             </CollapsibleTrigger>
             <CollapsibleContent className="pt-2">
+              <div className="flex space-x-2 mb-2 ml-4">
+                <Button variant="outline" size="sm" onClick={() => handleSelectAll(system)}>
+                  Select All
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => handleClearAll(system)}>
+                  Clear
+                </Button>
+              </div>
               <div className="grid grid-cols-2 gap-2 ml-4">
                 {symptoms.map((symptom) => (
                   <div key={symptom} className="flex items-center space-x-2">
