@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -67,6 +67,10 @@ const SYSTEM_SYMPTOMS = {
 export function SystemReviewChecklist({ onSystemSymptomsChange, initialSystemSymptoms = {} }: SystemReviewChecklistProps) {
   const [selectedSymptoms, setSelectedSymptoms] = useState<Record<string, string[]>>(initialSystemSymptoms);
   const [expandedSystems, setExpandedSystems] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    setSelectedSymptoms(initialSystemSymptoms);
+  }, [initialSystemSymptoms]);
 
   const handleSymptomChange = (system: string, symptom: string, checked: boolean) => {
     const updatedSymptoms = { ...selectedSymptoms };
