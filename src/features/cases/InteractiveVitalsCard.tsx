@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, memo, useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
@@ -13,13 +12,21 @@ import { Thermometer, Heart, ArrowUp, ArrowDown, Wind, Activity } from "lucide-r
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
+export type VitalName =
+  | "temperature"
+  | "heartRate"
+  | "systolicBP"
+  | "diastolicBP"
+  | "respiratoryRate"
+  | "oxygenSaturation";
+
 interface VitalRange {
   min: number;
   max: number;
 }
 
 interface VitalSign {
-  name: string;
+  name: VitalName;
   value: number;
   unit: string;
   range: VitalRange;
@@ -31,18 +38,18 @@ interface VitalSign {
 }
 
 interface InteractiveVitalsCardProps {
-  onVitalsChange: (vitals: Record<string, string>) => void;
-  initialVitals?: Record<string, string>;
+  onVitalsChange: (vitals: Record<VitalName, string>) => void;
+  initialVitals?: Partial<Record<VitalName, string>>;
   patientAge?: number;
 }
 
 // Memoized slider component with improved visual feedback
-const VitalSlider = memo(({ 
-  vital, 
-  index, 
-  handleVitalChange 
-}: { 
-  vital: VitalSign; 
+const VitalSlider = memo(({
+  vital,
+  index,
+  handleVitalChange
+}: {
+  vital: VitalSign;
   index: number;
   handleVitalChange: (index: number, values: number[]) => void;
 }) => {
@@ -58,7 +65,7 @@ const VitalSlider = memo(({
     if (value > range.max) return <ArrowUp className="h-3 w-3" />;
     return null;
   };
-  
+
   // Calculate range indicator positions for the colored zones
   const rangeIndicatorStyle = useMemo(() => {
     // Calculate width as percentage of the slider range
@@ -66,20 +73,20 @@ const VitalSlider = memo(({
       width: `${((vital.range.min - vital.min) / (vital.max - vital.min)) * 100}%`,
       left: 0,
     };
-    
+
     const normalRange = {
       width: `${((vital.range.max - vital.range.min) / (vital.max - vital.min)) * 100}%`,
       left: `${((vital.range.min - vital.min) / (vital.max - vital.min)) * 100}%`,
     };
-    
+
     const highRange = {
       width: `${((vital.max - vital.range.max) / (vital.max - vital.min)) * 100}%`,
       left: `${((vital.range.max - vital.min) / (vital.max - vital.min)) * 100}%`,
     };
-    
+
     return { lowRange, normalRange, highRange };
   }, [vital.range.max, vital.range.min, vital.min, vital.max]);
-  
+
   // Animation class for heart rate
   const pulseAnimation = vital.name === "heartRate" ? "animate-pulse" : "";
 
@@ -99,7 +106,7 @@ const VitalSlider = memo(({
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <span 
+              <span
                 className={cn(
                   "font-semibold text-lg flex items-center gap-1 transition-colors",
                   getStatusColor(vital.value, vital.range)
@@ -127,7 +134,7 @@ const VitalSlider = memo(({
           </Tooltip>
         </TooltipProvider>
       </div>
-      
+
       <div className="relative pt-1">
         <div className="overflow-hidden h-2 mb-1 text-xs flex bg-muted rounded">
           <div className="h-2 rounded absolute bg-blue-500/20" style={rangeIndicatorStyle.lowRange}></div>
@@ -145,8 +152,8 @@ const VitalSlider = memo(({
             "[&_.relative.h-2]:bg-transparent",
             "[&_[role=slider]]:h-5 [&_[role=slider]]:w-5",
             "[&_[role=slider]]:transition-all [&_[role=slider]]:duration-200",
-            vital.value < vital.range.min && "[&_[role=slider]]:bg-blue-500 [&_[role=slider]]:border-blue-600", 
-            vital.value > vital.range.max && "[&_[role=slider]]:bg-red-500 [&_[role=slider]]:border-red-600", 
+            vital.value < vital.range.min && "[&_[role=slider]]:bg-blue-500 [&_[role=slider]]:border-blue-600",
+            vital.value > vital.range.max && "[&_[role=slider]]:bg-red-500 [&_[role=slider]]:border-red-600",
             vital.value >= vital.range.min && vital.value <= vital.range.max && "[&_[role=slider]]:bg-green-600 [&_[role=slider]]:border-green-700"
           )}
         />
@@ -161,8 +168,15 @@ const VitalSlider = memo(({
 });
 VitalSlider.displayName = "VitalSlider";
 
+---
+
+### `VITAL_PRESETS` and `clinicalInfo`
+
+These constants provide predefined vital sign values and clinical information, respectively. They are now consistently exported for use across your application.
+
+```typescript
 // Define preset vital signs for quick selection
-export const VITAL_PRESETS = {
+export const VITAL_PRESETS: Record<string, Record<VitalName, number>> = {
   normal: {
     temperature: 37,
     heartRate: 70,
@@ -206,7 +220,7 @@ export const VITAL_PRESETS = {
 };
 
 // Clinical information for tooltips
-export const clinicalInfo = {
+export const clinicalInfo: Record<VitalName, string> = {
   temperature:
     "Body temperature is regulated by the hypothalamus. Fever may indicate infection, inflammation, or other conditions requiring investigation.",
   heartRate:
@@ -219,242 +233,4 @@ export const clinicalInfo = {
     "Rate of breathing is controlled by the respiratory center in the medulla oblongata. Changes can indicate respiratory, metabolic, or neurological issues.",
   oxygenSaturation:
     "Oxygen saturation measures the percentage of hemoglobin binding sites occupied by oxygen. Low levels may indicate respiratory compromise."
-} as const;
-
-// Normal ranges based on patient age
-export function getNormalRanges(age: number) {
-  if (age < 12) {
-    // Child
-    return {
-      temperature: { min: 36.5, max: 37.5 },
-      heartRate: { min: 70, max: 120 },
-      systolicBP: { min: 90, max: 110 },
-      diastolicBP: { min: 55, max: 75 },
-      respiratoryRate: { min: 20, max: 30 },
-      oxygenSaturation: { min: 97, max: 100 }
-    };
-  }
-  if (age > 65) {
-    // Elderly
-    return {
-      temperature: { min: 36.0, max: 37.5 },
-      heartRate: { min: 60, max: 100 },
-      systolicBP: { min: 110, max: 140 },
-      diastolicBP: { min: 65, max: 90 },
-      respiratoryRate: { min: 12, max: 20 },
-      oxygenSaturation: { min: 95, max: 100 }
-    };
-  }
-  // Adult
-  return {
-    temperature: { min: 36.5, max: 37.5 },
-    heartRate: { min: 60, max: 100 },
-    systolicBP: { min: 100, max: 130 },
-    diastolicBP: { min: 60, max: 85 },
-    respiratoryRate: { min: 12, max: 18 },
-    oxygenSaturation: { min: 95, max: 100 }
-  };
-}
-
-export function InteractiveVitalsCard({ 
-  onVitalsChange, 
-  initialVitals = {},
-  patientAge = 30
-}: InteractiveVitalsCardProps) {
-  // Get normal ranges for the provided age
-  const normalRanges = useMemo(() => getNormalRanges(patientAge), [patientAge]);
-
-  const [vitalSigns, setVitalSigns] = useState<VitalSign[]>([
-    {
-      name: "temperature",
-      value: parseFloat(initialVitals.temperature || "37"),
-      unit: "°C",
-      range: normalRanges.temperature,
-      min: 35,
-      max: 41,
-      step: 0.1,
-      icon: <Thermometer className="h-5 w-5" />,
-      info: clinicalInfo.temperature
-    },
-    {
-      name: "heartRate",
-      value: parseFloat(initialVitals.heartRate || "80"),
-      unit: "bpm",
-      range: normalRanges.heartRate,
-      min: 40,
-      max: 180,
-      step: 1,
-      icon: <Heart className="h-5 w-5" />,
-      info: clinicalInfo.heartRate
-    },
-    {
-      name: "systolicBP",
-      value: parseFloat(initialVitals.systolicBP || "120"),
-      unit: "mmHg",
-      range: normalRanges.systolicBP,
-      min: 80,
-      max: 200,
-      step: 1,
-      icon: <ArrowUp className="h-5 w-5" />,
-      info: clinicalInfo.systolicBP
-    },
-    {
-      name: "diastolicBP",
-      value: parseFloat(initialVitals.diastolicBP || "80"),
-      unit: "mmHg",
-      range: normalRanges.diastolicBP,
-      min: 40,
-      max: 120,
-      step: 1,
-      icon: <ArrowDown className="h-5 w-5" />,
-      info: clinicalInfo.diastolicBP
-    },
-    {
-      name: "respiratoryRate",
-      value: parseFloat(initialVitals.respiratoryRate || "16"),
-      unit: "bpm",
-      range: normalRanges.respiratoryRate,
-      min: 8,
-      max: 40,
-      step: 1,
-      icon: <Wind className="h-5 w-5" />,
-      info: clinicalInfo.respiratoryRate
-    },
-    {
-      name: "oxygenSaturation",
-      value: parseFloat(initialVitals.oxygenSaturation || "98"),
-      unit: "%",
-      range: normalRanges.oxygenSaturation,
-      min: 80,
-      max: 100,
-      step: 1,
-      icon: <Activity className="h-5 w-5" />,
-      info: clinicalInfo.oxygenSaturation
-    }
-  ]);
-
-  // Apply preset vital signs
-  const applyPreset = useCallback((preset: keyof typeof VITAL_PRESETS) => {
-    const presetValues = VITAL_PRESETS[preset];
-
-    setVitalSigns(prev => {
-      return prev.map(vital => ({
-        ...vital,
-        value: presetValues[vital.name as keyof typeof presetValues] || vital.value
-      }));
-    });
-  }, []);
-
-  // Memoize the handleVitalChange function to prevent unnecessary re-renders
-  const handleVitalChange = useCallback((index: number, values: number[]) => {
-    const newValue = values[0];
-    setVitalSigns(prev => {
-      const updated = [...prev];
-      updated[index] = { ...updated[index], value: newValue };
-      return updated;
-    });
-  }, []);
-
-  // Debounced version of onVitalsChange to reduce state updates
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      // Convert vital signs to the format expected by parent component
-      const vitalsObj: Record<string, string> = {};
-      vitalSigns.forEach(vital => {
-        vitalsObj[vital.name] = vital.value.toString();
-      });
-      onVitalsChange(vitalsObj);
-    }, 100);
-    
-    return () => clearTimeout(timer);
-  }, [vitalSigns, onVitalsChange]);
-
-  // Update initial values when they change
-  useEffect(() => {
-    if (Object.keys(initialVitals).length > 0) {
-      setVitalSigns(prev => 
-        prev.map(vital => ({
-          ...vital,
-          value: initialVitals[vital.name] ? parseFloat(initialVitals[vital.name]) : vital.value,
-          range: normalRanges[vital.name as keyof typeof normalRanges]
-        }))
-      );
-    }
-  }, [initialVitals, normalRanges]);
-
-  // Update ranges when patientAge changes
-  useEffect(() => {
-    setVitalSigns(prev => 
-      prev.map(vital => ({
-        ...vital,
-        range: normalRanges[vital.name as keyof typeof normalRanges]
-      }))
-    );
-  }, [normalRanges]);
-
-  return (
-    <Card className="shadow-sm border-medical-200">
-      <CardContent className="pt-4">
-        <div className="flex justify-end gap-1 mb-4">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-7 text-xs text-medical-600 border-medical-300 hover:bg-medical-50 hover:text-medical-700"
-                  onClick={() => applyPreset("normal")}
-                >
-                  Normal
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Apply normal vital signs</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-7 text-xs text-medical-600 border-medical-300 hover:bg-medical-50 hover:text-medical-700"
-                  onClick={() => applyPreset("fever")}
-                >
-                  Fever
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Apply febrile vital signs</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-7 text-xs text-medical-600 border-medical-300 hover:bg-medical-50 hover:text-medical-700"
-                  onClick={() => applyPreset("hypotension")}
-                >
-                  Shock
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Apply shock/hypotension vital signs</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {vitalSigns.map((vital, index) => (
-            <VitalSlider 
-              key={vital.name} 
-              vital={vital} 
-              index={index} 
-              handleVitalChange={handleVitalChange} 
-            />
-          ))}
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
+};
