@@ -25,7 +25,7 @@ const StatCard = ({ title, value, icon, description, className }: StatCardProps)
       <CardContent>
         <div className="text-2xl font-bold">{value}</div>
         {description && (
-          <p className="text-xs text-muted-foreground mt-1">{description}</p>
+          <p className="text-sm text-muted-foreground mt-1">{description}</p>
         )}
       </CardContent>
     </Card>

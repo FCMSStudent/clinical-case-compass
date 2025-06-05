@@ -42,7 +42,7 @@ export const QuickStartPanel = () => {
   return (
     <Card className="col-span-2">
       <CardHeader>
-        <CardTitle>Quick Actions</CardTitle>
+        <CardTitle className="text-xl">Quick Actions</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="grid gap-4 md:grid-cols-2">
