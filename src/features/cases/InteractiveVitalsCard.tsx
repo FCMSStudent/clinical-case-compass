@@ -13,13 +13,21 @@ import { Thermometer, Heart, ArrowUp, ArrowDown, Wind, Activity } from "lucide-r
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
+export type VitalName =
+  | "temperature"
+  | "heartRate"
+  | "systolicBP"
+  | "diastolicBP"
+  | "respiratoryRate"
+  | "oxygenSaturation";
+
 interface VitalRange {
   min: number;
   max: number;
 }
 
 interface VitalSign {
-  name: string;
+  name: VitalName;
   value: number;
   unit: string;
   range: VitalRange;
@@ -31,8 +39,8 @@ interface VitalSign {
 }
 
 interface InteractiveVitalsCardProps {
-  onVitalsChange: (vitals: Record<string, string>) => void;
-  initialVitals?: Record<string, string>;
+  onVitalsChange: (vitals: Record<VitalName, string>) => void;
+  initialVitals?: Partial<Record<VitalName, string>>;
   patientAge?: number;
 }
 
@@ -165,7 +173,7 @@ const VitalSlider = memo(({
 VitalSlider.displayName = "VitalSlider";
 
 // Define preset vital signs for quick selection
-const VITAL_PRESETS = {
+const VITAL_PRESETS: Record<string, Record<VitalName, number>> = {
   normal: {
     temperature: 37,
     heartRate: 70,
@@ -214,7 +222,7 @@ export function InteractiveVitalsCard({
   patientAge = 30
 }: InteractiveVitalsCardProps) {
   // Define normal ranges based on age
-  const getNormalRanges = useCallback((age: number) => {
+  const getNormalRanges = useCallback((age: number): Record<VitalName, VitalRange> => {
     if (age < 12) { // Child
       return {
         temperature: { min: 36.5, max: 37.5 },
@@ -248,7 +256,7 @@ export function InteractiveVitalsCard({
   const normalRanges = useMemo(() => getNormalRanges(patientAge), [patientAge, getNormalRanges]);
 
   // Clinical information for tooltips
-  const clinicalInfo = {
+  const clinicalInfo: Record<VitalName, string> = {
     temperature: "Body temperature is regulated by the hypothalamus. Fever may indicate infection, inflammation, or other conditions requiring investigation.",
     heartRate: "Heart rate varies with activity level, emotions, medications, and underlying conditions. Sustained tachycardia or bradycardia may require investigation.",
     systolicBP: "Systolic blood pressure reflects the pressure when the heart contracts. Elevated readings may indicate hypertension and cardiovascular risk.",
@@ -352,7 +360,7 @@ export function InteractiveVitalsCard({
   useEffect(() => {
     const timer = setTimeout(() => {
       // Convert vital signs to the format expected by parent component
-      const vitalsObj: Record<string, string> = {};
+      const vitalsObj: Record<VitalName, string> = {} as Record<VitalName, string>;
       vitalSigns.forEach(vital => {
         vitalsObj[vital.name] = vital.value.toString();
       });
