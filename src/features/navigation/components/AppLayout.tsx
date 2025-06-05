@@ -8,14 +8,14 @@ interface AppLayoutProps {
 }
 
 export const AppLayout: React.FC<AppLayoutProps> = ({ children, className }) => {
-  const { state, isMobile } = useSidebar();
+  const { open, isMobile } = useSidebar();
 
   // Determine padding based on sidebar state and screen size
   const mainPaddingClass = isMobile
-    ? "pl-0" // No padding on mobile (sidebar is an overlay)
-    : state === "expanded"
-    ? "pl-[var(--sidebar-width)]" // Padding for expanded sidebar on desktop
-    : "pl-[var(--sidebar-width-icon)]"; // Padding for collapsed sidebar on desktop
+    ? "pl-0"
+    : open
+    ? "pl-[var(--sidebar-width)]"
+    : "pl-0";
 
   return (
     <div className="min-h-screen bg-background">
