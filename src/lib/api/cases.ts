@@ -45,3 +45,14 @@ export const createCase = async (data: CreateCaseRequest): Promise<MedicalCase> 
 
   return newCase;
 };
+
+export const deleteCase = async (caseId: string): Promise<void> => {
+  // Placeholder for future API integration
+  console.log('Deleting case:', caseId);
+  if (typeof window !== 'undefined') {
+    const stored = JSON.parse(localStorage.getItem('cases') || '[]') as MedicalCase[];
+    const updated = stored.filter((c) => c.id !== caseId);
+    localStorage.setItem('cases', JSON.stringify(updated));
+  }
+}
+

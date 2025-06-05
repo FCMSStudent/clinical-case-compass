@@ -1,19 +1,35 @@
 
 import React, { useState, useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Plus, Search, Filter, Grid, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { getCases } from "@/lib/api/cases";
+import { getCases, deleteCase } from "@/lib/api/cases";
+import type { MedicalCase } from "@/types/case";
 import { CaseCard } from "@/features/cases/CaseCard";
 import { CaseListItem } from "@/features/cases/CaseListItem";
 import { PageHeader } from "@/components/ui/page-header";
+import { useErrorHandler } from "@/hooks/use-error-handler";
 
 const Cases = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+
+  const queryClient = useQueryClient();
+  const { handleError } = useErrorHandler();
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteCase,
+    onSuccess: (_, caseId: string) => {
+      queryClient.setQueriesData<MedicalCase[]>(
+        { queryKey: ["cases"] },
+        (old = []) => old.filter((c) => c.id !== caseId)
+      );
+    },
+    onError: (err) => handleError(err, "deleting case"),
+  });
 
   const { data: cases, isLoading, isError } = useQuery({
     queryKey: ["cases", searchQuery],
@@ -28,8 +44,7 @@ const Cases = () => {
   }, [cases, searchQuery]);
 
   const handleDelete = (caseId: string) => {
-    console.log("Delete case:", caseId);
-    // TODO: Implement delete functionality
+    deleteMutation.mutate(caseId);
   };
 
   if (isLoading) {
