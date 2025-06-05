@@ -253,7 +253,7 @@ export const Sidebar = React.memo(function Sidebar() {
   );
 
   const ExpandedNavItem = ({ item, index }: { item: (typeof navItems)[0]; index: number }) => (
-    <li className="mb-1">
+    <li className="mb-2">
       <Link
         to={item.href}
         className="group flex items-center space-x-3 rounded-md p-2 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground data-[active=true]:bg-accent data-[active=true]:text-accent-foreground"
@@ -331,7 +331,7 @@ export const Sidebar = React.memo(function Sidebar() {
         aria-expanded={state === "expanded"}
       >
         <div className="flex flex-col h-full">
-          <div className="flex items-center justify-between p-4">
+          <div className="flex items-center justify-between px-4 py-4">
             {state === "expanded" ? (
               <Link to="/" className="font-bold text-lg">
                 MedCase
@@ -348,7 +348,7 @@ export const Sidebar = React.memo(function Sidebar() {
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4">
+          <div className="flex-1 overflow-y-auto px-4 py-4">
             <ul className="space-y-2">
               {navItems.map((item, index) =>
                 state === "expanded" ? (
@@ -360,7 +360,7 @@ export const Sidebar = React.memo(function Sidebar() {
             </ul>
           </div>
           {state === "expanded" && (
-            <div className="p-4">
+            <div className="px-4 py-4">
               <Button variant="outline" className="w-full" onClick={() => navigate("/cases/new")}>
                 <Plus className="mr-2 h-5 w-5" /> New Case
               </Button>
