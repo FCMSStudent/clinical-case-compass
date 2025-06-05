@@ -3,7 +3,7 @@ export const SIDEBAR_CONFIG = {
   COOKIE_MAX_AGE: 60 * 60 * 24 * 7,
   WIDTH: "16rem",
   WIDTH_MOBILE: "18rem",
-  WIDTH_ICON: "3rem",
+  WIDTH_ICON: "4rem",
   KEYBOARD_SHORTCUT: "b",
 } as const;
 
