@@ -47,7 +47,7 @@ export const BODY_PARTS: Record<BodyPartId, BodyPartSelection> = {
     },
     commonConditions: ["Angina", "Pneumonia", "Costochondritis"],
     coordinates: { x: 140, y: 180 },
-    urgencyLevel: "high" as SeverityLevel
+    urgencyLevel: "critical" as SeverityLevel
   },
   abdomen: {
     id: "abdomen",
