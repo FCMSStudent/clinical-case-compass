@@ -3,7 +3,6 @@ import React, {
   useMemo,
   useState,
   useRef,
-  useEffect,
 } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -22,8 +21,6 @@ import {
   Search,
   Filter,
   BookOpen,
-  Activity,
-  AlertCircle,
   CheckCircle2,
   X,
 } from "lucide-react";
@@ -40,7 +37,6 @@ const ZOOM_MAX = 200;
 const ZOOM_STEP = 15;
 
 export type ViewType = "anterior" | "posterior" | "lateral";
-export type InteractionMode = "select" | "diagnose" | "annotate";
 export type SeverityLevel = "low" | "medium" | "high" | "critical";
 
 export type BodyPartId =
@@ -132,7 +128,6 @@ import { BODY_PARTS } from "./bodyParts.data";
 export interface InteractiveBodyDiagramProps {
   onBodyPartSelected: (selection: BodyPartSelection) => void;
   onMultiplePartsSelected?: (selections: BodyPartSelection[]) => void;
-  mode?: InteractionMode;
   allowMultiSelect?: boolean;
   showUrgencyIndicators?: boolean;
   showSystemColors?: boolean;
@@ -147,7 +142,6 @@ export interface InteractiveBodyDiagramProps {
 export const InteractiveBodyDiagram: React.FC<InteractiveBodyDiagramProps> = ({
   onBodyPartSelected,
   onMultiplePartsSelected,
-  mode = "select",
   allowMultiSelect = false,
   showUrgencyIndicators = true,
   showSystemColors = true,
@@ -158,7 +152,6 @@ export const InteractiveBodyDiagram: React.FC<InteractiveBodyDiagramProps> = ({
   const [hoveredPart, setHoveredPart] = useState<BodyPartId | null>(null);
   const [zoom, setZoom] = useState(100);
   const [viewType, setViewType] = useState<ViewType>("anterior");
-  const [interactionMode, setInteractionMode] = useState<InteractionMode>(mode);
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [searchFilter, setSearchFilter] = useState("");
