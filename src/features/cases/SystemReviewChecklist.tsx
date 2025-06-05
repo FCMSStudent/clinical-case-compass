@@ -3,8 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Button } from "@/components/ui/button"; // From codex/add-select-all-and-clear-buttons
-import { Badge } from "@/components/ui/badge"; // From codex/add-select-all-and-clear-buttons
+import { Button } from "@/components/ui/button"; // Common import
+import { Badge } from "@/components/ui/badge"; // From main
 import { Check, X, ChevronDown, ChevronRight } from "lucide-react"; // Combined icons
 import { systemSymptoms } from "./systemSymptoms"; // From main
 
@@ -47,9 +47,7 @@ export function SystemReviewChecklist({ onSystemSymptomsChange, initialSystemSym
   };
 
   const handleSelectAll = (system: string) => {
-    // Assuming SYSTEM_SYMPTOMS is a global or imported constant, or you need to derive it from 'systemSymptoms'
-    // If SYSTEM_SYMPTOMS is not defined, you'll need to adjust this to use the imported systemSymptoms.
-    // For this resolution, I'm assuming systemSymptoms is the source of truth for all possible symptoms.
+    // Using systemSymptoms as the source of truth for all possible symptoms
     const allSymptoms = systemSymptoms.find(s => s.system === system)?.symptoms || [];
     const updatedSymptoms = {
       ...selectedSymptoms,
@@ -105,6 +103,7 @@ export function SystemReviewChecklist({ onSystemSymptomsChange, initialSystemSym
               )}
             </CollapsibleTrigger>
             <CollapsibleContent className="pt-2">
+              {/* This div combines the styling and content for Select All/Clear buttons */}
               <div className="flex justify-end space-x-1 mb-2 mr-2">
                 <Button variant="outline" size="sm" className="h-7 text-xs border-medical-300" onClick={() => handleSelectAll(system)}>
                   <Check className="h-3 w-3 mr-1" /> All
