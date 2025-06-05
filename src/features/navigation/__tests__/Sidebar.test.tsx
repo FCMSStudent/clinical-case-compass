@@ -15,8 +15,8 @@ import * as sidebarUtils from '@/constants/sidebar';
 const { SIDEBAR_CONFIG, getInitialSidebarState } = sidebarUtils;
 
 const SidebarStateDisplay = () => {
-  const { state } = useSidebar();
-  return <div data-testid="sidebar-state">{state}</div>;
+  const { open } = useSidebar();
+  return <div data-testid="sidebar-state">{open ? 'open' : 'closed'}</div>;
 };
 
 const renderWithProviders = (ui: React.ReactNode) =>
