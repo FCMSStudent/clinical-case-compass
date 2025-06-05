@@ -334,16 +334,16 @@ export function InteractiveVitalsCard({
   ]);
 
   // Apply preset vital signs
-  const applyPreset = (preset: keyof typeof VITAL_PRESETS) => {
+  const applyPreset = useCallback((preset: keyof typeof VITAL_PRESETS) => {
     const presetValues = VITAL_PRESETS[preset];
-    
+
     setVitalSigns(prev => {
       return prev.map(vital => ({
         ...vital,
         value: presetValues[vital.name as keyof typeof presetValues] || vital.value
       }));
     });
-  };
+  }, []);
 
   // Memoize the handleVitalChange function to prevent unnecessary re-renders
   const handleVitalChange = useCallback((index: number, values: number[]) => {
