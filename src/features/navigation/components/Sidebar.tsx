@@ -95,6 +95,7 @@ export const SidebarProvider: React.FC<SidebarProviderProps> = ({
   );
   const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
+  const firstLinkRef = useRef<HTMLAnchorElement>(null);
 
   const toggle = useCallback(() => {
     setState((prevState) => {
@@ -114,15 +115,14 @@ export const SidebarProvider: React.FC<SidebarProviderProps> = ({
     saveSidebarState(false);
   }, []);
 
-  // Detect mobile screens
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768); // Adjust breakpoint as needed
+      setIsMobile(window.innerWidth < 768);
     };
 
     if (typeof window !== "undefined") {
       window.addEventListener("resize", handleResize);
-      handleResize(); // Initial check
+      handleResize();
     }
 
     return () => {
@@ -132,7 +132,6 @@ export const SidebarProvider: React.FC<SidebarProviderProps> = ({
     };
   }, []);
 
-  // Auto-close sidebar on route change
   useEffect(() => {
     if (state === "expanded") {
       collapse();
@@ -150,12 +149,10 @@ export const SidebarProvider: React.FC<SidebarProviderProps> = ({
     [state, isMobile, toggle, expand, collapse]
   );
 
-  // Persist state to cookie
   useEffect(() => {
     saveSidebarState(state === "expanded");
   }, [state]);
 
-  // Keyboard shortcut to toggle sidebar (Cmd/Ctrl + B)
   useEffect(() => {
     if (typeof window === "undefined") return;
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -172,7 +169,6 @@ export const SidebarProvider: React.FC<SidebarProviderProps> = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [toggle]);
 
-  // Focus the first navigation item when sidebar opens on mobile
   useEffect(() => {
     if (isMobile && state === "expanded") {
       firstLinkRef.current?.focus();
@@ -231,6 +227,7 @@ export const Sidebar = React.memo(function Sidebar() {
   const { state, isMobile, expand, collapse } = useSidebar();
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [hovered, setHovered] = useState(false);
   const firstLinkRef = useRef<HTMLAnchorElement>(null);
@@ -322,7 +319,6 @@ export const Sidebar = React.memo(function Sidebar() {
 
   return (
     <>
-      {/* Mobile Sidebar (Sheet) */}
       {isMobile && (
         <Sheet>
           <SheetTrigger asChild>
@@ -363,7 +359,6 @@ export const Sidebar = React.memo(function Sidebar() {
         </Sheet>
       )}
 
-      {/* Desktop Sidebar */}
       <div
         onMouseEnter={() => {
           if (!isMobile && state === "collapsed") {
@@ -428,3 +423,5 @@ export const Sidebar = React.memo(function Sidebar() {
     </>
   );
 });
+
+export default Sidebar;
