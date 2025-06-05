@@ -28,15 +28,18 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children, className }) => 
           className
         )}
       >
+        {/* Header for mobile view, combining elements from both branches */}
         <header
-          className="flex items-center justify-between p-4 md:hidden border-b"
+          className="flex items-center p-4 md:hidden border-b"
           role="banner"
           aria-label="Site"
         >
           <SidebarTrigger />
-          <h1 className="text-lg font-semibold">MedCase</h1>
-          <div className="w-8" />
+          {/* Use flex-1 and text-center for centering the title, and a placeholder div for balancing */}
+          <h1 className="flex-1 text-center text-lg font-semibold">MedCase</h1>
+          <div className="w-8" /> {/* Placeholder for alignment */}
         </header>
+
         <div className="flex-1 flex">
           <div className="container p-4">
             {children}
@@ -46,4 +49,3 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children, className }) => 
     </div>
   );
 };
-
