@@ -14,6 +14,7 @@ import Cases from "@/pages/Cases";
 import CaseDetail from "@/pages/CaseDetail";
 import CaseEdit from "@/pages/CaseEdit";
 import CreateCaseFlow from "../pages/CreateCaseFlow";
+import Settings from "@/pages/Settings";
 import Auth from "@/pages/Auth";
 import NotFound from "@/pages/NotFound";
 import { PrivateRoute } from "@/features/auth/PrivateRoute";
@@ -115,15 +116,25 @@ const App = () => {
                         </PrivateRoute>
                       } 
                     />
-                    <Route 
-                      path="/cases/:id" 
+                    <Route
+                      path="/cases/:id"
                       element={
                         <PrivateRoute>
                           <AppLayout>
                             <CaseDetail />
                           </AppLayout>
                         </PrivateRoute>
-                      } 
+                      }
+                    />
+                    <Route
+                      path="/settings"
+                      element={
+                        <PrivateRoute>
+                          <AppLayout>
+                            <Settings />
+                          </AppLayout>
+                        </PrivateRoute>
+                      }
                     />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
