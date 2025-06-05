@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Briefcase, CheckCircle, FileEdit } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ICON_SIZE } from "@/constants/ui";
 import React from "react";
 
 interface StatCardProps {
@@ -38,19 +39,19 @@ export const StatCards = () => {
       <StatCard
         title="Active Cases"
         value="0"
-        icon={<Briefcase className="h-5 w-5 text-muted-foreground" />}
+        icon={<Briefcase className={`${ICON_SIZE} text-muted-foreground`} />}
         description="Currently ongoing cases"
       />
       <StatCard
         title="Drafts"
         value="0"
-        icon={<FileEdit className="h-5 w-5 text-muted-foreground" />}
+        icon={<FileEdit className={`${ICON_SIZE} text-muted-foreground`} />}
         description="Cases saved as drafts"
       />
       <StatCard
         title="Completed Cases"
         value="0"
-        icon={<CheckCircle className="h-5 w-5 text-muted-foreground" />}
+        icon={<CheckCircle className={`${ICON_SIZE} text-muted-foreground`} />}
         description="Successfully closed cases"
       />
     </div>

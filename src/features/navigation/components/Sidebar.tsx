@@ -43,6 +43,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { cn } from "@/shared/utils";
+import { ICON_SIZE } from "@/constants/ui";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/app/AuthContext";
@@ -192,7 +193,7 @@ export const SidebarTrigger = () => {
       className="md:hidden"
       aria-label="Toggle sidebar"
     >
-      <Menu className="h-5 w-5" />
+      <Menu className={ICON_SIZE} />
     </Button>
   );
 };
@@ -245,7 +246,7 @@ export const Sidebar = React.memo(function Sidebar() {
           aria-label={item.label}
           ref={index === 0 ? firstLinkRef : undefined}
         >
-          <item.icon className="h-5 w-5" aria-hidden="true" />
+          <item.icon className={ICON_SIZE} aria-hidden="true" />
         </Link>
       </TooltipTrigger>
       <TooltipContent side="right">{item.label}</TooltipContent>
@@ -260,7 +261,7 @@ export const Sidebar = React.memo(function Sidebar() {
         data-active={location.pathname === item.href}
         ref={index === 0 ? firstLinkRef : undefined}
       >
-        <item.icon className="h-5 w-5" aria-hidden="true" />
+        <item.icon className={ICON_SIZE} aria-hidden="true" />
         <span>{item.label}</span>
       </Link>
     </li>
@@ -278,7 +279,7 @@ export const Sidebar = React.memo(function Sidebar() {
               className="md:hidden"
               aria-label="Open sidebar"
             >
-              <Menu className="h-5 w-5" />
+              <Menu className={ICON_SIZE} />
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="w-[var(--sidebar-width-mobile)]">
@@ -343,7 +344,7 @@ export const Sidebar = React.memo(function Sidebar() {
             )}
             <div className="flex items-center gap-2">
               <Button variant="ghost" size="icon" aria-label="Notifications">
-                <Bell className="h-5 w-5" />
+                <Bell className={ICON_SIZE} />
               </Button>
             </div>
           </div>
@@ -362,7 +363,7 @@ export const Sidebar = React.memo(function Sidebar() {
           {state === "expanded" && (
             <div className="p-4">
               <Button variant="outline" className="w-full" onClick={() => navigate("/cases/new")}>
-                <Plus className="mr-2 h-5 w-5" /> New Case
+                <Plus className={cn("mr-2", ICON_SIZE)} /> New Case
               </Button>
             </div>
           )}
