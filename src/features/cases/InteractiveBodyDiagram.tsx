@@ -182,6 +182,17 @@ export const InteractiveBodyDiagram: React.FC<InteractiveBodyDiagramProps> = ({
     return new Set(matches.map((m) => m.id));
   }, [searchFilter]);
 
+  const severityParts = useMemo(() => {
+    if (severityFilter === "all") {
+      return new Set(Object.keys(BODY_PARTS) as BodyPartId[]);
+    }
+    return new Set(
+      Object.values(BODY_PARTS)
+        .filter((p) => p.urgencyLevel === severityFilter)
+        .map((p) => p.id)
+    );
+  }, [severityFilter]);
+
   // ——— CALLBACKS ————————————————————————————————————————————————————————
   const handleSelect = useCallback(
     (part: BodyPartId, event?: React.MouseEvent) => {
@@ -274,6 +285,11 @@ export const InteractiveBodyDiagram: React.FC<InteractiveBodyDiagramProps> = ({
         return "hsl(var(--muted) / 0.2)";
       }
 
+      // Dim parts that do not match selected severity
+      if (severityFilter !== "all" && !severityParts.has(part)) {
+        return "hsl(var(--muted) / 0.2)";
+      }
+
       if (isSelected) return "hsl(var(--primary))";
       if (isHovered) return "hsl(var(--primary) / 0.3)";
 
@@ -295,7 +311,14 @@ export const InteractiveBodyDiagram: React.FC<InteractiveBodyDiagramProps> = ({
 
       return "hsl(var(--muted))";
     },
-    [showSystemColors, showUrgencyIndicators, searchFilter, searchableParts]
+    [
+      showSystemColors,
+      showUrgencyIndicators,
+      searchFilter,
+      searchableParts,
+      severityFilter,
+      severityParts,
+    ]
   );
 
   const getStrokeColor = useCallback(
