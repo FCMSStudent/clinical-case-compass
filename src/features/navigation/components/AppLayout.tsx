@@ -28,11 +28,15 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children, className }) => 
           className
         )}
       >
-        <div className="flex items-center justify-between p-4 md:hidden border-b">
+        <header
+          className="flex items-center justify-between p-4 md:hidden border-b"
+          role="banner"
+          aria-label="Site"
+        >
           <SidebarTrigger />
           <h1 className="text-lg font-semibold">MedCase</h1>
           <div className="w-8" />
-        </div>
+        </header>
         <div className="flex-1 flex">
           <div className="w-full max-w-6xl p-4">
             {children}
