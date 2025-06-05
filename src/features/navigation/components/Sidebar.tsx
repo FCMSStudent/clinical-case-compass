@@ -38,6 +38,11 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   Bell,
   Menu,
   Home,
@@ -171,10 +176,11 @@ const navItems = [
 ];
 
 export const Sidebar = React.memo(function Sidebar() {
-  const { state, isMobile } = useSidebar();
+  const { state, isMobile, expand, collapse } = useSidebar();
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [hovered, setHovered] = useState(false);
 
   const handleSignOut = async () => {
     await signOut();
@@ -231,15 +237,19 @@ export const Sidebar = React.memo(function Sidebar() {
   };
 
   const CollapsedNavItem = ({ item }: { item: (typeof navItems)[0] }) => (
-    <Link
-      to={item.href}
-      className="group flex h-[70px] w-[70px] flex-col items-center justify-center rounded-md text-muted-foreground outline-none data-[active=true]:bg-accent data-[active=true]:text-accent-foreground"
-      data-active={location.pathname === item.href}
-      aria-label={item.label}
-    >
-      <item.icon className="h-5 w-5" aria-hidden="true" />
-      <span className="text-xs font-medium">{item.label}</span>
-    </Link>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Link
+          to={item.href}
+          className="group flex h-[70px] w-[70px] flex-col items-center justify-center rounded-md text-muted-foreground outline-none data-[active=true]:bg-accent data-[active=true]:text-accent-foreground"
+          data-active={location.pathname === item.href}
+          aria-label={item.label}
+        >
+          <item.icon className="h-5 w-5" aria-hidden="true" />
+        </Link>
+      </TooltipTrigger>
+      <TooltipContent side="right">{item.label}</TooltipContent>
+    </Tooltip>
   );
 
   const ExpandedNavItem = ({ item }: { item: (typeof navItems)[0] }) => (
@@ -295,6 +305,18 @@ export const Sidebar = React.memo(function Sidebar() {
 
       {/* Desktop Sidebar */}
       <div
+        onMouseEnter={() => {
+          if (!isMobile && state === "collapsed") {
+            expand();
+            setHovered(true);
+          }
+        }}
+        onMouseLeave={() => {
+          if (!isMobile && hovered) {
+            collapse();
+            setHovered(false);
+          }
+        }}
         className={cn(
           "bg-background fixed left-0 top-0 z-50 flex h-screen flex-col border-r shadow-sm transition-all duration-300 ease-in-out",
           state === "expanded" ? "w-[var(--sidebar-width)]" : "w-[var(--sidebar-width-icon)]",
