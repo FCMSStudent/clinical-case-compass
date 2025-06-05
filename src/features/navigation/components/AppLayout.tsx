@@ -1,6 +1,6 @@
 import React from "react";
 import { Sidebar, SidebarTrigger, useSidebar } from "@/features/navigation";
-import { cn } from "@/shared/utils";
+import { cn } from "@/lib/utils";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -28,12 +28,20 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children, className }) => 
           className
         )}
       >
-        <div className="flex items-center p-4 md:hidden border-b">
+        {/* Header for mobile view, combining elements from both branches */}
+        <header
+          className="flex items-center p-4 md:hidden border-b"
+          role="banner"
+          aria-label="Site"
+        >
           <SidebarTrigger />
+          {/* Use flex-1 and text-center for centering the title, and a placeholder div for balancing */}
           <h1 className="flex-1 text-center text-lg font-semibold">MedCase</h1>
-        </div>
+          <div className="w-8" /> {/* Placeholder for alignment */}
+        </header>
+
         <div className="flex-1 flex">
-          <div className="w-full max-w-6xl p-4">
+          <div className="container p-4">
             {children}
           </div>
         </div>
@@ -41,4 +49,3 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children, className }) => 
     </div>
   );
 };
-
