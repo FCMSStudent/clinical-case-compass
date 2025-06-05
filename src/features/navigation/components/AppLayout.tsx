@@ -33,8 +33,8 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children, className }) => 
           <h1 className="text-lg font-semibold">MedCase</h1>
           <div className="w-8" />
         </div>
-        <div className="flex-1 flex justify-center">
-          <div className="w-full max-w-6xl p-6">
+        <div className="flex-1 flex">
+          <div className="w-full max-w-6xl p-4">
             {children}
           </div>
         </div>
