@@ -168,6 +168,7 @@ export const SidebarProvider: React.FC<SidebarProviderProps> = ({
         style={{
           "--sidebar-width": SIDEBAR_CONFIG.WIDTH,
           "--sidebar-width-icon": SIDEBAR_CONFIG.WIDTH_ICON,
+          "--sidebar-width-mobile": SIDEBAR_CONFIG.WIDTH_MOBILE,
         } as React.CSSProperties}
         className="group/sidebar-wrapper"
         data-state={state}
@@ -280,7 +281,7 @@ export const Sidebar = React.memo(function Sidebar() {
               <Menu className="h-4 w-4" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="w-3/4">
+          <SheetContent side="left" className="w-[var(--sidebar-width-mobile)]">
             <SheetHeader className="text-left">
               <SheetTitle>Navigation</SheetTitle>
               <SheetDescription>
