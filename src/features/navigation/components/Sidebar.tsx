@@ -331,7 +331,7 @@ export const Sidebar = React.memo(function Sidebar() {
         aria-expanded={state === "expanded"}
       >
         <div className="flex flex-col h-full">
-          <div className="flex items-center justify-between px-4 py-3">
+          <div className="flex items-center justify-between p-4">
             {state === "expanded" ? (
               <Link to="/" className="font-bold text-lg">
                 MedCase
@@ -348,8 +348,8 @@ export const Sidebar = React.memo(function Sidebar() {
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto py-4 px-3">
-            <ul className="space-y-1">
+          <div className="flex-1 overflow-y-auto p-4">
+            <ul className="space-y-2">
               {navItems.map((item, index) =>
                 state === "expanded" ? (
                   <ExpandedNavItem key={item.href} item={item} index={index} />
