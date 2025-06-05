@@ -2,6 +2,7 @@
 export * from './components/CaseCard';
 export * from './components/CaseListItem';
 export * from './InteractiveBodyDiagram';
+export * from './BodySvgView';
 export * from './SymptomChecklist';
 export * from './SystemReviewChecklist';
 export * from './VitalsCard';
