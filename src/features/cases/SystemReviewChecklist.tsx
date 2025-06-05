@@ -4,7 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Check, X, ChevronDown, ChevronRight } from "lucide-react";
 
 interface SystemReviewChecklistProps {
   onSystemSymptomsChange?: (systemSymptoms: Record<string, string[]>) => void;
@@ -93,6 +95,27 @@ export function SystemReviewChecklist({ onSystemSymptomsChange, initialSystemSym
     }
   };
 
+  const handleSelectAll = (system: string) => {
+    const allSymptoms = SYSTEM_SYMPTOMS[system] || [];
+    const updatedSymptoms = {
+      ...selectedSymptoms,
+      [system]: [...allSymptoms]
+    };
+    setSelectedSymptoms(updatedSymptoms);
+    if (onSystemSymptomsChange) {
+      onSystemSymptomsChange(updatedSymptoms);
+    }
+  };
+
+  const handleClearAll = (system: string) => {
+    const updatedSymptoms = { ...selectedSymptoms };
+    delete updatedSymptoms[system];
+    setSelectedSymptoms(updatedSymptoms);
+    if (onSystemSymptomsChange) {
+      onSystemSymptomsChange(updatedSymptoms);
+    }
+  };
+
   const toggleSystem = (system: string) => {
     setExpandedSystems(prev => ({
       ...prev,
@@ -113,21 +136,29 @@ export function SystemReviewChecklist({ onSystemSymptomsChange, initialSystemSym
             onOpenChange={() => toggleSystem(system)}
           >
             <CollapsibleTrigger className="flex items-center justify-between w-full p-2 bg-medical-50 hover:bg-medical-100 rounded-md transition-colors">
-              <span className="font-medium text-medical-700">{system}</span>
               <div className="flex items-center space-x-2">
+                <span className="font-medium text-medical-700">{system}</span>
                 {selectedSymptoms[system]?.length > 0 && (
-                  <span className="text-xs bg-medical-200 text-medical-800 px-2 py-1 rounded">
-                    {selectedSymptoms[system].length} selected
-                  </span>
-                )}
-                {expandedSystems[system] ? (
-                  <ChevronDown className="h-4 w-4" />
-                ) : (
-                  <ChevronRight className="h-4 w-4" />
+                  <Badge variant="outline" className="bg-medical-100 text-xs font-normal">
+                    {selectedSymptoms[system].length}/{symptoms.length}
+                  </Badge>
                 )}
               </div>
+              {expandedSystems[system] ? (
+                <ChevronDown className="h-4 w-4" />
+              ) : (
+                <ChevronRight className="h-4 w-4" />
+              )}
             </CollapsibleTrigger>
             <CollapsibleContent className="pt-2">
+              <div className="flex justify-end space-x-1 mb-2 mr-2">
+                <Button variant="outline" size="sm" className="h-7 text-xs border-medical-300" onClick={() => handleSelectAll(system)}>
+                  <Check className="h-3 w-3 mr-1" /> All
+                </Button>
+                <Button variant="outline" size="sm" className="h-7 text-xs border-medical-300" onClick={() => handleClearAll(system)}>
+                  <X className="h-3 w-3 mr-1" /> Clear
+                </Button>
+              </div>
               <div className="grid grid-cols-2 gap-2 ml-4">
                 {symptoms.map((symptom) => (
                   <div key={symptom} className="flex items-center space-x-2">
