@@ -28,10 +28,9 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children, className }) => 
           className
         )}
       >
-        <div className="flex items-center justify-between p-4 md:hidden border-b">
+        <div className="flex items-center p-4 md:hidden border-b">
           <SidebarTrigger />
-          <h1 className="text-lg font-semibold">MedCase</h1>
-          <div className="w-8" />
+          <h1 className="flex-1 text-center text-lg font-semibold">MedCase</h1>
         </div>
         <div className="flex-1 flex">
           <div className="w-full max-w-6xl p-4">
