@@ -42,7 +42,7 @@ import {
   LogOut,
   ChevronDown,
 } from "lucide-react";
-import { cn } from "@/shared/utils";
+import { cn } from "@/lib/utils";
 import { ICON_SIZE } from "@/constants/ui";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
