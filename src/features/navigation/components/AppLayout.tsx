@@ -1,6 +1,6 @@
 import React from "react";
 import { Sidebar, SidebarTrigger, useSidebar } from "@/features/navigation";
-import { cn } from "@/shared/utils";
+import { cn } from "@/lib/utils";
 
 interface AppLayoutProps {
   children: React.ReactNode;
