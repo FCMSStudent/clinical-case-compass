@@ -60,7 +60,7 @@ export const QuickStartPanel = () => {
                   <IconComponent className={`${ICON_SIZE} mt-0.5 flex-shrink-0`} />
                   <div className="text-left">
                     <div className="font-medium">{action.title}</div>
-                    <div className="text-sm text-muted-foreground mt-1">
+                    <div className="text-sm font-medium text-muted-foreground mt-1">
                       {action.description}
                     </div>
                   </div>
