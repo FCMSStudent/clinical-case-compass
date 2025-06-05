@@ -25,19 +25,6 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar";
-import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
@@ -177,7 +164,16 @@ export const SidebarProvider: React.FC<SidebarProviderProps> = ({
 
   return (
     <SidebarContext.Provider value={value}>
-      {children}
+      <div
+        style={{
+          "--sidebar-width": SIDEBAR_CONFIG.WIDTH,
+          "--sidebar-width-icon": SIDEBAR_CONFIG.WIDTH_ICON,
+        } as React.CSSProperties}
+        className="group/sidebar-wrapper"
+        data-state={state}
+      >
+        {children}
+      </div>
     </SidebarContext.Provider>
   );
 };
@@ -237,54 +233,6 @@ export const Sidebar = React.memo(function Sidebar() {
     navigate("/auth");
   };
 
-  const AvatarMenu = () => {
-    return (
-      <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            className="relative h-8 w-8 rounded-full"
-            aria-label="Open user menu"
-          >
-            <Avatar className="h-8 w-8">
-              <AvatarImage src="https://github.com/shadcn.png" alt="Shadcn" />
-              <AvatarFallback>SC</AvatarFallback>
-            </Avatar>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56" align="end" forceMount>
-          <DropdownMenuLabel className="font-normal">
-            <div className="flex flex-col space-y-1">
-              <span className="text-sm font-medium leading-none">
-                {user?.displayName || "User"}
-              </span>
-              <span className="text-xs leading-none text-muted-foreground">
-                {user?.email || "user@example.com"}
-              </span>
-            </div>
-          </DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            <User className="mr-2 h-4 w-4" />
-            <span>Profile</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Settings className="mr-2 h-4 w-4" />
-            <span>Settings</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <HelpCircle className="mr-2 h-4 w-4" />
-            <span>Support</span>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem className="cursor-pointer" onSelect={handleSignOut}>
-            <LogOut className="mr-2 h-4 w-4" />
-            <span>Log out</span>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    );
-  };
 
   const CollapsedNavItem = ({ item, index }: { item: (typeof navItems)[0]; index: number }) => (
     <Tooltip>
@@ -396,7 +344,6 @@ export const Sidebar = React.memo(function Sidebar() {
               <Button variant="ghost" size="icon" aria-label="Notifications">
                 <Bell className="h-5 w-5" />
               </Button>
-              <AvatarMenu />
             </div>
           </div>
 
