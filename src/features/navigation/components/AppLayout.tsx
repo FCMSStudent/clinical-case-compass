@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Search, Settings, LogOut, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Sidebar, SidebarTrigger } from "@/features/navigation";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -83,10 +84,12 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   return (
     <div className="min-h-screen bg-background md:flex">
       {/* Rest of your layout code */}
+      <Sidebar />
       <div className="flex-1 min-h-screen transition-all duration-300 ease-in-out">
         {/* Desktop Header */}
         <header className="hidden md:flex items-center justify-between border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-6 py-4 sticky top-0 z-30">
           <div className="flex items-center space-x-4">
+            <SidebarTrigger />
             <h1 className="text-xl font-semibold text-foreground">{title}</h1>
           </div>
           
@@ -98,6 +101,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
         {/* Mobile Header */}
         <header className="flex md:hidden items-center justify-between border-b bg-background px-4 py-3 sticky top-0 z-30">
           <div className="flex items-center space-x-3">
+            <SidebarTrigger />
             <h1 className="text-lg font-semibold text-foreground">{title}</h1>
           </div>
           
