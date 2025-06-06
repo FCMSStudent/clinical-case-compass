@@ -1,5 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { Menu, X, LayoutDashboard, BookOpen, Settings } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import NAV_ITEMS from "@/constants/navItems";
 
 interface SidebarContextValue {
   open: boolean;
@@ -122,11 +123,6 @@ export const SidebarTrigger = () => {
   );
 };
 
-const navItems = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/cases", label: "Cases", icon: BookOpen },
-  { href: "/settings", label: "Settings", icon: Settings },
-];
 
 const Sidebar = React.memo(function Sidebar() {
   const { open, isMobile, closeSidebar } = useSidebar();
@@ -135,7 +131,7 @@ const Sidebar = React.memo(function Sidebar() {
   const content = (
     <nav className="flex h-full flex-col p-4">
       <ul className="space-y-2">
-        {navItems.map((item) => (
+        {NAV_ITEMS.map((item) => (
           <li key={item.href}>
             <a
               href={item.href}

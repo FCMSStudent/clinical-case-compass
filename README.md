@@ -149,6 +149,16 @@ This project offers two components for selecting body regions:
 * `src/features/cases/InteractiveBodyDiagram.tsx` – a full SVG diagram with zoom and anterior/posterior views.
 * `src/components/body-diagram/SimpleBodyPartSelector.tsx` – a lightweight list of buttons for quick selection.
 
+## Modifying Navigation
+
+Sidebar links are defined in `src/constants/navItems.ts`. Each entry has the shape:
+
+```ts
+{ href: string; label: string; icon: LucideIcon }
+```
+
+Add, remove, or edit items in this array to customize the navigation displayed in the sidebar.
+
 ## Contributing
 
 Contributions are welcome! Please refer to `CONTRIBUTING.md` for more details (if available) or follow standard GitHub flow (fork, branch, PR).
