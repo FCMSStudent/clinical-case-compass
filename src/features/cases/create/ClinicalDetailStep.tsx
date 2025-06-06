@@ -1,4 +1,3 @@
-
 import React, {
   memo,
   useCallback,
@@ -12,6 +11,12 @@ import {
   UseFormWatch,
 } from "react-hook-form";
 import { z } from "zod";
+import {
+  clinicalDetailStepSchema,
+  type ClinicalDetailFormData,
+  TAB_ITEMS,
+  type TabValue,
+} from "./ClinicalDetailConfig";
 import {
   FormField,
   FormItem,
@@ -45,63 +50,21 @@ import {
   Microscope as MicroscopeIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { LabTest as ComponentLabTest, RadiologyExam as ComponentRadiologyExam } from "@/types/case";
 
 /**
  * ────────────────────────────────────────────────────────────────────────────────
  * SCHEMA
  * ────────────────────────────────────────────────────────────────────────────────
  */
-export const clinicalDetailStepSchema = z.object({
-  patientHistory: z.string().optional(),
-  selectedBodyParts: z.array(z.string()).default([]),
-  systemSymptoms: z.record(z.array(z.string())).default({}),
-  vitals: z.record(z.string()).default({}),
-  physicalExam: z.string().optional(),
-  labResults: z
-    .array(
-      z.object({
-        id: z.string(),
-        name: z.string(),
-        value: z.string(),
-        unit: z.string(),
-      }),
-    )
-    .default([]),
-  radiologyExams: z
-    .array(
-      z.object({
-        id: z.string(),
-        modality: z.string(),
-        findings: z.string(),
-      }),
-    )
-    .default([]),
-});
-export type ClinicalDetailFormData = z.infer<typeof clinicalDetailStepSchema>;
+
 
 /**
  * ────────────────────────────────────────────────────────────────────────────────
- * CONSTANTS & TYPES
+ * TYPES
  * ────────────────────────────────────────────────────────────────────────────────
  */
-const TAB_ITEMS = [
-  {
-    value: "history",
-    label: "History & Exam",
-    icon: UserIcon,
-  },
-  {
-    value: "systems",
-    label: "Systems Review",
-    icon: BrainIcon,
-  },
-  {
-    value: "diagnostics",
-    label: "Diagnostics",
-    icon: TestTubeIcon,
-  },
-] as const;
-export type TabValue = (typeof TAB_ITEMS)[number]["value"];
+type TabValue = (typeof TAB_ITEMS)[number]["value"];
 
 interface ClinicalDetailStepProps<T extends FieldValues = ClinicalDetailFormData> {
   control: Control<T>;
