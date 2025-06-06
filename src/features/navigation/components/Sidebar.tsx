@@ -1,7 +1,8 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Menu, X, LayoutDashboard, BookOpen, Settings } from "lucide-react";
-import { NavLink } from 'react-router-dom';
-import { cn } from '@/lib/utils';
+import { NavLink } from 'react-router-dom'; // Import NavLink for routing
+import { cn } from '@/lib/utils'; // Import cn utility for conditional class names
+import { SIDEBAR_CONFIG, getInitialSidebarState, saveSidebarState } from "@/constants/sidebar"; // Import sidebar constants
 
 interface SidebarContextValue {
   open: boolean;
@@ -19,30 +20,7 @@ const SidebarContext = createContext<SidebarContextValue>({
   closeSidebar: () => {},
 });
 
-const SIDEBAR_CONFIG = {
-  WIDTH: '240px',
-  WIDTH_MOBILE: '280px',
-  KEYBOARD_SHORTCUT: 'b'
-};
-
 const ICON_SIZE = "w-5 h-5";
-
-const getInitialSidebarState = (defaultState: boolean) => {
-  try {
-    const saved = localStorage.getItem('sidebarOpen');
-    return saved ? JSON.parse(saved) : defaultState;
-  } catch {
-    return defaultState;
-  }
-};
-
-const saveSidebarState = (state: boolean) => {
-  try {
-    localStorage.setItem('sidebarOpen', JSON.stringify(state));
-  } catch {
-    // Ignore errors
-  }
-};
 
 interface SidebarProviderProps {
   children: React.ReactNode;
@@ -146,6 +124,9 @@ const Sidebar = React.memo(function Sidebar() {
                   isActive && 'bg-gray-100'
                 )
               }
+              // The onClick for NavLink is generally not needed for simple navigation,
+              // but if clicking a link should close the sidebar, you can add it:
+              // onClick={isMobile ? closeSidebar : undefined}
             >
               <item.icon className={ICON_SIZE} />
               <span>{item.label}</span>

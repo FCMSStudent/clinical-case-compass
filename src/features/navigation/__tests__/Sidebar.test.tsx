@@ -26,23 +26,25 @@ const renderWithProviders = (ui: React.ReactNode, initialPath = '/') =>
     </MemoryRouter>
   );
 
-const clearSidebarCookie = () => {
+const clearSidebarStorage = () => {
+  localStorage.removeItem(SIDEBAR_CONFIG.STORAGE_KEY);
+  // Also clear any potential cookie if it was used before, for complete cleanup.
   document.cookie = `${SIDEBAR_CONFIG.COOKIE_NAME}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-  localStorage.removeItem('sidebarOpen');
 };
 
 describe('Sidebar Provider', () => {
   afterEach(() => {
     cleanup();
-    clearSidebarCookie();
+    clearSidebarStorage();
+    // Reset window width and dispatch resize event for tests that depend on it
     window.innerWidth = 1024;
     window.dispatchEvent(new Event('resize'));
   });
 
-  it('getInitialSidebarState reads open and closed values from cookies', () => {
-    document.cookie = `${SIDEBAR_CONFIG.COOKIE_NAME}=true`;
+  it('getInitialSidebarState reads open and closed values from localStorage', () => {
+    localStorage.setItem(SIDEBAR_CONFIG.STORAGE_KEY, 'true');
     expect(getInitialSidebarState(false)).toBe(true);
-    document.cookie = `${SIDEBAR_CONFIG.COOKIE_NAME}=false`;
+    localStorage.setItem(SIDEBAR_CONFIG.STORAGE_KEY, 'false');
     expect(getInitialSidebarState(true)).toBe(false);
   });
 
@@ -104,6 +106,7 @@ describe('Sidebar Provider', () => {
     expect(casesLink).not.toHaveClass('bg-gray-100');
     fireEvent.click(casesLink);
     expect(nav).toBeInTheDocument();
+    // NavLink automatically adds aria-current="page" to the active link
     expect(casesLink).toHaveAttribute('aria-current', 'page');
     expect(casesLink).toHaveClass('bg-gray-100');
     expect(dashboardLink).not.toHaveClass('bg-gray-100');
