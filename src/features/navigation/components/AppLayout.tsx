@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Search, Settings, LogOut, User, Menu } from "lucide-react";
+import { Search, Settings, LogOut, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface AppLayoutProps {
@@ -36,13 +36,12 @@ const HeaderActions = () => {
       <div className="relative">
         <button
           onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-          className="flex items-center space-x-2 p-2 hover:bg-accent rounded-lg transition-colors"
+          className="flex items-center p-2 hover:bg-accent rounded-lg transition-colors"
           aria-label="User menu"
         >
           <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
-            <span className="text-sm font-medium text-primary-foreground">DJ</span>
+            <User className="h-5 w-5 text-primary-foreground" />
           </div>
-          <Menu className="h-4 w-4 hidden md:block" />
         </button>
 
         <AnimatePresence>
