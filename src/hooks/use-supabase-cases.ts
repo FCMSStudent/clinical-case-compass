@@ -19,14 +19,14 @@ interface LabTest {
   value: string;
   unit?: string;
   normalRange?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 interface RadiologyExam {
   type: string;
   findings: string;
   impression?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 type DiagnosisStatus = 'pending' | 'confirmed' | 'ruled_out';
@@ -261,13 +261,23 @@ function transformDbCaseToMedicalCase(dbCase: Record<string, unknown>): MedicalC
     vitals: (dbCase.vitals || {}) as Record<string, string>,
     symptoms: (dbCase.symptoms || {}) as Record<string, boolean>,
     urinarySymptoms: (dbCase.urinary_symptoms || []) as string[],
-    labTests: ((dbCase.lab_tests || []) as any[]).map((test: any) => ({
+    labTests: ((dbCase.lab_tests || []) as {
+      id?: string;
+      name?: string;
+      value?: string;
+      unit?: string;
+    }[]).map((test) => ({
       id: test.id || `lab-${Date.now()}-${Math.random()}`,
       name: test.name || '',
       value: test.value || '',
       unit: test.unit || ''
     })) as ComponentLabTest[],
-    radiologyExams: ((dbCase.radiology_exams || []) as any[]).map((exam: any) => ({
+    radiologyExams: ((dbCase.radiology_exams || []) as {
+      id?: string;
+      modality?: string;
+      type?: string;
+      findings?: string;
+    }[]).map((exam) => ({
       id: exam.id || `rad-${Date.now()}-${Math.random()}`,
       modality: exam.modality || exam.type || '',
       findings: exam.findings || ''

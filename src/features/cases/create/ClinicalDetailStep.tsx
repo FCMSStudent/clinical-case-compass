@@ -21,7 +21,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import { InteractiveBodyDiagram } from "@/features/cases/InteractiveBodyDiagram";
+import {
+  InteractiveBodyDiagram,
+  BodyPartSelection,
+} from "@/features/cases/InteractiveBodyDiagram";
 import { SystemReviewChecklist } from "@/features/cases/SystemReviewChecklist";
 import { VitalsCard } from "@/features/cases/VitalsCard";
 import { LabResultsCard } from "@/features/cases/LabResultsCard";
@@ -151,13 +154,13 @@ export const ClinicalDetailStep = memo(function ClinicalDetailStep<
    * ─────────── Handlers ————————————————————————————————————————————————
    */
   const handleBodyPartSelected = useCallback(
-    (selection: any) => {
+    (selection: BodyPartSelection) => {
       const partName = selection.name || selection.id;
       setValue(
         "selectedBodyParts" as Path<T>,
         selectedBodyParts.includes(partName)
-          ? (selectedBodyParts.filter((p) => p !== partName) as any)
-          : ([...selectedBodyParts, partName] as any),
+          ? (selectedBodyParts.filter((p) => p !== partName) as string[])
+          : ([...selectedBodyParts, partName] as string[]),
         { shouldValidate: true },
       );
     },
@@ -166,24 +169,35 @@ export const ClinicalDetailStep = memo(function ClinicalDetailStep<
 
   const setSystemSymptoms = useCallback(
     (val: Record<string, string[]>) =>
-      setValue("systemSymptoms" as Path<T>, val as any, { shouldValidate: true }),
+      setValue("systemSymptoms" as Path<T>, val as Record<string, string[]>, {
+        shouldValidate: true,
+      }),
     [setValue],
   );
 
   const setVitals = useCallback(
     (v: Record<string, string>) =>
-      setValue("vitals" as Path<T>, v as any, { shouldValidate: true }),
+      setValue("vitals" as Path<T>, v as Record<string, string>, {
+        shouldValidate: true,
+      }),
     [setValue],
   );
 
   const setLabResults = useCallback(
-    (labs: any[]) => setValue("labResults" as Path<T>, labs as any, { shouldValidate: true }),
+    (labs: ComponentLabTest[]) =>
+      setValue("labResults" as Path<T>, labs as ComponentLabTest[], {
+        shouldValidate: true,
+      }),
     [setValue],
   );
 
   const setRadiology = useCallback(
-    (imgs: any[]) =>
-      setValue("radiologyExams" as Path<T>, imgs as any, { shouldValidate: true }),
+    (imgs: ComponentRadiologyExam[]) =>
+      setValue(
+        "radiologyExams" as Path<T>,
+        imgs as ComponentRadiologyExam[],
+        { shouldValidate: true },
+      ),
     [setValue],
   );
 
