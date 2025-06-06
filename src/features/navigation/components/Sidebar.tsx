@@ -364,7 +364,7 @@ const Sidebar = React.memo(function Sidebar() {
     <div
       className={cn(
         open
-          ? "sticky top-0 z-20"
+          ? "sticky top-0 z-20 h-screen"
           : "fixed inset-y-0 left-0 z-40",
         "bg-background border-r shadow-sm transform transition-all duration-300 ease-in-out",
         "w-[var(--sidebar-width)]",
