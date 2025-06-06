@@ -78,7 +78,7 @@ const HeaderActions = () => {
 export const AppLayout: React.FC<AppLayoutProps> = ({
   children,
   className,
-  title = "MedCase",
+  title = "Clinical Case Compass",
   actions
 }) => {
   return (

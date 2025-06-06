@@ -70,7 +70,7 @@ export default function Auth() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-medical-50 to-medical-200 dark:from-background dark:to-background py-12 px-4 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="space-y-2 pb-6 text-center">
-          <CardTitle className="text-3xl font-semibold">MedCase</CardTitle>
+          <CardTitle className="text-3xl font-semibold">Clinical Case Compass</CardTitle>
           <CardDescription className="text-sm text-muted-foreground">
             Sign in or create an account to manage your medical cases
           </CardDescription>
