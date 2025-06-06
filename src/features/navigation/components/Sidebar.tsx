@@ -224,7 +224,10 @@ const UserProfile: React.FC<{ collapsed: boolean; isMobile: boolean }> = ({ coll
     return null;
   }
 
-  const fullName = (user.user_metadata as any)?.full_name || user.email;
+  interface UserMetadata {
+    full_name?: string;
+  }
+  const fullName = (user.user_metadata as UserMetadata)?.full_name || user.email;
 
   if (collapsed && !isMobile) {
     return (
