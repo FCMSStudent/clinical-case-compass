@@ -37,3 +37,5 @@ export const RecentActivityList = () => {
     </Card>
   );
 };
+
+export default RecentActivityList;
