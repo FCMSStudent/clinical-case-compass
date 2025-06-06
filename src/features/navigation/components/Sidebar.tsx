@@ -9,7 +9,6 @@ import {
   User,
   LogOut,
   Bell,
-  Search,
   HelpCircle
 } from "lucide-react";
 import { NavLink } from 'react-router-dom';
@@ -146,21 +145,15 @@ const navItems = [
     icon: BookOpen,
     badge: "12"
   },
-  { 
-    href: "/notifications", 
-    label: "Notifications", 
+  {
+    href: "/notifications",
+    label: "Notifications",
     icon: Bell,
     badge: "3"
   },
-  { 
-    href: "/search", 
-    label: "Search", 
-    icon: Search,
-    badge: null
-  },
-  { 
-    href: "/settings", 
-    label: "Settings", 
+  {
+    href: "/settings",
+    label: "Settings",
     icon: Settings,
     badge: null
   },
