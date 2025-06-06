@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { NavLink } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/app/AuthContext';
 import { SIDEBAR_CONFIG, getInitialSidebarState, saveSidebarState } from "@/constants/sidebar";
 
 interface SidebarContextValue {
@@ -224,26 +225,27 @@ const NavItem: React.FC<NavItemProps> = ({ item, collapsed, isMobile, onNavigate
 };
 
 const UserProfile: React.FC<{ collapsed: boolean; isMobile: boolean }> = ({ collapsed, isMobile }) => {
-  // Mock user data - replace with actual user context
-  const user = {
-    name: "Dr. Sarah Johnson",
-    email: "sarah.johnson@medcase.com",
-    avatar: null
-  };
+  const { user, signOut } = useAuth();
+
+  if (!user) {
+    return null;
+  }
+
+  const fullName = (user.user_metadata as any)?.full_name || user.email;
 
   if (collapsed && !isMobile) {
     return (
       <div className="group relative">
         <button className="flex w-full items-center justify-center rounded-lg p-2 hover:bg-accent">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-sm font-medium text-primary-foreground">
-            {user.name.split(' ').map(n => n[0]).join('')}
+            {String(fullName).split(' ').map(n => n[0]).join('')}
           </div>
         </button>
         
         {/* Tooltip */}
         <div className="absolute left-full ml-2 hidden group-hover:block">
           <div className="rounded-md bg-popover px-3 py-2 text-xs text-popover-foreground shadow-md border min-w-[200px]">
-            <div className="font-medium">{user.name}</div>
+            <div className="font-medium">{fullName}</div>
             <div className="text-muted-foreground">{user.email}</div>
           </div>
         </div>
@@ -255,15 +257,16 @@ const UserProfile: React.FC<{ collapsed: boolean; isMobile: boolean }> = ({ coll
     <div className="border-t pt-4">
       <div className="flex items-center space-x-3 rounded-lg p-3 hover:bg-accent transition-colors">
         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-sm font-medium text-primary-foreground">
-          {user.name.split(' ').map(n => n[0]).join('')}
+          {String(fullName).split(' ').map(n => n[0]).join('')}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="truncate text-sm font-medium">{user.name}</p>
+          <p className="truncate text-sm font-medium">{fullName}</p>
           <p className="truncate text-xs text-muted-foreground">{user.email}</p>
         </div>
-        <button 
+        <button
           className="p-1 hover:bg-accent rounded transition-colors"
           aria-label="Sign out"
+          onClick={() => signOut()}
         >
           <LogOut className="h-4 w-4" />
         </button>
