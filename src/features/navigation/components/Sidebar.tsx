@@ -8,7 +8,6 @@ import {
   ChevronLeft,
   User,
   LogOut,
-  Bell,
   Search,
   HelpCircle
 } from "lucide-react";
@@ -145,12 +144,6 @@ const navItems = [
     label: "Cases", 
     icon: BookOpen,
     badge: "12"
-  },
-  { 
-    href: "/notifications", 
-    label: "Notifications", 
-    icon: Bell,
-    badge: "3"
   },
   { 
     href: "/search", 
