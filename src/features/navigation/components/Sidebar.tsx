@@ -1,6 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Menu, X } from "lucide-react";
 import NAV_ITEMS from "@/constants/navItems";
+import { SIDEBAR_CONFIG, getInitialSidebarState, saveSidebarState } from "@/constants/sidebar";
 
 interface SidebarContextValue {
   open: boolean;
@@ -18,30 +19,7 @@ const SidebarContext = createContext<SidebarContextValue>({
   closeSidebar: () => {},
 });
 
-const SIDEBAR_CONFIG = {
-  WIDTH: '240px',
-  WIDTH_MOBILE: '280px',
-  KEYBOARD_SHORTCUT: 'b'
-};
-
 const ICON_SIZE = "w-5 h-5";
-
-const getInitialSidebarState = (defaultState: boolean) => {
-  try {
-    const saved = localStorage.getItem('sidebarOpen');
-    return saved ? JSON.parse(saved) : defaultState;
-  } catch {
-    return defaultState;
-  }
-};
-
-const saveSidebarState = (state: boolean) => {
-  try {
-    localStorage.setItem('sidebarOpen', JSON.stringify(state));
-  } catch {
-    // Ignore errors
-  }
-};
 
 interface SidebarProviderProps {
   children: React.ReactNode;
@@ -126,7 +104,7 @@ export const SidebarTrigger = () => {
 
 const Sidebar = React.memo(function Sidebar() {
   const { open, isMobile, closeSidebar } = useSidebar();
-  const location = { pathname: window.location.pathname };
+  const location = { pathname: typeof window !== "undefined" ? window.location.pathname : "" };
 
   const content = (
     <nav className="flex h-full flex-col p-4">
