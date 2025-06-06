@@ -100,6 +100,26 @@ The `package.json` file defines the following scripts:
 
 If using Bun, replace `npm run` with `bun run`.
 
+## Running Tests
+
+Before executing the tests, ensure all dependencies are installed:
+
+```bash
+npm install
+```
+
+Then run the suite:
+
+```bash
+npm test
+```
+
+If npm reports vulnerabilities, you may attempt to automatically fix them with:
+
+```bash
+npm audit fix
+```
+
 ## Project Structure
 
 ```
