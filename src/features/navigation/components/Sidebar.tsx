@@ -9,8 +9,6 @@ import {
   User,
   LogOut,
   Search,
-  Bell,
-  HelpCircle
 } from "lucide-react";
 import { NavLink } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -162,12 +160,6 @@ const navItems = [
     href: "/settings",
     label: "Settings",
     icon: Settings,
-    badge: null
-  },
-  {
-    href: "/help",
-    label: "Help & Support",
-    icon: HelpCircle,
     badge: null
   },
 ];
