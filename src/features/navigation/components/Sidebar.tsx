@@ -1,13 +1,14 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { 
-  Menu, 
-  X, 
-  LayoutDashboard, 
-  BookOpen, 
-  Settings, 
+import {
+  Menu,
+  X,
+  LayoutDashboard,
+  BookOpen,
+  Settings,
   ChevronLeft,
   User,
   LogOut,
+  Search,
   Bell,
   HelpCircle
 } from "lucide-react";
@@ -66,7 +67,7 @@ export const SidebarProvider: React.FC<SidebarProviderProps> = ({ children }) =>
         setCollapsed(false); // Reset collapsed state on mobile
       }
     };
-    
+
     if (typeof window !== "undefined") {
       window.addEventListener("resize", handleResize);
       handleResize();
@@ -133,17 +134,23 @@ export const SidebarTrigger = ({ className }: { className?: string }) => {
 };
 
 const navItems = [
-  { 
-    href: "/dashboard", 
-    label: "Dashboard", 
+  {
+    href: "/dashboard",
+    label: "Dashboard",
     icon: LayoutDashboard,
     badge: null
   },
-  { 
-    href: "/cases", 
-    label: "Cases", 
+  {
+    href: "/cases",
+    label: "Cases",
     icon: BookOpen,
     badge: "12"
+  },
+  {
+    href: "/search",
+    label: "Search",
+    icon: Search,
+    badge: null
   },
   {
     href: "/notifications",
@@ -157,9 +164,9 @@ const navItems = [
     icon: Settings,
     badge: null
   },
-  { 
-    href: "/help", 
-    label: "Help & Support", 
+  {
+    href: "/help",
+    label: "Help & Support",
     icon: HelpCircle,
     badge: null
   },
@@ -188,7 +195,7 @@ const NavItem: React.FC<NavItemProps> = ({ item, collapsed, isMobile, onNavigate
       }
     >
       <item.icon className={cn(ICON_SIZE, "flex-shrink-0")} />
-      
+
       {(!collapsed || isMobile) && (
         <>
           <span className="ml-3 truncate">{item.label}</span>
@@ -199,7 +206,7 @@ const NavItem: React.FC<NavItemProps> = ({ item, collapsed, isMobile, onNavigate
           )}
         </>
       )}
-      
+
       {/* Tooltip for collapsed state */}
       {collapsed && !isMobile && (
         <div className="absolute left-full ml-2 hidden group-hover:block">
@@ -234,7 +241,7 @@ const UserProfile: React.FC<{ collapsed: boolean; isMobile: boolean }> = ({ coll
             {String(fullName).split(' ').map(n => n[0]).join('')}
           </div>
         </button>
-        
+
         {/* Tooltip */}
         <div className="absolute left-full ml-2 hidden group-hover:block">
           <div className="rounded-md bg-popover px-3 py-2 text-xs text-popover-foreground shadow-md border min-w-[200px]">
@@ -284,7 +291,7 @@ const Sidebar = React.memo(function Sidebar() {
         {collapsed && !isMobile && (
           <div className="text-xl font-bold text-primary">MC</div>
         )}
-        
+
         {isMobile && (
           <button
             className="ml-auto p-1 hover:bg-accent rounded transition-colors"
@@ -301,9 +308,9 @@ const Sidebar = React.memo(function Sidebar() {
         <ul className="space-y-1">
           {navItems.map((item) => (
             <li key={item.href}>
-              <NavItem 
-                item={item} 
-                collapsed={collapsed} 
+              <NavItem
+                item={item}
+                collapsed={collapsed}
                 isMobile={isMobile}
                 onNavigate={isMobile ? closeSidebar : undefined}
               />
@@ -326,7 +333,7 @@ const Sidebar = React.memo(function Sidebar() {
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             <ChevronLeft className={cn(
-              ICON_SIZE, 
+              ICON_SIZE,
               "transition-transform duration-200",
               collapsed && "rotate-180"
             )} />
