@@ -1,6 +1,5 @@
 export const SIDEBAR_CONFIG = {
-  COOKIE_NAME: "sidebar:state",
-  COOKIE_MAX_AGE: 60 * 60 * 24 * 7,
+  STORAGE_KEY: "sidebar:state",
   WIDTH: "16rem",
   WIDTH_MOBILE: "18rem",
   WIDTH_ICON: "4rem",
@@ -9,15 +8,20 @@ export const SIDEBAR_CONFIG = {
 
 export const saveSidebarState = (state: boolean) => {
   try {
-    document.cookie = `${SIDEBAR_CONFIG.COOKIE_NAME}=${state}; path=/; max-age=${SIDEBAR_CONFIG.COOKIE_MAX_AGE}`;
+    if (typeof window !== "undefined") {
+      localStorage.setItem(SIDEBAR_CONFIG.STORAGE_KEY, JSON.stringify(state));
+    }
   } catch (error) {
     console.warn("Failed to save sidebar state:", error);
   }
 };
 
 export const getInitialSidebarState = (defaultOpen = false) => {
-  if (typeof document === "undefined") return defaultOpen;
-  const cookies = document.cookie.split(";");
-  const sidebarCookie = cookies.find((c) => c.trim().startsWith(SIDEBAR_CONFIG.COOKIE_NAME));
-  return sidebarCookie ? sidebarCookie.split("=")[1] === "true" : defaultOpen;
+  if (typeof window === "undefined") return defaultOpen;
+  try {
+    const stored = localStorage.getItem(SIDEBAR_CONFIG.STORAGE_KEY);
+    return stored !== null ? JSON.parse(stored) : defaultOpen;
+  } catch {
+    return defaultOpen;
+  }
 };
