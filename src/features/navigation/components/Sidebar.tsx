@@ -1,4 +1,5 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { saveSidebarState, getInitialSidebarState } from "@/constants/sidebar";
 import { Menu, X, LayoutDashboard, BookOpen, Settings } from "lucide-react";
 
 interface SidebarContextValue {
@@ -25,22 +26,6 @@ const SIDEBAR_CONFIG = {
 
 const ICON_SIZE = "w-5 h-5";
 
-const getInitialSidebarState = (defaultState: boolean) => {
-  try {
-    const saved = localStorage.getItem('sidebarOpen');
-    return saved ? JSON.parse(saved) : defaultState;
-  } catch {
-    return defaultState;
-  }
-};
-
-const saveSidebarState = (state: boolean) => {
-  try {
-    localStorage.setItem('sidebarOpen', JSON.stringify(state));
-  } catch {
-    // Ignore errors
-  }
-};
 
 interface SidebarProviderProps {
   children: React.ReactNode;
