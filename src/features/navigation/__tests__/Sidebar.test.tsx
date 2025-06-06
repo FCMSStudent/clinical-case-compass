@@ -1,7 +1,7 @@
 /** @vitest-environment jsdom */
 import React from 'react';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import * as jestDomMatchers from '@testing-library/jest-dom/matchers';
 expect.extend(jestDomMatchers);
@@ -10,7 +10,7 @@ vi.mock('@/app/AuthContext', () => ({
   useAuth: () => ({ user: null, signOut: vi.fn() }),
 }));
 
-import { SidebarProvider, SidebarTrigger, useSidebar } from '..';
+import { SidebarProvider, SidebarTrigger, useSidebar, Sidebar } from '..';
 import * as sidebarUtils from '@/constants/sidebar';
 const { SIDEBAR_CONFIG, getInitialSidebarState } = sidebarUtils;
 
@@ -19,21 +19,26 @@ const SidebarStateDisplay = () => {
   return <div data-testid="sidebar-state">{open ? 'open' : 'closed'}</div>;
 };
 
-const renderWithProviders = (ui: React.ReactNode) =>
+const renderWithProviders = (ui: React.ReactNode, initialPath = '/') =>
   render(
-    <BrowserRouter>
+    <MemoryRouter initialEntries={[initialPath]}>
       <SidebarProvider>{ui}</SidebarProvider>
-    </BrowserRouter>
+    </MemoryRouter>
   );
 
 const clearSidebarStorage = () => {
   localStorage.removeItem(SIDEBAR_CONFIG.STORAGE_KEY);
+  // Also clear any potential cookie if it was used before, for complete cleanup.
+  document.cookie = `${SIDEBAR_CONFIG.COOKIE_NAME}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
 };
 
 describe('Sidebar Provider', () => {
   afterEach(() => {
     cleanup();
     clearSidebarStorage();
+    // Reset window width and dispatch resize event for tests that depend on it
+    window.innerWidth = 1024;
+    window.dispatchEvent(new Event('resize'));
   });
 
   it('getInitialSidebarState reads open and closed values from localStorage', () => {
@@ -44,7 +49,6 @@ describe('Sidebar Provider', () => {
   });
 
   it('SidebarTrigger toggles state on desktop', () => {
-    const saveSpy = vi.spyOn(sidebarUtils, 'saveSidebarState').mockImplementation(() => {});
     window.innerWidth = 1024;
     renderWithProviders(
       <>
@@ -53,42 +57,58 @@ describe('Sidebar Provider', () => {
       </>
     );
     const btn = screen.getByRole('button', { name: /toggle sidebar/i });
+    // default open on desktop
+    expect(screen.getByTestId('sidebar-state')).toHaveTextContent('open');
     fireEvent.click(btn);
-    expect(saveSpy.mock.calls.some(([arg]) => arg === true)).toBe(true);
+    expect(screen.getByTestId('sidebar-state')).toHaveTextContent('closed');
     fireEvent.click(btn);
-    expect(saveSpy.mock.calls.some(([arg]) => arg === false)).toBe(true);
-    saveSpy.mockRestore();
+    expect(screen.getByTestId('sidebar-state')).toHaveTextContent('open');
   });
 
   it('SidebarTrigger toggles state on mobile', () => {
-    const saveSpy = vi.spyOn(sidebarUtils, 'saveSidebarState').mockImplementation(() => {});
     window.innerWidth = 375;
     window.dispatchEvent(new Event('resize'));
     renderWithProviders(
       <>
         <SidebarTrigger />
         <SidebarStateDisplay />
-      </>
+      </>,
+      '/'
     );
     const btn = screen.getByRole('button', { name: /toggle sidebar/i });
+    // default closed on mobile
+    expect(screen.getByTestId('sidebar-state')).toHaveTextContent('closed');
     fireEvent.click(btn);
-    expect(saveSpy.mock.calls.some(([arg]) => arg === true)).toBe(true);
-    saveSpy.mockRestore();
+    expect(screen.getByTestId('sidebar-state')).toHaveTextContent('open');
   });
 
   it('keyboard shortcut toggles the sidebar', () => {
-    const saveSpy = vi.spyOn(sidebarUtils, 'saveSidebarState').mockImplementation(() => {});
     renderWithProviders(<SidebarStateDisplay />);
+    expect(screen.getByTestId('sidebar-state')).toHaveTextContent('open');
     fireEvent.keyDown(window, {
       key: SIDEBAR_CONFIG.KEYBOARD_SHORTCUT,
       ctrlKey: true,
     });
-    expect(saveSpy.mock.calls.some(([arg]) => arg === true)).toBe(true);
+    expect(screen.getByTestId('sidebar-state')).toHaveTextContent('closed');
     fireEvent.keyDown(window, {
       key: SIDEBAR_CONFIG.KEYBOARD_SHORTCUT,
       ctrlKey: true,
     });
-    expect(saveSpy.mock.calls.some(([arg]) => arg === false)).toBe(true);
-    saveSpy.mockRestore();
+    expect(screen.getByTestId('sidebar-state')).toHaveTextContent('open');
+  });
+
+  it('navigation does not reload the page and highlights active link', () => {
+    renderWithProviders(<Sidebar />, '/dashboard');
+    const nav = screen.getByRole('navigation');
+    const dashboardLink = screen.getByRole('link', { name: /dashboard/i });
+    const casesLink = screen.getByRole('link', { name: /cases/i });
+    expect(dashboardLink).toHaveClass('bg-gray-100');
+    expect(casesLink).not.toHaveClass('bg-gray-100');
+    fireEvent.click(casesLink);
+    expect(nav).toBeInTheDocument();
+    // NavLink automatically adds aria-current="page" to the active link
+    expect(casesLink).toHaveAttribute('aria-current', 'page');
+    expect(casesLink).toHaveClass('bg-gray-100');
+    expect(dashboardLink).not.toHaveClass('bg-gray-100');
   });
 });
