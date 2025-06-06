@@ -348,18 +348,20 @@ const Sidebar = React.memo(function Sidebar() {
       <>
         {/* Backdrop */}
         {open && (
-          <div 
-            className="fixed inset-0 z-40 bg-black/50 transition-opacity" 
+          <div
+            className="fixed inset-0 z-40 bg-black/50 transition-opacity"
             onClick={closeSidebar}
             aria-hidden="true"
           />
         )}
-        
+
         {/* Mobile Sidebar */}
-        <div className={cn(
-          "fixed inset-y-0 left-0 z-50 w-[var(--sidebar-width-mobile)] bg-background border-r shadow-lg transform transition-transform duration-300 ease-in-out",
-          open ? "translate-x-0" : "-translate-x-full"
-        )}>
+        <div
+          className={cn(
+            "fixed inset-y-0 left-0 z-50 w-[var(--sidebar-width-mobile)] bg-background border-r shadow-lg transform transition-transform duration-300 ease-in-out",
+            open ? "translate-x-0" : "-translate-x-full"
+          )}
+        >
           {content}
         </div>
       </>
@@ -369,9 +371,12 @@ const Sidebar = React.memo(function Sidebar() {
   return (
     <div
       className={cn(
-        "fixed inset-y-0 left-0 z-40 bg-background border-r shadow-sm transform transition-all duration-300 ease-in-out",
+        open
+          ? "sticky top-0 z-20"
+          : "fixed inset-y-0 left-0 z-40",
+        "bg-background border-r shadow-sm transform transition-all duration-300 ease-in-out",
         "w-[var(--sidebar-width)]",
-        open ? "translate-x-0" : "-translate-x-full"
+        open ? "" : "-translate-x-full"
       )}
     >
       {content}
