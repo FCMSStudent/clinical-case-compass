@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useAuth } from "@/app/AuthContext";
+import type { UserMetadata } from "@/types/auth";
 import { useTheme } from "@/app/ThemeContext";
 import { PageHeader } from "@/components/ui/page-header";
 import {
@@ -54,10 +55,10 @@ const Settings = () => {
 
   useEffect(() => {
     form.reset({
-      full_name: (user?.user_metadata as any)?.full_name || "",
-      specialty: (user?.user_metadata as any)?.specialty || "",
+      full_name: (user?.user_metadata as UserMetadata)?.full_name || "",
+      specialty: (user?.user_metadata as UserMetadata)?.specialty || "",
     });
-  }, [user]);
+  }, [user, form]);
 
   const onSubmit = async (data: ProfileFormData) => {
     try {
@@ -66,8 +67,9 @@ const Settings = () => {
         specialty: data.specialty,
       });
       toast.success("Profile updated");
-    } catch (error: any) {
-      toast.error(error.message || "Failed to update profile");
+    } catch (error: unknown) {
+      const err = error as Error;
+      toast.error(err.message || "Failed to update profile");
     }
   };
 

@@ -61,11 +61,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as Error;
       toast({
         variant: "destructive",
         title: "Sign in failed",
-        description: error.message || "An error occurred during sign in",
+        description: err.message || "An error occurred during sign in",
       });
       throw error;
     }
@@ -73,24 +74,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signUp = async (email: string, password: string, fullName?: string) => {
     try {
-      const { error } = await supabase.auth.signUp({ 
-        email, 
+      const { error } = await supabase.auth.signUp({
+        email,
         password,
         options: {
           data: { full_name: fullName }
         }
       });
       if (error) throw error;
-      
+
       toast({
         title: "Account created",
         description: "Please check your email to verify your account",
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as Error;
       toast({
         variant: "destructive",
         title: "Sign up failed",
-        description: error.message || "An error occurred during sign up",
+        description: err.message || "An error occurred during sign up",
       });
       throw error;
     }
@@ -99,11 +101,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signOut = async () => {
     try {
       await supabase.auth.signOut();
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as Error;
       toast({
         variant: "destructive",
         title: "Sign out failed",
-        description: error.message || "An error occurred during sign out",
+        description: err.message || "An error occurred during sign out",
       });
     }
   };
@@ -126,11 +129,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         title: "Profile updated",
         description: "Your profile has been updated successfully",
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as Error;
       toast({
         variant: "destructive",
         title: "Profile update failed",
-        description: error.message || "An error occurred while updating your profile",
+        description: err.message || "An error occurred while updating your profile",
       });
       throw error;
     }

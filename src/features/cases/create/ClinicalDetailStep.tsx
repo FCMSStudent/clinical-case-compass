@@ -13,6 +13,12 @@ import {
 } from "react-hook-form";
 import { z } from "zod";
 import {
+  clinicalDetailStepSchema,
+  type ClinicalDetailFormData,
+  TAB_ITEMS,
+  type TabValue,
+} from "./ClinicalDetailConfig";
+import {
   FormField,
   FormItem,
   FormLabel,
@@ -42,63 +48,21 @@ import {
   Microscope as MicroscopeIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { LabTest as ComponentLabTest, RadiologyExam as ComponentRadiologyExam } from "@/types/case";
 
 /**
  * ────────────────────────────────────────────────────────────────────────────────
  * SCHEMA
  * ────────────────────────────────────────────────────────────────────────────────
  */
-export const clinicalDetailStepSchema = z.object({
-  patientHistory: z.string().optional(),
-  selectedBodyParts: z.array(z.string()).default([]),
-  systemSymptoms: z.record(z.array(z.string())).default({}),
-  vitals: z.record(z.string()).default({}),
-  physicalExam: z.string().optional(),
-  labResults: z
-    .array(
-      z.object({
-        id: z.string(),
-        name: z.string(),
-        value: z.string(),
-        unit: z.string(),
-      }),
-    )
-    .default([]),
-  radiologyExams: z
-    .array(
-      z.object({
-        id: z.string(),
-        modality: z.string(),
-        findings: z.string(),
-      }),
-    )
-    .default([]),
-});
-export type ClinicalDetailFormData = z.infer<typeof clinicalDetailStepSchema>;
+
 
 /**
  * ────────────────────────────────────────────────────────────────────────────────
- * CONSTANTS & TYPES
+ * TYPES
  * ────────────────────────────────────────────────────────────────────────────────
  */
-const TAB_ITEMS = [
-  {
-    value: "history",
-    label: "History & Exam",
-    icon: UserIcon,
-  },
-  {
-    value: "systems",
-    label: "Systems Review",
-    icon: BrainIcon,
-  },
-  {
-    value: "diagnostics",
-    label: "Diagnostics",
-    icon: TestTubeIcon,
-  },
-] as const;
-export type TabValue = (typeof TAB_ITEMS)[number]["value"];
+type TabValue = (typeof TAB_ITEMS)[number]["value"];
 
 interface ClinicalDetailStepProps<T extends FieldValues = ClinicalDetailFormData> {
   control: Control<T>;
@@ -151,13 +115,13 @@ export const ClinicalDetailStep = memo(function ClinicalDetailStep<
    * ─────────── Handlers ————————————————————————————————————————————————
    */
   const handleBodyPartSelected = useCallback(
-    (selection: any) => {
+    (selection: { id?: string; name?: string }) => {
       const partName = selection.name || selection.id;
       setValue(
         "selectedBodyParts" as Path<T>,
-        selectedBodyParts.includes(partName)
-          ? (selectedBodyParts.filter((p) => p !== partName) as any)
-          : ([...selectedBodyParts, partName] as any),
+        (selectedBodyParts.includes(partName)
+          ? selectedBodyParts.filter((p) => p !== partName)
+          : [...selectedBodyParts, partName]) as FieldValues[Path<T>],
         { shouldValidate: true },
       );
     },
@@ -166,24 +130,24 @@ export const ClinicalDetailStep = memo(function ClinicalDetailStep<
 
   const setSystemSymptoms = useCallback(
     (val: Record<string, string[]>) =>
-      setValue("systemSymptoms" as Path<T>, val as any, { shouldValidate: true }),
+      setValue("systemSymptoms" as Path<T>, val as FieldValues[Path<T>], { shouldValidate: true }),
     [setValue],
   );
 
   const setVitals = useCallback(
     (v: Record<string, string>) =>
-      setValue("vitals" as Path<T>, v as any, { shouldValidate: true }),
+      setValue("vitals" as Path<T>, v as FieldValues[Path<T>], { shouldValidate: true }),
     [setValue],
   );
 
   const setLabResults = useCallback(
-    (labs: any[]) => setValue("labResults" as Path<T>, labs as any, { shouldValidate: true }),
+    (labs: ComponentLabTest[]) => setValue("labResults" as Path<T>, labs as FieldValues[Path<T>], { shouldValidate: true }),
     [setValue],
   );
 
   const setRadiology = useCallback(
-    (imgs: any[]) =>
-      setValue("radiologyExams" as Path<T>, imgs as any, { shouldValidate: true }),
+    (imgs: ComponentRadiologyExam[]) =>
+      setValue("radiologyExams" as Path<T>, imgs as FieldValues[Path<T>], { shouldValidate: true }),
     [setValue],
   );
 

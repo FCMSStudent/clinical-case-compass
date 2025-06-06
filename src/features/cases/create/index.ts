@@ -1,6 +1,7 @@
 export { CaseInfoStep, caseInfoSchema } from './CaseInfoStep';
 export { PatientStep, patientStepSchema } from './PatientStep';
-export { ClinicalDetailStep, clinicalDetailStepSchema } from './ClinicalDetailStep';
+export { ClinicalDetailStep } from './ClinicalDetailStep';
+export { clinicalDetailStepSchema } from './ClinicalDetailConfig';
 export { LearningPointsStep, learningPointsStepSchema } from './LearningPointsStep';
 export { FormContainer } from './FormContainer';
 export type { StepMeta } from './FormContainer';

@@ -12,7 +12,7 @@ class ResizeObserver {
   unobserve() {}
   disconnect() {}
 }
-(global as any).ResizeObserver = ResizeObserver;
+(globalThis as unknown as { ResizeObserver: typeof ResizeObserver }).ResizeObserver = ResizeObserver;
 
 describe('InteractiveBodyDiagram severity filter', () => {
   it('shows only critical parts when filter is set to critical', () => {

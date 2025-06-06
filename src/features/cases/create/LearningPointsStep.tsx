@@ -123,7 +123,7 @@ export const LearningPointsStep = memo(function LearningPointsStep<
 >({ control, className, maxLinks = 8 }: LearningPointsStepProps<T>) {
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "resourceLinks" as any, // Type assertion to resolve the complex type error
+    name: "resourceLinks" as Path<T>,
   });
 
   return (
@@ -212,7 +212,7 @@ export const LearningPointsStep = memo(function LearningPointsStep<
           <Button
             type="button"
             variant="outline"
-            onClick={() => append({ url: "", description: "" } as any)}
+            onClick={() => append({ url: "", description: "" } as unknown as FieldValues[Path<T>])}
             disabled={fields.length >= maxLinks}
           >
             <PlusCircle className="mr-2 h-4 w-4" /> Add Resource Link

@@ -13,7 +13,7 @@ beforeAll(() => {
     unobserve() {}
     disconnect() {}
   }
-  // @ts-ignore
+  // @ts-expect-error ResizeObserver is not available in jsdom
   global.ResizeObserver = ResizeObserver;
 });
 
