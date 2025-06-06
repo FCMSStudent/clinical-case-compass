@@ -102,13 +102,13 @@ describe('Sidebar Provider', () => {
     const nav = screen.getByRole('navigation');
     const dashboardLink = screen.getByRole('link', { name: /dashboard/i });
     const casesLink = screen.getByRole('link', { name: /cases/i });
-    expect(dashboardLink).toHaveClass('bg-gray-100');
-    expect(casesLink).not.toHaveClass('bg-gray-100');
+    expect(dashboardLink).toHaveClass('bg-accent');
+    expect(casesLink).not.toHaveClass('bg-accent');
     fireEvent.click(casesLink);
     expect(nav).toBeInTheDocument();
     // NavLink automatically adds aria-current="page" to the active link
     expect(casesLink).toHaveAttribute('aria-current', 'page');
-    expect(casesLink).toHaveClass('bg-gray-100');
-    expect(dashboardLink).not.toHaveClass('bg-gray-100');
+    expect(casesLink).toHaveClass('bg-accent');
+    expect(dashboardLink).not.toHaveClass('bg-accent');
   });
 });
