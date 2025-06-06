@@ -111,11 +111,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const updateProfile = async (data: { full_name?: string; specialty?: string; avatar_url?: string }) => {
     try {
       if (!user) throw new Error("No user logged in");
-      
-      const { error } = await supabase.from("profiles").update(data).eq("id", user.id);
-      
-      if (error) throw error;
-      
+
+      const { error: dbError } = await supabase.from("profiles").update(data).eq("id", user.id);
+      if (dbError) throw dbError;
+
+      const { data: authData, error: authError } = await supabase.auth.updateUser({ data });
+      if (authError) throw authError;
+
+      if (authData?.user) {
+        setUser(authData.user);
+      }
+
       toast({
         title: "Profile updated",
         description: "Your profile has been updated successfully",
