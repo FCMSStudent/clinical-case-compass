@@ -4,6 +4,7 @@ import {
   X,
   LayoutDashboard,
   BookOpen,
+  Bell,
   Settings,
   ChevronLeft,
   User,
