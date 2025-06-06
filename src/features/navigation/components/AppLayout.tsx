@@ -1,6 +1,6 @@
 import React from "react";
 import { Bell, Search } from "lucide-react";
-import { Sidebar, SidebarTrigger, useSidebar } from "@/features/navigation";
+import { Sidebar, SidebarTrigger } from "@/features/navigation";
 import { cn } from "@/lib/utils";
 
 interface AppLayoutProps {
@@ -45,29 +45,20 @@ const HeaderActions: React.FC = () => {
   );
 };
 
-export const AppLayout: React.FC<AppLayoutProps> = ({ 
-  children, 
-  className, 
+export const AppLayout: React.FC<AppLayoutProps> = ({
+  children,
+  className,
   title = "MedCase",
-  actions 
+  actions
 }) => {
-  const { open, isMobile, collapsed } = useSidebar();
-
-  // Calculate main content padding based on sidebar state
-  const getMainPadding = () => {
-    if (isMobile) return "pl-0";
-    if (!open) return "pl-0";
-    return collapsed ? "pl-[var(--sidebar-width-icon)]" : "pl-[var(--sidebar-width)]";
-  };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background md:flex">
       <Sidebar />
-      
+
       <div
         className={cn(
-          "min-h-screen transition-all duration-300 ease-in-out",
-          getMainPadding()
+          "flex-1 min-h-screen transition-all duration-300 ease-in-out"
         )}
       >
         {/* Desktop Header */}
