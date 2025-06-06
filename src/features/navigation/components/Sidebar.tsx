@@ -201,7 +201,7 @@ const NavItem: React.FC<NavItemProps> = ({ item, collapsed, isMobile, onNavigate
 
       {/* Tooltip for collapsed state */}
       {collapsed && !isMobile && (
-        <div className="absolute left-full ml-2 hidden group-hover:block">
+        <div className="absolute top-1/2 left-full ml-2 -translate-y-1/2 z-50 hidden group-hover:block">
           <div className="rounded-md bg-popover px-2 py-1 text-xs text-popover-foreground shadow-md border">
             {item.label}
             {item.badge && (
@@ -235,7 +235,7 @@ const UserProfile: React.FC<{ collapsed: boolean; isMobile: boolean }> = ({ coll
         </button>
 
         {/* Tooltip */}
-        <div className="absolute left-full ml-2 hidden group-hover:block">
+        <div className="absolute top-1/2 left-full ml-2 -translate-y-1/2 z-50 hidden group-hover:block">
           <div className="rounded-md bg-popover px-3 py-2 text-xs text-popover-foreground shadow-md border min-w-[200px]">
             <div className="font-medium">{fullName}</div>
             <div className="text-muted-foreground">{user.email}</div>
@@ -296,7 +296,7 @@ const Sidebar = React.memo(function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto p-4">
+      <nav className={cn("flex-1 p-4", collapsed && !isMobile ? "overflow-visible" : "overflow-y-auto")}>
         <ul className="space-y-1">
           {navItems.map((item) => (
             <li key={item.href}>
