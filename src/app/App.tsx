@@ -136,6 +136,7 @@ const App = () => {
                         </PrivateRoute>
                       }
                     />
+                    <Route path="/setting" element={<Navigate to="/settings" replace />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </SidebarProvider>
