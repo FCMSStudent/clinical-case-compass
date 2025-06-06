@@ -26,20 +26,20 @@ const renderWithProviders = (ui: React.ReactNode) =>
     </BrowserRouter>
   );
 
-const clearSidebarCookie = () => {
-  document.cookie = `${SIDEBAR_CONFIG.COOKIE_NAME}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+const clearSidebarStorage = () => {
+  localStorage.removeItem(SIDEBAR_CONFIG.STORAGE_KEY);
 };
 
 describe('Sidebar Provider', () => {
   afterEach(() => {
     cleanup();
-    clearSidebarCookie();
+    clearSidebarStorage();
   });
 
-  it('getInitialSidebarState reads open and closed values from cookies', () => {
-    document.cookie = `${SIDEBAR_CONFIG.COOKIE_NAME}=true`;
+  it('getInitialSidebarState reads open and closed values from localStorage', () => {
+    localStorage.setItem(SIDEBAR_CONFIG.STORAGE_KEY, 'true');
     expect(getInitialSidebarState(false)).toBe(true);
-    document.cookie = `${SIDEBAR_CONFIG.COOKIE_NAME}=false`;
+    localStorage.setItem(SIDEBAR_CONFIG.STORAGE_KEY, 'false');
     expect(getInitialSidebarState(true)).toBe(false);
   });
 
