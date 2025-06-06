@@ -3,7 +3,7 @@ import { useAuth } from "@/app/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useSidebar } from "@/features/navigation";
-import { LogOut } from "lucide-react";
+import { LogOut, User } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -18,10 +18,7 @@ export function UserProfileDisplay() {
   if (!user) {
     return null;
   }
-  
-  // Get the first letter of the user's email as a fallback
-  const emailInitial = user.email ? user.email[0].toUpperCase() : "U";
-  
+
   // Collapsed sidebar on desktop
   if (!open && !isMobile) {
     return (
@@ -31,7 +28,9 @@ export function UserProfileDisplay() {
             <TooltipTrigger asChild>
               <Avatar className="h-8 w-8">
                 <AvatarImage src="" />
-                <AvatarFallback>{emailInitial}</AvatarFallback>
+                <AvatarFallback>
+                  <User className="h-4 w-4 text-muted-foreground" />
+                </AvatarFallback>
               </Avatar>
             </TooltipTrigger>
             <TooltipContent side="right">
@@ -60,7 +59,9 @@ export function UserProfileDisplay() {
         <div className="flex items-center space-x-3">
           <Avatar>
             <AvatarImage src="" />
-            <AvatarFallback>{emailInitial}</AvatarFallback>
+            <AvatarFallback>
+              <User className="h-4 w-4 text-muted-foreground" />
+            </AvatarFallback>
           </Avatar>
           <div className="space-y-1">
             <p className="text-sm font-medium truncate">{user.email}</p>
