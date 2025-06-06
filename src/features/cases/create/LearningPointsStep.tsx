@@ -1,4 +1,3 @@
-
 import React, { memo } from "react";
 import {
   Control,
@@ -212,7 +211,9 @@ export const LearningPointsStep = memo(function LearningPointsStep<
           <Button
             type="button"
             variant="outline"
-            onClick={() => append({ url: "", description: "" } as unknown as FieldValues[Path<T>])}
+            onClick={() =>
+              append({ url: "", description: "" } as unknown as { url: string; description?: string })
+            }
             disabled={fields.length >= maxLinks}
           >
             <PlusCircle className="mr-2 h-4 w-4" /> Add Resource Link

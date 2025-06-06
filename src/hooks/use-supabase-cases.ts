@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/app/AuthContext';
@@ -14,6 +13,7 @@ type DbDiagnosis = Database['public']['Tables']['diagnoses']['Row'];
 type DbResource = Database['public']['Tables']['resources']['Row'];
 type DbCaseTag = Database['public']['Tables']['case_tags']['Row'];
 
+// Use the more flexible DB types for incoming data
 interface DbLabTest {
   id?: string;
   name?: string | null;
@@ -25,7 +25,7 @@ interface DbLabTest {
 interface DbRadiologyExam {
   id?: string;
   modality?: string | null;
-  type?: string | null;
+  type?: string | null; // Keep type as it exists in both
   findings?: string | null;
   impression?: string | null;
 }
@@ -262,16 +262,20 @@ function transformDbCaseToMedicalCase(dbCase: Record<string, unknown>): MedicalC
     vitals: (dbCase.vitals || {}) as Record<string, string>,
     symptoms: (dbCase.symptoms || {}) as Record<string, boolean>,
     urinarySymptoms: (dbCase.urinary_symptoms || []) as string[],
+    // Use DbLabTest interface and ensure properties are handled for ComponentLabTest
     labTests: ((dbCase.lab_tests || []) as DbLabTest[]).map((test) => ({
       id: test.id ?? `lab-${Date.now()}-${Math.random()}`,
       name: test.name ?? '',
       value: test.value ?? '',
-      unit: test.unit ?? ''
+      unit: test.unit ?? '',
+      normalRange: test.normalRange ?? undefined // Ensure normalRange is handled
     })) as ComponentLabTest[],
+    // Use DbRadiologyExam interface and ensure properties are handled for ComponentRadiologyExam
     radiologyExams: ((dbCase.radiology_exams || []) as DbRadiologyExam[]).map((exam) => ({
       id: exam.id ?? `rad-${Date.now()}-${Math.random()}`,
-      modality: exam.modality ?? exam.type ?? '',
-      findings: exam.findings ?? ''
+      modality: exam.modality ?? exam.type ?? '', // Prioritize modality, fallback to type
+      findings: exam.findings ?? '',
+      impression: exam.impression ?? undefined // Ensure impression is handled
     })) as ComponentRadiologyExam[],
     diagnoses: ((dbCase.diagnoses as DbDiagnosis[]) || []).map((d: DbDiagnosis) => ({
       id: d.id,

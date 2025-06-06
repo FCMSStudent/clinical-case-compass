@@ -53,6 +53,11 @@ const Settings = () => {
     },
   });
 
+  interface UserMetadata {
+    full_name?: string;
+    specialty?: string;
+  }
+
   useEffect(() => {
     form.reset({
       full_name: (user?.user_metadata as UserMetadata)?.full_name || "",

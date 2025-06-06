@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, useEffect, useContext } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
@@ -68,7 +67,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         title: "Sign in failed",
         description: err.message || "An error occurred during sign in",
       });
-      throw error;
+      throw err;
     }
   };
 
@@ -94,7 +93,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         title: "Sign up failed",
         description: err.message || "An error occurred during sign up",
       });
-      throw error;
+      throw err;
     }
   };
 
@@ -136,7 +135,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         title: "Profile update failed",
         description: err.message || "An error occurred while updating your profile",
       });
-      throw error;
+      throw err;
     }
   };
 

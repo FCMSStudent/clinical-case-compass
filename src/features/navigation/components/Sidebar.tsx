@@ -4,6 +4,7 @@ import {
   X,
   LayoutDashboard,
   BookOpen,
+  Bell,
   Settings,
   ChevronLeft,
   User,
@@ -13,7 +14,7 @@ import {
 import { NavLink } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/app/AuthContext';
-import type { UserMetadata } from '@/types/auth';
+import type { UserMetadata } from '@/types/auth'; // Keep this import
 import { SIDEBAR_CONFIG, getInitialSidebarState, saveSidebarState } from "@/constants/sidebar";
 import { SidebarContext, useSidebar, type SidebarContextValue } from './SidebarContext';
 
