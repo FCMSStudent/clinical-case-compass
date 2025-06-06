@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, useEffect, useContext } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
@@ -61,7 +60,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
-  } catch (error: unknown) {
+    } catch (error: unknown) {
       const err = error as Error;
       toast({
         variant: "destructive",
@@ -74,15 +73,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signUp = async (email: string, password: string, fullName?: string) => {
     try {
-      const { error } = await supabase.auth.signUp({ 
-        email, 
+      const { error } = await supabase.auth.signUp({
+        email,
         password,
         options: {
           data: { full_name: fullName }
         }
       });
       if (error) throw error;
-      
+
       toast({
         title: "Account created",
         description: "Please check your email to verify your account",

@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Menu,
   X,
@@ -14,27 +14,9 @@ import {
 import { NavLink } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/app/AuthContext';
+import type { UserMetadata } from '@/types/auth'; // Keep this import
 import { SIDEBAR_CONFIG, getInitialSidebarState, saveSidebarState } from "@/constants/sidebar";
-
-interface SidebarContextValue {
-  open: boolean;
-  isMobile: boolean;
-  collapsed: boolean;
-  toggle: () => void;
-  openSidebar: () => void;
-  closeSidebar: () => void;
-  toggleCollapsed: () => void;
-}
-
-const SidebarContext = createContext<SidebarContextValue>({
-  open: false,
-  isMobile: false,
-  collapsed: false,
-  toggle: () => {},
-  openSidebar: () => {},
-  closeSidebar: () => {},
-  toggleCollapsed: () => {},
-});
+import { SidebarContext, useSidebar, type SidebarContextValue } from './SidebarContext';
 
 const ICON_SIZE = "w-5 h-5";
 
@@ -110,8 +92,6 @@ export const SidebarProvider: React.FC<SidebarProviderProps> = ({ children }) =>
     </SidebarContext.Provider>
   );
 };
-
-export const useSidebar = () => useContext(SidebarContext);
 
 export const SidebarTrigger = ({ className }: { className?: string }) => {
   const { toggle } = useSidebar();
@@ -224,9 +204,6 @@ const UserProfile: React.FC<{ collapsed: boolean; isMobile: boolean }> = ({ coll
     return null;
   }
 
-  interface UserMetadata {
-    full_name?: string;
-  }
   const fullName = (user.user_metadata as UserMetadata)?.full_name || user.email;
 
   if (collapsed && !isMobile) {

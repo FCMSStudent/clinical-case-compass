@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useAuth } from "@/app/AuthContext";
+import type { UserMetadata } from "@/types/auth";
 import { useTheme } from "@/app/ThemeContext";
 import { PageHeader } from "@/components/ui/page-header";
 import {
