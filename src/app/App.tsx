@@ -18,17 +18,6 @@ import Settings from "@/pages/Settings";
 import Auth from "@/pages/Auth";
 import NotFound from "@/pages/NotFound";
 import { PrivateRoute } from "@/features/auth/PrivateRoute";
-import { useEffect } from "react";
-import NProgress from "nprogress";
-import "nprogress/nprogress.css";
-
-// Configure NProgress
-NProgress.configure({
-  showSpinner: false,
-  minimum: 0.1,
-  speed: 200,
-  trickleSpeed: 200,
-});
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -49,20 +38,6 @@ const queryClient = new QueryClient({
 });
 
 const App = () => {
-  useEffect(() => {
-    // Start loading indicator on route changes
-    const handleStart = () => NProgress.start();
-    const handleComplete = () => NProgress.done();
-
-    // Listen for route changes (simplified approach)
-    window.addEventListener('beforeunload', handleStart);
-    
-    return () => {
-      window.removeEventListener('beforeunload', handleStart);
-      handleComplete();
-    };
-  }, []);
-
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
