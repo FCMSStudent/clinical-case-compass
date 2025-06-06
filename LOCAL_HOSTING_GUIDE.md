@@ -69,7 +69,7 @@ Finally, start the local development server:
     bun run dev
     ```
 
-This will typically make the application available at `http://localhost:5173` in your web browser. Check the terminal output for the exact URL.
+This will typically make the application available at `http://localhost:8080` in your web browser. Check the terminal output for the exact URL.
 
 ---
 
