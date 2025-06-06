@@ -1,5 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Menu, X, LayoutDashboard, BookOpen, Settings } from "lucide-react";
+import { NavLink } from 'react-router-dom';
+import { cn } from '@/lib/utils';
 
 interface SidebarContextValue {
   open: boolean;
@@ -130,21 +132,24 @@ const navItems = [
 
 const Sidebar = React.memo(function Sidebar() {
   const { open, isMobile, closeSidebar } = useSidebar();
-  const location = { pathname: window.location.pathname };
 
   const content = (
     <nav className="flex h-full flex-col p-4">
       <ul className="space-y-2">
         {navItems.map((item) => (
           <li key={item.href}>
-            <a
-              href={item.href}
-              className={`flex items-center space-x-2 rounded-md p-2 text-sm hover:bg-gray-100
-                ${location.pathname === item.href ? 'bg-gray-100' : ''}`}
+            <NavLink
+              to={item.href}
+              className={({ isActive }) =>
+                cn(
+                  'flex items-center space-x-2 rounded-md p-2 text-sm hover:bg-gray-100',
+                  isActive && 'bg-gray-100'
+                )
+              }
             >
               <item.icon className={ICON_SIZE} />
               <span>{item.label}</span>
-            </a>
+            </NavLink>
           </li>
         ))}
       </ul>
