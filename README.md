@@ -92,6 +92,10 @@ bun run dev
 
 This will start the development server, typically at `http://localhost:8080`.
 
+### Troubleshooting
+If `npm run dev` fails with an error about `@vitejs/plugin-react` or other missing modules, run `npm install` (or `bun install`) to install dependencies before starting the dev server.
+
+
 ## Available Scripts
 
 The `package.json` file defines the following scripts:
