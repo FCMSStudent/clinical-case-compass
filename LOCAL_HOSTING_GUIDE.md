@@ -34,8 +34,10 @@ Once inside the project directory, install the necessary packages using either n
     ```
 *   **Or, using Bun:**
     ```bash
-    bun install
-    ```
+bun install
+```
+
+If you update the repository or switch branches later, run `npm install` again so that new dependencies (like Vite plugins) are installed.
 
 ## 4. Set Up Environment Variables (Supabase)
 
@@ -55,6 +57,8 @@ This project uses Supabase for its backend. You'll need to connect it to your ow
         VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
         ```
     *   Replace `your_supabase_project_url` and `your_supabase_anon_key` with your actual Supabase project details. The `VITE_` prefix is important.
+
+If the server starts but the page is blank, ensure this `.env` file exists and contains your Supabase credentials.
 
 ## 5. Run the Development Server
 
