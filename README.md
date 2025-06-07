@@ -56,6 +56,8 @@ Or using Bun:
 bun install
 ```
 
+If you pull new updates or switch branches later, run `npm install` again to ensure all dependencies are installed.
+
 ### 3. Set Up Environment Variables
 
 This project uses Supabase for its backend services. You will need to create a Supabase project and obtain your project URL and anon key.
@@ -72,7 +74,10 @@ This project uses Supabase for its backend services. You will need to create a S
    ```
 
    **Note:** The `VITE_` prefix is important for Vite projects to expose these variables to the client-side code.
-   The Supabase client now reads these values from `import.meta.env`.
+The Supabase client now reads these values from `import.meta.env`.
+
+If the app shows a blank page after running the dev server, double-check that the
+`.env` file exists and contains your Supabase credentials.
 
 ### 4. Run the Development Server
 
