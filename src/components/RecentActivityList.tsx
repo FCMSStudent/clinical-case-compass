@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from './supabaseClient'; // Make sure you import your Supabase client
+import { supabase } from '@/integrations/supabase/client';
 
 function RecentActivityList() {
   // 1. Initialize state with an empty array
