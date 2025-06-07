@@ -51,6 +51,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(false);
     });
 
+    // Check for placeholder Supabase credentials
+    if (
+      import.meta.env.VITE_SUPABASE_URL === "YOUR_SUPABASE_URL" ||
+      import.meta.env.VITE_SUPABASE_ANON_KEY === "YOUR_SUPABASE_ANON_KEY"
+    ) {
+      console.warn(
+        "Supabase credentials are using placeholder values. Please update them in your .env file for full functionality."
+      );
+    }
+
     return () => {
       subscription.unsubscribe();
     };
