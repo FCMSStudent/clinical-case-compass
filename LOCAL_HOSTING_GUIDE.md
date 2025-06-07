@@ -34,8 +34,10 @@ Once inside the project directory, install the necessary packages using either n
     ```
 *   **Or, using Bun:**
     ```bash
-    bun install
-    ```
+bun install
+```
+
+If you update the repository or switch branches later, run `npm install` again so that new dependencies (like Vite plugins) are installed.
 
 ## 4. Set Up Environment Variables (Supabase)
 

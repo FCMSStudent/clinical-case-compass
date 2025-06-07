@@ -56,6 +56,8 @@ Or using Bun:
 bun install
 ```
 
+If you pull new updates or switch branches later, run `npm install` again to ensure all dependencies are installed.
+
 ### 3. Set Up Environment Variables
 
 This project uses Supabase for its backend services. You will need to create a Supabase project and obtain your project URL and anon key.
