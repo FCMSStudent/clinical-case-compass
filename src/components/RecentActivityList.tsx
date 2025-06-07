@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client'; // Corrected import path
+import { supabase } from '../integrations/supabase/client'; // Corrected import path for components folder
 
 function RecentActivityList() {
   // 1. Initialize state with an empty array
