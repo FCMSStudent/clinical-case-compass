@@ -1,4 +1,3 @@
-
 import { MedicalCase, CaseTag } from "@/types/case";
 
 // Generate a random ID

@@ -1,6 +1,6 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
-import { getCaseById } from "@/data/mock-data";
+import * as MockData from "@/data/mock-data";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -56,7 +56,7 @@ const CaseDetail = () => {
     }
     
     // If not found in localStorage, check mock data
-    const mockCase = getCaseById(id);
+    const mockCase = MockData.getCaseById(id);
     if (mockCase) {
       console.log("Found case in mock data:", mockCase);
       setMedicalCase(mockCase);
