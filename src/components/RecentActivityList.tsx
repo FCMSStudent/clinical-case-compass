@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from './supabaseClient'; // Make sure you import your Supabase client
+import { supabase } from '@/integrations/supabase/client'; // Corrected import path
 
 function RecentActivityList() {
   // 1. Initialize state with an empty array
@@ -10,11 +10,12 @@ function RecentActivityList() {
     async function getActivities() {
       try {
         setLoading(true);
-        // 2. Replace 'activities' with your actual table name
+        // 2. Using medical_cases table since 'activities' doesn't exist in your schema
         const { data, error } = await supabase
-          .from('activities')
-          .select('*') // Select all columns
-          .limit(10); // Optionally limit the results
+          .from('medical_cases')
+          .select('id, title, created_at, chief_complaint')
+          .order('created_at', { ascending: false })
+          .limit(10);
 
         if (error) {
           // 3. This will show an error in the console if the request fails
@@ -24,7 +25,7 @@ function RecentActivityList() {
 
         // 4. CRITICAL: Log the data you receive from Supabase
         console.log('Fetched data:', data);
-
+        
         if (data) {
           setActivities(data);
         }
@@ -52,7 +53,10 @@ function RecentActivityList() {
   return (
     <ul>
       {activities.map((activity) => (
-        <li key={activity.id}>{activity.description}</li> // Use a real property from your data
+        <li key={activity.id}>
+          <strong>{activity.title}</strong> - {activity.chief_complaint}
+          <small> ({new Date(activity.created_at).toLocaleDateString()})</small>
+        </li>
       ))}
     </ul>
   );
