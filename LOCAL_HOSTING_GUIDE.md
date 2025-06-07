@@ -75,6 +75,10 @@ Finally, start the local development server:
 
 This will typically make the application available at `http://localhost:8080` in your web browser. Check the terminal output for the exact URL.
 
+## Troubleshooting
+If `npm run dev` fails with an error about `@vitejs/plugin-react` or other missing modules, run `npm install` (or `bun install`) before starting the dev server.
+
+
 ---
 
 Now you can access the application locally, make code changes, and see them reflected in real-time.
