@@ -17,7 +17,16 @@ import {
 } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, Hash, User as UserIcon, Users } from "lucide-react";
+import { 
+  Calendar, 
+  Hash, 
+  User as UserIcon, 
+  Users, 
+  Heart,
+  FileUser,
+  UserCheck,
+  Clock
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -43,27 +52,46 @@ export type PatientStepFormData = z.infer<typeof patientStepSchema>;
 const SEX_OPTIONS = ["Male", "Female", "Other"] as const;
 
 /**
- * Utility wrapper that standardises card header & icon usage.
+ * Enhanced utility wrapper with beautiful gradients and animations
  */
 function FieldCard({
   icon: Icon,
   title,
   children,
   className,
+  gradient,
+  iconColor,
 }: {
   icon: React.ElementType;
   title: string;
   children: React.ReactNode;
   className?: string;
+  gradient?: string;
+  iconColor?: string;
 }) {
   return (
-    <Card className={cn("shadow-sm", className)}>
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-base text-foreground">
-          <Icon className="h-4 w-4" /> {title}
+    <Card className={cn(
+      "group shadow-lg border-0 bg-gradient-to-br from-white to-gray-50/30 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden",
+      className
+    )}>
+      <CardHeader className={cn(
+        "pb-4 bg-gradient-to-r relative overflow-hidden",
+        gradient || "from-blue-50 to-indigo-50"
+      )}>
+        <div className="absolute inset-0 bg-gradient-to-r from-white/40 to-transparent"></div>
+        <CardTitle className="flex items-center gap-3 text-lg font-semibold relative z-10">
+          <div className={cn(
+            "p-2.5 rounded-xl bg-white/90 shadow-md group-hover:shadow-lg transition-all duration-300 group-hover:scale-110",
+            iconColor || "text-blue-600"
+          )}>
+            <Icon className="h-5 w-5" />
+          </div>
+          <span className="bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+            {title}
+          </span>
         </CardTitle>
       </CardHeader>
-      <CardContent>{children}</CardContent>
+      <CardContent className="pt-6 space-y-4">{children}</CardContent>
     </Card>
   );
 }
@@ -87,21 +115,38 @@ export const PatientStep = memo(function PatientStep<
   T extends FieldValues = PatientStepFormData,
 >({ control, className }: PatientStepProps<T>) {
   return (
-    <section className={cn("space-y-6", className)}>
-      {/* Header */}
-      <header className="mb-6 space-y-1">
-        <h3 className="flex items-center text-lg font-semibold text-primary">
-          <UserIcon className="mr-2 h-5 w-5 text-primary" /> Patient Information
-        </h3>
-        <p className="text-sm text-muted-foreground">
-          Enter the patient’s basic demographic and identification information.
-        </p>
+    <section className={cn("space-y-8", className)}>
+      {/* Enhanced Header with medical theme */}
+      <header className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-teal-600 via-cyan-600 to-blue-700 p-8 text-white shadow-2xl">
+        <div className="absolute inset-0 bg-black/10"></div>
+        <div className="absolute -top-4 -right-4 opacity-10">
+          <Heart className="h-24 w-24" />
+        </div>
+        <div className="absolute top-8 right-8 opacity-20">
+          <UserCheck className="h-8 w-8" />
+        </div>
+        <div className="relative space-y-3">
+          <h3 className="flex items-center text-2xl font-bold">
+            <div className="mr-4 rounded-xl bg-white/20 p-3 backdrop-blur-sm">
+              <UserIcon className="h-7 w-7" />
+            </div>
+            Patient Demographics
+          </h3>
+          <p className="text-cyan-100 text-lg max-w-2xl leading-relaxed">
+            Document essential patient information and demographic details for comprehensive case documentation.
+          </p>
+        </div>
       </header>
 
-      {/* Name & MRN */}
+      {/* Name & MRN Row */}
       <div className="grid gap-6 md:grid-cols-2">
-        {/* Name */}
-        <FieldCard icon={UserIcon} title="Patient Name *">
+        {/* Patient Name */}
+        <FieldCard 
+          icon={UserIcon} 
+          title="Patient Name" 
+          gradient="from-emerald-50 to-green-50"
+          iconColor="text-emerald-600"
+        >
           <FormField
             control={control}
             name={"patientName" as Path<T>}
@@ -109,13 +154,14 @@ export const PatientStep = memo(function PatientStep<
               <FormItem>
                 <FormControl>
                   <Input
-                    placeholder="e.g., John Doe"
-                    className="text-sm"
+                    placeholder="e.g., John A. Doe"
+                    className="text-base border-2 border-gray-200 focus:border-emerald-400 focus:ring-emerald-100 rounded-xl py-3 px-4 transition-all duration-200"
                     {...field}
                   />
                 </FormControl>
-                <FormDescription>
-                  Full name of the patient (may be anonymised).
+                <FormDescription className="text-gray-600 mt-3 flex items-start gap-2">
+                  <div className="w-2 h-2 rounded-full bg-emerald-400 mt-2 flex-shrink-0"></div>
+                  Patient's full name (can be anonymized for privacy)
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -123,18 +169,28 @@ export const PatientStep = memo(function PatientStep<
           />
         </FieldCard>
 
-        {/* MRN */}
-        <FieldCard icon={Hash} title="Medical Record Number">
+        {/* Medical Record Number */}
+        <FieldCard 
+          icon={Hash} 
+          title="Medical Record Number" 
+          gradient="from-blue-50 to-indigo-50"
+          iconColor="text-blue-600"
+        >
           <FormField
             control={control}
             name={"medicalRecordNumber" as Path<T>}
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input placeholder="e.g., MRN123456" className="text-sm" {...field} />
+                  <Input 
+                    placeholder="e.g., MRN-2024-001234" 
+                    className="text-base border-2 border-gray-200 focus:border-blue-400 focus:ring-blue-100 rounded-xl py-3 px-4 transition-all duration-200 font-mono"
+                    {...field} 
+                  />
                 </FormControl>
-                <FormDescription>
-                  Patient’s medical record number or hospital ID (optional).
+                <FormDescription className="text-gray-600 mt-3 flex items-start gap-2">
+                  <div className="w-2 h-2 rounded-full bg-blue-400 mt-2 flex-shrink-0"></div>
+                  Unique hospital identifier (optional)
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -143,37 +199,55 @@ export const PatientStep = memo(function PatientStep<
         </FieldCard>
       </div>
 
-      {/* Age & Sex */}
+      {/* Age & Gender Row */}
       <div className="grid gap-6 md:grid-cols-2">
         {/* Age */}
-        <FieldCard icon={Calendar} title="Age">
+        <FieldCard 
+          icon={Clock} 
+          title="Patient Age" 
+          gradient="from-orange-50 to-amber-50"
+          iconColor="text-orange-600"
+        >
           <FormField
             control={control}
             name={"patientAge" as Path<T>}
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input
-                    type="number"
-                    placeholder="e.g., 35"
-                    min={0}
-                    max={150}
-                    className="text-sm"
-                    value={field.value ?? ""}
-                    onChange={(e) =>
-                      field.onChange(e.target.value === "" ? "" : Number(e.target.value))
-                    }
-                  />
+                  <div className="relative">
+                    <Input
+                      type="number"
+                      placeholder="e.g., 45"
+                      min={0}
+                      max={150}
+                      className="text-base border-2 border-gray-200 focus:border-orange-400 focus:ring-orange-100 rounded-xl py-3 px-4 pr-16 transition-all duration-200"
+                      value={field.value ?? ""}
+                      onChange={(e) =>
+                        field.onChange(e.target.value === "" ? "" : Number(e.target.value))
+                      }
+                    />
+                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm font-medium">
+                      years
+                    </span>
+                  </div>
                 </FormControl>
-                <FormDescription>Patient age in years (0–150).</FormDescription>
+                <FormDescription className="text-gray-600 mt-3 flex items-start gap-2">
+                  <div className="w-2 h-2 rounded-full bg-orange-400 mt-2 flex-shrink-0"></div>
+                  Patient's age in years (0–150)
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
         </FieldCard>
 
-        {/* Sex */}
-        <FieldCard icon={Users} title="Gender">
+        {/* Gender */}
+        <FieldCard 
+          icon={Users} 
+          title="Gender Identity" 
+          gradient="from-purple-50 to-pink-50"
+          iconColor="text-purple-600"
+        >
           <FormField
             control={control}
             name={"patientSex" as Path<T>}
@@ -183,18 +257,18 @@ export const PatientStep = memo(function PatientStep<
                   <RadioGroup
                     onValueChange={field.onChange}
                     defaultValue={field.value}
-                    className="mt-2 flex flex-row gap-6"
+                    className="mt-2 flex flex-col space-y-3"
                   >
                     {SEX_OPTIONS.map((option) => (
-                      <div key={option} className="flex items-center gap-2">
+                      <div key={option} className="flex items-center gap-3 p-3 rounded-lg hover:bg-purple-50/50 transition-colors">
                         <RadioGroupItem
                           value={option}
                           id={`sex-${option}`}
-                          className="border"
+                          className="border-2 border-purple-300 text-purple-600"
                         />
                         <Label
                           htmlFor={`sex-${option}`}
-                          className="cursor-pointer text-sm font-normal"
+                          className="cursor-pointer text-base font-medium text-gray-700 flex-1"
                         >
                           {option}
                         </Label>
@@ -202,7 +276,10 @@ export const PatientStep = memo(function PatientStep<
                     ))}
                   </RadioGroup>
                 </FormControl>
-                <FormDescription>Patient gender identity (optional).</FormDescription>
+                <FormDescription className="text-gray-600 mt-3 flex items-start gap-2">
+                  <div className="w-2 h-2 rounded-full bg-purple-400 mt-2 flex-shrink-0"></div>
+                  Patient's gender identity (optional)
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -210,24 +287,31 @@ export const PatientStep = memo(function PatientStep<
         </FieldCard>
       </div>
 
-      {/* Medical history */}
-      <FieldCard icon={UserIcon} title="Medical History">
+      {/* Medical History - Full Width */}
+      <FieldCard 
+        icon={FileUser} 
+        title="Past Medical History" 
+        gradient="from-rose-50 to-red-50"
+        iconColor="text-rose-600"
+      >
         <FormField
           control={control}
           name={"medicalHistory" as Path<T>}
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Relevant Past Medical History</FormLabel>
+              <FormLabel className="text-base font-semibold text-gray-700">
+                Relevant Medical History
+              </FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="e.g., Hypertension (2018), Type 2 Diabetes (2020)…"
-                  className="min-h-[120px] text-sm"
+                  placeholder="e.g., Hypertension (diagnosed 2018, well-controlled on ACE inhibitors)&#10;Type 2 Diabetes Mellitus (2020, managed with metformin)&#10;Previous myocardial infarction (2019, treated with PCI)&#10;No known drug allergies&#10;Current medications: Lisinopril 10mg daily, Metformin 500mg BID..."
+                  className="min-h-[160px] text-base border-2 border-gray-200 focus:border-rose-400 focus:ring-rose-100 rounded-xl p-4 leading-6 transition-all duration-200 resize-none"
                   {...field}
                 />
               </FormControl>
-              <FormDescription>
-                Brief summary of relevant conditions, surgeries, allergies, and
-                medications.
+              <FormDescription className="text-gray-600 mt-3 flex items-start gap-2">
+                <div className="w-2 h-2 rounded-full bg-rose-400 mt-2 flex-shrink-0"></div>
+                Include chronic conditions, previous surgeries, medications, allergies, and family history
               </FormDescription>
               <FormMessage />
             </FormItem>
