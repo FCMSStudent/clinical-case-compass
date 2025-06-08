@@ -161,7 +161,6 @@ const CreateCaseFlow = () => {
 
     if (currentStepIndex < STEPS.length - 1) {
       setCurrentStepIndex((prev) => prev + 1);
-      toast.success(`Step ${currentStepIndex + 1} completed`);
     }
   };
 
