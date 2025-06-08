@@ -4,12 +4,10 @@ import {
   X,
   LayoutDashboard,
   BookOpen,
-  Bell,
   Settings,
   ChevronLeft,
   User,
   LogOut,
-  Search,
 } from "lucide-react";
 import { NavLink } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -117,31 +115,16 @@ const navItems = [
     href: "/dashboard",
     label: "Dashboard",
     icon: LayoutDashboard,
-    badge: null
   },
   {
     href: "/cases",
     label: "Cases",
     icon: BookOpen,
-    badge: "12"
-  },
-  {
-    href: "/search",
-    label: "Search",
-    icon: Search,
-    badge: null
-  },
-  {
-    href: "/notifications",
-    label: "Notifications",
-    icon: Bell,
-    badge: "3"
   },
   {
     href: "/settings",
     label: "Settings",
     icon: Settings,
-    badge: null
   },
 ];
 
@@ -170,14 +153,7 @@ const NavItem: React.FC<NavItemProps> = ({ item, collapsed, isMobile, onNavigate
       <item.icon className={cn(ICON_SIZE, "flex-shrink-0")} />
 
       {(!collapsed || isMobile) && (
-        <>
-          <span className="ml-3 truncate">{item.label}</span>
-          {item.badge && (
-            <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
-              {item.badge}
-            </span>
-          )}
-        </>
+        <span className="ml-3 truncate">{item.label}</span>
       )}
 
       {/* Tooltip for collapsed state */}
@@ -185,11 +161,6 @@ const NavItem: React.FC<NavItemProps> = ({ item, collapsed, isMobile, onNavigate
         <div className="absolute top-1/2 left-full ml-2 -translate-y-1/2 z-50 hidden group-hover:block">
           <div className="rounded-md bg-popover px-2 py-1 text-xs text-popover-foreground shadow-md border">
             {item.label}
-            {item.badge && (
-              <span className="ml-1 rounded-full bg-primary px-1.5 py-0.5 text-xs text-primary-foreground">
-                {item.badge}
-              </span>
-            )}
           </div>
         </div>
       )}
@@ -210,8 +181,8 @@ const UserProfile: React.FC<{ collapsed: boolean; isMobile: boolean }> = ({ coll
     return (
       <div className="group relative">
         <button className="flex w-full items-center justify-center rounded-lg p-2 hover:bg-accent">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-sm font-medium text-primary-foreground">
-            {String(fullName).split(' ').map(n => n[0]).join('')}
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
+            <User className="h-4 w-4" />
           </div>
         </button>
 
@@ -229,8 +200,8 @@ const UserProfile: React.FC<{ collapsed: boolean; isMobile: boolean }> = ({ coll
   return (
     <div className="border-t pt-4">
       <div className="flex items-center space-x-3 rounded-lg p-3 hover:bg-accent transition-colors">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-sm font-medium text-primary-foreground">
-          {String(fullName).split(' ').map(n => n[0]).join('')}
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground">
+          <User className="h-5 w-5" />
         </div>
         <div className="flex-1 min-w-0">
           <p className="truncate text-sm font-medium">{fullName}</p>
