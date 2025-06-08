@@ -51,14 +51,25 @@ import {
  * ────────────────────────────────────────────────────────────────────────────────
  */
 export const patientStepSchema = z.object({
-  patientName: z.string().min(2, "Patient name must be at least 2 characters.").optional(),
-  medicalRecordNumber: z.string().optional(),
+  patientName: z.string()
+    .min(1, "Patient name is required")
+    .min(2, "Patient name must be at least 2 characters")
+    .max(100, "Patient name must be less than 100 characters"),
+  medicalRecordNumber: z.string()
+    .optional()
+    .refine((val) => !val || val.length >= 3, {
+      message: "Medical record number must be at least 3 characters if provided"
+    }),
   patientAge: z
     .union([z.string().length(0), z.number().int().min(0).max(150)])
     .transform((val) => (val === "" ? undefined : Number(val)))
     .optional(),
-  patientSex: z.enum(["Male", "Female", "Other"]).optional(),
-  medicalHistory: z.string().optional(),
+  patientSex: z.enum(["Male", "Female", "Other"], {
+    required_error: "Gender is required"
+  }),
+  medicalHistory: z.string()
+    .max(2000, "Medical history must be less than 2000 characters")
+    .optional(),
 });
 export type PatientStepFormData = z.infer<typeof patientStepSchema>;
 
