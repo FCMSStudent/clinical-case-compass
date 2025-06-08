@@ -28,9 +28,9 @@ import { cn } from "@/lib/utils";
  * ────────────────────────────────────────────────────────────────────────────────
  */
 export const caseInfoSchema = z.object({
-  caseTitle: z.string().min(3, "Case title must be at least 3 characters."),
-  chiefComplaint: z.string().min(5, "Chief complaint must be at least 5 characters."),
-  specialty: z.string().min(1, "Please select a medical specialty."),
+  caseTitle: z.string().min(3, "Case title must be at least 3 characters.").optional(),
+  chiefComplaint: z.string().min(5, "Chief complaint must be at least 5 characters.").optional(),
+  specialty: z.string().optional(),
 });
 
 export type CaseInfoFormData = z.infer<typeof caseInfoSchema>;
