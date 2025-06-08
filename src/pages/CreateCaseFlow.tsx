@@ -168,29 +168,12 @@ const CreateCaseFlow = () => {
     setCurrentStepIndex((prev) => Math.max(prev - 1, 0));
   };
 
-  const handleStepClick = async (stepId: string) => {
-    const targetStepIndex = STEPS.findIndex(step => step.id === stepId);
+  const handleStepClick = (stepId: string) => {
+    const targetStepIndex = STEPS.findIndex((step) => step.id === stepId);
     if (targetStepIndex < 0 || targetStepIndex === currentStepIndex) return;
 
-    if (targetStepIndex < currentStepIndex || targetStepIndex <= highestValidatedStep + 1) {
-        if (targetStepIndex > currentStepIndex && targetStepIndex > highestValidatedStep) {
-            for (let i = currentStepIndex; i < targetStepIndex; i++) {
-                const fieldsToValidate = STEPS[i].fields;
-                if (fieldsToValidate.length > 0) {
-                    const isValid = await trigger(fieldsToValidate);
-                    if (!isValid) {
-                        setCurrentStepIndex(i);
-                        toast.error(`Please complete step ${i + 1} before proceeding`);
-                        return;
-                    }
-                    setHighestValidatedStep(Math.max(highestValidatedStep, i));
-                }
-            }
-        }
-        setCurrentStepIndex(targetStepIndex);
-    } else {
-        toast.warning("Please complete the current step first");
-    }
+    // Allow direct navigation without validating intermediate steps
+    setCurrentStepIndex(targetStepIndex);
   };
   
   const onSubmit: SubmitHandler<CombinedCaseFormData> = async (data) => {
@@ -261,12 +244,13 @@ const CreateCaseFlow = () => {
           <FormContainer
             currentStep={currentStepIndex + 1}
             totalSteps={STEPS.length}
-            steps={STEPS.map((step, index) => ({ 
-                id: step.id, 
-                label: step.label, 
+            steps={STEPS.map((step, index) => ({
+                id: step.id,
+                label: step.label,
                 icon: step.icon,
                 isCompleted: index <= highestValidatedStep,
-                isNavigable: index <= highestValidatedStep + 1 || index < currentStepIndex,
+                // Steps remain clickable even if not yet validated
+                isNavigable: true,
             }))}
             onStepClick={handleStepClick}
           >
