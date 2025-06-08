@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Search, Settings, LogOut, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sidebar, SidebarTrigger } from "@/features/navigation";
+import { useNavigate } from "react-router-dom";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -12,6 +13,12 @@ interface AppLayoutProps {
 
 const HeaderActions = () => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleNavigate = (path: string) => {
+    navigate(path);
+    setIsUserMenuOpen(false);
+  };
 
   return (
     <div className="flex items-center space-x-4">
@@ -54,11 +61,17 @@ const HeaderActions = () => {
               transition={{ duration: 0.2 }}
               className="absolute right-0 mt-2 w-48 py-2 bg-background rounded-lg shadow-lg border"
             >
-              <button className="w-full px-4 py-2 text-sm text-left hover:bg-accent flex items-center space-x-2">
+              <button
+                className="w-full px-4 py-2 text-sm text-left hover:bg-accent flex items-center space-x-2"
+                onClick={() => handleNavigate("/settings")}
+              >
                 <User className="h-4 w-4" />
                 <span>Profile</span>
               </button>
-              <button className="w-full px-4 py-2 text-sm text-left hover:bg-accent flex items-center space-x-2">
+              <button
+                className="w-full px-4 py-2 text-sm text-left hover:bg-accent flex items-center space-x-2"
+                onClick={() => handleNavigate("/settings")}
+              >
                 <Settings className="h-4 w-4" />
                 <span>Settings</span>
               </button>

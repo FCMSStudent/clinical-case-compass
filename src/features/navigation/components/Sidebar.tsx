@@ -9,7 +9,7 @@ import {
   User,
   LogOut,
 } from "lucide-react";
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/app/AuthContext';
 import type { UserMetadata } from '@/types/auth'; // Keep this import
@@ -170,6 +170,7 @@ const NavItem: React.FC<NavItemProps> = ({ item, collapsed, isMobile, onNavigate
 
 const UserProfile: React.FC<{ collapsed: boolean; isMobile: boolean }> = ({ collapsed, isMobile }) => {
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
 
   if (!user) {
     return null;
@@ -180,7 +181,10 @@ const UserProfile: React.FC<{ collapsed: boolean; isMobile: boolean }> = ({ coll
   if (collapsed && !isMobile) {
     return (
       <div className="group relative">
-        <button className="flex w-full items-center justify-center rounded-lg p-2 hover:bg-accent">
+        <button
+          className="flex w-full items-center justify-center rounded-lg p-2 hover:bg-accent"
+          onClick={() => navigate("/settings")}
+        >
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
             <User className="h-4 w-4" />
           </div>
@@ -199,7 +203,10 @@ const UserProfile: React.FC<{ collapsed: boolean; isMobile: boolean }> = ({ coll
 
   return (
     <div className="border-t pt-4">
-      <div className="flex items-center space-x-3 rounded-lg p-3 hover:bg-accent transition-colors">
+      <div
+        className="flex items-center space-x-3 rounded-lg p-3 hover:bg-accent transition-colors cursor-pointer"
+        onClick={() => navigate("/settings")}
+      >
         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground">
           <User className="h-5 w-5" />
         </div>
@@ -210,7 +217,7 @@ const UserProfile: React.FC<{ collapsed: boolean; isMobile: boolean }> = ({ coll
         <button
           className="p-1 hover:bg-accent rounded transition-colors"
           aria-label="Sign out"
-          onClick={() => signOut()}
+          onClick={e => { e.stopPropagation(); signOut(); }}
         >
           <LogOut className="h-4 w-4" />
         </button>
