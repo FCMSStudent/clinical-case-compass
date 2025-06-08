@@ -5,6 +5,7 @@ import { z } from "zod";
 import { useAuth } from "@/app/AuthContext";
 import type { UserMetadata } from "@/types/auth";
 import { useTheme } from "@/app/ThemeContext";
+import { supabase } from "@/integrations/supabase/client";
 import { PageHeader } from "@/components/ui/page-header";
 import {
   Card,
@@ -41,6 +42,19 @@ const profileSchema = z.object({
 
 type ProfileFormData = z.infer<typeof profileSchema>;
 
+const accountSchema = z
+  .object({
+    email: z.string().email("Valid email is required"),
+    password: z.string().optional(),
+    confirmPassword: z.string().optional(),
+  })
+  .refine((data) => !data.password || data.password === data.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "Passwords do not match",
+  });
+
+type AccountFormData = z.infer<typeof accountSchema>;
+
 const Settings = () => {
   const { user, updateProfile } = useAuth();
   const { theme, setTheme } = useTheme();
@@ -50,6 +64,15 @@ const Settings = () => {
     defaultValues: {
       full_name: "",
       specialty: "none", // Changed default to "none" instead of empty string
+    },
+  });
+
+  const accountForm = useForm<AccountFormData>({
+    resolver: zodResolver(accountSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      confirmPassword: "",
     },
   });
 
@@ -63,9 +86,14 @@ const Settings = () => {
       full_name: (user?.user_metadata as UserMetadata)?.full_name || "",
       specialty: (user?.user_metadata as UserMetadata)?.specialty || "none", // Handle empty specialty
     });
-  }, [user, form]);
+    accountForm.reset({
+      email: user?.email || "",
+      password: "",
+      confirmPassword: "",
+    });
+  }, [user, form, accountForm]);
 
-  const onSubmit = async (data: ProfileFormData) => {
+  const onProfileSubmit = async (data: ProfileFormData) => {
     try {
       await updateProfile({
         full_name: data.full_name,
@@ -78,13 +106,26 @@ const Settings = () => {
     }
   };
 
+  const onAccountSubmit = async (data: AccountFormData) => {
+    try {
+      await supabase.auth.updateUser({
+        email: data.email,
+        password: data.password || undefined,
+      });
+      toast.success("Account updated");
+    } catch (error: unknown) {
+      const err = error as Error;
+      toast.error(err.message || "Failed to update account");
+    }
+  };
+
   return (
-    <div className="space-y-6">
+    <div className="w-full max-w-4xl mx-auto space-y-6">
       <PageHeader
         title="Settings"
         description="Manage your account and preferences"
       />
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader>
             <CardTitle>Profile</CardTitle>
@@ -93,7 +134,7 @@ const Settings = () => {
           <CardContent>
             <Form {...form}>
               <form
-                onSubmit={form.handleSubmit(onSubmit)}
+                onSubmit={form.handleSubmit(onProfileSubmit)}
                 className="space-y-4"
               >
                 <FormField
@@ -138,6 +179,61 @@ const Settings = () => {
                   )}
                 />
                 <Button type="submit">Save Changes</Button>
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Account</CardTitle>
+            <CardDescription>Update your email or password</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Form {...accountForm}>
+              <form
+                onSubmit={accountForm.handleSubmit(onAccountSubmit)}
+                className="space-y-4"
+              >
+                <FormField
+                  control={accountForm.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input type="email" placeholder="you@example.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={accountForm.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>New Password</FormLabel>
+                      <FormControl>
+                        <Input type="password" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={accountForm.control}
+                  name="confirmPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Confirm Password</FormLabel>
+                      <FormControl>
+                        <Input type="password" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button type="submit">Save Account</Button>
               </form>
             </Form>
           </CardContent>
