@@ -158,39 +158,25 @@ const CreateCaseFlow = () => {
                               STEPS[currentStepIndex].id === "clinical" ? clinicalDetailStepSchema :
                               learningPointsStepSchema;
 
-      // Only validate fields that have values and are required
-      const fieldsWithValues = fieldsToValidate.filter(field => {
-        const value = currentValues[field];
-        // Check if the field is required in the schema
-        const isRequired = !currentStepSchema.shape[field].isOptional();
+      // Validate all fields in the current step
+      const result = await trigger(fieldsToValidate);
+      
+      if (!result) {
+        // Get all error messages
+        const errors = form.formState.errors;
+        const errorMessages = Object.values(errors).map(error => error.message).filter(Boolean);
         
-        // If field is required, validate it
-        if (isRequired) {
-          if (Array.isArray(value)) return value.length > 0;
-          if (typeof value === 'object' && value !== null) return Object.keys(value).length > 0;
-          if (typeof value === 'string') return value.trim().length > 0;
-          return !!value;
-        }
-        
-        // For optional fields, only validate if they have a value
-        if (Array.isArray(value)) return value.length > 0;
-        if (typeof value === 'object' && value !== null) return Object.keys(value).length > 0;
-        if (typeof value === 'string') return value.trim().length > 0;
-        return !!value;
-      });
-
-      if (fieldsWithValues.length > 0) {
-        const result = await trigger(fieldsWithValues);
-        if (!result) {
-          // Get the first error message
-          const errors = form.formState.errors;
-          const firstError = Object.values(errors)[0]?.message || "Please review the highlighted fields";
-          
-          toast.error("Validation Error", {
-            description: firstError
+        // Show the first error message
+        if (errorMessages.length > 0) {
+          toast.error("Please complete required fields", {
+            description: errorMessages[0]
           });
-          return;
+        } else {
+          toast.error("Please review the form", {
+            description: "Some fields require your attention"
+          });
         }
+        return;
       }
       
       setHighestValidatedStep(Math.max(highestValidatedStep, currentStepIndex));

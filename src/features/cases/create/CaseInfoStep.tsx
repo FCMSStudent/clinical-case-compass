@@ -29,8 +29,14 @@ import { StepHeader, FormFieldCard, StepProgress, ValidationFeedback } from "./c
  * ────────────────────────────────────────────────────────────────────────────────
  */
 export const caseInfoSchema = z.object({
-  caseTitle: z.string().min(3, "Case title must be at least 3 characters.").optional(),
-  chiefComplaint: z.string().min(5, "Chief complaint must be at least 5 characters.").optional(),
+  caseTitle: z.string()
+    .min(1, "Case title is required")
+    .min(3, "Case title must be at least 3 characters")
+    .max(200, "Case title must be less than 200 characters"),
+  chiefComplaint: z.string()
+    .min(1, "Chief complaint is required")
+    .min(5, "Chief complaint must be at least 5 characters")
+    .max(500, "Chief complaint must be less than 500 characters"),
   specialty: z.string().optional(),
 });
 
