@@ -118,13 +118,6 @@ const accountSchema = z
 
 type AccountFormData = z.infer<typeof accountSchema>;
 
-const notificationSchema = z.object({
-  emailNotifications: z.boolean().default(true),
-  caseUpdates: z.boolean().default(true),
-  systemAlerts: z.boolean().default(true),
-  marketingEmails: z.boolean().default(false),
-});
-
 const appearanceSchema = z.object({
   theme: z.enum(["light", "dark", "system"]).default("system"),
   fontSize: z.enum(["small", "medium", "large"]).default("medium"),
@@ -132,7 +125,6 @@ const appearanceSchema = z.object({
   highContrast: z.boolean().default(false),
 });
 
-type NotificationFormData = z.infer<typeof notificationSchema>;
 type AppearanceFormData = z.infer<typeof appearanceSchema>;
 
 const Settings = () => {
@@ -161,16 +153,6 @@ const Settings = () => {
     },
   });
 
-  const notificationForm = useForm<NotificationFormData>({
-    resolver: zodResolver(notificationSchema),
-    defaultValues: {
-      emailNotifications: true,
-      caseUpdates: true,
-      systemAlerts: true,
-      marketingEmails: false,
-    },
-  });
-
   const appearanceForm = useForm<AppearanceFormData>({
     resolver: zodResolver(appearanceSchema),
     defaultValues: {
@@ -191,19 +173,13 @@ const Settings = () => {
       password: "",
       confirmPassword: "",
     });
-    notificationForm.reset({
-      emailNotifications: true,
-      caseUpdates: true,
-      systemAlerts: true,
-      marketingEmails: false,
-    });
     appearanceForm.reset({
       theme: "system",
       fontSize: "medium",
       reducedMotion: false,
       highContrast: false,
     });
-  }, [user, form, accountForm, notificationForm, appearanceForm]);
+  }, [user, form, accountForm, appearanceForm]);
 
   const onProfileSubmit = async (data: ProfileFormData) => {
     try {
@@ -228,15 +204,6 @@ const Settings = () => {
     } catch (error: unknown) {
       const err = error as Error;
       toast.error(err.message || "Failed to update account");
-    }
-  };
-
-  const onNotificationSubmit = async (data: NotificationFormData) => {
-    try {
-      localStorage.setItem("notificationPreferences", JSON.stringify(data));
-      toast.success("Notification preferences updated");
-    } catch (error) {
-      toast.error("Failed to update notification preferences");
     }
   };
 
@@ -287,7 +254,7 @@ const Settings = () => {
       />
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 lg:w-auto">
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 lg:w-auto">
           <TabsTrigger value="profile" className="flex items-center gap-2">
             <User className="h-4 w-4" />
             Profile
@@ -295,10 +262,6 @@ const Settings = () => {
           <TabsTrigger value="account" className="flex items-center gap-2">
             <Shield className="h-4 w-4" />
             Account
-          </TabsTrigger>
-          <TabsTrigger value="notifications" className="flex items-center gap-2">
-            <Bell className="h-4 w-4" />
-            Notifications
           </TabsTrigger>
           <TabsTrigger value="appearance" className="flex items-center gap-2">
             <Palette className="h-4 w-4" />
@@ -565,119 +528,6 @@ const Settings = () => {
               </CardContent>
             </Card>
           </div>
-        </TabsContent>
-
-        <TabsContent value="notifications" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Notification Preferences</CardTitle>
-              <CardDescription>
-                Manage how you receive notifications
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Form {...notificationForm}>
-                <form
-                  onSubmit={notificationForm.handleSubmit(onNotificationSubmit)}
-                  className="space-y-6"
-                >
-                  <div className="space-y-4">
-                    <FormField
-                      control={notificationForm.control}
-                      name="emailNotifications"
-                      render={({ field }) => (
-                        <FormItem className="flex items-center justify-between rounded-lg border p-4">
-                          <div className="space-y-0.5">
-                            <FormLabel className="text-base">
-                              Email Notifications
-                            </FormLabel>
-                            <FormDescription>
-                              Receive notifications via email
-                            </FormDescription>
-                          </div>
-                          <FormControl>
-                            <Switch
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={notificationForm.control}
-                      name="caseUpdates"
-                      render={({ field }) => (
-                        <FormItem className="flex items-center justify-between rounded-lg border p-4">
-                          <div className="space-y-0.5">
-                            <FormLabel className="text-base">
-                              Case Updates
-                            </FormLabel>
-                            <FormDescription>
-                              Get notified about case updates
-                            </FormDescription>
-                          </div>
-                          <FormControl>
-                            <Switch
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={notificationForm.control}
-                      name="systemAlerts"
-                      render={({ field }) => (
-                        <FormItem className="flex items-center justify-between rounded-lg border p-4">
-                          <div className="space-y-0.5">
-                            <FormLabel className="text-base">
-                              System Alerts
-                            </FormLabel>
-                            <FormDescription>
-                              Important system notifications
-                            </FormDescription>
-                          </div>
-                          <FormControl>
-                            <Switch
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={notificationForm.control}
-                      name="marketingEmails"
-                      render={({ field }) => (
-                        <FormItem className="flex items-center justify-between rounded-lg border p-4">
-                          <div className="space-y-0.5">
-                            <FormLabel className="text-base">
-                              Marketing Emails
-                            </FormLabel>
-                            <FormDescription>
-                              Receive marketing and promotional emails
-                            </FormDescription>
-                          </div>
-                          <FormControl>
-                            <Switch
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                  <Button type="submit" className="w-full">
-                    Save Preferences
-                  </Button>
-                </form>
-              </Form>
-            </CardContent>
-          </Card>
         </TabsContent>
 
         <TabsContent value="appearance" className="space-y-6">
