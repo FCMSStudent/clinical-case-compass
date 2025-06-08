@@ -181,7 +181,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
         className="
           sticky top-0 z-40
           flex items-center justify-between
-          px-4 sm:px-4 py-2
+          px-4 py-2 sm:px-6 sm:py-3
           border-b border-gray-200/80
           bg-white/70 backdrop-blur-xl
         "
