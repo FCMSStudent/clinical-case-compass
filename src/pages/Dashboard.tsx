@@ -1,5 +1,6 @@
 
 import { PageHeader } from "@/components/ui/page-header";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   StatCards,
   RecentActivityList,
@@ -35,21 +36,29 @@ const Dashboard = () => {
         description="Overview of your clinical case activities."
       />
       
-      <div className="mb-6">
-        <SearchPanel />
-      </div>
+      <Card className="bg-card shadow-sm border-border">
+        <CardContent>
+          <SearchPanel />
+        </CardContent>
+      </Card>
 
-      <div className="mb-6">
-        <StatCards />
-      </div>
+      <Card className="bg-card shadow-sm border-border">
+        <CardContent>
+          <StatCards />
+        </CardContent>
+      </Card>
       
       <div className="grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          <QuickStartPanel />
-        </div>
-        <div className="lg:col-span-1">
-          <RecentActivityList />
-        </div>
+        <Card className="lg:col-span-2 bg-card shadow-sm border-border">
+          <CardContent>
+            <QuickStartPanel />
+          </CardContent>
+        </Card>
+        <Card className="lg:col-span-1 bg-card shadow-sm border-border">
+          <CardContent>
+            <RecentActivityList />
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
