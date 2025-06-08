@@ -1,39 +1,9 @@
-import React, { memo } from "react";
-import { Control, FieldValues, Path } from "react-hook-form";
+import React, { memo, useCallback, useMemo } from "react";
+import { useFormContext, Controller, Path } from "react-hook-form";
 import { z } from "zod";
-import {
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormDescription,
-  FormMessage,
-} from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileText, Stethoscope, User, Thermometer, Brain, Microscope, Scan } from "lucide-react";
-import { cn } from "@/lib/utils";
 
-/**
- * ────────────────────────────────────────────────────────────────────────────────
- * SCHEMA
- * ────────────────────────────────────────────────────────────────────────────────
- */
-export const clinicalDetailSchema = z.object({
-  patientHistory: z.string().min(10, "Patient history must be at least 10 characters.").optional(),
-  physicalExam: z.string().min(10, "Physical exam must be at least 10 characters.").optional(),
-  selectedBodyParts: z.array(z.string()).optional(),
-  systemSymptoms: z.record(z.array(z.string())).optional(),
-  vitals: z.record(z.string()).optional(),
-  labResults: z.array(z.string()).optional(),
-  radiologyExams: z.array(z.string()).optional(),
-});
-
-export type ClinicalDetailFormData = z.infer<typeof clinicalDetailSchema>;
-
-/**
- * Constants
- */
+// 1. CENTRALIZED CONFIGURATION: All form field names are now in one place.
+// This prevents typos and makes refactoring easier.
 const FORM_FIELDS = {
   PATIENT_HISTORY: "patientHistory",
   PHYSICAL_EXAM: "physicalExam",
@@ -44,254 +14,194 @@ const FORM_FIELDS = {
   RADIOLOGY_EXAMS: "radiologyExams",
 } as const;
 
-/**
- * Enhanced utility wrapper for consistent card styling with gradients and animations
- */
-function FieldCard({
-  icon: Icon,
-  title,
-  children,
-  className,
-  gradient,
-}: {
-  icon: React.ElementType;
-  title: string;
-  children: React.ReactNode;
-  className?: string;
-  gradient?: string;
-}) {
+// --- Local Imports (assuming folder structure) ---
+import { clinicalDetailStepSchema, type ClinicalDetailFormData, TAB_ITEMS } from "./ClinicalDetailConfig";
+import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from "@/components/ui/form";
+import { Textarea } from "@/components/ui/textarea";
+import { InteractiveBodyDiagram, BodyPartSelection } from "@/features/cases/InteractiveBodyDiagram";
+import { SystemReviewChecklist } from "@/features/cases/SystemReviewChecklist";
+import { VitalsCard } from "@/features/cases/VitalsCard";
+import { LabResultsCard } from "@/features/cases/LabResultsCard";
+import { RadiologyCard } from "@/features/cases/RadiologyCard";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Brain as BrainIcon, FileText as FileTextIcon, Heart as HeartIcon, Microscope as MicroscopeIcon, Scan as ScanIcon, Stethoscope as StethoscopeIcon, User as UserIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+import type { LabTest, RadiologyExam } from "@/types/case";
+
+// 2. REUSABLE & DECOUPLED FIELD COMPONENT
+// This component encapsulates the boilerplate for a controlled textarea field.
+// It uses `useFormContext` so it doesn't need `control` passed as a prop.
+interface FormTextAreaFieldProps {
+  name: Path<ClinicalDetailFormData>;
+  label: string;
+  placeholder: string;
+  description: string;
+}
+
+const FormTextAreaField = ({ name, label, placeholder, description }: FormTextAreaFieldProps) => {
   return (
-    <Card className={cn(
-      "group shadow-lg border-0 bg-gradient-to-br from-white to-gray-50/50 hover:shadow-xl transition-all duration-300 hover:-translate-y-1",
-      className
-    )}>
-      <CardHeader className={cn(
-        "pb-4 bg-gradient-to-r rounded-t-lg",
-        gradient || "from-blue-50 to-indigo-50"
-      )}>
-        <CardTitle className="flex items-center gap-3 text-lg font-semibold">
-          <div className="p-2 rounded-lg bg-white/80 shadow-sm group-hover:shadow-md transition-shadow">
-            <Icon className="h-5 w-5 text-blue-600" />
-          </div>
-          <span className="bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
-            {title}
-          </span>
+    <FormField
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>{label}</FormLabel>
+          <FormControl>
+            <Textarea placeholder={placeholder} className="min-h-[160px] text-sm" {...field} />
+          </FormControl>
+          <FormDescription>{description}</FormDescription>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+};
+
+// --- Reusable Section Card (Unchanged, it's already good!) ---
+function SectionCard({ icon: Icon, title, headerClass, children }: { icon: React.ElementType; title: string; headerClass: string; children: React.ReactNode; }) {
+  return (
+    <Card className="shadow-sm">
+      <CardHeader className={cn("pb-3", headerClass)}>
+        <CardTitle className="flex items-center gap-2 text-base">
+          <Icon className="h-5 w-5" />
+          {title}
         </CardTitle>
       </CardHeader>
-      <CardContent className="pt-6 space-y-4">{children}</CardContent>
+      <CardContent className="pt-4">{children}</CardContent>
     </Card>
   );
 }
 
-/**
- * ────────────────────────────────────────────────────────────────────────────────
- * PROPS
- * ────────────────────────────────────────────────────────────────────────────────
- */
-export interface ClinicalDetailStepProps<T extends FieldValues = ClinicalDetailFormData> {
-  control: Control<T>;
-  className?: string;
-}
+// 3. COMPOSITION: Break down tabs into smaller, focused components.
+// Each component is responsible for its own content and state.
 
-/**
- * ────────────────────────────────────────────────────────────────────────────────
- * COMPONENT
- * ────────────────────────────────────────────────────────────────────────────────
- */
-export const ClinicalDetailStep = memo(function ClinicalDetailStep<
-  T extends FieldValues = ClinicalDetailFormData,
->({ control, className }: ClinicalDetailStepProps<T>) {
+const HistoryAndExamTab = memo(() => (
+  <TabsContent value="history" className="space-y-6">
+    <SectionCard icon={FileTextIcon} title="History of Present Illness" headerClass="bg-gradient-to-r from-medical-50 to-blue-50 text-medical-800">
+      <FormTextAreaField
+        name={FORM_FIELDS.PATIENT_HISTORY}
+        label="Clinical History"
+        placeholder="Document the patient's presenting complaint, timeline, associated factors, and relevant history…"
+        description="Provide a detailed chronological account of the patient's condition and relevant background."
+      />
+    </SectionCard>
+    <SectionCard icon={StethoscopeIcon} title="Physical Examination" headerClass="bg-gradient-to-r from-blue-50 to-purple-50 text-blue-800">
+      <FormTextAreaField
+        name={FORM_FIELDS.PHYSICAL_EXAM}
+        label="Examination Findings"
+        placeholder="Systematic physical examination findings…"
+        description="Record objective findings from systematic examination of all relevant body systems."
+      />
+    </SectionCard>
+  </TabsContent>
+));
+HistoryAndExamTab.displayName = "HistoryAndExamTab";
+
+
+const SystemsReviewTab = memo(() => {
+  // 4. DECOUPLED STATE MANAGEMENT: Hooks from `useFormContext` are called here,
+  // not passed down from the top-level component.
+  const { setValue, watch } = useFormContext<ClinicalDetailFormData>();
+  const selectedBodyParts = watch(FORM_FIELDS.SELECTED_BODY_PARTS) || [];
+
+  const handleBodyPartSelected = useCallback((selection: BodyPartSelection) => {
+    const partName = selection.name || selection.id;
+    const updatedParts = selectedBodyParts.includes(partName)
+      ? selectedBodyParts.filter((p) => p !== partName)
+      : [...selectedBodyParts, partName];
+    setValue(FORM_FIELDS.SELECTED_BODY_PARTS, updatedParts, { shouldValidate: true });
+  }, [selectedBodyParts, setValue]);
+
+  const setSystemSymptoms = useCallback((val: Record<string, string[]>) =>
+    setValue(FORM_FIELDS.SYSTEM_SYMPTOMS, val, { shouldValidate: true }), [setValue]);
+
+  const setVitals = useCallback((v: Record<string, string>) =>
+    setValue(FORM_FIELDS.VITALS, v, { shouldValidate: true }), [setValue]);
+
+  const PartBadges = useMemo(() => (
+    selectedBodyParts.length > 0 && (
+      <div className="mt-3 flex flex-wrap gap-1">
+        {selectedBodyParts.map((p) => (
+          <Badge key={p} variant="secondary" className="text-xs bg-blue-100 text-blue-800">{p}</Badge>
+        ))}
+      </div>
+    )
+  ), [selectedBodyParts]);
+
   return (
-    <section className={cn("space-y-8", className)}>
-      {/* Enhanced Header with gradient background */}
-      <header className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 p-8 text-white shadow-2xl">
-        <div className="absolute inset-0 bg-black/10"></div>
-        <div className="absolute top-4 right-4 opacity-20">
-          <Brain className="h-12 w-12" />
-        </div>
-        <div className="relative space-y-3">
-          <h3 className="flex items-center text-2xl font-bold">
-            <div className="mr-4 rounded-xl bg-white/20 p-3 backdrop-blur-sm">
-              <FileText className="h-7 w-7" />
-            </div>
-            Clinical Details
-          </h3>
-          <p className="text-blue-100 text-lg max-w-2xl leading-relaxed">
-            Provide detailed clinical information including patient history, physical examination, and diagnostic findings.
-          </p>
-        </div>
+    <TabsContent value="systems" className="space-y-6">
+      <div className="grid gap-6 lg:grid-cols-2">
+        <SectionCard icon={BrainIcon} title="Review of Systems" headerClass="bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-800">
+          <SystemReviewChecklist onSystemSymptomsChange={setSystemSymptoms} />
+        </SectionCard>
+        <SectionCard icon={UserIcon} title="Affected Body Areas" headerClass="bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-800">
+          <InteractiveBodyDiagram onBodyPartSelected={handleBodyPartSelected} />
+          <FormDescription className="mt-3 text-blue-600">Click on body parts to mark affected areas</FormDescription>
+          {PartBadges}
+          <Controller name={FORM_FIELDS.SELECTED_BODY_PARTS} render={({ fieldState }) => fieldState.error ? <FormMessage className="mt-2">{fieldState.error.message}</FormMessage> : null} />
+        </SectionCard>
+      </div>
+      <SectionCard icon={HeartIcon} title="Vital Signs & Physiological Parameters" headerClass="bg-gradient-to-r from-green-50 to-teal-50 text-green-800">
+        <VitalsCard onVitalsChange={setVitals} />
+      </SectionCard>
+    </TabsContent>
+  );
+});
+SystemsReviewTab.displayName = "SystemsReviewTab";
+
+
+const DiagnosticsTab = memo(() => {
+  const { setValue } = useFormContext<ClinicalDetailFormData>();
+
+  const setLabResults = useCallback((labs: LabTest[]) =>
+    setValue(FORM_FIELDS.LAB_RESULTS, labs, { shouldValidate: true }), [setValue]);
+
+  const setRadiology = useCallback((imgs: RadiologyExam[]) =>
+    setValue(FORM_FIELDS.RADIOLOGY_EXAMS, imgs, { shouldValidate: true }), [setValue]);
+
+  return (
+    <TabsContent value="diagnostics" className="space-y-6">
+      <div className="grid gap-6 lg:grid-cols-2">
+        <SectionCard icon={MicroscopeIcon} title="Laboratory Studies" headerClass="bg-gradient-to-r from-purple-50 to-pink-50 text-purple-800">
+          <LabResultsCard onLabResultsChange={setLabResults} />
+        </SectionCard>
+        <SectionCard icon={ScanIcon} title="Imaging Studies" headerClass="bg-gradient-to-r from-pink-50 to-red-50 text-red-800">
+          <RadiologyCard onRadiologyChange={setRadiology} />
+        </SectionCard>
+      </div>
+    </TabsContent>
+  );
+});
+DiagnosticsTab.displayName = "DiagnosticsTab";
+
+
+// 5. SIMPLIFIED & CLEANER MAIN COMPONENT
+export const ClinicalDetailStep = memo(({ className }: { className?: string }) => {
+  return (
+    <section className={cn("space-y-6", className)}>
+      <header className="space-y-2 text-center">
+        <h2 className="text-2xl font-bold text-medical-800">Clinical Assessment & Documentation</h2>
+        <p className="text-medical-600">Comprehensive clinical evaluation and diagnostic work-up</p>
       </header>
+      
+      {/* The main component is now just a layout shell. The complexity is handled by child components. */}
+      <Tabs defaultValue="history" className="w-full">
+        <TabsList className="grid w-full grid-cols-4 mb-6">
+          {TAB_ITEMS.map(({ value, label, icon: Icon }) => (
+            <TabsTrigger key={value} value={value} className="flex items-center gap-2">
+              <Icon className="h-4 w-4" />
+              <span>{label}</span>
+            </TabsTrigger>
+          ))}
+        </TabsList>
 
-      {/* Patient History */}
-      <FieldCard 
-        icon={FileText} 
-        title="Patient History" 
-        gradient="from-emerald-50 to-teal-50"
-      >
-        <FormField
-          control={control}
-          name={FORM_FIELDS.PATIENT_HISTORY as Path<T>}
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Textarea
-                  placeholder="e.g., 65-year-old patient presents with acute onset chest pain radiating to left arm, accompanied by shortness of breath and diaphoresis. Symptoms began 2 hours ago during mild physical activity..."
-                  className="min-h-[140px] text-base border-2 border-gray-200 focus:border-emerald-400 focus:ring-emerald-100 rounded-xl p-4 leading-6 transition-all duration-200 resize-none"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription className="text-gray-600 mt-3 flex items-start gap-2">
-                <div className="w-2 h-2 rounded-full bg-emerald-400 mt-2 flex-shrink-0"></div>
-                Describe the patient's medical history, presenting complaints, and relevant background.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </FieldCard>
+        <HistoryAndExamTab />
+        <SystemsReviewTab />
+        <DiagnosticsTab />
 
-      {/* Physical Examination */}
-      <FieldCard 
-        icon={Stethoscope} 
-        title="Physical Examination" 
-        gradient="from-rose-50 to-pink-50"
-      >
-        <FormField
-          control={control}
-          name={FORM_FIELDS.PHYSICAL_EXAM as Path<T>}
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Textarea
-                  placeholder="e.g., Systematic physical examination findings including cardiovascular, respiratory, and neurological systems..."
-                  className="min-h-[140px] text-base border-2 border-gray-200 focus:border-rose-400 focus:ring-rose-100 rounded-xl p-4 leading-6 transition-all duration-200 resize-none"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription className="text-gray-600 mt-3 flex items-start gap-2">
-                <div className="w-2 h-2 rounded-full bg-rose-400 mt-2 flex-shrink-0"></div>
-                Record comprehensive physical examination findings.
-              </FormDescription>
-              <FormMessage />
-            </FormFormMessage>
-            </FormItem>
-          )}
-        />
-      </FieldCard>
-
-      {/* Review of Systems */}
-      <FieldCard 
-        icon={Brain} 
-        title="Review of Systems" 
-        gradient="from-violet-50 to-purple-50"
-      >
-        <FormField
-          control={control}
-          name={FORM_FIELDS.SYSTEM_SYMPTOMS as Path<T>}
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Textarea
-                  placeholder="e.g., Cardiovascular: Chest pain, Respiratory: Shortness of breath, Neurological: Dizziness..."
-                  className="min-h-[140px] text-base border-2 border-gray-200 focus:border-violet-400 focus:ring-violet-100 rounded-xl p-4 leading-6 transition-all duration-200 resize-none"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription className="text-gray-600 mt-3 flex items-start gap-2">
-                <div className="w-2 h-2 rounded-full bg-violet-400 mt-2 flex-shrink-0"></div>
-                Document the patient's review of systems and associated symptoms.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </FieldCard>
-
-      {/* Vital Signs */}
-      <FieldCard 
-        icon={Thermometer} 
-        title="Vital Signs" 
-        gradient="from-blue-50 to-indigo-50"
-      >
-        <FormField
-          control={control}
-          name={FORM_FIELDS.VITALS as Path<T>}
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Textarea
-                  placeholder="e.g., Blood Pressure: 120/80 mmHg, Heart Rate: 72 bpm, Respiratory Rate: 16 breaths/min..."
-                  className="min-h-[140px] text-base border-2 border-gray-200 focus:border-blue-400 focus:ring-blue-100 rounded-xl p-4 leading-6 transition-all duration-200 resize-none"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription className="text-gray-600 mt-3 flex items-start gap-2">
-                <div className="w-2 h-2 rounded-full bg-blue-400 mt-2 flex-shrink-0"></div>
-                Record the patient's vital signs and physiological parameters.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </FieldCard>
-
-      {/* Lab Results */}
-      <FieldCard 
-        icon={Microscope} 
-        title="Lab Results" 
-        gradient="from-green-50 to-teal-50"
-      >
-        <FormField
-          control={control}
-          name={FORM_FIELDS.LAB_RESULTS as Path<T>}
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Textarea
-                  placeholder="e.g., CBC: WBC 10,000/mm³, Hgb 14 g/dL, Platelets 250,000/mm³..."
-                  className="min-h-[140px] text-base border-2 border-gray-200 focus:border-green-400 focus:ring-green-100 rounded-xl p-4 leading-6 transition-all duration-200 resize-none"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription className="text-gray-600 mt-3 flex items-start gap-2">
-                <div className="w-2 h-2 rounded-full bg-green-400 mt-2 flex-shrink-0"></div>
-                Document laboratory test results and findings.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </FieldCard>
-
-      {/* Radiology Exams */}
-      <FieldCard 
-        icon={Scan} 
-        title="Radiology Exams" 
-        gradient="from-purple-50 to-pink-50"
-      >
-        <FormField
-          control={control}
-          name={FORM_FIELDS.RADIOLOGY_EXAMS as Path<T>}
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Textarea
-                  placeholder="e.g., Chest X-ray: Normal, CT Scan: Evidence of pulmonary embolism..."
-                  className="min-h-[140px] text-base border-2 border-gray-200 focus:border-purple-400 focus:ring-purple-100 rounded-xl p-4 leading-6 transition-all duration-200 resize-none"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription className="text-gray-600 mt-3 flex items-start gap-2">
-                <div className="w-2 h-2 rounded-full bg-purple-400 mt-2 flex-shrink-0"></div>
-                Record imaging study results and findings.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </FieldCard>
+      </Tabs>
     </section>
   );
 });
-
 ClinicalDetailStep.displayName = "ClinicalDetailStep";
