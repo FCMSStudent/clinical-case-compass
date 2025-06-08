@@ -179,7 +179,7 @@ DiagnosticsTab.displayName = "DiagnosticsTab";
 // 5. SIMPLIFIED & CLEANER MAIN COMPONENT
 export const ClinicalDetailStep = memo(({ className }: { className?: string }) => {
   return (
-    <section className={cn("space-y-6", className)}>
+    <section className={cn("space-y-6 mx-auto max-w-3xl", className)}>
       <header className="space-y-2 text-center">
         <h2 className="text-2xl font-bold text-medical-800">Clinical Assessment & Documentation</h2>
         <p className="text-medical-600">Comprehensive clinical evaluation and diagnostic work-up</p>
