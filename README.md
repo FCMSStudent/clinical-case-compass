@@ -1,4 +1,4 @@
-# Clinical Case Compass
+# Medica
 
 ## Description
 

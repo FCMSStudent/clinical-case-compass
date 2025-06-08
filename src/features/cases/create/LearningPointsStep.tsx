@@ -5,6 +5,8 @@ import {
   Path,
   useFieldArray,
   ArrayPath,
+  useWatch,
+  FieldArrayWithId,
 } from "react-hook-form";
 import { z } from "zod";
 import {
@@ -19,8 +21,29 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Trash2, PlusCircle } from "lucide-react";
+import { 
+  Trash2, 
+  PlusCircle, 
+  Lightbulb, 
+  BookOpen, 
+  Link2, 
+  FileText,
+  Sparkles,
+  AlertCircle,
+  CheckCircle,
+  Info
+} from "lucide-react";
 import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 
 /**
  * ────────────────────────────────────────────────────────────────────────────────
@@ -37,78 +60,233 @@ export const learningPointsStepSchema = z.object({
     })
   ).optional(),
 });
-export type LearningPointsFormData = z.infer<typeof learningPointsStepSchema>;
+
+// Define a more specific type for resource links
+interface ResourceLink {
+  url: string;
+  description: string;
+}
+
+// Define the form data type with proper constraints
+interface LearningPointsFormData extends FieldValues {
+  learningPoints?: string;
+  generalNotes?: string;
+  resourceLinks: ResourceLink[];
+}
+
+// Create a type for the field array
+type ResourceLinksFieldArray = FieldArrayWithId<LearningPointsFormData, "resourceLinks", "id">;
 
 /**
  * ────────────────────────────────────────────────────────────────────────────────
  * PROPS
  * ────────────────────────────────────────────────────────────────────────────────
  */
-export interface LearningPointsStepProps<T extends FieldValues = LearningPointsFormData> {
+export interface LearningPointsStepProps<T extends LearningPointsFormData = LearningPointsFormData> {
   className?: string;
   /** Optional limit for resource links. */
   maxLinks?: number;
 }
 
 /**
- * Row component for each resource link form group.
+ * Validation feedback component for resource links
  */
-const ResourceRow = <T extends FieldValues>({
-  index,
+const ResourceLinkValidation = memo(({ 
+  isValid, 
+  message,
+  type = "url"
+}: { 
+  isValid: boolean; 
+  message?: string;
+  type?: "url" | "description";
+}) => (
+  <AnimatePresence mode="wait">
+    {message && (
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 10 }}
+        className={cn(
+          "flex items-center gap-2 mt-2 text-sm",
+          isValid ? "text-emerald-600" : "text-red-600"
+        )}
+      >
+        {isValid ? (
+          <CheckCircle className="h-4 w-4" />
+        ) : (
+          <AlertCircle className="h-4 w-4" />
+        )}
+        <span>{message}</span>
+      </motion.div>
+    )}
+  </AnimatePresence>
+));
+ResourceLinkValidation.displayName = "ResourceLinkValidation";
+
+/**
+ * Enhanced resource link card with better validation and animations
+ */
+const ResourceLinkCard = memo(({ 
+  index, 
   onRemove,
-}: {
-  index: number;
+  isLast,
+  totalLinks
+}: { 
+  index: number; 
   onRemove: () => void;
+  isLast: boolean;
+  totalLinks: number;
 }) => {
-  const { control } = useFormContext<T>();
-  
+  const { control, formState } = useFormContext();
+  const error = formState.errors?.resourceLinks?.[index];
+  const urlError = error?.url;
+  const descriptionError = error?.description;
+
   return (
-    <Card className="bg-muted/30 p-4 shadow-sm">
-      <div className="flex flex-col gap-4 md:flex-row">
-        {/* URL */}
-        <FormField
-          control={control}
-          name={`resourceLinks.${index}.url` as Path<T>}
-          render={({ field }) => (
-            <FormItem className="flex-1">
-              <FormLabel>URL</FormLabel>
-              <FormControl>
-                <Input placeholder="https://example.com/article" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {/* Description */}
-        <FormField
-          control={control}
-          name={`resourceLinks.${index}.description` as Path<T>}
-          render={({ field }) => (
-            <FormItem className="flex-1">
-              <FormLabel>Description (optional)</FormLabel>
-              <FormControl>
-                <Input placeholder="e.g., AHA Guidelines for STEMI" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {/* Remove */}
-        <div className="pt-1 md:pt-6">
-          <Button
-            type="button"
-            variant="destructive"
-            size="icon"
-            onClick={onRemove}
-            aria-label="Remove resource link"
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
-    </Card>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.2 }}
+      className="relative"
+    >
+      <Card className={cn(
+        "border-2 transition-all duration-200",
+        error ? "border-red-200 bg-red-50/50" : "border-gray-200 hover:border-purple-200 hover:shadow-md"
+      )}>
+        <CardContent className="p-4 space-y-4">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex-1 space-y-4">
+              <FormField
+                control={control}
+                name={`resourceLinks.${index}.url` as Path<FieldValues>}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center gap-2">
+                      <Link2 className="h-4 w-4 text-blue-500" />
+                      Resource URL
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Info className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Enter a valid URL to an educational resource (e.g., journal article, guideline, or video)</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="https://example.com/resource"
+                        className={cn(
+                          "font-mono text-sm transition-all duration-200",
+                          urlError ? "border-red-300 focus:border-red-400 bg-red-50/50" : "border-gray-200 focus:border-blue-400"
+                        )}
+                        {...field}
+                      />
+                    </FormControl>
+                    <ResourceLinkValidation
+                      isValid={!urlError}
+                      message={urlError?.message || "URL looks good!"}
+                      type="url"
+                    />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={control}
+                name={`resourceLinks.${index}.description` as Path<FieldValues>}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center gap-2">
+                      Description
+                      <span className="text-sm text-gray-500">(Optional)</span>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Info className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Briefly describe what makes this resource valuable for learning</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Brief description of the resource's key points or relevance"
+                        className={cn(
+                          "text-sm transition-all duration-200",
+                          descriptionError ? "border-red-300 focus:border-red-400 bg-red-50/50" : "border-gray-200 focus:border-blue-400"
+                        )}
+                        {...field}
+                      />
+                    </FormControl>
+                    <ResourceLinkValidation
+                      isValid={!descriptionError}
+                      message={descriptionError?.message}
+                      type="description"
+                    />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={onRemove}
+                    className={cn(
+                      "h-8 w-8 transition-colors duration-200",
+                      isLast && totalLinks > 1
+                        ? "text-red-500 hover:text-red-600 hover:bg-red-50"
+                        : "text-gray-400 hover:text-gray-600 hover:bg-gray-50"
+                    )}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Remove this resource link</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
-};
+});
+
+ResourceLinkCard.displayName = "ResourceLinkCard";
+
+/**
+ * Type-safe wrapper for the field array append function.
+ * 
+ * Note: We use a type assertion here because react-hook-form's field array types
+ * are complex and don't work well with our generic type constraints. The assertion
+ * is safe because we know the shape of our data matches what the form expects.
+ * 
+ * @see https://github.com/react-hook-form/react-hook-form/issues/4059
+ */
+function appendResourceLinkSafely<T extends LearningPointsFormData>(
+  append: ReturnType<typeof useFieldArray<T>>["append"]
+) {
+  return () => {
+    const newLink: ResourceLink = { url: "", description: "" };
+    // TypeScript limitation: react-hook-form's field array types are too complex
+    // for our generic constraints. This assertion is safe because we know the
+    // shape of our data matches what the form expects.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (append as any)(newLink);
+  };
+}
 
 /**
  * ────────────────────────────────────────────────────────────────────────────────
@@ -116,110 +294,262 @@ const ResourceRow = <T extends FieldValues>({
  * ────────────────────────────────────────────────────────────────────────────────
  */
 export const LearningPointsStep = memo(function LearningPointsStep<
-  T extends FieldValues = LearningPointsFormData,
->({ className, maxLinks = 8 }: LearningPointsStepProps<T>) {
-  const { control } = useFormContext<T>();
+  T extends LearningPointsFormData = LearningPointsFormData,
+>({ className, maxLinks = 5 }: LearningPointsStepProps<T>) {
+  const { control, formState } = useFormContext<T>();
+  
   const { fields, append, remove } = useFieldArray<T>({
     control,
     name: "resourceLinks" as ArrayPath<T>,
   });
 
-  const handleAddLink = () => {
-    if (fields.length < maxLinks) {
-      append({ url: "", description: "" } as any);
-    }
-  };
+  // Create a memoized append function with proper documentation
+  const handleAppendResourceLink = React.useMemo(
+    () => appendResourceLinkSafely<T>(append),
+    [append]
+  );
+
+  const learningPoints = useWatch({
+    control,
+    name: "learningPoints" as Path<T>,
+  });
+  const generalNotes = useWatch({
+    control,
+    name: "generalNotes" as Path<T>,
+  });
+  const resourceLinks = useWatch({
+    control,
+    name: "resourceLinks" as Path<T>,
+  }) as ResourceLink[];
+
+  const completedFields = [
+    learningPoints?.trim() ? 1 : 0,
+    generalNotes?.trim() ? 1 : 0,
+    resourceLinks?.some(link => link?.url?.trim() && link?.description?.trim()) ? 1 : 0,
+  ].reduce((sum, val) => sum + val, 0);
+
+  const totalFields = 3;
+  const completionPercentage = (completedFields / totalFields) * 100;
+
+  const canAddMoreLinks = fields.length < maxLinks;
 
   return (
-    <section className={cn("space-y-6", className)}>
-      {/* --------------------------------- Takeaways + Notes --------------------------------- */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Educational Takeaways</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <FormField
-            control={control}
-            name={"learningPoints" as Path<T>}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Key Learning Points</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="• Importance of early ECG in suspected MI&#10;• Differential diagnosis for acute chest pain&#10;• Management protocol for STEMI"
-                    className="min-h-[120px] text-sm"
-                    {...field}
-                  />
-                </FormControl>
-                <FormDescription>
-                  Summarise the main educational insights or lessons learned from this case. Use bullet points for clarity.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+    <section className={cn("space-y-8", className)}>
+      {/* Enhanced Header */}
+      <motion.header
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-600 via-orange-600 to-red-700 p-8 text-white shadow-2xl"
+      >
+        <div className="absolute inset-0 bg-black/10"></div>
+        <div className="absolute top-4 right-4 opacity-20">
+          <Sparkles className="h-12 w-12" />
+        </div>
+        <div className="relative space-y-3">
+          <h3 className="flex items-center text-2xl font-bold">
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="mr-4 rounded-xl bg-white/20 p-3 backdrop-blur-sm"
+            >
+              <Lightbulb className="h-7 w-7" />
+            </motion.div>
+            Educational Insights
+          </h3>
+          <p className="text-amber-100 text-lg max-w-2xl leading-relaxed">
+            Capture key learning points, reflections, and educational resources to maximize the educational value of this case.
+          </p>
+        </div>
+      </motion.header>
 
-          <FormField
-            control={control}
-            name={"generalNotes" as Path<T>}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>General Reflections & Notes</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Any other thoughts, reflections, areas for further study, or personal notes…"
-                    className="min-h-[100px] text-sm"
-                    {...field}
-                  />
-                </FormControl>
-                <FormDescription>
-                  Optional space for additional reflections or miscellaneous notes.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </CardContent>
-      </Card>
+      {/* Progress Indicator */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between text-sm">
+          <span className="font-medium">Step Progress</span>
+          <span className="text-muted-foreground">{completedFields} of {totalFields} fields completed</span>
+        </div>
+        <Progress value={completionPercentage} className="h-2" />
+      </div>
 
-      {/* --------------------------------- Resource Links --------------------------------- */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Supporting Resources</CardTitle>
-          <FormDescription>
-            Add links to relevant articles, guidelines, or other educational material.
-          </FormDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {/* Dynamic link rows */}
-          {fields.map((field, index) => (
-            <ResourceRow
-              key={field.id}
-              index={index}
-              onRemove={() => remove(index)}
+      {/* Validation Summary */}
+      {Object.keys(formState.errors).length > 0 && (
+        <Alert variant="destructive" className="mb-6">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Validation Errors</AlertTitle>
+          <AlertDescription>
+            Please review and correct the highlighted fields below.
+          </AlertDescription>
+        </Alert>
+      )}
+
+      <div className="grid gap-6 md:grid-cols-2">
+        {/* Learning Points Card */}
+        <Card className="border-2">
+          <CardHeader className="bg-gradient-to-r from-amber-50 to-orange-50 border-b">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-amber-100">
+                <Lightbulb className="h-5 w-5 text-amber-600" />
+              </div>
+              <CardTitle className="text-lg font-semibold text-amber-900">
+                Key Learning Points
+              </CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent className="p-6">
+            <FormField
+              control={control}
+              name={"learningPoints" as Path<T>}
+              render={({ field, fieldState }) => (
+                <FormItem>
+                  <FormControl>
+                    <Textarea
+                      placeholder="• Importance of early ECG in suspected MI&#10;• Differential diagnosis for acute chest pain&#10;• Management protocol for STEMI"
+                      className={cn(
+                        "min-h-[200px] text-base border-2 focus:ring-amber-100 rounded-xl p-4 leading-6 transition-all duration-200 resize-none",
+                        fieldState.error 
+                          ? "border-red-300 focus:border-red-400 bg-red-50/50" 
+                          : "border-gray-200 focus:border-amber-400"
+                      )}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription className="text-gray-600 mt-3 flex items-start gap-2">
+                    <div className={cn(
+                      "w-2 h-2 rounded-full mt-2 flex-shrink-0",
+                      fieldState.error ? "bg-red-400" : "bg-amber-400"
+                    )}></div>
+                    Summarize the main educational insights or lessons learned from this case. Use bullet points for clarity.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          ))}
+          </CardContent>
+        </Card>
 
-          {/* Array-level validation */}
-          <FormField
-            control={control}
-            name={"resourceLinks" as Path<T>}
-            render={() => (
-              <FormItem>
-                <FormMessage />
-              </FormItem>
+        {/* General Notes Card */}
+        <Card className="border-2">
+          <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-blue-100">
+                <FileText className="h-5 w-5 text-blue-600" />
+              </div>
+              <CardTitle className="text-lg font-semibold text-blue-900">
+                General Notes & Reflections
+              </CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent className="p-6">
+            <FormField
+              control={control}
+              name={"generalNotes" as Path<T>}
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Any other thoughts, reflections, areas for further study, or personal notes…"
+                      className="min-h-[200px] text-base border-2 border-gray-200 focus:border-blue-400 focus:ring-blue-100 rounded-xl p-4 leading-6 transition-all duration-200 resize-none"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription className="text-gray-600 mt-3 flex items-start gap-2">
+                    <div className="w-2 h-2 rounded-full bg-blue-400 mt-2 flex-shrink-0"></div>
+                    Optional space for additional reflections or miscellaneous notes.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Resource Links Section */}
+      <Card className="border-2 transition-all duration-200 hover:shadow-md">
+        <CardHeader className="bg-gradient-to-r from-purple-50 to-pink-50 border-b">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-purple-100">
+                <BookOpen className="h-5 w-5 text-purple-600" />
+              </div>
+              <CardTitle className="text-lg font-semibold text-purple-900">
+                Educational Resources
+              </CardTitle>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Info className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Add links to educational resources like journal articles, guidelines, or videos</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+            <div className="flex items-center gap-2">
+              {fields.length > 0 && (
+                <Badge variant="secondary" className="text-sm">
+                  {fields.length} of {maxLinks} resources
+                </Badge>
+              )}
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={handleAppendResourceLink}
+                      disabled={!canAddMoreLinks}
+                      className={cn(
+                        "gap-2 transition-all duration-200",
+                        !canAddMoreLinks && "opacity-50 cursor-not-allowed"
+                      )}
+                    >
+                      <PlusCircle className="h-4 w-4" />
+                      Add Resource
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>
+                      {canAddMoreLinks 
+                        ? "Add a link to an educational resource"
+                        : `Maximum ${maxLinks} resources allowed`
+                      }
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="p-6">
+          <div className="space-y-4">
+            <AnimatePresence mode="popLayout">
+              {fields.map((field, index) => (
+                <ResourceLinkCard
+                  key={field.id}
+                  index={index}
+                  onRemove={() => remove(index)}
+                  isLast={index === fields.length - 1}
+                  totalLinks={fields.length}
+                />
+              ))}
+            </AnimatePresence>
+
+            {fields.length === 0 && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="text-center py-8 text-muted-foreground"
+              >
+                <BookOpen className="h-8 w-8 mx-auto mb-3 text-gray-400" />
+                <p>No resources added yet. Click "Add Resource" to include educational materials.</p>
+              </motion.div>
             )}
-          />
-
-          {/* Add new link */}
-          <Button
-            type="button"
-            variant="outline"
-            onClick={handleAddLink}
-            disabled={fields.length >= maxLinks}
-          >
-            <PlusCircle className="mr-2 h-4 w-4" /> Add Resource Link
-          </Button>
+          </div>
         </CardContent>
       </Card>
     </section>

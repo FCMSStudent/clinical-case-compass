@@ -31,7 +31,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (event === 'SIGNED_IN') {
           toast({
             title: "Signed in successfully",
-            description: "Welcome to Clinical Case Compass",
+            description: "Welcome to Medica",
           });
         }
         

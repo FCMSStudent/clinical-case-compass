@@ -1,6 +1,42 @@
 import React, { memo, useCallback, useMemo } from "react";
-import { useFormContext, Controller, Path } from "react-hook-form";
+import { useFormContext, Controller, Path, useWatch } from "react-hook-form";
 import { z } from "zod";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormDescription,
+  FormMessage,
+} from "@/components/ui/form";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Brain as BrainIcon,
+  FileText as FileTextIcon,
+  Heart as HeartIcon,
+  Microscope as MicroscopeIcon,
+  Scan as ScanIcon,
+  Stethoscope as StethoscopeIcon,
+  User as UserIcon,
+  AlertCircle,
+  CheckCircle2,
+  Info,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import type { LabTest, RadiologyExam } from "@/types/case";
+import { clinicalDetailStepSchema, type ClinicalDetailFormData, TAB_ITEMS } from "./ClinicalDetailConfig";
+import { InteractiveBodyDiagram, BodyPartSelection } from "@/features/cases/InteractiveBodyDiagram";
+import { SystemReviewChecklist } from "@/features/cases/SystemReviewChecklist";
+import { VitalsCard } from "@/features/cases/VitalsCard";
+import { LabResultsCard } from "@/features/cases/LabResultsCard";
+import { RadiologyCard } from "@/features/cases/RadiologyCard";
 
 // 1. CENTRALIZED CONFIGURATION: All form field names are now in one place.
 // This prevents typos and makes refactoring easier.
@@ -14,22 +50,6 @@ const FORM_FIELDS = {
   RADIOLOGY_EXAMS: "radiologyExams",
 } as const;
 
-// --- Local Imports (assuming folder structure) ---
-import { clinicalDetailStepSchema, type ClinicalDetailFormData, TAB_ITEMS } from "./ClinicalDetailConfig";
-import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
-import { InteractiveBodyDiagram, BodyPartSelection } from "@/features/cases/InteractiveBodyDiagram";
-import { SystemReviewChecklist } from "@/features/cases/SystemReviewChecklist";
-import { VitalsCard } from "@/features/cases/VitalsCard";
-import { LabResultsCard } from "@/features/cases/LabResultsCard";
-import { RadiologyCard } from "@/features/cases/RadiologyCard";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Brain as BrainIcon, FileText as FileTextIcon, Heart as HeartIcon, Microscope as MicroscopeIcon, Scan as ScanIcon, Stethoscope as StethoscopeIcon, User as UserIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
-import type { LabTest, RadiologyExam } from "@/types/case";
-
 // 2. REUSABLE & DECOUPLED FIELD COMPONENT
 // This component encapsulates the boilerplate for a controlled textarea field.
 // It uses `useFormContext` so it doesn't need `control` passed as a prop.
@@ -38,40 +58,126 @@ interface FormTextAreaFieldProps {
   label: string;
   placeholder: string;
   description: string;
+  tooltip?: string;
+  isRequired?: boolean;
 }
 
-const FormTextAreaField = ({ name, label, placeholder, description }: FormTextAreaFieldProps) => {
+const FormTextAreaField = memo(({ 
+  name, 
+  label, 
+  placeholder, 
+  description, 
+  tooltip,
+  isRequired 
+}: FormTextAreaFieldProps) => {
+  const { formState } = useFormContext<ClinicalDetailFormData>();
+  const error = formState.errors[name];
+
   return (
     <FormField
       name={name}
-      render={({ field }) => (
+      render={({ field, fieldState }) => (
         <FormItem>
-          <FormLabel>{label}</FormLabel>
+          <div className="flex items-center justify-between">
+            <FormLabel className="text-base font-semibold text-gray-700">
+              {label}
+              {isRequired && <span className="text-red-500 ml-1">*</span>}
+            </FormLabel>
+            {tooltip && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Info className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{tooltip}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
+          </div>
           <FormControl>
-            <Textarea placeholder={placeholder} className="min-h-[160px] text-sm" {...field} />
+            <Textarea
+              placeholder={placeholder}
+              className={cn(
+                "min-h-[160px] text-sm border-2 transition-all duration-200",
+                fieldState.error
+                  ? "border-red-300 focus:border-red-400 bg-red-50/50"
+                  : "border-gray-200 focus:border-blue-400"
+              )}
+              {...field}
+            />
           </FormControl>
-          <FormDescription>{description}</FormDescription>
+          <div className="mt-2 flex items-center gap-2">
+            {fieldState.error ? (
+              <AlertCircle className="h-4 w-4 text-red-500" />
+            ) : field.value ? (
+              <CheckCircle2 className="h-4 w-4 text-green-500" />
+            ) : null}
+            <FormDescription className={cn(
+              "text-sm",
+              fieldState.error ? "text-red-500" : "text-gray-600"
+            )}>
+              {fieldState.error?.message || description}
+            </FormDescription>
+          </div>
           <FormMessage />
         </FormItem>
       )}
     />
   );
-};
+});
+FormTextAreaField.displayName = "FormTextAreaField";
 
 // --- Reusable Section Card (Unchanged, it's already good!) ---
-function SectionCard({ icon: Icon, title, headerClass, children }: { icon: React.ElementType; title: string; headerClass: string; children: React.ReactNode; }) {
-  return (
-    <Card className="shadow-sm">
-      <CardHeader className={cn("pb-3", headerClass)}>
-        <CardTitle className="flex items-center gap-2 text-base">
-          <Icon className="h-5 w-5" />
-          {title}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="pt-4">{children}</CardContent>
-    </Card>
-  );
+interface SectionCardProps {
+  icon: React.ElementType;
+  title: string;
+  headerClass?: string;
+  children: React.ReactNode;
+  tooltip?: string;
 }
+
+const SectionCard = memo(({ 
+  icon: Icon, 
+  title, 
+  headerClass, 
+  children,
+  tooltip 
+}: SectionCardProps) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.3 }}
+  >
+    <Card className="border-2 overflow-hidden">
+      <CardHeader className={cn("border-b", headerClass)}>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="rounded-lg bg-white/20 p-2 backdrop-blur-sm">
+              <Icon className="h-5 w-5" />
+            </div>
+            <CardTitle className="text-lg font-semibold">{title}</CardTitle>
+          </div>
+          {tooltip && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Info className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{tooltip}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
+        </div>
+      </CardHeader>
+      <CardContent className="p-6">{children}</CardContent>
+    </Card>
+  </motion.div>
+));
+SectionCard.displayName = "SectionCard";
 
 // 3. COMPOSITION: Break down tabs into smaller, focused components.
 // Each component is responsible for its own content and state.
@@ -100,24 +206,20 @@ HistoryAndExamTab.displayName = "HistoryAndExamTab";
 
 
 const SystemsReviewTab = memo(() => {
-  // 4. DECOUPLED STATE MANAGEMENT: Hooks from `useFormContext` are called here,
-  // not passed down from the top-level component.
   const { setValue, watch } = useFormContext<ClinicalDetailFormData>();
   const selectedBodyParts = watch(FORM_FIELDS.SELECTED_BODY_PARTS) || [];
+  const [systemSymptoms, setSystemSymptoms] = React.useState<Record<string, string[]>>({});
+  const [vitals, setVitals] = React.useState<Record<string, string>>({});
 
   const handleBodyPartSelected = useCallback((selection: BodyPartSelection) => {
     const partName = selection.name || selection.id;
+    if (!partName) return;
+    
     const updatedParts = selectedBodyParts.includes(partName)
       ? selectedBodyParts.filter((p) => p !== partName)
       : [...selectedBodyParts, partName];
     setValue(FORM_FIELDS.SELECTED_BODY_PARTS, updatedParts, { shouldValidate: true });
   }, [selectedBodyParts, setValue]);
-
-  const setSystemSymptoms = useCallback((val: Record<string, string[]>) =>
-    setValue(FORM_FIELDS.SYSTEM_SYMPTOMS, val, { shouldValidate: true }), [setValue]);
-
-  const setVitals = useCallback((v: Record<string, string>) =>
-    setValue(FORM_FIELDS.VITALS, v, { shouldValidate: true }), [setValue]);
 
   const PartBadges = useMemo(() => (
     selectedBodyParts.length > 0 && (
@@ -175,32 +277,161 @@ const DiagnosticsTab = memo(() => {
 });
 DiagnosticsTab.displayName = "DiagnosticsTab";
 
+// Tab progress component
+interface TabProgressProps {
+  currentTab: string;
+  completedFields: number;
+  totalFields: number;
+}
+
+const TabProgress = memo(({ currentTab, completedFields, totalFields }: TabProgressProps) => {
+  const percentage = (completedFields / totalFields) * 100;
+  
+  return (
+    <div className="mb-6 space-y-2">
+      <div className="flex items-center justify-between text-sm">
+        <span className="font-medium text-gray-700">
+          {TAB_ITEMS.find(tab => tab.value === currentTab)?.label} Progress
+        </span>
+        <span className="text-gray-500">{completedFields} of {totalFields} fields completed</span>
+      </div>
+      <Progress value={percentage} className="h-2" />
+    </div>
+  );
+});
+TabProgress.displayName = "TabProgress";
 
 // 5. SIMPLIFIED & CLEANER MAIN COMPONENT
 export const ClinicalDetailStep = memo(({ className }: { className?: string }) => {
-  const { setValue, watch } = useFormContext<ClinicalDetailFormData>();
+  const { setValue, control, formState } = useFormContext<ClinicalDetailFormData>();
+  const [currentTab, setCurrentTab] = React.useState("history");
+
+  // Watch form values for progress tracking
+  const watchedFields = useWatch({
+    control,
+    name: [
+      FORM_FIELDS.PATIENT_HISTORY,
+      FORM_FIELDS.PHYSICAL_EXAM,
+      FORM_FIELDS.SELECTED_BODY_PARTS,
+      FORM_FIELDS.SYSTEM_SYMPTOMS,
+      FORM_FIELDS.VITALS,
+      FORM_FIELDS.LAB_RESULTS,
+      FORM_FIELDS.RADIOLOGY_EXAMS,
+    ] as const,
+  });
+
+  // Calculate progress for current tab
+  const tabProgress = useMemo(() => {
+    const [history, exam, bodyParts, systems, vitals, labs, radiology] = watchedFields;
+    const tabFields = {
+      history: [history, exam],
+      systems: [bodyParts, systems, vitals],
+      diagnostics: [labs, radiology],
+    }[currentTab] || [];
+
+    const completed = tabFields.filter(field => {
+      if (Array.isArray(field)) {
+        return field.length > 0;
+      }
+      if (typeof field === "string") {
+        return field.trim().length > 0;
+      }
+      if (typeof field === "object" && field !== null) {
+        return Object.keys(field).length > 0;
+      }
+      return !!field;
+    }).length;
+
+    return {
+      completed,
+      total: tabFields.length,
+    };
+  }, [watchedFields, currentTab]);
 
   return (
     <section className={cn("space-y-6", className)}>
-      <header className="space-y-2 text-center">
-        <h2 className="text-2xl font-bold text-medical-800">Clinical Assessment & Documentation</h2>
-        <p className="text-medical-600">Comprehensive clinical evaluation and diagnostic work-up</p>
-      </header>
-      
-      {/* The main component is now just a layout shell. The complexity is handled by child components. */}
-      <Tabs defaultValue="history" className="w-full">
-        <TabsList className="grid w-full grid-cols-4 mb-6">
+      <motion.header
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 p-8 text-white shadow-2xl"
+      >
+        <div className="absolute inset-0 bg-black/10"></div>
+        <div className="absolute -top-4 -right-4 opacity-10">
+          <StethoscopeIcon className="h-24 w-24" />
+        </div>
+        <div className="relative space-y-3">
+          <h3 className="flex items-center text-2xl font-bold">
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="mr-4 rounded-xl bg-white/20 p-3 backdrop-blur-sm"
+            >
+              <StethoscopeIcon className="h-7 w-7" />
+            </motion.div>
+            Clinical Assessment & Documentation
+          </h3>
+          <p className="text-blue-100 text-lg max-w-2xl leading-relaxed">
+            Comprehensive clinical evaluation and diagnostic work-up
+          </p>
+        </div>
+      </motion.header>
+
+      {/* Validation summary alert */}
+      {Object.keys(formState.errors).length > 0 && (
+        <Alert variant="destructive" className="mb-6">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Validation Errors</AlertTitle>
+          <AlertDescription>
+            Please review and correct the highlighted fields below.
+          </AlertDescription>
+        </Alert>
+      )}
+
+      <Tabs 
+        defaultValue="history" 
+        className="w-full"
+        onValueChange={setCurrentTab}
+      >
+        <TabsList className="grid w-full grid-cols-3 mb-6">
           {TAB_ITEMS.map(({ value, label, icon: Icon }) => (
-            <TabsTrigger key={value} value={value} className="flex items-center gap-2">
+            <TabsTrigger
+              key={value}
+              value={value}
+              className="flex items-center gap-2 relative"
+            >
               <Icon className="h-4 w-4" />
               <span>{label}</span>
+              {value === currentTab && (
+                <motion.div
+                  layoutId="activeTab"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600"
+                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                />
+              )}
             </TabsTrigger>
           ))}
         </TabsList>
 
-        <HistoryAndExamTab />
-        <SystemsReviewTab />
-        <DiagnosticsTab />
+        <TabProgress
+          currentTab={currentTab}
+          completedFields={tabProgress.completed}
+          totalFields={tabProgress.total}
+        />
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentTab}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.2 }}
+          >
+            <HistoryAndExamTab />
+            <SystemsReviewTab />
+            <DiagnosticsTab />
+          </motion.div>
+        </AnimatePresence>
       </Tabs>
     </section>
   );

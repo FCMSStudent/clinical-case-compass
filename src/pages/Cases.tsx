@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Plus, Search, Filter, Grid, List } from "lucide-react";
@@ -12,6 +11,8 @@ import { CaseCard } from "@/features/cases/CaseCard";
 import { CaseListItem } from "@/features/cases/CaseListItem";
 import { PageHeader } from "@/components/ui/page-header";
 import { useErrorHandler } from "@/hooks/use-error-handler";
+import { CaseGridSkeleton, CaseListSkeleton } from "@/features/cases/CaseCardSkeleton";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Cases = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -47,20 +48,13 @@ const Cases = () => {
     deleteMutation.mutate(caseId);
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-center space-y-2">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-          <p className="text-muted-foreground">Loading cases...</p>
-        </div>
-      </div>
-    );
-  }
-
   if (isError) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex items-center justify-center min-h-[400px]"
+      >
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle className="text-destructive">Error</CardTitle>
@@ -69,7 +63,7 @@ const Cases = () => {
             <p className="text-muted-foreground">Error loading cases. Please try again.</p>
           </CardContent>
         </Card>
-      </div>
+      </motion.div>
     );
   }
 
@@ -129,37 +123,85 @@ const Cases = () => {
       </Card>
 
       {/* Cases Display */}
-      {filteredCases.length === 0 ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>No cases found</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground">
-              {searchQuery 
-                ? "No cases match your search criteria. Try adjusting your search terms."
-                : "No cases have been created yet. Click 'Add Case' to create your first case."
-              }
-            </p>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className={
-          viewMode === "grid" 
-            ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" 
-            : "space-y-4"
-        }>
-          {viewMode === "grid" ? (
-            filteredCases.map((caseItem) => (
-              <CaseCard key={caseItem.id} medicalCase={caseItem} />
-            ))
-          ) : (
-            filteredCases.map((caseItem) => (
-              <CaseListItem key={caseItem.id} medicalCase={caseItem} onDelete={handleDelete} />
-            ))
-          )}
-        </div>
-      )}
+      <AnimatePresence mode="wait">
+        {isLoading ? (
+          <motion.div
+            key="loading"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            {viewMode === "grid" ? (
+              <CaseGridSkeleton count={6} />
+            ) : (
+              <CaseListSkeleton count={4} />
+            )}
+          </motion.div>
+        ) : filteredCases.length === 0 ? (
+          <motion.div
+            key="empty"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+          >
+            <Card>
+              <CardHeader>
+                <CardTitle>No cases found</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  {searchQuery 
+                    ? "No cases match your search criteria. Try adjusting your search terms."
+                    : "No cases have been created yet. Click 'Add Case' to create your first case."
+                  }
+                </p>
+              </CardContent>
+            </Card>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="cases"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className={
+              viewMode === "grid" 
+                ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" 
+                : "space-y-4"
+            }
+          >
+            <AnimatePresence mode="popLayout">
+              {viewMode === "grid" ? (
+                filteredCases.map((caseItem) => (
+                  <motion.div
+                    key={caseItem.id}
+                    layout
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <CaseCard medicalCase={caseItem} onDelete={handleDelete} />
+                  </motion.div>
+                ))
+              ) : (
+                filteredCases.map((caseItem) => (
+                  <motion.div
+                    key={caseItem.id}
+                    layout
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <CaseListItem medicalCase={caseItem} onDelete={handleDelete} />
+                  </motion.div>
+                ))
+              )}
+            </AnimatePresence>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

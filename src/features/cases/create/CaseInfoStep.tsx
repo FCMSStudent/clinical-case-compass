@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileText, Stethoscope, Tag, Sparkles, Info } from "lucide-react";
+import { FileText, Stethoscope, Tag, Sparkles, Info, AlertCircle, CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Tooltip,
@@ -28,6 +28,13 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Progress } from "@/components/ui/progress";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert";
 
 /**
  * ────────────────────────────────────────────────────────────────────────────────
@@ -72,55 +79,100 @@ interface FieldCardProps {
   isRequired?: boolean;
 }
 
-const FieldCard: React.FC<FieldCardProps> = ({ 
-  icon: Icon, 
-  title, 
-  gradient, 
-  children, 
-  tooltip,
-  isRequired = false 
-}) => (
-  <Card className={cn("overflow-hidden", gradient)}>
-    <CardHeader className="pb-2">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Icon className="h-5 w-5 text-gray-600" />
-          <CardTitle className="text-lg font-semibold">
-            {title}
-            {isRequired && <span className="text-red-500 ml-1">*</span>}
-          </CardTitle>
-        </div>
-        {tooltip && (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                <Info className="h-4 w-4 text-gray-400 hover:text-gray-600" />
-              </TooltipTrigger>
-              <TooltipContent>
-                <p className="max-w-xs">{tooltip}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        )}
-      </div>
-    </CardHeader>
-    <CardContent>{children}</CardContent>
-  </Card>
+const ValidationFeedback = ({ isValid, message }: { isValid: boolean; message: string }) => (
+  <motion.div
+    initial={{ opacity: 0, y: -10 }}
+    animate={{ opacity: 1, y: 0 }}
+    className={cn(
+      "flex items-center gap-2 mt-2 text-sm",
+      isValid ? "text-emerald-600" : "text-red-600"
+    )}
+  >
+    {isValid ? (
+      <CheckCircle className="h-4 w-4" />
+    ) : (
+      <AlertCircle className="h-4 w-4" />
+    )}
+    <span>{message}</span>
+  </motion.div>
 );
+
+const FieldCard = memo(function FieldCard({
+  icon: Icon,
+  title,
+  gradient,
+  tooltip,
+  isRequired,
+  children,
+}: {
+  icon: React.ElementType;
+  title: string;
+  gradient: string;
+  tooltip?: string;
+  isRequired?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <Card className={cn("overflow-hidden border-2", gradient)}>
+        <CardHeader className="pb-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className={cn("p-2 rounded-lg", gradient.replace("50", "100"))}>
+                <Icon className="h-5 w-5" />
+              </div>
+              <CardTitle className="text-lg font-semibold flex items-center gap-2">
+                {title}
+                {isRequired && (
+                  <span className="text-red-500 text-sm">*</span>
+                )}
+              </CardTitle>
+            </div>
+            {tooltip && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 rounded-full hover:bg-white/50"
+                    >
+                      <Info className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-xs p-4">
+                    <p className="text-sm">{tooltip}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
+          </div>
+        </CardHeader>
+        <CardContent>
+          {children}
+        </CardContent>
+      </Card>
+    </motion.div>
+  );
+});
 
 interface StepProgressProps {
   completedFields: number;
   totalFields: number;
 }
 
-const StepProgress: React.FC<StepProgressProps> = ({ completedFields, totalFields }) => {
+const StepProgress = ({ completedFields, totalFields }: { completedFields: number; totalFields: number }) => {
   const progress = (completedFields / totalFields) * 100;
   
   return (
     <div className="space-y-2">
-      <div className="flex justify-between text-sm text-gray-600">
-        <span>Step Progress</span>
-        <span>{completedFields} of {totalFields} fields completed</span>
+      <div className="flex items-center justify-between text-sm">
+        <span className="font-medium">Step Progress</span>
+        <span className="text-muted-foreground">{completedFields} of {totalFields} fields completed</span>
       </div>
       <Progress value={progress} className="h-2" />
     </div>
@@ -144,7 +196,7 @@ export interface CaseInfoStepProps<T extends FieldValues = CaseInfoFormData> {
 export const CaseInfoStep = memo(function CaseInfoStep<
   T extends FieldValues = CaseInfoFormData,
 >({ className }: CaseInfoStepProps<T>) {
-  const { control } = useFormContext<T>();
+  const { control, formState } = useFormContext<T>();
   const [completedFields, setCompletedFields] = React.useState(0);
   const totalFields = 3; // caseTitle, chiefComplaint, specialty
 
@@ -164,26 +216,46 @@ export const CaseInfoStep = memo(function CaseInfoStep<
 
   return (
     <section className={cn("space-y-8", className)}>
-      {/* Enhanced Header with gradient background */}
-      <header className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 p-8 text-white shadow-2xl">
+      {/* Enhanced header with animation */}
+      <motion.header
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 p-8 text-white shadow-2xl"
+      >
         <div className="absolute inset-0 bg-black/10"></div>
         <div className="absolute top-4 right-4 opacity-20">
           <Sparkles className="h-12 w-12" />
         </div>
         <div className="relative space-y-3">
           <h3 className="flex items-center text-2xl font-bold">
-            <div className="mr-4 rounded-xl bg-white/20 p-3 backdrop-blur-sm">
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="mr-4 rounded-xl bg-white/20 p-3 backdrop-blur-sm"
+            >
               <FileText className="h-7 w-7" />
-            </div>
+            </motion.div>
             Case Information
           </h3>
           <p className="text-blue-100 text-lg max-w-2xl leading-relaxed">
             Create a comprehensive clinical case by providing essential information about the patient presentation and medical context.
           </p>
         </div>
-      </header>
+      </motion.header>
 
       <StepProgress completedFields={completedFields} totalFields={totalFields} />
+
+      {/* Add validation summary alert if there are errors */}
+      {Object.keys(formState.errors).length > 0 && (
+        <Alert variant="destructive" className="mb-6">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Validation Errors</AlertTitle>
+          <AlertDescription>
+            Please review and correct the highlighted fields below.
+          </AlertDescription>
+        </Alert>
+      )}
 
       <FieldCard 
         icon={FileText} 
@@ -203,12 +275,16 @@ export const CaseInfoStep = memo(function CaseInfoStep<
                   className={cn(
                     "text-base border-2 focus:ring-emerald-100 rounded-xl py-3 px-4 transition-all duration-200",
                     fieldState.error 
-                      ? "border-red-300 focus:border-red-400" 
+                      ? "border-red-300 focus:border-red-400 bg-red-50/50" 
                       : "border-gray-200 focus:border-emerald-400"
                   )}
                   {...field}
                 />
               </FormControl>
+              <ValidationFeedback
+                isValid={!fieldState.error}
+                message={fieldState.error?.message || "Title looks good!"}
+              />
               <FormDescription className="text-gray-600 mt-3 flex items-start gap-2">
                 <div className={cn(
                   "w-2 h-2 rounded-full mt-2 flex-shrink-0",
@@ -216,7 +292,6 @@ export const CaseInfoStep = memo(function CaseInfoStep<
                 )}></div>
                 Create a descriptive and engaging title that captures the essence of this clinical case
               </FormDescription>
-              <FormMessage />
             </FormItem>
           )}
         />

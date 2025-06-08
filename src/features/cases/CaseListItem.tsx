@@ -1,12 +1,42 @@
-
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MedicalCase } from '@/types/case';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { User, Clipboard, Eye, Edit, Trash2, Tag as TagIcon, CalendarDays } from 'lucide-react'; // Changed ClipboardText to Clipboard
+import { 
+  User, 
+  Clipboard, 
+  Eye, 
+  Edit, 
+  Trash2, 
+  Tag as TagIcon, 
+  CalendarDays,
+  AlertCircle,
+  CheckCircle2,
+  ChevronRight,
+  Sparkles
+} from 'lucide-react';
 import { format } from 'date-fns';
-import { cn } from '@/lib/utils'; // For optional className
+import { cn } from '@/lib/utils';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Badge } from "@/components/ui/badge";
 
 interface CaseListItemProps {
   medicalCase: MedicalCase;
@@ -16,87 +46,201 @@ interface CaseListItemProps {
 
 export const CaseListItem = memo<CaseListItemProps>(({ medicalCase, className, onDelete }) => {
   const primaryTag = medicalCase.tags && medicalCase.tags.length > 0 ? medicalCase.tags[0] : null;
-  // Simplified: just show the first tag, or more sophisticated logic like in CaseCard can be adopted if needed.
+  const [isHovered, setIsHovered] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const handleDelete = () => {
+    setShowDeleteDialog(true);
+  };
+
+  const confirmDelete = () => {
     onDelete(medicalCase.id);
+    setShowDeleteDialog(false);
   };
 
   return (
-    <Card className={cn("hover:shadow-md transition-shadow", className)}>
-      <CardContent className="p-4">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"> {/* Main flex container: items-start for alignment if content heights differ */}
-          
-          {/* Left Section: Main Info (takes up more space) */}
-          <div className="flex-grow space-y-2 min-w-0"> {/* min-w-0 for proper truncation */}
-            <h3 className="font-semibold text-lg truncate" title={medicalCase.title}>
-              {medicalCase.title}
-            </h3>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.2 }}
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+    >
+      <Card 
+        className={cn(
+          "group relative overflow-hidden transition-all duration-200",
+          "hover:shadow-lg hover:border-primary/20",
+          "focus-within:ring-2 focus-within:ring-primary/20 focus-within:ring-offset-2",
+          className
+        )}
+      >
+        {/* Gradient overlay on hover */}
+        <motion.div
+          className="absolute inset-0 bg-gradient-to-r from-primary/5 to-primary/10 opacity-0"
+          animate={{ opacity: isHovered ? 1 : 0 }}
+          transition={{ duration: 0.2 }}
+        />
 
-            <div className="flex items-center text-sm text-muted-foreground" title={`Patient: ${medicalCase.patient.name}, ${medicalCase.patient.age} y/o ${medicalCase.patient.gender}`}>
-              <User className="h-4 w-4 mr-2 flex-shrink-0" />
-              <span className="truncate">{medicalCase.patient.name}, {medicalCase.patient.age} y/o {medicalCase.patient.gender}</span>
-            </div>
-
-            <div className="flex items-start text-sm text-muted-foreground" title={`Complaint: ${medicalCase.chiefComplaint}`}>
-              <Clipboard className="h-4 w-4 mr-2 mt-1 flex-shrink-0" /> {/* Changed ClipboardText to Clipboard */}
-              <p className="truncate">
-                {medicalCase.chiefComplaint}
-              </p>
-            </div>
-            
-            <div className="flex items-center text-xs text-muted-foreground pt-1">
-              <CalendarDays className="h-3 w-3 mr-1 flex-shrink-0" />
-              <span>Created: {format(new Date(medicalCase.createdAt), "MMM d, yyyy")}</span>
-            </div>
-          </div>
-
-          {/* Right Section: Tags & Actions (fixed width or shrinks less) */}
-          <div className="flex-shrink-0 flex flex-col items-start sm:items-end space-y-2 w-full sm:w-auto">
-            {/* Tags */}
-            <div className="flex items-center gap-2">
-              {primaryTag && (
-                <span
-                  key={primaryTag.id}
-                  className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
-                  style={{
-                    backgroundColor: `${primaryTag.color}20`, // Assuming hex color with alpha
-                    color: primaryTag.color,
-                  }}
-                  title={`Tag: ${primaryTag.name}`}
+        <CardContent className="p-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            {/* Left Section: Main Info */}
+            <div className="flex-grow space-y-2 min-w-0">
+              <div className="flex items-start gap-3">
+                <motion.div
+                  animate={{ scale: isHovered ? 1.1 : 1 }}
+                  transition={{ duration: 0.2 }}
+                  className="mt-1"
                 >
-                  <TagIcon className="h-3 w-3 mr-1" /> {primaryTag.name}
-                </span>
-              )}
-              {/* Add more tags or a "+N" badge if needed, similar to CaseCard */}
-               {medicalCase.tags && medicalCase.tags.length > 1 && (
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground">
-                    +{medicalCase.tags.length - 1}
-                  </span>
-                )}
+                  <Sparkles className="h-5 w-5 text-primary/60" />
+                </motion.div>
+                <div className="space-y-1">
+                  <h3 
+                    className="font-semibold text-lg truncate group-hover:text-primary transition-colors"
+                    title={medicalCase.title}
+                  >
+                    {medicalCase.title}
+                  </h3>
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <User className="h-4 w-4 mr-2 flex-shrink-0" aria-hidden="true" />
+                    <span className="truncate">
+                      {medicalCase.patient.name}, {medicalCase.patient.age} y/o {medicalCase.patient.gender}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-start text-sm text-muted-foreground">
+                <Clipboard className="h-4 w-4 mr-2 mt-1 flex-shrink-0" aria-hidden="true" />
+                <p className="truncate" title={medicalCase.chiefComplaint}>
+                  {medicalCase.chiefComplaint}
+                </p>
+              </div>
+              
+              <div className="flex items-center text-xs text-muted-foreground pt-1">
+                <CalendarDays className="h-3 w-3 mr-1 flex-shrink-0" aria-hidden="true" />
+                <time dateTime={new Date(medicalCase.createdAt).toISOString()}>
+                  Created: {format(new Date(medicalCase.createdAt), "MMM d, yyyy")}
+                </time>
+              </div>
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex items-center gap-1 pt-2">
-              <Button variant="ghost" size="sm" asChild title="View Case">
-                <Link to={`/cases/${medicalCase.id}`}>
-                  <Eye className="h-4 w-4" />
-                </Link>
-              </Button>
-              <Button variant="ghost" size="sm" asChild title="Edit Case">
-                <Link to={`/cases/edit/${medicalCase.id}`}>
-                  <Edit className="h-4 w-4" />
-                </Link>
-              </Button>
-              <Button variant="ghost" size="sm" onClick={handleDelete} title="Delete Case">
-                <Trash2 className="h-4 w-4 text-destructive hover:text-destructive/80" />
-              </Button>
+            {/* Right Section: Tags & Actions */}
+            <div className="flex-shrink-0 flex flex-col items-start sm:items-end space-y-2 w-full sm:w-auto">
+              {/* Tags */}
+              <div className="flex items-center gap-2">
+                <AnimatePresence mode="popLayout">
+                  {primaryTag && (
+                    <motion.span
+                      key={primaryTag.id}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium transition-colors"
+                      style={{
+                        backgroundColor: `${primaryTag.color}20`,
+                        color: primaryTag.color,
+                      }}
+                    >
+                      <TagIcon className="h-3 w-3 mr-1" aria-hidden="true" />
+                      {primaryTag.name}
+                    </motion.span>
+                  )}
+                  {medicalCase.tags && medicalCase.tags.length > 1 && (
+                    <Badge variant="secondary" className="text-xs">
+                      +{medicalCase.tags.length - 1}
+                    </Badge>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center gap-1 pt-2">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        asChild 
+                        className="relative group/btn"
+                      >
+                        <Link to={`/cases/${medicalCase.id}`}>
+                          <Eye className="h-4 w-4 transition-transform group-hover/btn:scale-110" />
+                          <span className="sr-only">View Case</span>
+                        </Link>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>View Case Details</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        asChild
+                        className="relative group/btn"
+                      >
+                        <Link to={`/cases/edit/${medicalCase.id}`}>
+                          <Edit className="h-4 w-4 transition-transform group-hover/btn:scale-110" />
+                          <span className="sr-only">Edit Case</span>
+                        </Link>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Edit Case</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+
+                <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+                  <AlertDialogTrigger asChild>
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      className="relative group/btn text-destructive hover:text-destructive/80"
+                    >
+                      <Trash2 className="h-4 w-4 transition-transform group-hover/btn:scale-110" />
+                      <span className="sr-only">Delete Case</span>
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Delete Case</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Are you sure you want to delete this case? This action cannot be undone.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction 
+                        onClick={confirmDelete}
+                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      >
+                        Delete
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
             </div>
           </div>
 
-        </div>
-      </CardContent>
-    </Card>
+          {/* Hover indicator */}
+          <motion.div
+            className="absolute right-0 top-1/2 -translate-y-1/2 text-primary/40"
+            animate={{ 
+              x: isHovered ? -8 : 0,
+              opacity: isHovered ? 1 : 0 
+            }}
+            transition={{ duration: 0.2 }}
+          >
+            <ChevronRight className="h-6 w-6" />
+          </motion.div>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 });
 

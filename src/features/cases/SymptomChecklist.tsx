@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect, memo, useMemo } from "react";
+import React, { useState, useEffect, memo, useMemo, useCallback } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -15,12 +14,53 @@ import {
   Search,
   Check,
   X,
-  Circle
+  Circle,
+  Filter,
+  AlertCircle,
+  Info,
+  Star,
+  Clock,
+  Sparkles,
+  ArrowUpDown,
+  BookOpen,
+  Tag,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { systemSymptoms } from "./systemSymptoms";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 interface SymptomChecklistProps {
   onSelectionChange: (selections: Record<string, string[]>) => void;
@@ -31,15 +71,17 @@ interface SymptomChecklistProps {
   initialSymptoms?: Record<string, boolean>;
 }
 
-
-// Memoized symptom item to prevent unnecessary re-renders
+// Memoized symptom item with enhanced visual feedback
 const SymptomItem = memo(({
   system,
   symptom,
   isChecked,
   isHighlighted,
   onToggle,
-  id
+  id,
+  isSearchResult,
+  isRecentlyUsed,
+  isFrequentlyUsed,
 }: {
   system: string;
   symptom: string;
@@ -47,36 +89,79 @@ const SymptomItem = memo(({
   isHighlighted: boolean;
   onToggle: (checked: boolean) => void;
   id: string;
-}) => (
-  <div 
-    className={cn(
-      "flex items-start space-x-2 p-1 transition-colors rounded",
-      isHighlighted && "bg-yellow-50",
-      isChecked && "bg-medical-50"
-    )}
-  >
-    <Checkbox 
-      id={id} 
-      checked={isChecked}
-      onCheckedChange={(checked) => onToggle(checked === true)}
+  isSearchResult?: boolean;
+  isRecentlyUsed?: boolean;
+  isFrequentlyUsed?: boolean;
+}) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <motion.div
+      initial={false}
+      animate={{
+        scale: isHovered ? 1.02 : 1,
+        backgroundColor: isChecked 
+          ? "hsl(var(--medical-50))" 
+          : isHovered 
+          ? "hsl(var(--medical-50/0.5))" 
+          : "transparent",
+      }}
+      transition={{ duration: 0.2 }}
       className={cn(
-        "mt-1 transition-all duration-200",
-        isChecked && "bg-medical-600 border-medical-600",
-        isHighlighted && "ring-2 ring-yellow-400"
+        "flex items-start space-x-2 p-2 rounded-lg transition-all duration-200",
+        isHighlighted && "bg-yellow-50 ring-1 ring-yellow-200",
+        isSearchResult && "bg-blue-50/50",
+        isRecentlyUsed && "bg-green-50/50",
+        isFrequentlyUsed && "bg-purple-50/50",
       )}
-    />
-    <Label 
-      htmlFor={id}
-      className={cn(
-        "text-sm leading-tight cursor-pointer",
-        isChecked && "text-medical-900",
-        isHighlighted && "font-medium"
-      )}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      {symptom}
-    </Label>
-  </div>
-));
+      <Checkbox 
+        id={id} 
+        checked={isChecked}
+        onCheckedChange={(checked) => onToggle(checked === true)}
+        className={cn(
+          "mt-1 transition-all duration-200",
+          isChecked && "bg-medical-600 border-medical-600",
+          isHighlighted && "ring-2 ring-yellow-400",
+          isHovered && "scale-110",
+        )}
+      />
+      <div className="flex-1 min-w-0">
+        <Label 
+          htmlFor={id}
+          className={cn(
+            "text-sm leading-tight cursor-pointer block",
+            isChecked && "text-medical-900 font-medium",
+            isHighlighted && "font-medium",
+            isSearchResult && "text-blue-700",
+            isRecentlyUsed && "text-green-700",
+            isFrequentlyUsed && "text-purple-700",
+          )}
+        >
+          {symptom}
+        </Label>
+        {(isRecentlyUsed || isFrequentlyUsed) && (
+          <div className="flex items-center gap-1 mt-1">
+            {isRecentlyUsed && (
+              <Badge variant="outline" className="bg-green-50 text-green-700 text-xs">
+                <Clock className="h-3 w-3 mr-1" />
+                Recent
+              </Badge>
+            )}
+            {isFrequentlyUsed && (
+              <Badge variant="outline" className="bg-purple-50 text-purple-700 text-xs">
+                <Star className="h-3 w-3 mr-1" />
+                Frequent
+              </Badge>
+            )}
+          </div>
+        )}
+      </div>
+    </motion.div>
+  );
+});
 SymptomItem.displayName = "SymptomItem";
 
 export function SymptomChecklist({ 
@@ -90,7 +175,42 @@ export function SymptomChecklist({
   const [selectedSymptoms, setSelectedSymptoms] = useState<Record<string, string[]>>(initialSelections);
   const [activeSystem, setActiveSystem] = useState<string>(systemSymptoms[0].system);
   const [searchTerm, setSearchTerm] = useState("");
+  const [sortBy, setSortBy] = useState<"alphabetical" | "frequency" | "recent">("alphabetical");
+  const [filterBy, setFilterBy] = useState<"all" | "selected" | "highlighted">("all");
+  const [recentlyUsed, setRecentlyUsed] = useState<string[]>([]);
+  const [frequentlyUsed, setFrequentlyUsed] = useState<string[]>([]);
+  const [showMobileHelp, setShowMobileHelp] = useState(true);
+  const [searchFocused, setSearchFocused] = useState(false);
   const isMobile = useIsMobile();
+
+  // Track recently and frequently used symptoms
+  useEffect(() => {
+    const recentlyUsedSymptoms = localStorage.getItem("recentlyUsedSymptoms");
+    const frequentlyUsedSymptoms = localStorage.getItem("frequentlyUsedSymptoms");
+    
+    if (recentlyUsedSymptoms) {
+      setRecentlyUsed(JSON.parse(recentlyUsedSymptoms));
+    }
+    if (frequentlyUsedSymptoms) {
+      setFrequentlyUsed(JSON.parse(frequentlyUsedSymptoms));
+    }
+  }, []);
+
+  const updateUsageStats = useCallback((symptom: string) => {
+    // Update recently used
+    const newRecentlyUsed = [symptom, ...recentlyUsed.filter(s => s !== symptom)].slice(0, 5);
+    setRecentlyUsed(newRecentlyUsed);
+    localStorage.setItem("recentlyUsedSymptoms", JSON.stringify(newRecentlyUsed));
+
+    // Update frequently used
+    const currentFreq = frequentlyUsed.filter(s => s === symptom).length;
+    const newFrequentlyUsed = [...frequentlyUsed];
+    if (currentFreq === 0) {
+      newFrequentlyUsed.push(symptom);
+    }
+    setFrequentlyUsed(newFrequentlyUsed);
+    localStorage.setItem("frequentlyUsedSymptoms", JSON.stringify(newFrequentlyUsed));
+  }, [recentlyUsed, frequentlyUsed]);
 
   // Convert old format (boolean record) to new format (string array record) if needed
   useEffect(() => {
