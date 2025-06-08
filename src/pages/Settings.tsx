@@ -49,7 +49,7 @@ const Settings = () => {
     resolver: zodResolver(profileSchema),
     defaultValues: {
       full_name: "",
-      specialty: "",
+      specialty: "none", // Changed default to "none" instead of empty string
     },
   });
 
@@ -61,7 +61,7 @@ const Settings = () => {
   useEffect(() => {
     form.reset({
       full_name: (user?.user_metadata as UserMetadata)?.full_name || "",
-      specialty: (user?.user_metadata as UserMetadata)?.specialty || "",
+      specialty: (user?.user_metadata as UserMetadata)?.specialty || "none", // Handle empty specialty
     });
   }, [user, form]);
 
@@ -69,7 +69,7 @@ const Settings = () => {
     try {
       await updateProfile({
         full_name: data.full_name,
-        specialty: data.specialty,
+        specialty: data.specialty === "none" ? undefined : data.specialty, // Convert "none" back to undefined/empty
       });
       toast.success("Profile updated");
     } catch (error: unknown) {
@@ -124,7 +124,7 @@ const Settings = () => {
                             <SelectValue placeholder="Select specialty" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="">None</SelectItem>
+                            <SelectItem value="none">None</SelectItem> {/* Changed from empty string to "none" */}
                             {SPECIALTIES.map((s) => (
                               <SelectItem key={s.id} value={s.id}>
                                 {s.name}
