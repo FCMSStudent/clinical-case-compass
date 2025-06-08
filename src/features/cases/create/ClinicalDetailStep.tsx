@@ -14,6 +14,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FileText, Stethoscope, User, Thermometer, Brain, Microscope, Scan } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+/**
+ * ────────────────────────────────────────────────────────────────────────────────
+ * SCHEMA
+ * ────────────────────────────────────────────────────────────────────────────────
+ */
 export const clinicalDetailSchema = z.object({
   patientHistory: z.string().min(10, "Patient history must be at least 10 characters.").optional(),
   physicalExam: z.string().min(10, "Physical exam must be at least 10 characters.").optional(),
@@ -26,6 +31,9 @@ export const clinicalDetailSchema = z.object({
 
 export type ClinicalDetailFormData = z.infer<typeof clinicalDetailSchema>;
 
+/**
+ * Constants
+ */
 const FORM_FIELDS = {
   PATIENT_HISTORY: "patientHistory",
   PHYSICAL_EXAM: "physicalExam",
@@ -36,6 +44,9 @@ const FORM_FIELDS = {
   RADIOLOGY_EXAMS: "radiologyExams",
 } as const;
 
+/**
+ * Enhanced utility wrapper for consistent card styling with gradients and animations
+ */
 function FieldCard({
   icon: Icon,
   title,
@@ -72,16 +83,27 @@ function FieldCard({
   );
 }
 
+/**
+ * ────────────────────────────────────────────────────────────────────────────────
+ * PROPS
+ * ────────────────────────────────────────────────────────────────────────────────
+ */
 export interface ClinicalDetailStepProps<T extends FieldValues = ClinicalDetailFormData> {
   control: Control<T>;
   className?: string;
 }
 
+/**
+ * ────────────────────────────────────────────────────────────────────────────────
+ * COMPONENT
+ * ────────────────────────────────────────────────────────────────────────────────
+ */
 export const ClinicalDetailStep = memo(function ClinicalDetailStep<
   T extends FieldValues = ClinicalDetailFormData,
 >({ control, className }: ClinicalDetailStepProps<T>) {
   return (
     <section className={cn("space-y-8", className)}>
+      {/* Enhanced Header with gradient background */}
       <header className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 p-8 text-white shadow-2xl">
         <div className="absolute inset-0 bg-black/10"></div>
         <div className="absolute top-4 right-4 opacity-20">
@@ -100,6 +122,7 @@ export const ClinicalDetailStep = memo(function ClinicalDetailStep<
         </div>
       </header>
 
+      {/* Patient History */}
       <FieldCard 
         icon={FileText} 
         title="Patient History" 
@@ -127,6 +150,7 @@ export const ClinicalDetailStep = memo(function ClinicalDetailStep<
         />
       </FieldCard>
 
+      {/* Physical Examination */}
       <FieldCard 
         icon={Stethoscope} 
         title="Physical Examination" 
@@ -149,11 +173,13 @@ export const ClinicalDetailStep = memo(function ClinicalDetailStep<
                 Record comprehensive physical examination findings.
               </FormDescription>
               <FormMessage />
+            </FormFormMessage>
             </FormItem>
           )}
         />
       </FieldCard>
 
+      {/* Review of Systems */}
       <FieldCard 
         icon={Brain} 
         title="Review of Systems" 
@@ -181,6 +207,7 @@ export const ClinicalDetailStep = memo(function ClinicalDetailStep<
         />
       </FieldCard>
 
+      {/* Vital Signs */}
       <FieldCard 
         icon={Thermometer} 
         title="Vital Signs" 
@@ -208,6 +235,7 @@ export const ClinicalDetailStep = memo(function ClinicalDetailStep<
         />
       </FieldCard>
 
+      {/* Lab Results */}
       <FieldCard 
         icon={Microscope} 
         title="Lab Results" 
@@ -235,6 +263,7 @@ export const ClinicalDetailStep = memo(function ClinicalDetailStep<
         />
       </FieldCard>
 
+      {/* Radiology Exams */}
       <FieldCard 
         icon={Scan} 
         title="Radiology Exams" 
