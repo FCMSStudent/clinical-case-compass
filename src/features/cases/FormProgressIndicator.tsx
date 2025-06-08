@@ -65,7 +65,12 @@ export function FormProgressIndicator({
                     ? "bg-primary/20 text-primary" // Completed: Lighter primary background, primary text
                     : "bg-muted text-muted-foreground" // Default: Muted background, muted foreground text
               )}>
-                {step.icon ? step.icon : stepNumber}
+                {step.icon || (
+                  <div className={cn(
+                    "w-2 h-2 rounded-full",
+                    isActive ? "bg-primary-foreground" : "bg-current"
+                  )} />
+                )}
               </div>
               {/* Step Label */}
               <span className={cn(

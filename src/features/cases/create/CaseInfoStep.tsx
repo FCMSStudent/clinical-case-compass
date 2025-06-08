@@ -104,12 +104,6 @@ export const CaseInfoStep = memo(function CaseInfoStep<
         gradient="blue"
       />
 
-      <StepProgress 
-        completedFields={completedFields} 
-        totalFields={totalFields}
-        label="Form Progress"
-      />
-
       {/* Validation summary alert */}
       {Object.keys(formState.errors).length > 0 && (
         <Alert variant="destructive" className="mb-6">

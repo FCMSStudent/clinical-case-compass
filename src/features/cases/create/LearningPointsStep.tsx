@@ -363,15 +363,6 @@ export const LearningPointsStep = memo(function LearningPointsStep<
         </div>
       </motion.header>
 
-      {/* Progress Indicator */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between text-sm">
-          <span className="font-medium">Step Progress</span>
-          <span className="text-muted-foreground">{completedFields} of {totalFields} fields completed</span>
-        </div>
-        <Progress value={completionPercentage} className="h-2" />
-      </div>
-
       {/* Validation Summary */}
       {Object.keys(formState.errors).length > 0 && (
         <Alert variant="destructive" className="mb-6">

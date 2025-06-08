@@ -157,50 +157,14 @@ export const PatientStep = memo(function PatientStep<
 
   return (
     <section className={cn("space-y-8", className)}>
-      {/* Enhanced Header with medical theme and animation */}
-      <motion.header
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-teal-600 via-cyan-600 to-blue-700 p-8 text-white shadow-2xl"
-      >
-        <div className="absolute inset-0 bg-black/10"></div>
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="absolute -top-4 -right-4 opacity-10"
-        >
-          <Heart className="h-24 w-24" />
-        </motion.div>
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="absolute top-8 right-8 opacity-20"
-        >
-          <UserCheck className="h-8 w-8" />
-        </motion.div>
-        <div className="relative space-y-3">
-          <h3 className="flex items-center text-2xl font-bold">
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              className="mr-4 rounded-xl bg-white/20 p-3 backdrop-blur-sm"
-            >
-              <UserIcon className="h-7 w-7" />
-            </motion.div>
-            Patient Demographics
-          </h3>
-          <p className="text-cyan-100 text-lg max-w-2xl leading-relaxed">
-            Document essential patient information and demographic details for comprehensive case documentation.
-          </p>
-        </div>
-      </motion.header>
+      <StepHeader
+        title="Patient Information"
+        description="Enter the patient's demographic information and relevant medical history."
+        icon={UserIcon}
+        gradient="teal"
+      />
 
-      <StepProgress completedFields={completedFields} totalFields={totalFields} />
-
-      {/* Add validation summary alert if there are errors */}
+      {/* Validation summary alert */}
       {Object.keys(formState.errors).length > 0 && (
         <Alert variant="destructive" className="mb-6">
           <AlertCircle className="h-4 w-4" />
@@ -462,24 +426,6 @@ export const PatientStep = memo(function PatientStep<
 });
 
 PatientStep.displayName = "PatientStep";
-
-/**
- * Progress tracking component
- */
-const StepProgress = memo(({ completedFields, totalFields }: { completedFields: number; totalFields: number }) => {
-  const percentage = Math.round((completedFields / totalFields) * 100);
-  
-  return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between text-sm">
-        <span className="font-medium text-gray-700">Form Progress</span>
-        <span className="text-gray-500">{percentage}% Complete</span>
-      </div>
-      <Progress value={percentage} className="h-2" />
-    </div>
-  );
-});
-StepProgress.displayName = "StepProgress";
 
 /**
  * Validation feedback component

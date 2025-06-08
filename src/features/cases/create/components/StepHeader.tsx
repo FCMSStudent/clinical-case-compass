@@ -66,7 +66,9 @@ export const StepHeader = React.memo(function StepHeader({
           >
             <Icon className="h-7 w-7" />
           </motion.div>
-          {title}
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80">
+            {title}
+          </span>
         </h3>
         <p className={cn(
           "text-lg max-w-2xl leading-relaxed",

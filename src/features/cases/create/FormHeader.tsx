@@ -62,7 +62,7 @@ export const FormHeader = memo(function FormHeader({
               >
                 <h1 className="text-2xl font-bold tracking-tight">{formTitle}</h1>
                 <p className="text-muted-foreground">
-                  Step {currentStep} of {totalSteps}: {currentStepLabel}
+                  {currentStepLabel}
                 </p>
               </motion.div>
 
@@ -161,8 +161,7 @@ export const FormHeader = memo(function FormHeader({
                     animate={{ scale: 1 }}
                     className="flex items-center gap-2"
                   >
-                    <span className="hidden sm:inline">Step {stepNumber}</span>
-                    <span className="sm:hidden">{stepNumber}</span>
+                    <span className="text-primary font-medium">Current</span>
                   </motion.div>
                 ) : (
                   <motion.div
@@ -171,8 +170,7 @@ export const FormHeader = memo(function FormHeader({
                     animate={{ opacity: 1 }}
                     className="flex items-center gap-2"
                   >
-                    <span className="hidden sm:inline">Step {stepNumber}</span>
-                    <span className="sm:hidden">{stepNumber}</span>
+                    <span className="text-muted-foreground">Upcoming</span>
                   </motion.div>
                 )}
               </AnimatePresence>

@@ -277,30 +277,6 @@ const DiagnosticsTab = memo(() => {
 });
 DiagnosticsTab.displayName = "DiagnosticsTab";
 
-// Tab progress component
-interface TabProgressProps {
-  currentTab: string;
-  completedFields: number;
-  totalFields: number;
-}
-
-const TabProgress = memo(({ currentTab, completedFields, totalFields }: TabProgressProps) => {
-  const percentage = (completedFields / totalFields) * 100;
-  
-  return (
-    <div className="mb-6 space-y-2">
-      <div className="flex items-center justify-between text-sm">
-        <span className="font-medium text-gray-700">
-          {TAB_ITEMS.find(tab => tab.value === currentTab)?.label} Progress
-        </span>
-        <span className="text-gray-500">{completedFields} of {totalFields} fields completed</span>
-      </div>
-      <Progress value={percentage} className="h-2" />
-    </div>
-  );
-});
-TabProgress.displayName = "TabProgress";
-
 // 5. SIMPLIFIED & CLEANER MAIN COMPONENT
 export const ClinicalDetailStep = memo(({ className }: { className?: string }) => {
   const { setValue, control, formState } = useFormContext<ClinicalDetailFormData>();
@@ -412,12 +388,6 @@ export const ClinicalDetailStep = memo(({ className }: { className?: string }) =
             </TabsTrigger>
           ))}
         </TabsList>
-
-        <TabProgress
-          currentTab={currentTab}
-          completedFields={tabProgress.completed}
-          totalFields={tabProgress.total}
-        />
 
         <AnimatePresence mode="wait">
           <motion.div

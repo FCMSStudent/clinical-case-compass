@@ -126,11 +126,12 @@ export const FormFieldCard = React.memo(function FormFieldCard({
           isHighlighted && "ring-2 ring-primary ring-offset-2",
           isDisabled && "opacity-50 cursor-not-allowed",
           isHovered && "shadow-lg -translate-y-0.5",
-          !isDisabled && "hover:shadow-md"
+          !isDisabled && "hover:shadow-md",
+          "space-y-4"
         )}
       >
         <Collapsible open={!isCollapsible || !isCollapsed} onOpenChange={setIsCollapsed}>
-          <CardHeader className="pb-4">
+          <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <motion.div
@@ -177,20 +178,20 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                   </TooltipProvider>
                 )}
                 {tooltip && (
-                  <TooltipProvider>
+                  <TooltipProvider delayDuration={0}>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 rounded-full hover:bg-white/50"
-                          disabled={isDisabled}
-                        >
-                          <Info className="h-4 w-4 text-gray-400" />
-                        </Button>
+                        <div className="flex items-center justify-center h-8 w-8 rounded-full hover:bg-white/50 cursor-help transition-colors">
+                          <Info className="h-4 w-4 text-gray-500 hover:text-gray-700" />
+                        </div>
                       </TooltipTrigger>
-                      <TooltipContent className="max-w-xs p-4">
-                        <p className="text-sm">{tooltip}</p>
+                      <TooltipContent 
+                        side="right" 
+                        align="start"
+                        className="max-w-xs p-4 bg-white shadow-lg border border-gray-200"
+                        sideOffset={5}
+                      >
+                        <p className="text-sm text-gray-700 leading-relaxed">{tooltip}</p>
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
@@ -204,46 +205,27 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                       className="h-8 w-8 rounded-full hover:bg-white/50"
                       disabled={isDisabled}
                     >
-                      <AnimatePresence mode="wait" initial={false}>
-                        <motion.div
-                          key={isCollapsed ? "collapsed" : "expanded"}
-                          initial={{ rotate: -90, opacity: 0 }}
-                          animate={{ rotate: 0, opacity: 1 }}
-                          exit={{ rotate: 90, opacity: 0 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          {isCollapsed ? (
-                            <ChevronDown className="h-4 w-4" />
-                          ) : (
-                            <ChevronUp className="h-4 w-4" />
-                          )}
-                        </motion.div>
-                      </AnimatePresence>
+                      {isCollapsed ? (
+                        <ChevronDown className="h-4 w-4" />
+                      ) : (
+                        <ChevronUp className="h-4 w-4" />
+                      )}
                     </Button>
                   </CollapsibleTrigger>
                 )}
               </div>
             </div>
           </CardHeader>
-          <CollapsibleContent>
-            <CardContent>
-              <AnimatePresence mode="wait">
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  {children}
-                </motion.div>
-              </AnimatePresence>
-            </CardContent>
-            {footer && (
-              <CardFooter className="pt-4 border-t bg-white/50">
-                {footer}
-              </CardFooter>
-            )}
-          </CollapsibleContent>
+          <CardContent className="pt-0">
+            <CollapsibleContent>
+              {children}
+            </CollapsibleContent>
+          </CardContent>
+          {footer && (
+            <CardFooter className="pt-0">
+              {footer}
+            </CardFooter>
+          )}
         </Collapsible>
       </Card>
     </motion.div>
