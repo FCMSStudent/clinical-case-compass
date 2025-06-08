@@ -1,8 +1,7 @@
-
 import React, { memo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle, Loader2, Save } from "lucide-react";
+import { Loader2, Save, CheckCircle } from "lucide-react"; // Keep CheckCircle if needed elsewhere or for future use
 import { cn } from "@/lib/utils";
 
 export interface FormHeaderProps {
@@ -22,6 +21,8 @@ export interface FormHeaderProps {
   hideDraftButton?: boolean;
   /** Extra class names for the wrapper. */
   className?: string;
+  /** Title for the form, e.g., "Create New Clinical Case". */
+  formTitle?: string; // Added prop for flexibility
 }
 
 /**
@@ -37,8 +38,10 @@ export const FormHeader: React.FC<FormHeaderProps> = memo(
     currentStepLabel,
     hideDraftButton = false,
     className,
+    formTitle = "Form Progress", // Default title
   }) => {
-    const showSave = !hideDraftButton && Boolean(onSaveDraft);
+    // Determine if the save button should be shown
+    const shouldShowSaveButton = !hideDraftButton && typeof onSaveDraft === 'function';
 
     return (
       <Card className={cn("bg-muted/30 border-border", className)}>
@@ -46,28 +49,41 @@ export const FormHeader: React.FC<FormHeaderProps> = memo(
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             {/* Step Info */}
             <div className="space-y-1">
+              {/* Added formTitle prop for dynamic title */}
               <h2 className="text-xl font-semibold text-foreground">
-                Create New Clinical Case
+                {formTitle}
               </h2>
-              <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                <span>
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
+                {/* Current Step Progress */}
+                <span className="font-medium text-foreground"> {/* Made this text more prominent */}
                   Step {currentStep} of {totalSteps}: {currentStepLabel}
                 </span>
-                <span className="flex items-center gap-1">
-                  <CheckCircle className="h-4 w-4 text-primary" />
+
+                {/* Completion Percentage - removed CheckCircle as it implies 'complete' */}
+                <span className={cn(
+                    "flex items-center gap-1",
+                    completionPercentage === 100 ? "text-primary font-medium" : "text-muted-foreground" // Highlight if 100% complete
+                )}>
+                  {/* You could add a progress icon here if preferred, e.g., <ProgressBarIcon /> */}
                   {completionPercentage}% Complete
                 </span>
+
+                {/* Saving Status - made it an ARIA live region */}
                 {isDraftSaving && (
-                  <span className="flex items-center gap-1 text-primary">
+                  <span
+                    className="flex items-center gap-1 text-primary animate-pulse" // Added animate-pulse for better visual feedback
+                    role="status" // ARIA role for live regions
+                    aria-live="polite" // Screen readers announce changes politely
+                  >
                     <Loader2 className="h-3 w-3 animate-spin" />
-                    Saving...
+                    Saving Draft...
                   </span>
                 )}
               </div>
             </div>
 
             {/* Save Draft Button */}
-            {showSave && (
+            {shouldShowSaveButton && (
               <Button
                 type="button"
                 onClick={onSaveDraft}
