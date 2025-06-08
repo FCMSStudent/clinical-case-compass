@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Search, Settings, LogOut, User, Sparkles } from "lucide-react";
+import { Search, Settings, LogOut, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sidebar, SidebarTrigger } from "@/features/navigation";
 
@@ -36,7 +36,7 @@ const HeaderActions = () => {
   useOnClickOutside(userMenuRef, () => setIsUserMenuOpen(false));
 
   const menuVariants = {
-    hidden: { opacity: 0, scale: 0.95, y: 10 },
+    hidden: { opacity: 0, scale: 0.95, y: -10 },
     visible: { opacity: 1, scale: 1, y: 0 },
   };
 
@@ -63,7 +63,8 @@ const HeaderActions = () => {
       <button
         className="
           md:hidden grid place-items-center h-10 w-10
-          hover:bg-white/80 rounded-full transition-colors text-gray-600 hover:text-indigo-600
+          hover:bg-white/80 rounded-full transition-colors
+          text-gray-600 hover:text-indigo-600
         "
         aria-label="Search"
       >
@@ -77,11 +78,14 @@ const HeaderActions = () => {
           className="p-1.5 rounded-full transition-transform duration-200 ease-in-out hover:scale-105"
           aria-label="User menu"
         >
-          <div className="
-            h-9 w-9 rounded-full
-            bg-gradient-to-br from-blue-500 to-indigo-600
-            flex items-center justify-center shadow-md hover:shadow-lg
-          ">
+          <div
+            className="
+              h-9 w-9 rounded-full
+              bg-gradient-to-br from-blue-500 to-indigo-600
+              flex items-center justify-center
+              shadow-md hover:shadow-lg
+            "
+          >
             <User className="h-5 w-5 text-white" />
           </div>
         </button>
@@ -96,20 +100,23 @@ const HeaderActions = () => {
               transition={{ duration: 0.2, ease: "easeInOut" }}
               className="
                 absolute right-0 mt-3 w-56 p-2
-                bg-gradient-to-br from-white to-gray-50/80 backdrop-blur-lg
-                rounded-xl shadow-2xl border border-gray-200/80
+                bg-gradient-to-br from-white to-gray-50/80
+                backdrop-blur-lg rounded-xl shadow-2xl
+                border border-gray-200/80
               "
             >
-              <div className="p-3 border-b border-gray-200/80">
-                  <p className="text-sm font-semibold text-gray-800">Jane Doe</p>
-                  <p className="text-xs text-gray-500">janedoe@example.com</p>
+              <div className="p-2 border-b border-gray-200/80">
+                <p className="text-sm font-semibold text-gray-800">Jane Doe</p>
+                <p className="text-xs text-gray-500">janedoe@example.com</p>
               </div>
               <div className="py-2 space-y-1">
-                 <MenuItem icon={User}>Profile</MenuItem>
-                 <MenuItem icon={Settings}>Settings</MenuItem>
+                <MenuItem icon={User}>Profile</MenuItem>
+                <MenuItem icon={Settings}>Settings</MenuItem>
               </div>
-              <div className="h-px bg-gray-200/80 my-1" />
-              <MenuItem icon={LogOut} isDanger>Log out</MenuItem>
+              <div className="h-px bg-gray-200/80" />
+              <MenuItem icon={LogOut} isDanger>
+                Log out
+              </MenuItem>
             </motion.div>
           )}
         </AnimatePresence>
@@ -119,19 +126,21 @@ const HeaderActions = () => {
 };
 
 const MenuItem = ({ children, icon: Icon, isDanger = false }) => (
-    <button className={`
-        w-full px-3 py-2 text-sm text-left flex items-center gap-3 rounded-md
-        transition-colors duration-200
-        ${isDanger
-            ? 'text-red-600 hover:bg-red-500/10'
-            : 'text-gray-700 hover:bg-indigo-500/10 hover:text-indigo-700'
-        }
-    `}>
-        <Icon className="h-4 w-4" />
-        <span className="font-medium">{children}</span>
-    </button>
+  <button
+    className={`
+      w-full px-3 py-2 text-sm text-left flex items-center gap-3 rounded-md
+      transition-colors duration-200
+      ${
+        isDanger
+          ? "text-red-600 hover:bg-red-500/10"
+          : "text-gray-700 hover:bg-indigo-500/10 hover:text-indigo-700"
+      }
+    `}
+  >
+    <Icon className="h-4 w-4" />
+    <span className="font-medium">{children}</span>
+  </button>
 );
-
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -150,26 +159,28 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   return (
     <div className="min-h-screen bg-slate-50 md:flex">
       <Sidebar />
-      <div className="flex-1 min-h-screen transition-all duration-300 ease-in-out">
+      <div className="flex-1 min-w-0 transition-all duration-300 ease-in-out">
         {/* Unified Header with Glassmorphism Effect */}
-        <header className="
-          sticky top-0 z-40
-          flex items-center justify-between
-          px-4 sm:px-6 py-3
-          border-b border-gray-200/80
-          bg-white/70 backdrop-blur-xl
-        ">
+        <header
+          className="
+            sticky top-0 z-40
+            flex items-center justify-between
+            px-4 sm:px-6 py-3
+            border-b border-gray-200/80
+            bg-white/70 backdrop-blur-xl
+          "
+        >
           <div className="flex items-center gap-2 sm:gap-4">
             <SidebarTrigger />
             <h1 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
-                {title}
+              {title}
             </h1>
           </div>
           <HeaderActions />
         </header>
 
         {/* Main Content */}
-        <main className={`flex-1 flex flex-col ${className}`}>
+        <main className={`p-4 sm:p-6 ${className}`}>
           {children}
         </main>
       </div>
