@@ -178,6 +178,8 @@ DiagnosticsTab.displayName = "DiagnosticsTab";
 
 // 5. SIMPLIFIED & CLEANER MAIN COMPONENT
 export const ClinicalDetailStep = memo(({ className }: { className?: string }) => {
+  const { setValue, watch } = useFormContext<ClinicalDetailFormData>();
+
   return (
     <section className={cn("space-y-6", className)}>
       <header className="space-y-2 text-center">
@@ -199,7 +201,6 @@ export const ClinicalDetailStep = memo(({ className }: { className?: string }) =
         <HistoryAndExamTab />
         <SystemsReviewTab />
         <DiagnosticsTab />
-
       </Tabs>
     </section>
   );

@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { useForm, SubmitHandler, FieldValues, Path, UseFormSetValue } from "react-hook-form";
+import { useForm, SubmitHandler, FieldValues, Path, UseFormSetValue, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useNavigate } from "react-router-dom";
 
 import { FileText, User, Stethoscope, Lightbulb, AlertTriangle } from "lucide-react";
 import { Form } from "@/components/ui/form";
@@ -48,6 +49,7 @@ const CreateCaseFlow = () => {
   const [highestValidatedStep, setHighestValidatedStep] = useState(-1);
   const [isDraftSaving, setIsDraftSaving] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
 
   const form = useForm<CombinedCaseFormData>({
     resolver: zodResolver(combinedCaseSchema),
@@ -162,14 +164,10 @@ const CreateCaseFlow = () => {
     setCurrentStepIndex((prev) => Math.max(prev - 1, 0));
   };
 
-  const handleStepClick = (stepId: string) => {
-    const targetStepIndex = STEPS.findIndex((step) => step.id === stepId);
-    if (targetStepIndex < 0 || targetStepIndex === currentStepIndex) return;
-
-    // Allow direct navigation without validating intermediate steps
-    setCurrentStepIndex(targetStepIndex);
+  const handleStepChange = (stepIndex: number) => {
+    setCurrentStepIndex(stepIndex);
   };
-  
+
   const onSubmit: SubmitHandler<CombinedCaseFormData> = async (data) => {
     try {
       setIsSubmitting(true);
@@ -196,28 +194,46 @@ const CreateCaseFlow = () => {
     }
   };
 
+  const handleSaveAndExit = async () => {
+    try {
+      setIsDraftSaving(true);
+      const currentData = getValues();
+      localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(currentData));
+      toast.success("Progress saved", {
+        description: "You can continue editing this case later"
+      });
+      // Navigate back to cases list
+      navigate("/cases");
+    } catch (error) {
+      console.error("Error saving draft:", error);
+      toast.error("Failed to save progress");
+    } finally {
+      setIsDraftSaving(false);
+    }
+  };
+
   const currentStepData = STEPS[currentStepIndex];
   const completionPercentage = Math.round(((currentStepIndex + 1) / STEPS.length) * 100);
 
   const renderStepContent = () => {
     switch (STEPS[currentStepIndex].id) {
       case "caseInfo":
-        return <CaseInfoStep control={control} />;
+        return <CaseInfoStep />;
       case "patient":
-        return <PatientStep control={control} />;
+        return <PatientStep />;
       case "clinical":
-        return <ClinicalDetailStep control={control} setValue={setValue as UseFormSetValue<FieldValues>} watch={watch} />;
+        return <ClinicalDetailStep />;
       case "learning":
-        return <LearningPointsStep control={control} />;
+        return <LearningPointsStep />;
       default:
         return (
-            <Card className="border-destructive bg-destructive/10">
-                <CardContent className="p-6 flex flex-col items-center text-center">
-                    <AlertTriangle className="h-12 w-12 text-destructive mb-4" />
-                    <h2 className="text-xl font-semibold text-destructive mb-2">Error</h2>
-                    <p className="text-destructive/80">Invalid step. Please refresh or contact support.</p>
-                </CardContent>
-            </Card>
+          <Card className="border-destructive bg-destructive/10">
+            <CardContent className="p-6 flex flex-col items-center text-center">
+              <AlertTriangle className="h-12 w-12 text-destructive mb-4" />
+              <h2 className="text-xl font-semibold text-destructive mb-2">Error</h2>
+              <p className="text-destructive/80">Invalid step. Please refresh or contact support.</p>
+            </CardContent>
+          </Card>
         );
     }
   };
@@ -233,20 +249,18 @@ const CreateCaseFlow = () => {
         currentStepLabel={currentStepData.label}
       />
         
-      <Form {...form}>
+      <FormProvider {...form}>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <FormContainer
-            currentStep={currentStepIndex + 1}
-            totalSteps={STEPS.length}
+            currentStepIndex={currentStepIndex}
             steps={STEPS.map((step, index) => ({
-                id: step.id,
-                label: step.label,
-                icon: step.icon,
-                isCompleted: index <= highestValidatedStep,
-                // Steps remain clickable even if not yet validated
-                isNavigable: true,
+              id: step.id,
+              label: step.label,
+              icon: step.icon,
+              isCompleted: index <= highestValidatedStep,
+              isNavigable: true,
             }))}
-            onStepClick={handleStepClick}
+            onStepChange={handleStepChange}
           >
             {renderStepContent()}
           </FormContainer>
@@ -258,9 +272,10 @@ const CreateCaseFlow = () => {
             isSubmitting={isSubmitting}
             onPrevious={handlePrevious}
             onNext={handleNext}
+            onSaveAndExit={handleSaveAndExit}
           />
         </form>
-      </Form>
+      </FormProvider>
     </div>
   );
 };

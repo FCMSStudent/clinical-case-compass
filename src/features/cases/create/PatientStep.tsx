@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { Control, FieldValues, Path } from "react-hook-form";
+import { useFormContext, FieldValues, Path } from "react-hook-form";
 import { z } from "zod";
 import {
   FormField,
@@ -102,7 +102,6 @@ function FieldCard({
  * ────────────────────────────────────────────────────────────────────────────────
  */
 export interface PatientStepProps<T extends FieldValues = PatientStepFormData> {
-  control: Control<T>;
   className?: string;
 }
 
@@ -113,7 +112,9 @@ export interface PatientStepProps<T extends FieldValues = PatientStepFormData> {
  */
 export const PatientStep = memo(function PatientStep<
   T extends FieldValues = PatientStepFormData,
->({ control, className }: PatientStepProps<T>) {
+>({ className }: PatientStepProps<T>) {
+  const { control } = useFormContext<T>();
+
   return (
     <section className={cn("space-y-8", className)}>
       {/* Enhanced Header with medical theme */}

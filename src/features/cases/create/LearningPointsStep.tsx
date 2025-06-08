@@ -1,9 +1,10 @@
 import React, { memo } from "react";
 import {
-  Control,
+  useFormContext,
   FieldValues,
   Path,
   useFieldArray,
+  ArrayPath,
 } from "react-hook-form";
 import { z } from "zod";
 import {
@@ -27,16 +28,14 @@ import { cn } from "@/lib/utils";
  * ────────────────────────────────────────────────────────────────────────────────
  */
 export const learningPointsStepSchema = z.object({
-  learningPoints: z.string().optional(),
+  learningPoints: z.string().min(10, "Learning points must be at least 10 characters.").optional(),
   generalNotes: z.string().optional(),
-  resourceLinks: z
-    .array(
-      z.object({
-        url: z.string().url({ message: "Invalid URL format" }),
-        description: z.string().optional(),
-      }),
-    )
-    .default([]),
+  resourceLinks: z.array(
+    z.object({
+      url: z.string().url("Please enter a valid URL."),
+      description: z.string().optional(),
+    })
+  ).optional(),
 });
 export type LearningPointsFormData = z.infer<typeof learningPointsStepSchema>;
 
@@ -45,10 +44,7 @@ export type LearningPointsFormData = z.infer<typeof learningPointsStepSchema>;
  * PROPS
  * ────────────────────────────────────────────────────────────────────────────────
  */
-export interface LearningPointsStepProps<
-  T extends FieldValues = LearningPointsFormData,
-> {
-  control: Control<T>;
+export interface LearningPointsStepProps<T extends FieldValues = LearningPointsFormData> {
   className?: string;
   /** Optional limit for resource links. */
   maxLinks?: number;
@@ -58,59 +54,61 @@ export interface LearningPointsStepProps<
  * Row component for each resource link form group.
  */
 const ResourceRow = <T extends FieldValues>({
-  control,
   index,
   onRemove,
 }: {
-  control: Control<T>;
   index: number;
   onRemove: () => void;
-}) => (
-  <Card className="bg-muted/30 p-4 shadow-sm">
-    <div className="flex flex-col gap-4 md:flex-row">
-      {/* URL */}
-      <FormField
-        control={control}
-        name={`resourceLinks.${index}.url` as Path<T>}
-        render={({ field }) => (
-          <FormItem className="flex-1">
-            <FormLabel>URL</FormLabel>
-            <FormControl>
-              <Input placeholder="https://example.com/article" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      {/* Description */}
-      <FormField
-        control={control}
-        name={`resourceLinks.${index}.description` as Path<T>}
-        render={({ field }) => (
-          <FormItem className="flex-1">
-            <FormLabel>Description (optional)</FormLabel>
-            <FormControl>
-              <Input placeholder="e.g., AHA Guidelines for STEMI" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      {/* Remove */}
-      <div className="pt-1 md:pt-6">
-        <Button
-          type="button"
-          variant="destructive"
-          size="icon"
-          onClick={onRemove}
-          aria-label="Remove resource link"
-        >
-          <Trash2 className="h-4 w-4" />
-        </Button>
+}) => {
+  const { control } = useFormContext<T>();
+  
+  return (
+    <Card className="bg-muted/30 p-4 shadow-sm">
+      <div className="flex flex-col gap-4 md:flex-row">
+        {/* URL */}
+        <FormField
+          control={control}
+          name={`resourceLinks.${index}.url` as Path<T>}
+          render={({ field }) => (
+            <FormItem className="flex-1">
+              <FormLabel>URL</FormLabel>
+              <FormControl>
+                <Input placeholder="https://example.com/article" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {/* Description */}
+        <FormField
+          control={control}
+          name={`resourceLinks.${index}.description` as Path<T>}
+          render={({ field }) => (
+            <FormItem className="flex-1">
+              <FormLabel>Description (optional)</FormLabel>
+              <FormControl>
+                <Input placeholder="e.g., AHA Guidelines for STEMI" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {/* Remove */}
+        <div className="pt-1 md:pt-6">
+          <Button
+            type="button"
+            variant="destructive"
+            size="icon"
+            onClick={onRemove}
+            aria-label="Remove resource link"
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
-    </div>
-  </Card>
-);
+    </Card>
+  );
+};
 
 /**
  * ────────────────────────────────────────────────────────────────────────────────
@@ -119,11 +117,18 @@ const ResourceRow = <T extends FieldValues>({
  */
 export const LearningPointsStep = memo(function LearningPointsStep<
   T extends FieldValues = LearningPointsFormData,
->({ control, className, maxLinks = 8 }: LearningPointsStepProps<T>) {
-  const { fields, append, remove } = useFieldArray({
+>({ className, maxLinks = 8 }: LearningPointsStepProps<T>) {
+  const { control } = useFormContext<T>();
+  const { fields, append, remove } = useFieldArray<T>({
     control,
-    name: "resourceLinks" as Path<T>,
+    name: "resourceLinks" as ArrayPath<T>,
   });
+
+  const handleAddLink = () => {
+    if (fields.length < maxLinks) {
+      append({ url: "", description: "" } as any);
+    }
+  };
 
   return (
     <section className={cn("space-y-6", className)}>
@@ -190,7 +195,6 @@ export const LearningPointsStep = memo(function LearningPointsStep<
           {fields.map((field, index) => (
             <ResourceRow
               key={field.id}
-              control={control}
               index={index}
               onRemove={() => remove(index)}
             />
@@ -211,9 +215,7 @@ export const LearningPointsStep = memo(function LearningPointsStep<
           <Button
             type="button"
             variant="outline"
-            onClick={() =>
-              append({ url: "", description: "" } as unknown as { url: string; description?: string })
-            }
+            onClick={handleAddLink}
             disabled={fields.length >= maxLinks}
           >
             <PlusCircle className="mr-2 h-4 w-4" /> Add Resource Link
