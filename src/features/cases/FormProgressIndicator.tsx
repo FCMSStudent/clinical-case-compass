@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
@@ -29,26 +28,34 @@ export function FormProgressIndicator({
   return (
     <div className={cn("w-full space-y-4", className)}>
       <div className="flex items-center justify-between">
-        <div className="text-sm font-medium text-foreground">
+        {/* Added conditional class for the "Step X of Y" text */}
+        <div className={cn(
+          "text-sm",
+          currentStep === totalSteps ? "font-semibold text-primary" : "font-medium text-foreground"
+        )}>
           Step {currentStep} of {totalSteps}
         </div>
-        <div className="text-sm text-muted-foreground">
+        {/* Added conditional class for the "% Complete" text */}
+        <div className={cn(
+          "text-sm",
+          currentStep === totalSteps ? "text-primary" : "text-muted-foreground"
+        )}>
           {Math.round(progressPercentage)}% Complete
         </div>
       </div>
-      
-      <Progress 
-        value={progressPercentage} 
+
+      <Progress
+        value={progressPercentage}
         className="h-2 bg-muted"
         indicatorClassName="bg-primary"
       />
-      
+
       <div className="flex justify-between flex-wrap gap-2">
         {steps.map((step, index) => {
           const isActive = index + 1 === currentStep;
           const isCompleted = step.isCompleted || index + 1 < currentStep;
           const isNavigable = step.isNavigable !== false;
-          
+
           return (
             <button
               key={step.id}
@@ -57,17 +64,17 @@ export function FormProgressIndicator({
               className={cn(
                 "flex flex-col items-center space-y-2 px-2 py-1 rounded-lg transition-all",
                 "hover:bg-muted/50 focus:outline-none focus:ring-2 focus:ring-primary/20",
-                isActive && "bg-primary/5",
+                isActive && "bg-primary/5", // This adds a subtle background highlight to the active step's clickable area
                 isNavigable && onStepClick && "cursor-pointer",
                 !isNavigable && "cursor-not-allowed opacity-50"
               )}
             >
               <div className={cn(
                 "w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors",
-                isActive 
-                  ? "bg-primary text-primary-foreground" 
-                  : isCompleted 
-                    ? "bg-primary/20 text-primary" 
+                isActive
+                  ? "bg-primary text-primary-foreground"
+                  : isCompleted
+                    ? "bg-primary/20 text-primary"
                     : "bg-muted text-muted-foreground"
               )}>
                 {step.icon ? step.icon : index + 1}
