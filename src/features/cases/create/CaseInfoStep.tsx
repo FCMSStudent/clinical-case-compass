@@ -78,11 +78,14 @@ export const CaseInfoStep = memo(function CaseInfoStep<
   const [completedFields, setCompletedFields] = React.useState(0);
   const totalFields = 3; // caseTitle, chiefComplaint, specialty
 
-  // Watch form values to update progress
-  const watch = useWatch({ control });
+  // Watch only the specific fields we want to track
+  const watchedFields = useWatch({
+    control,
+    name: ["caseTitle", "chiefComplaint", "specialty"] as const,
+  });
   
   React.useEffect(() => {
-    const completed = Object.entries(watch).filter(([_, value]) => {
+    const completed = watchedFields.filter(value => {
       if (typeof value === 'string') {
         return value.trim().length > 0;
       }
@@ -90,7 +93,7 @@ export const CaseInfoStep = memo(function CaseInfoStep<
     }).length;
     
     setCompletedFields(completed);
-  }, [watch]);
+  }, [watchedFields]);
 
   return (
     <section className={cn("space-y-8", className)}>
