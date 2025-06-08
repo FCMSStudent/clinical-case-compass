@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
-export default function RecentActivityList() {
+function RecentActivityList() {
   // 1. Initialize state with an empty array
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -66,3 +66,5 @@ export default function RecentActivityList() {
     </div>
   );
 }
+
+export default RecentActivityList;

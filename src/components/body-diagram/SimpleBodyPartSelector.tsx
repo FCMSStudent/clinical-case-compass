@@ -1,15 +1,15 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 // Enhanced type definitions
-export type BodyPart = 
-  | "Head" 
-  | "Neck" 
-  | "Chest" 
-  | "Abdomen" 
-  | "Arms" 
+export type BodyPart =
+  | "Head"
+  | "Neck"
+  | "Chest"
+  | "Abdomen"
+  | "Arms"
   | "Legs";
 
 export type BodyPartCategory = "upper" | "core" | "lower";
@@ -36,7 +36,7 @@ const BODY_PART_CONFIG: Record<BodyPart, BodyPartConfig> = {
   Neck: {
     id: "Neck",
     label: "Neck",
-    category: "upper", 
+    category: "upper",
     description: "Cervical spine, throat, lymph nodes",
     icon: "🦴",
     relatedParts: ["Head", "Chest"]
@@ -110,7 +110,11 @@ export const SimpleBodyPartSelector: React.FC<SimpleBodyPartSelectorProps> = Rea
   const [selectedParts, setSelectedParts] = useState<Set<BodyPart>>(
     new Set(initialSelection)
   );
+  useEffect(() => {
+    setSelectedParts(new Set(initialSelection));
+  }, [initialSelection]);
   const [hoveredPart, setHoveredPart] = useState<BodyPart | null>(null);
+  const highlightedSet = useMemo(() => new Set(highlightedParts), [highlightedParts]);
 
   // Categorized body parts for better layout
   const categorizedParts = useMemo(() => {
@@ -119,11 +123,11 @@ export const SimpleBodyPartSelector: React.FC<SimpleBodyPartSelectorProps> = Rea
       core: [],
       lower: []
     };
-    
+
     Object.values(BODY_PART_CONFIG).forEach(part => {
       categories[part.category].push(part);
     });
-    
+
     return categories;
   }, []);
 
@@ -132,7 +136,7 @@ export const SimpleBodyPartSelector: React.FC<SimpleBodyPartSelectorProps> = Rea
 
     setSelectedParts(prev => {
       const newSelection = new Set(prev);
-      
+
       if (multiSelect) {
         if (newSelection.has(part)) {
           newSelection.delete(part);
@@ -145,17 +149,16 @@ export const SimpleBodyPartSelector: React.FC<SimpleBodyPartSelectorProps> = Rea
           newSelection.add(part);
         }
       }
-      
+
       onSelectionChange(Array.from(newSelection));
       return newSelection;
     });
   }, [disabled, multiSelect, onSelectionChange]);
 
-  const isPartSelected = useCallback((part: BodyPart) => 
+  const isPartSelected = useCallback((part: BodyPart) =>
     selectedParts.has(part), [selectedParts]);
 
-  const isPartHighlighted = useCallback((part: BodyPart) => 
-    highlightedParts.includes(part), [highlightedParts]);
+  const isPartHighlighted = useCallback((part: BodyPart) => highlightedSet.has(part), [highlightedSet]);
 
   const getPartVariant = useCallback((part: BodyPart) => {
     if (isPartSelected(part)) return "default";
@@ -165,10 +168,10 @@ export const SimpleBodyPartSelector: React.FC<SimpleBodyPartSelectorProps> = Rea
 
   const categoryVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
+    visible: {
+      opacity: 1,
       y: 0,
-      transition: { 
+      transition: {
         staggerChildren: 0.1,
         delayChildren: 0.1
       }
@@ -177,16 +180,22 @@ export const SimpleBodyPartSelector: React.FC<SimpleBodyPartSelectorProps> = Rea
 
   const partVariants = {
     hidden: { opacity: 0, scale: 0.8 },
-    visible: { 
-      opacity: 1, 
+    visible: {
+      opacity: 1,
       scale: 1,
       transition: { type: "spring", stiffness: 300, damping: 20 }
     },
-    hover: { 
+    hover: {
       scale: 1.05,
       transition: { type: "spring", stiffness: 400, damping: 10 }
     },
     tap: { scale: 0.95 }
+  };
+
+  const CATEGORY_LABEL: Record<BodyPartCategory, string> = {
+    upper: "Upper Body",
+    core: "Torso",
+    lower: "Lower Body",
   };
 
   const renderCategory = (category: BodyPartCategory, parts: BodyPartConfig[]) => (
@@ -198,7 +207,7 @@ export const SimpleBodyPartSelector: React.FC<SimpleBodyPartSelectorProps> = Rea
       className="space-y-3"
     >
       <h4 className="text-sm font-semibold text-muted-foreground capitalize tracking-wide">
-        {category === "core" ? "Torso" : category}
+        {CATEGORY_LABEL[category]}
       </h4>
       <div className={cn(
         "grid gap-3",
@@ -208,7 +217,13 @@ export const SimpleBodyPartSelector: React.FC<SimpleBodyPartSelectorProps> = Rea
           const isSelected = isPartSelected(partConfig.id);
           const isHighlighted = isPartHighlighted(partConfig.id);
           const isHovered = hoveredPart === partConfig.id;
-          
+
+          const baseClasses = "w-full justify-start gap-3 h-auto p-4 transition-all duration-200 hover:shadow-md active:shadow-sm";
+          const selectedClasses = isSelected ? "ring-2 ring-primary ring-offset-2 bg-primary text-primary-foreground" : "";
+          const highlightedClasses = isHighlighted && !isSelected ? "ring-2 ring-secondary ring-offset-1" : "";
+          const disabledClasses = disabled ? "opacity-50 cursor-not-allowed" : "";
+          const compactClasses = compact ? "p-2 text-sm" : "";
+
           return (
             <motion.div
               key={partConfig.id}
@@ -220,12 +235,11 @@ export const SimpleBodyPartSelector: React.FC<SimpleBodyPartSelectorProps> = Rea
                 variant={getPartVariant(partConfig.id)}
                 size={compact ? "sm" : "default"}
                 className={cn(
-                  "w-full justify-start gap-3 h-auto p-4 transition-all duration-200",
-                  "hover:shadow-md active:shadow-sm",
-                  isSelected && "ring-2 ring-primary ring-offset-2 bg-primary text-primary-foreground",
-                  isHighlighted && !isSelected && "ring-2 ring-secondary ring-offset-1",
-                  disabled && "opacity-50 cursor-not-allowed",
-                  compact && "p-2 text-sm"
+                  baseClasses,
+                  selectedClasses,
+                  highlightedClasses,
+                  disabledClasses,
+                  compactClasses
                 )}
                 disabled={disabled}
                 aria-pressed={isSelected}
@@ -233,6 +247,7 @@ export const SimpleBodyPartSelector: React.FC<SimpleBodyPartSelectorProps> = Rea
                 onClick={() => handlePartClick(partConfig.id)}
                 onMouseEnter={() => setHoveredPart(partConfig.id)}
                 onMouseLeave={() => setHoveredPart(null)}
+                data-testid={`bodypart-${partConfig.id}`}
               >
                 <span className="text-lg" role="img" aria-hidden="true">
                   {partConfig.icon}
