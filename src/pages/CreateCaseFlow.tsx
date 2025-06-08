@@ -148,15 +148,40 @@ const CreateCaseFlow = () => {
   };
 
   const handleNext = async () => {
-    const fieldsToValidate = STEPS[currentStepIndex].fields;
-    if (fieldsToValidate.length > 0) {
-        await trigger(fieldsToValidate); // Keep this line to show validation messages
-    }
-    
-    setHighestValidatedStep(Math.max(highestValidatedStep, currentStepIndex));
+    try {
+      const fieldsToValidate = STEPS[currentStepIndex].fields;
+      const currentValues = getValues();
+      
+      // Only validate fields that have values
+      const fieldsWithValues = fieldsToValidate.filter(field => {
+        const value = currentValues[field];
+        if (Array.isArray(value)) return value.length > 0;
+        if (typeof value === 'object' && value !== null) return Object.keys(value).length > 0;
+        if (typeof value === 'string') return value.trim().length > 0;
+        return !!value;
+      });
 
-    if (currentStepIndex < STEPS.length - 1) {
-      setCurrentStepIndex((prev) => prev + 1);
+      if (fieldsWithValues.length > 0) {
+        const result = await trigger(fieldsWithValues);
+        if (!result) {
+          // If validation fails, show error toast and stay on current step
+          toast.error("Please review the highlighted fields", {
+            description: "Some fields require your attention before proceeding"
+          });
+          return;
+        }
+      }
+      
+      setHighestValidatedStep(Math.max(highestValidatedStep, currentStepIndex));
+
+      if (currentStepIndex < STEPS.length - 1) {
+        setCurrentStepIndex((prev) => prev + 1);
+      }
+    } catch (error) {
+      console.error("Error during step navigation:", error);
+      toast.error("Something went wrong", {
+        description: "Please try again or refresh the page"
+      });
     }
   };
 
