@@ -148,13 +148,7 @@ const CreateCaseFlow = () => {
   const handleNext = async () => {
     const fieldsToValidate = STEPS[currentStepIndex].fields;
     if (fieldsToValidate.length > 0) {
-        const isValid = await trigger(fieldsToValidate);
-        if (!isValid) {
-        toast.error("Please fix the errors before proceeding", {
-          description: "Some required fields are missing or invalid"
-        });
-        return;
-        }
+        await trigger(fieldsToValidate); // Keep this line to show validation messages
     }
     
     setHighestValidatedStep(Math.max(highestValidatedStep, currentStepIndex));

@@ -35,7 +35,7 @@ import { cn } from "@/lib/utils";
  * ────────────────────────────────────────────────────────────────────────────────
  */
 export const patientStepSchema = z.object({
-  patientName: z.string().min(2, "Patient name must be at least 2 characters."),
+  patientName: z.string().min(2, "Patient name must be at least 2 characters.").optional(),
   medicalRecordNumber: z.string().optional(),
   patientAge: z
     .union([z.string().length(0), z.number().int().min(0).max(150)])
