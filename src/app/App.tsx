@@ -45,7 +45,7 @@ const App = () => {
           <ThemeProvider>
             <AuthProvider>
               <Toaster />
-              <Sonner />
+              <Sonner position="top-right" />
               <BrowserRouter>
                 <SidebarProvider>
                   <Routes>
