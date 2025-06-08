@@ -14,8 +14,6 @@ import { cn } from "@/lib/utils";
 
 /**
  * Custom hook to detect clicks outside a specified element.
- * @param ref - The ref of the element to monitor.
- * @param handler - The function to call when a click outside is detected.
  */
 function useOnClickOutside(
   ref: RefObject<HTMLElement>,
@@ -38,16 +36,14 @@ function useOnClickOutside(
 }
 
 /**
- * Enhanced Header Actions with improved styling, animations, and accessibility.
+ * HeaderActions: search + user-menu with animations and accessibility.
  */
 const HeaderActions: React.FC = () => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
 
-  // Close menu when clicking outside
   useOnClickOutside(userMenuRef, () => setIsUserMenuOpen(false));
 
-  // Memorize variants so they're stable across renders
   const menuVariants: Variants = useMemo(
     () => ({
       hidden: { opacity: 0, scale: 0.95, y: -10 },
@@ -58,11 +54,12 @@ const HeaderActions: React.FC = () => {
 
   return (
     <div className="flex items-center gap-2 sm:gap-4">
-      {/* Search Input (desktop) */}
+      {/* Desktop Search */}
       <div className="hidden md:flex items-center group relative">
         <input
           type="text"
           placeholder="Search..."
+          aria-label="Search"
           className="
             pl-8 pr-3 py-1.5 w-48 lg:w-64
             bg-white/60 group-hover:bg-white/80 focus:bg-white
@@ -71,19 +68,18 @@ const HeaderActions: React.FC = () => {
             focus:outline-none focus:ring-2 focus:ring-indigo-500/50
             transition-all duration-300 shadow-sm hover:shadow-md
           "
-          aria-label="Search"
         />
         <Search className="h-4 w-4 absolute left-4 text-gray-400 group-hover:text-indigo-600 transition-colors" />
       </div>
 
-      {/* Search Button (mobile) */}
+      {/* Mobile Search Button */}
       <button
+        aria-label="Open search"
         className="
           md:hidden grid place-items-center h-10 w-10
           hover:bg-white/80 rounded-full transition-colors
           text-gray-600 hover:text-indigo-600
         "
-        aria-label="Open search"
       >
         <Search className="h-5 w-5" />
       </button>
@@ -91,20 +87,13 @@ const HeaderActions: React.FC = () => {
       {/* User Menu */}
       <div className="relative" ref={userMenuRef}>
         <button
-          onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-          className="p-1.5 rounded-full transition-transform duration-200 ease-in-out hover:scale-105"
+          onClick={() => setIsUserMenuOpen((open) => !open)}
           aria-label="User menu"
           aria-haspopup="true"
           aria-expanded={isUserMenuOpen}
+          className="p-1.5 rounded-full transition-transform duration-200 ease-in-out hover:scale-105"
         >
-          <div
-            className="
-              h-9 w-9 rounded-full
-              bg-gradient-to-br from-blue-500 to-indigo-600
-              flex items-center justify-center
-              shadow-md hover:shadow-lg
-            "
-          >
+          <div className="h-9 w-9 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-md hover:shadow-lg">
             <User className="h-5 w-5 text-white" />
           </div>
         </button>
@@ -152,13 +141,9 @@ interface MenuItemProps {
 }
 
 /**
- * Individual menu item with proper roles and hover states.
+ * MenuItem: styled menu option with proper role and hover state.
  */
-const MenuItem: React.FC<MenuItemProps> = ({
-  children,
-  icon: Icon,
-  isDanger = false,
-}) => (
+const MenuItem: React.FC<MenuItemProps> = ({ children, icon: Icon, isDanger = false }) => (
   <button
     role="menuitem"
     className={cn(
@@ -180,7 +165,7 @@ interface AppLayoutProps {
 }
 
 /**
- * A full-page application layout with a glassmorphism header and enhanced UI elements.
+ * AppLayout: full-page layout with glassmorphic header & adjusted padding.
  */
 export const AppLayout: React.FC<AppLayoutProps> = ({
   children,
@@ -191,7 +176,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
     <Sidebar />
 
     <div className="flex-1 min-w-0 transition-all duration-300 ease-in-out">
-      {/* Unified Header with Glassmorphism Effect */}
+      {/* Glassmorphic Header with tighter padding */}
       <header
         className="
           sticky top-0 z-40
@@ -210,10 +195,8 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
         <HeaderActions />
       </header>
 
-      {/* Main Content */}
-      <main className={cn("p-4 sm:p-6 flex-1", className)}>
-        {children}
-      </main>
+      {/* Main Content with consistent padding */}
+      <main className={cn("p-4 sm:p-6 flex-1", className)}>{children}</main>
     </div>
   </div>
 );
