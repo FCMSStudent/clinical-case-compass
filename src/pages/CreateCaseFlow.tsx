@@ -152,9 +152,27 @@ const CreateCaseFlow = () => {
       const fieldsToValidate = STEPS[currentStepIndex].fields;
       const currentValues = getValues();
       
-      // Only validate fields that have values
+      // Get the current step's schema
+      const currentStepSchema = STEPS[currentStepIndex].id === "caseInfo" ? caseInfoSchema :
+                              STEPS[currentStepIndex].id === "patient" ? patientStepSchema :
+                              STEPS[currentStepIndex].id === "clinical" ? clinicalDetailStepSchema :
+                              learningPointsStepSchema;
+
+      // Only validate fields that have values and are required
       const fieldsWithValues = fieldsToValidate.filter(field => {
         const value = currentValues[field];
+        // Check if the field is required in the schema
+        const isRequired = !currentStepSchema.shape[field].isOptional();
+        
+        // If field is required, validate it
+        if (isRequired) {
+          if (Array.isArray(value)) return value.length > 0;
+          if (typeof value === 'object' && value !== null) return Object.keys(value).length > 0;
+          if (typeof value === 'string') return value.trim().length > 0;
+          return !!value;
+        }
+        
+        // For optional fields, only validate if they have a value
         if (Array.isArray(value)) return value.length > 0;
         if (typeof value === 'object' && value !== null) return Object.keys(value).length > 0;
         if (typeof value === 'string') return value.trim().length > 0;
@@ -164,9 +182,12 @@ const CreateCaseFlow = () => {
       if (fieldsWithValues.length > 0) {
         const result = await trigger(fieldsWithValues);
         if (!result) {
-          // If validation fails, show error toast and stay on current step
-          toast.error("Please review the highlighted fields", {
-            description: "Some fields require your attention before proceeding"
+          // Get the first error message
+          const errors = form.formState.errors;
+          const firstError = Object.values(errors)[0]?.message || "Please review the highlighted fields";
+          
+          toast.error("Validation Error", {
+            description: firstError
           });
           return;
         }
