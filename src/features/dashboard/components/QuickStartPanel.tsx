@@ -58,7 +58,7 @@ export const QuickStartPanel = () => {
               >
                 <div className="flex items-start space-x-3">
                   <IconComponent className={`${ICON_SIZE} mt-0.5 flex-shrink-0`} />
-                  <div className="text-left">
+                  <div className="text-left flex-wrap whitespace-normal">
                     <div className="font-medium">{action.title}</div>
                     <div className="text-sm font-medium text-muted-foreground mt-1">
                       {action.description}
