@@ -63,6 +63,14 @@ export interface MedicalCase {
   systemSymptoms?: Record<string, string[]>;
   labTests?: LabTest[];
   radiologyExams?: RadiologyExam[];
+  pastMedicalHistory?: string[];
+  medications?: string[];
+  allergies?: string[];
+  socialHistory?: string;
+  familyHistory?: string;
+  differentialDiagnosis?: string[];
+  managementPlan?: string;
+  notes?: string;
 }
 
 // Medical specialties list for use throughout the app
