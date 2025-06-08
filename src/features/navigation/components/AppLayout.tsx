@@ -1,72 +1,115 @@
-import React, { useState } from "react";
-import { Search, Settings, LogOut, User } from "lucide-react";
+import React, { useState, useRef, useEffect } from "react";
+import { Search, Settings, LogOut, User, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sidebar, SidebarTrigger } from "@/features/navigation";
 
-interface AppLayoutProps {
-  children: React.ReactNode;
-  className?: string;
-  title?: string;
-  actions?: React.ReactNode;
-}
+/**
+ * Custom hook to detect clicks outside a specified element.
+ * @param ref - The ref of the element to monitor.
+ * @param handler - The function to call when a click outside is detected.
+ */
+const useOnClickOutside = (ref, handler) => {
+  useEffect(() => {
+    const listener = (event) => {
+      if (!ref.current || ref.current.contains(event.target)) {
+        return;
+      }
+      handler(event);
+    };
+    document.addEventListener("mousedown", listener);
+    document.addEventListener("touchstart", listener);
+    return () => {
+      document.removeEventListener("mousedown", listener);
+      document.removeEventListener("touchstart", listener);
+    };
+  }, [ref, handler]);
+};
 
+/**
+ * Enhanced Header Actions with improved styling and animations.
+ */
 const HeaderActions = () => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const userMenuRef = useRef(null);
+
+  // Close menu when clicking outside
+  useOnClickOutside(userMenuRef, () => setIsUserMenuOpen(false));
+
+  const menuVariants = {
+    hidden: { opacity: 0, scale: 0.95, y: 10 },
+    visible: { opacity: 1, scale: 1, y: 0 },
+  };
 
   return (
-    <div className="flex items-center space-x-4">
-      {/* Search */}
-      <div className="hidden md:flex items-center relative">
+    <div className="flex items-center gap-2 sm:gap-4">
+      {/* Search Input */}
+      <div className="hidden md:flex items-center group relative">
         <input
           type="text"
           placeholder="Search..."
-          className="pl-10 pr-4 py-2 bg-accent/50 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+          className="
+            pl-10 pr-4 py-2 w-48 lg:w-64
+            bg-white/60 group-hover:bg-white/80 focus:bg-white
+            border border-transparent focus:border-indigo-400
+            rounded-full text-sm placeholder:text-gray-500
+            focus:outline-none focus:ring-2 focus:ring-indigo-500/50
+            transition-all duration-300 shadow-sm hover:shadow-md
+          "
         />
-        <Search className="h-4 w-4 absolute left-3 text-muted-foreground" />
+        <Search className="h-4 w-4 absolute left-4 text-gray-400 group-hover:text-indigo-600 transition-colors" />
       </div>
 
       {/* Mobile Search Button */}
       <button
-        className="md:hidden p-2 hover:bg-accent rounded-lg transition-colors"
+        className="
+          md:hidden grid place-items-center h-10 w-10
+          hover:bg-white/80 rounded-full transition-colors text-gray-600 hover:text-indigo-600
+        "
         aria-label="Search"
       >
         <Search className="h-5 w-5" />
       </button>
 
       {/* User Menu */}
-      <div className="relative">
+      <div className="relative" ref={userMenuRef}>
         <button
           onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-          className="flex items-center p-2 hover:bg-accent rounded-lg transition-colors"
+          className="p-1.5 rounded-full transition-transform duration-200 ease-in-out hover:scale-105"
           aria-label="User menu"
         >
-          <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
-            <User className="h-5 w-5 text-primary-foreground" />
+          <div className="
+            h-9 w-9 rounded-full
+            bg-gradient-to-br from-blue-500 to-indigo-600
+            flex items-center justify-center shadow-md hover:shadow-lg
+          ">
+            <User className="h-5 w-5 text-white" />
           </div>
         </button>
 
         <AnimatePresence>
           {isUserMenuOpen && (
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              transition={{ duration: 0.2 }}
-              className="absolute right-0 mt-2 w-48 py-2 bg-background rounded-lg shadow-lg border"
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              variants={menuVariants}
+              transition={{ duration: 0.2, ease: "easeInOut" }}
+              className="
+                absolute right-0 mt-3 w-56 p-2
+                bg-gradient-to-br from-white to-gray-50/80 backdrop-blur-lg
+                rounded-xl shadow-2xl border border-gray-200/80
+              "
             >
-              <button className="w-full px-4 py-2 text-sm text-left hover:bg-accent flex items-center space-x-2">
-                <User className="h-4 w-4" />
-                <span>Profile</span>
-              </button>
-              <button className="w-full px-4 py-2 text-sm text-left hover:bg-accent flex items-center space-x-2">
-                <Settings className="h-4 w-4" />
-                <span>Settings</span>
-              </button>
-              <div className="h-px bg-border my-2" />
-              <button className="w-full px-4 py-2 text-sm text-left text-red-500 hover:bg-accent flex items-center space-x-2">
-                <LogOut className="h-4 w-4" />
-                <span>Log out</span>
-              </button>
+              <div className="p-3 border-b border-gray-200/80">
+                  <p className="text-sm font-semibold text-gray-800">Jane Doe</p>
+                  <p className="text-xs text-gray-500">janedoe@example.com</p>
+              </div>
+              <div className="py-2 space-y-1">
+                 <MenuItem icon={User}>Profile</MenuItem>
+                 <MenuItem icon={Settings}>Settings</MenuItem>
+              </div>
+              <div className="h-px bg-gray-200/80 my-1" />
+              <MenuItem icon={LogOut} isDanger>Log out</MenuItem>
             </motion.div>
           )}
         </AnimatePresence>
@@ -75,44 +118,59 @@ const HeaderActions = () => {
   );
 };
 
+const MenuItem = ({ children, icon: Icon, isDanger = false }) => (
+    <button className={`
+        w-full px-3 py-2 text-sm text-left flex items-center gap-3 rounded-md
+        transition-colors duration-200
+        ${isDanger
+            ? 'text-red-600 hover:bg-red-500/10'
+            : 'text-gray-700 hover:bg-indigo-500/10 hover:text-indigo-700'
+        }
+    `}>
+        <Icon className="h-4 w-4" />
+        <span className="font-medium">{children}</span>
+    </button>
+);
+
+
+interface AppLayoutProps {
+  children: React.ReactNode;
+  className?: string;
+  title?: string;
+}
+
+/**
+ * A full-page application layout with a glassmorphism header and enhanced UI elements.
+ */
 export const AppLayout: React.FC<AppLayoutProps> = ({
   children,
   className,
   title = "Clinical Case Compass",
-  actions
 }) => {
   return (
-    <div className="min-h-screen bg-background md:flex">
-      {/* Rest of your layout code */}
+    <div className="min-h-screen bg-slate-50 md:flex">
       <Sidebar />
       <div className="flex-1 min-h-screen transition-all duration-300 ease-in-out">
-        {/* Desktop Header */}
-        <header className="hidden md:flex items-center justify-between border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-6 py-4 sticky top-0 z-30">
-          <div className="flex items-center space-x-4">
+        {/* Unified Header with Glassmorphism Effect */}
+        <header className="
+          sticky top-0 z-40
+          flex items-center justify-between
+          px-4 sm:px-6 py-3
+          border-b border-gray-200/80
+          bg-white/70 backdrop-blur-xl
+        ">
+          <div className="flex items-center gap-2 sm:gap-4">
             <SidebarTrigger />
-            <h1 className="text-xl font-semibold text-foreground">{title}</h1>
+            <h1 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+                {title}
+            </h1>
           </div>
-          
-          <div className="flex items-center space-x-4">
-            {actions || <HeaderActions />}
-          </div>
-        </header>
-
-        {/* Mobile Header */}
-        <header className="flex md:hidden items-center justify-between border-b bg-background px-4 py-3 sticky top-0 z-30">
-          <div className="flex items-center space-x-3">
-            <SidebarTrigger />
-            <h1 className="text-lg font-semibold text-foreground">{title}</h1>
-          </div>
-          
           <HeaderActions />
         </header>
 
         {/* Main Content */}
         <main className={`flex-1 flex flex-col ${className}`}>
-          <div className="container mx-auto px-4 py-6 flex-1">
-            {children}
-          </div>
+          {children}
         </main>
       </div>
     </div>
