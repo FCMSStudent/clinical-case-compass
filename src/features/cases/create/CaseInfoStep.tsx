@@ -4,7 +4,6 @@ import { z } from "zod";
 import {
   FormField,
   FormItem,
-  FormLabel,
   FormControl,
   FormDescription,
   FormMessage,
@@ -18,23 +17,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileText, Stethoscope, Tag, Sparkles, Info, AlertCircle, CheckCircle } from "lucide-react";
+import { FileText, Stethoscope, Tag } from "lucide-react";
 import { cn } from "@/lib/utils";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Progress } from "@/components/ui/progress";
-import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "@/components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
+import { StepHeader, FormFieldCard, StepProgress, ValidationFeedback } from "./components";
 
 /**
  * ────────────────────────────────────────────────────────────────────────────────
@@ -69,115 +56,6 @@ const MEDICAL_SPECIALTIES = [
   "Urology",
   "Other",
 ] as const;
-
-interface FieldCardProps {
-  icon: React.ElementType;
-  title: string;
-  gradient: string;
-  children: React.ReactNode;
-  tooltip?: string;
-  isRequired?: boolean;
-}
-
-const ValidationFeedback = ({ isValid, message }: { isValid: boolean; message: string }) => (
-  <motion.div
-    initial={{ opacity: 0, y: -10 }}
-    animate={{ opacity: 1, y: 0 }}
-    className={cn(
-      "flex items-center gap-2 mt-2 text-sm",
-      isValid ? "text-emerald-600" : "text-red-600"
-    )}
-  >
-    {isValid ? (
-      <CheckCircle className="h-4 w-4" />
-    ) : (
-      <AlertCircle className="h-4 w-4" />
-    )}
-    <span>{message}</span>
-  </motion.div>
-);
-
-const FieldCard = memo(function FieldCard({
-  icon: Icon,
-  title,
-  gradient,
-  tooltip,
-  isRequired,
-  children,
-}: {
-  icon: React.ElementType;
-  title: string;
-  gradient: string;
-  tooltip?: string;
-  isRequired?: boolean;
-  children: React.ReactNode;
-}) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-    >
-      <Card className={cn("overflow-hidden border-2", gradient)}>
-        <CardHeader className="pb-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className={cn("p-2 rounded-lg", gradient.replace("50", "100"))}>
-                <Icon className="h-5 w-5" />
-              </div>
-              <CardTitle className="text-lg font-semibold flex items-center gap-2">
-                {title}
-                {isRequired && (
-                  <span className="text-red-500 text-sm">*</span>
-                )}
-              </CardTitle>
-            </div>
-            {tooltip && (
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 rounded-full hover:bg-white/50"
-                    >
-                      <Info className="h-4 w-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent className="max-w-xs p-4">
-                    <p className="text-sm">{tooltip}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            )}
-          </div>
-        </CardHeader>
-        <CardContent>
-          {children}
-        </CardContent>
-      </Card>
-    </motion.div>
-  );
-});
-
-interface StepProgressProps {
-  completedFields: number;
-  totalFields: number;
-}
-
-const StepProgress = ({ completedFields, totalFields }: { completedFields: number; totalFields: number }) => {
-  const progress = (completedFields / totalFields) * 100;
-  
-  return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between text-sm">
-        <span className="font-medium">Step Progress</span>
-        <span className="text-muted-foreground">{completedFields} of {totalFields} fields completed</span>
-      </div>
-      <Progress value={progress} className="h-2" />
-    </div>
-  );
-};
 
 /**
  * ────────────────────────────────────────────────────────────────────────────────
@@ -216,37 +94,20 @@ export const CaseInfoStep = memo(function CaseInfoStep<
 
   return (
     <section className={cn("space-y-8", className)}>
-      {/* Enhanced header with animation */}
-      <motion.header
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 p-8 text-white shadow-2xl"
-      >
-        <div className="absolute inset-0 bg-black/10"></div>
-        <div className="absolute top-4 right-4 opacity-20">
-          <Sparkles className="h-12 w-12" />
-        </div>
-        <div className="relative space-y-3">
-          <h3 className="flex items-center text-2xl font-bold">
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="mr-4 rounded-xl bg-white/20 p-3 backdrop-blur-sm"
-            >
-              <FileText className="h-7 w-7" />
-            </motion.div>
-            Case Information
-          </h3>
-          <p className="text-blue-100 text-lg max-w-2xl leading-relaxed">
-            Create a comprehensive clinical case by providing essential information about the patient presentation and medical context.
-          </p>
-        </div>
-      </motion.header>
+      <StepHeader
+        title="Case Information"
+        description="Create a comprehensive clinical case by providing essential information about the patient presentation and medical context."
+        icon={FileText}
+        gradient="blue"
+      />
 
-      <StepProgress completedFields={completedFields} totalFields={totalFields} />
+      <StepProgress 
+        completedFields={completedFields} 
+        totalFields={totalFields}
+        label="Form Progress"
+      />
 
-      {/* Add validation summary alert if there are errors */}
+      {/* Validation summary alert */}
       {Object.keys(formState.errors).length > 0 && (
         <Alert variant="destructive" className="mb-6">
           <AlertCircle className="h-4 w-4" />
@@ -257,10 +118,10 @@ export const CaseInfoStep = memo(function CaseInfoStep<
         </Alert>
       )}
 
-      <FieldCard 
+      <FormFieldCard 
         icon={FileText} 
         title="Case Title" 
-        gradient="from-emerald-50 to-teal-50"
+        gradient="emerald"
         tooltip="A clear, descriptive title helps others quickly understand the case's focus. Include key details like condition, patient type, or unique aspects."
         isRequired
       >
@@ -295,12 +156,12 @@ export const CaseInfoStep = memo(function CaseInfoStep<
             </FormItem>
           )}
         />
-      </FieldCard>
+      </FormFieldCard>
 
-      <FieldCard 
+      <FormFieldCard 
         icon={Stethoscope} 
         title="Chief Complaint" 
-        gradient="from-rose-50 to-pink-50"
+        gradient="rose"
         tooltip="Describe the patient's primary symptoms and concerns in detail. Include onset, duration, and any relevant context."
         isRequired
       >
@@ -321,6 +182,10 @@ export const CaseInfoStep = memo(function CaseInfoStep<
                   {...field}
                 />
               </FormControl>
+              <ValidationFeedback
+                isValid={!fieldState.error}
+                message={fieldState.error?.message}
+              />
               <FormDescription className="text-gray-600 mt-3 flex items-start gap-2">
                 <div className={cn(
                   "w-2 h-2 rounded-full mt-2 flex-shrink-0",
@@ -332,13 +197,12 @@ export const CaseInfoStep = memo(function CaseInfoStep<
             </FormItem>
           )}
         />
-      </FieldCard>
+      </FormFieldCard>
 
-      {/* Medical Specialty */}
-      <FieldCard 
+      <FormFieldCard 
         icon={Tag} 
         title="Medical Specialty" 
-        gradient="from-violet-50 to-purple-50"
+        gradient="violet"
       >
         <FormField
           control={control}
@@ -371,7 +235,7 @@ export const CaseInfoStep = memo(function CaseInfoStep<
             </FormItem>
           )}
         />
-      </FieldCard>
+      </FormFieldCard>
     </section>
   );
 });
