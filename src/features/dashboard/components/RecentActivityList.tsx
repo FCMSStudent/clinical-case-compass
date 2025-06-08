@@ -7,7 +7,7 @@ const activityItems = [
   { id: 3, description: "Settings updated: Notifications enabled", time: "3 days ago" },
 ];
 
-export const RecentActivityList = () => {
+const RecentActivityList: React.FC = () => {
   return (
     <Card>
       <CardHeader>
