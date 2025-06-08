@@ -37,25 +37,25 @@ const Dashboard = () => {
       />
       
       <Card className="bg-card shadow-sm border-border">
-        <CardContent>
+        <CardContent className="px-6 py-4">
           <SearchPanel />
         </CardContent>
       </Card>
 
       <Card className="bg-card shadow-sm border-border">
-        <CardContent>
+        <CardContent className="px-6 py-4">
           <StatCards />
         </CardContent>
       </Card>
       
       <div className="grid gap-6 lg:grid-cols-3">
         <Card className="lg:col-span-2 bg-card shadow-sm border-border">
-          <CardContent>
+          <CardContent className="px-6 py-4">
             <QuickStartPanel />
           </CardContent>
         </Card>
         <Card className="lg:col-span-1 bg-card shadow-sm border-border">
-          <CardContent>
+          <CardContent className="px-6 py-4">
             <RecentActivityList />
           </CardContent>
         </Card>
