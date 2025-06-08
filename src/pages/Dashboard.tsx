@@ -19,7 +19,7 @@ const Dashboard = () => {
   }, [])
 
   return (
-    <div className="space-y-6">
+    <div className="w-full max-w-5xl mx-auto space-y-6">
       {/* Welcome Alert */}
       {showWelcome && (
         <Alert className="border-primary/20 bg-primary/5">
