@@ -368,90 +368,95 @@ export function SymptomChecklist({
   // Mobile view uses Collapsible components
   if (isMobile) {
     return (
-      <div className="bg-white rounded-lg border border-medical-200 overflow-hidden shadow-sm">
-        <div className="p-3 bg-medical-50 border-b border-medical-200">
-          <h3 className="font-medium text-medical-800">System Review Checklist</h3>
-        </div>
-        
-        <div className="p-3 border-b border-medical-100">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder="Search symptoms..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9 border-medical-200"
-            />
-          </div>
-        </div>
-        
-        <div className="divide-y divide-medical-100 max-h-[400px] overflow-y-auto">
-          {filteredSystems.map((systemItem) => {
-            const totalCount = systemItem.symptoms.length;
-            const selectedCount = selectedSymptoms[systemItem.system]?.filter(
-              s => systemItem.symptoms.includes(s)
-            ).length || 0;
+      <div className="relative">
+        <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
+        <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-4">
+          <div className="bg-white rounded-lg border border-medical-200 overflow-hidden shadow-sm">
+            <div className="p-3 bg-medical-50 border-b border-medical-200">
+              <h3 className="font-medium text-medical-800">System Review Checklist</h3>
+            </div>
             
-            return (
-              <Collapsible 
-                key={systemItem.system} 
-                className="w-full"
-                open={systemItem.system === activeSystem || Object.keys(highlightedSymptoms).includes(systemItem.system)}
-              >
-                <CollapsibleTrigger className="flex w-full items-center justify-between p-3 font-medium text-left hover:bg-medical-50/60 transition-colors">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-sm">{systemItem.system}</span>
-                    {selectedCount > 0 && (
-                      <Badge variant="outline" className="bg-medical-100 font-normal text-xs">
-                        {selectedCount}/{totalCount}
-                      </Badge>
-                    )}
-                  </div>
-                  <ChevronDown className="h-4 w-4 text-medical-500 transition-transform duration-200 ui-open:rotate-180" />
-                </CollapsibleTrigger>
-                <CollapsibleContent className="p-2 pb-3 bg-medical-50/20">
-                  <div className="flex justify-between items-center mb-2 px-1">
-                    <span className="text-xs text-muted-foreground">
-                      {selectedCount} of {totalCount} selected
-                    </span>
-                    <div className="flex space-x-2">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className="h-7 text-xs"
-                        onClick={() => handleSelectAll(systemItem.system)}
-                      >
-                        <Check className="h-3 w-3 mr-1" />
-                        Select All
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className="h-7 text-xs"
-                        onClick={() => handleClearAll(systemItem.system)}
-                      >
-                        <X className="h-3 w-3 mr-1" />
-                        Clear
-                      </Button>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-1 gap-2">
-                    {systemItem.symptoms.map((symptom) => (
-                      <SymptomItem
-                        key={symptom}
-                        system={systemItem.system}
-                        symptom={symptom}
-                        isChecked={isChecked(systemItem.system, symptom)}
-                        isHighlighted={isHighlighted(systemItem.system, symptom)}
-                        onToggle={(checked) => handleSymptomToggle(systemItem.system, symptom, checked)}
-                        id={`${systemItem.system}-${symptom}-mobile`}
-                      />
-                    ))}
-                  </div>
-                </CollapsibleContent>
-              </Collapsible>
-            );
-          })}
+            <div className="p-3 border-b border-medical-100">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  placeholder="Search symptoms..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-9 border-medical-200"
+                />
+              </div>
+            </div>
+            
+            <div className="divide-y divide-medical-100 max-h-[400px] overflow-y-auto">
+              {filteredSystems.map((systemItem) => {
+                const totalCount = systemItem.symptoms.length;
+                const selectedCount = selectedSymptoms[systemItem.system]?.filter(
+                  s => systemItem.symptoms.includes(s)
+                ).length || 0;
+                
+                return (
+                  <Collapsible 
+                    key={systemItem.system} 
+                    className="w-full"
+                    open={systemItem.system === activeSystem || Object.keys(highlightedSymptoms).includes(systemItem.system)}
+                  >
+                    <CollapsibleTrigger className="flex w-full items-center justify-between p-3 font-medium text-left hover:bg-medical-50/60 transition-colors">
+                      <div className="flex items-center space-x-2">
+                        <span className="text-sm">{systemItem.system}</span>
+                        {selectedCount > 0 && (
+                          <Badge variant="outline" className="bg-medical-100 font-normal text-xs">
+                            {selectedCount}/{totalCount}
+                          </Badge>
+                        )}
+                      </div>
+                      <ChevronDown className="h-4 w-4 text-medical-500 transition-transform duration-200 ui-open:rotate-180" />
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="p-2 pb-3 bg-medical-50/20">
+                      <div className="flex justify-between items-center mb-2 px-1">
+                        <span className="text-xs text-muted-foreground">
+                          {selectedCount} of {totalCount} selected
+                        </span>
+                        <div className="flex space-x-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="h-7 text-xs"
+                            onClick={() => handleSelectAll(systemItem.system)}
+                          >
+                            <Check className="h-3 w-3 mr-1" />
+                            Select All
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="h-7 text-xs"
+                            onClick={() => handleClearAll(systemItem.system)}
+                          >
+                            <X className="h-3 w-3 mr-1" />
+                            Clear
+                          </Button>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-1 gap-2">
+                        {systemItem.symptoms.map((symptom) => (
+                          <SymptomItem
+                            key={symptom}
+                            system={systemItem.system}
+                            symptom={symptom}
+                            isChecked={isChecked(systemItem.system, symptom)}
+                            isHighlighted={isHighlighted(systemItem.system, symptom)}
+                            onToggle={(checked) => handleSymptomToggle(systemItem.system, symptom, checked)}
+                            id={`${systemItem.system}-${symptom}-mobile`}
+                          />
+                        ))}
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -459,110 +464,115 @@ export function SymptomChecklist({
   
   // Desktop view uses Tabs
   return (
-    <div className="bg-white rounded-lg border border-medical-200 overflow-hidden shadow-sm">
-      <div className="p-3 bg-medical-50 border-b border-medical-200">
-        <h3 className="font-medium text-medical-800">System Review Checklist</h3>
-      </div>
-      
-      <div className="p-3 border-b border-medical-100">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            placeholder="Search symptoms..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9 border-medical-200"
-          />
-        </div>
-      </div>
-      
-      <Tabs 
-        value={activeSystem} 
-        onValueChange={setActiveSystem}
-        className="w-full"
-      >
-        <TabsList className="flex overflow-x-auto w-full rounded-none bg-medical-50/50 border-b border-medical-200">
-          {systemSymptoms.map((item) => {
-            const count = selectionCounts[item.system];
-            const hasHighlights = Object.keys(highlightedSymptoms).includes(item.system);
-            
-            return (
-              <TabsTrigger 
-                key={item.system} 
-                value={item.system}
-                className={cn(
-                  "text-xs py-1 px-3 flex-shrink-0 flex items-center gap-2",
-                  "data-[state=active]:bg-white data-[state=active]:border-x data-[state=active]:border-t data-[state=active]:border-medical-200 data-[state=active]:border-b-0 data-[state=active]:rounded-b-none",
-                  hasHighlights && "ring-2 ring-yellow-300"
-                )}
-              >
-                {item.system}
-                {count > 0 && (
-                  <Badge variant="outline" className="bg-medical-100 text-xs">
-                    {count}
-                  </Badge>
-                )}
-              </TabsTrigger>
-            );
-          })}
-        </TabsList>
+    <div className="relative">
+      <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
+      <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-4">
+        <div className="bg-white rounded-lg border border-medical-200 overflow-hidden shadow-sm">
+          <div className="p-3 bg-medical-50 border-b border-medical-200">
+            <h3 className="font-medium text-medical-800">System Review Checklist</h3>
+          </div>
+          
+          <div className="p-3 border-b border-medical-100">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Search symptoms..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-9 border-medical-200"
+              />
+            </div>
+          </div>
+          
+          <Tabs 
+            value={activeSystem} 
+            onValueChange={setActiveSystem}
+            className="w-full"
+          >
+            <TabsList className="flex overflow-x-auto w-full rounded-none bg-medical-50/50 border-b border-medical-200">
+              {systemSymptoms.map((item) => {
+                const count = selectionCounts[item.system];
+                const hasHighlights = Object.keys(highlightedSymptoms).includes(item.system);
+                
+                return (
+                  <TabsTrigger 
+                    key={item.system} 
+                    value={item.system}
+                    className={cn(
+                      "text-xs py-1 px-3 flex-shrink-0 flex items-center gap-2",
+                      "data-[state=active]:bg-white data-[state=active]:border-x data-[state=active]:border-t data-[state=active]:border-medical-200 data-[state=active]:border-b-0 data-[state=active]:rounded-b-none",
+                      hasHighlights && "ring-2 ring-yellow-300"
+                    )}
+                  >
+                    {item.system}
+                    {count > 0 && (
+                      <Badge variant="outline" className="bg-medical-100 text-xs">
+                        {count}
+                      </Badge>
+                    )}
+                  </TabsTrigger>
+                );
+              })}
+            </TabsList>
 
-        <div className="max-h-[400px] overflow-y-auto">
-          {systemSymptoms.map((systemItem) => {
-            const totalCount = systemItem.symptoms.length;
-            const selectedCount = selectionCounts[systemItem.system] || 0;
-            
-            return (
-              <TabsContent key={systemItem.system} value={systemItem.system} className="p-3 m-0">
-                <div className="flex justify-between items-center mb-3">
-                  <span className="text-sm text-muted-foreground">
-                    {selectedCount} of {totalCount} selected
-                  </span>
-                  <div className="flex space-x-2">
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={() => handleSelectAll(systemItem.system)}
-                      className="h-8 bg-medical-50/50 border-medical-200 hover:bg-medical-100"
-                    >
-                      <Check className="h-4 w-4 mr-1" />
-                      Select All
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={() => handleClearAll(systemItem.system)}
-                      className="h-8"
-                    >
-                      <X className="h-4 w-4 mr-1" />
-                      Clear
-                    </Button>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                  {systemItem.symptoms.filter(symptom => {
-                    // Filter based on search if active
-                    if (searchTerm) {
-                      return symptom.toLowerCase().includes(searchTerm.toLowerCase());
-                    }
-                    return true;
-                  }).map((symptom) => (
-                    <SymptomItem
-                      key={symptom}
-                      system={systemItem.system}
-                      symptom={symptom}
-                      isChecked={isChecked(systemItem.system, symptom)}
-                      isHighlighted={isHighlighted(systemItem.system, symptom)}
-                      onToggle={(checked) => handleSymptomToggle(systemItem.system, symptom, checked)}
-                      id={`${systemItem.system}-${symptom}`}
-                    />
-                  ))}
-                </div>
-              </TabsContent>
-            );
-          })}
+            <div className="max-h-[400px] overflow-y-auto">
+              {systemSymptoms.map((systemItem) => {
+                const totalCount = systemItem.symptoms.length;
+                const selectedCount = selectionCounts[systemItem.system] || 0;
+                
+                return (
+                  <TabsContent key={systemItem.system} value={systemItem.system} className="p-3 m-0">
+                    <div className="flex justify-between items-center mb-3">
+                      <span className="text-sm text-muted-foreground">
+                        {selectedCount} of {totalCount} selected
+                      </span>
+                      <div className="flex space-x-2">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => handleSelectAll(systemItem.system)}
+                          className="h-8 bg-medical-50/50 border-medical-200 hover:bg-medical-100"
+                        >
+                          <Check className="h-4 w-4 mr-1" />
+                          Select All
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => handleClearAll(systemItem.system)}
+                          className="h-8"
+                        >
+                          <X className="h-4 w-4 mr-1" />
+                          Clear
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                      {systemItem.symptoms.filter(symptom => {
+                        // Filter based on search if active
+                        if (searchTerm) {
+                          return symptom.toLowerCase().includes(searchTerm.toLowerCase());
+                        }
+                        return true;
+                      }).map((symptom) => (
+                        <SymptomItem
+                          key={symptom}
+                          system={systemItem.system}
+                          symptom={symptom}
+                          isChecked={isChecked(systemItem.system, symptom)}
+                          isHighlighted={isHighlighted(systemItem.system, symptom)}
+                          onToggle={(checked) => handleSymptomToggle(systemItem.system, symptom, checked)}
+                          id={`${systemItem.system}-${symptom}`}
+                        />
+                      ))}
+                    </div>
+                  </TabsContent>
+                );
+              })}
+            </div>
+          </Tabs>
         </div>
-      </Tabs>
+      </div>
     </div>
   );
 }
