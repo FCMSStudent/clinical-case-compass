@@ -208,14 +208,18 @@ export function RadiologyCard({ onRadiologyChange, initialStudies = [] }: Radiol
   };
 
   return (
-    <Card className="border-medical-200 shadow-sm">
-      <CardHeader className="pb-4">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg font-semibold">Radiology Studies</CardTitle>
+    <div className="relative">
+      <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
+      <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20">
+        <div className="pb-4 pt-6 px-6 flex items-center justify-between">
+          <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+            <FileText className="h-5 w-5 text-white/80" />
+            Radiology Exams
+          </h3>
           <Button
             variant="outline"
             size="sm"
-            className="h-8"
+            className="h-8 bg-white/10 border-white/20 hover:bg-white/20 text-white"
             onClick={() => setShowAddForm(!showAddForm)}
           >
             {showAddForm ? (
@@ -226,145 +230,148 @@ export function RadiologyCard({ onRadiologyChange, initialStudies = [] }: Radiol
             {showAddForm ? "Cancel" : "Add Study"}
           </Button>
         </div>
-      </CardHeader>
-
-      <CardContent className="space-y-4">
-        <AnimatePresence mode="wait">
-          {showAddForm && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="space-y-4 p-4 border rounded-lg bg-medical-50"
-            >
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label>Study Type</Label>
-                  <Select
-                    value={selectedStudy}
-                    onValueChange={(value) => {
-                      setSelectedStudy(value);
-                      if (value) {
-                        const study = COMMON_RADIOLOGY_STUDIES.find(s => s.id === value);
-                        if (study) {
-                          setCustomStudy({ name: "", type: "" });
-                          setSelectedFinding("");
-                        }
-                      }
-                    }}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a study" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="">Custom Study</SelectItem>
-                      {COMMON_RADIOLOGY_STUDIES.map((study) => (
-                        <SelectItem key={study.id} value={study.id}>
-                          {study.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {selectedStudy ? (
+        <div className="p-6 space-y-4">
+          <AnimatePresence mode="wait">
+            {showAddForm && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                className="space-y-4 p-4 border rounded-lg bg-white/10 backdrop-blur-md border-white/20"
+              >
+                <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label>Common Findings</Label>
+                    <Label>Study Type</Label>
                     <Select
-                      value={selectedFinding}
-                      onValueChange={setSelectedFinding}
+                      value={selectedStudy}
+                      onValueChange={(value) => {
+                        setSelectedStudy(value);
+                        if (value) {
+                          const study = COMMON_RADIOLOGY_STUDIES.find(s => s.id === value);
+                          if (study) {
+                            setCustomStudy({ name: "", type: "" });
+                            setSelectedFinding("");
+                          }
+                        }
+                      }}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select common finding" />
+                        <SelectValue placeholder="Select a study" />
                       </SelectTrigger>
                       <SelectContent>
-                        {COMMON_RADIOLOGY_STUDIES.find(s => s.id === selectedStudy)?.commonFindings.map((finding) => (
-                          <SelectItem key={finding} value={finding}>
-                            {finding}
+                        <SelectItem value="">Custom Study</SelectItem>
+                        {COMMON_RADIOLOGY_STUDIES.map((study) => (
+                          <SelectItem key={study.id} value={study.id}>
+                            {study.name}
                           </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   </div>
-                ) : (
-                  <>
+
+                  {selectedStudy ? (
                     <div className="space-y-2">
-                      <Label>Study Name</Label>
-                      <Input
-                        value={customStudy.name}
-                        onChange={(e) => setCustomStudy(prev => ({ ...prev, name: e.target.value }))}
-                        placeholder="Enter study name"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Study Type</Label>
+                      <Label>Common Findings</Label>
                       <Select
-                        value={customStudy.type}
-                        onValueChange={(value) => setCustomStudy(prev => ({ ...prev, type: value }))}
+                        value={selectedFinding}
+                        onValueChange={setSelectedFinding}
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder="Select type" />
+                          <SelectValue placeholder="Select common finding" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="X-Ray">X-Ray</SelectItem>
-                          <SelectItem value="CT">CT</SelectItem>
-                          <SelectItem value="MRI">MRI</SelectItem>
-                          <SelectItem value="Ultrasound">Ultrasound</SelectItem>
-                          <SelectItem value="Nuclear Medicine">Nuclear Medicine</SelectItem>
-                          <SelectItem value="Other">Other</SelectItem>
+                          {COMMON_RADIOLOGY_STUDIES.find(s => s.id === selectedStudy)?.commonFindings.map((finding) => (
+                            <SelectItem key={finding} value={finding}>
+                              {finding}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </div>
-                  </>
-                )}
-              </div>
+                  ) : (
+                    <>
+                      <div className="space-y-2">
+                        <Label>Study Name</Label>
+                        <Input
+                          value={customStudy.name}
+                          onChange={(e) => setCustomStudy(prev => ({ ...prev, name: e.target.value }))}
+                          placeholder="Enter study name"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Study Type</Label>
+                        <Select
+                          value={customStudy.type}
+                          onValueChange={(value) => setCustomStudy(prev => ({ ...prev, type: value }))}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select type" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="X-Ray">X-Ray</SelectItem>
+                            <SelectItem value="CT">CT</SelectItem>
+                            <SelectItem value="MRI">MRI</SelectItem>
+                            <SelectItem value="Ultrasound">Ultrasound</SelectItem>
+                            <SelectItem value="Nuclear Medicine">Nuclear Medicine</SelectItem>
+                            <SelectItem value="Other">Other</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </>
+                  )}
+                </div>
 
-              <div className="space-y-2">
-                <Label>Findings</Label>
-                <Textarea
-                  value={findings}
-                  onChange={(e) => setFindings(e.target.value)}
-                  placeholder="Enter detailed findings"
-                  className="min-h-[100px]"
-                />
-              </div>
+                <div className="space-y-2">
+                  <Label>Findings</Label>
+                  <Textarea
+                    value={findings}
+                    onChange={(e) => setFindings(e.target.value)}
+                    placeholder="Enter detailed findings"
+                    className="min-h-[100px]"
+                  />
+                </div>
 
-              <div className="flex justify-end">
-                <Button
-                  onClick={handleAddStudy}
-                  disabled={!findings && !selectedFinding || (!selectedStudy && !customStudy.name)}
-                >
-                  Add Study
-                </Button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <div className="space-y-3">
-          <AnimatePresence mode="popLayout">
-            {studies.length === 0 ? (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
-                <Alert variant="default" className="bg-medical-50">
-                  <FileText className="h-4 w-4" />
-                  <AlertDescription>
-                    No radiology studies added yet. Click "Add Study" to begin.
-                  </AlertDescription>
-                </Alert>
+                <div className="flex gap-2 justify-end">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="bg-white/10 border-white/20 hover:bg-white/20 text-white"
+                    onClick={() => setShowAddForm(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="default"
+                    size="sm"
+                    className="bg-blue-500/80 hover:bg-blue-600 text-white"
+                    onClick={handleAddStudy}
+                  >
+                    Add
+                  </Button>
+                </div>
               </motion.div>
-            ) : (
-              studies.map((study) => (
-                <RadiologyStudyItem key={study.id} study={study} />
-              ))
             )}
           </AnimatePresence>
+          <div className="space-y-3">
+            <AnimatePresence>
+              {studies.length === 0 && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="text-white/70 text-sm"
+                >
+                  No radiology studies added yet.
+                </motion.div>
+              )}
+              {studies.map((study) => (
+                <RadiologyStudyItem key={study.id} study={study} />
+              ))}
+            </AnimatePresence>
+          </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
 
