@@ -112,13 +112,20 @@ export const CaseInfoStep = memo(function CaseInfoStep<
 
       {/* Validation summary alert */}
       {Object.keys(formState.errors).length > 0 && (
-        <Alert variant="destructive" className="mb-6">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Validation Errors</AlertTitle>
-          <AlertDescription>
-            Please review and correct the highlighted fields below.
-          </AlertDescription>
-        </Alert>
+        <div className="relative">
+          <div className="absolute inset-0 bg-red-400/10 backdrop-blur-xl rounded-xl border border-red-400/20 shadow-xl"></div>
+          <div className="relative bg-red-400/10 backdrop-blur-md rounded-xl border border-red-400/20 p-4">
+            <div className="flex items-start gap-3">
+              <AlertCircle className="h-5 w-5 text-red-400 mt-0.5" />
+              <div>
+                <h3 className="font-semibold text-red-400">Validation Errors</h3>
+                <p className="text-red-300 text-sm mt-1">
+                  Please review and correct the highlighted fields below.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
 
       <FormFieldCard 
@@ -134,22 +141,23 @@ export const CaseInfoStep = memo(function CaseInfoStep<
           render={({ field, fieldState }) => (
             <FormItem>
               <FormControl>
-                <Input
-                  placeholder="e.g., Complex Hypertension Management in Elderly Patient with Comorbidities"
-                  className={cn(
-                    "text-base border-2 focus:ring-emerald-100 rounded-xl py-3 px-4 transition-all duration-200",
-                    fieldState.error 
-                      ? "border-red-300 focus:border-red-400 bg-red-50/50" 
-                      : "border-gray-200 focus:border-emerald-400"
-                  )}
-                  {...field}
-                />
+                <div className="relative">
+                  <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
+                  <Input
+                    placeholder="e.g., Complex Hypertension Management in Elderly Patient with Comorbidities"
+                    className={cn(
+                      "relative bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 text-base rounded-xl py-3 px-4 transition-all duration-200",
+                      fieldState.error && "text-red-300 placeholder:text-red-300/50"
+                    )}
+                    {...field}
+                  />
+                </div>
               </FormControl>
               <ValidationFeedback
                 isValid={!fieldState.error}
                 message={fieldState.error?.message || "Title looks good!"}
               />
-              <FormDescription className="text-gray-600 mt-3 flex items-start gap-2">
+              <FormDescription className="text-white/70 mt-3 flex items-start gap-2">
                 <div className={cn(
                   "w-2 h-2 rounded-full mt-2 flex-shrink-0",
                   fieldState.error ? "bg-red-400" : "bg-emerald-400"
@@ -174,22 +182,23 @@ export const CaseInfoStep = memo(function CaseInfoStep<
           render={({ field, fieldState }) => (
             <FormItem>
               <FormControl>
-                <Textarea
-                  placeholder="e.g., 65-year-old patient presents with acute onset chest pain radiating to left arm, accompanied by shortness of breath and diaphoresis. Symptoms began 2 hours ago during mild physical activity..."
-                  className={cn(
-                    "min-h-[140px] text-base border-2 focus:ring-rose-100 rounded-xl p-4 leading-6 transition-all duration-200 resize-none",
-                    fieldState.error 
-                      ? "border-red-300 focus:border-red-400" 
-                      : "border-gray-200 focus:border-rose-400"
-                  )}
-                  {...field}
-                />
+                <div className="relative">
+                  <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
+                  <Textarea
+                    placeholder="e.g., 65-year-old patient presents with acute onset chest pain radiating to left arm, accompanied by shortness of breath and diaphoresis. Symptoms began 2 hours ago during mild physical activity..."
+                    className={cn(
+                      "relative bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 min-h-[140px] text-base rounded-xl p-4 leading-6 transition-all duration-200 resize-none",
+                      fieldState.error && "text-red-300 placeholder:text-red-300/50"
+                    )}
+                    {...field}
+                  />
+                </div>
               </FormControl>
               <ValidationFeedback
                 isValid={!fieldState.error}
                 message={fieldState.error?.message}
               />
-              <FormDescription className="text-gray-600 mt-3 flex items-start gap-2">
+              <FormDescription className="text-white/70 mt-3 flex items-start gap-2">
                 <div className={cn(
                   "w-2 h-2 rounded-full mt-2 flex-shrink-0",
                   fieldState.error ? "bg-red-400" : "bg-rose-400"
@@ -213,24 +222,27 @@ export const CaseInfoStep = memo(function CaseInfoStep<
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <SelectTrigger className="text-base border-2 border-gray-200 focus:border-violet-400 focus:ring-violet-100 rounded-xl py-3 px-4 h-auto transition-all duration-200">
-                    <SelectValue placeholder="Select the most relevant medical specialty" />
-                  </SelectTrigger>
-                  <SelectContent className="rounded-xl border-2 shadow-xl">
-                    {MEDICAL_SPECIALTIES.map((specialty) => (
-                      <SelectItem 
-                        key={specialty} 
-                        value={specialty}
-                        className="py-3 px-4 text-base hover:bg-violet-50 focus:bg-violet-100 rounded-lg mx-1"
-                      >
-                        {specialty}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="relative">
+                  <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <SelectTrigger className="relative bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 text-base rounded-xl py-3 px-4 h-auto transition-all duration-200">
+                      <SelectValue placeholder="Select the most relevant medical specialty" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 shadow-xl">
+                      {MEDICAL_SPECIALTIES.map((specialty) => (
+                        <SelectItem 
+                          key={specialty} 
+                          value={specialty}
+                          className="py-3 px-4 text-base text-white hover:bg-white/20 focus:bg-white/20 rounded-lg mx-1"
+                        >
+                          {specialty}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </FormControl>
-              <FormDescription className="text-gray-600 mt-3 flex items-start gap-2">
+              <FormDescription className="text-white/70 mt-3 flex items-start gap-2">
                 <div className="w-2 h-2 rounded-full bg-violet-400 mt-2 flex-shrink-0"></div>
                 Choose the primary medical specialty most relevant to this clinical presentation
               </FormDescription>

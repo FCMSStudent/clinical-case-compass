@@ -50,8 +50,9 @@ export const FormHeader = memo(function FormHeader({
   return (
     <div className={cn("space-y-4", className)}>
       {/* Main Header Card */}
-      <Card className="border-2 bg-gradient-to-br from-slate-50 to-slate-100/50">
-        <CardContent className="p-6">
+      <div className="relative">
+        <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
+        <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             {/* Title and Progress */}
             <div className="space-y-4 flex-1">
@@ -60,8 +61,8 @@ export const FormHeader = memo(function FormHeader({
                 animate={{ opacity: 1, y: 0 }}
                 className="space-y-1"
               >
-                <h1 className="text-2xl font-bold tracking-tight">{formTitle}</h1>
-                <p className="text-muted-foreground">
+                <h1 className="text-2xl font-bold tracking-tight text-white">{formTitle}</h1>
+                <p className="text-white/70">
                   {currentStepLabel}
                 </p>
               </motion.div>
@@ -69,10 +70,18 @@ export const FormHeader = memo(function FormHeader({
               {/* Progress Bar */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="font-medium">Overall Progress</span>
-                  <span className="text-muted-foreground">{completionPercentage}%</span>
+                  <span className="font-medium text-white">Overall Progress</span>
+                  <span className="text-white/70">{completionPercentage}%</span>
                 </div>
-                <Progress value={completionPercentage} className="h-2" />
+                <div className="relative">
+                  <div className="absolute inset-0 bg-white/20 rounded-full"></div>
+                  <div 
+                    className="relative h-2 bg-white/30 rounded-full overflow-hidden"
+                    style={{ width: `${completionPercentage}%` }}
+                  >
+                    <div className="absolute inset-0 bg-white/60 rounded-full"></div>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -85,7 +94,7 @@ export const FormHeader = memo(function FormHeader({
                       variant="outline"
                       onClick={onSaveDraft}
                       disabled={isDraftSaving}
-                      className="gap-2 whitespace-nowrap"
+                      className="gap-2 whitespace-nowrap bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 text-white"
                     >
                       <AnimatePresence mode="wait">
                         {isDraftSaving ? (
@@ -113,15 +122,15 @@ export const FormHeader = memo(function FormHeader({
                       </span>
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent>
+                  <TooltipContent className="bg-white/10 backdrop-blur-md border border-white/20 text-white">
                     <p>Save your progress and continue later</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
             )}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 });

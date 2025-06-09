@@ -259,55 +259,65 @@ const CreateCaseFlow = () => {
         return <LearningPointsStep />;
       default:
         return (
-          <Card className="border-destructive bg-destructive/10">
-            <CardContent className="p-6 flex flex-col items-center text-center">
-              <AlertTriangle className="h-12 w-12 text-destructive mb-4" />
-              <h2 className="text-xl font-semibold text-destructive mb-2">Error</h2>
-              <p className="text-destructive/80">Invalid step. Please refresh or contact support.</p>
-            </CardContent>
-          </Card>
+          <div className="relative">
+            <div className="absolute inset-0 bg-red-400/10 backdrop-blur-xl rounded-xl border border-red-400/20 shadow-xl"></div>
+            <div className="relative bg-red-400/10 backdrop-blur-md rounded-xl border border-red-400/20 p-6 flex flex-col items-center text-center">
+              <AlertTriangle className="h-12 w-12 text-red-400 mb-4" />
+              <h2 className="text-xl font-semibold text-red-400 mb-2">Error</h2>
+              <p className="text-red-300">Invalid step. Please refresh or contact support.</p>
+            </div>
+          </div>
         );
     }
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto space-y-6">
-      <FormHeader
-        currentStep={currentStepIndex + 1}
-        totalSteps={STEPS.length}
-        completionPercentage={completionPercentage}
-        isDraftSaving={isDraftSaving}
-        onSaveDraft={saveDraftManually}
-        currentStepLabel={currentStepData.label}
-      />
-        
-      <FormProvider {...form}>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <FormContainer
-            currentStepIndex={currentStepIndex}
-            steps={STEPS.map((step, index) => ({
-              id: step.id,
-              label: step.label,
-              icon: step.icon,
-              isCompleted: index <= highestValidatedStep,
-              isNavigable: true,
-            }))}
-            onStepChange={handleStepChange}
-          >
-            {renderStepContent()}
-          </FormContainer>
+    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-blue-700 dark:from-blue-900 dark:via-blue-800 dark:to-blue-900">
+      {/* Glassy background elements */}
+      <div className="absolute inset-0">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/3 rounded-full blur-3xl"></div>
+      </div>
 
-          <FormNavigation
-            currentStep={currentStepIndex + 1}
-            totalSteps={STEPS.length}
-            currentStepLabel={currentStepData.label}
-            isSubmitting={isSubmitting}
-            onPrevious={handlePrevious}
-            onNext={handleNext}
-            onSaveAndExit={handleSaveAndExit}
-          />
-        </form>
-      </FormProvider>
+      <div className="relative z-10 w-full max-w-5xl mx-auto space-y-6 p-6">
+        <FormHeader
+          currentStep={currentStepIndex + 1}
+          totalSteps={STEPS.length}
+          completionPercentage={completionPercentage}
+          isDraftSaving={isDraftSaving}
+          onSaveDraft={saveDraftManually}
+          currentStepLabel={currentStepData.label}
+        />
+          
+        <FormProvider {...form}>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <FormContainer
+              currentStepIndex={currentStepIndex}
+              steps={STEPS.map((step, index) => ({
+                id: step.id,
+                label: step.label,
+                icon: step.icon,
+                isCompleted: index <= highestValidatedStep,
+                isNavigable: true,
+              }))}
+              onStepChange={handleStepChange}
+            >
+              {renderStepContent()}
+            </FormContainer>
+
+            <FormNavigation
+              currentStep={currentStepIndex + 1}
+              totalSteps={STEPS.length}
+              currentStepLabel={currentStepData.label}
+              isSubmitting={isSubmitting}
+              onPrevious={handlePrevious}
+              onNext={handleNext}
+              onSaveAndExit={handleSaveAndExit}
+            />
+          </form>
+        </FormProvider>
+      </div>
     </div>
   );
 };
