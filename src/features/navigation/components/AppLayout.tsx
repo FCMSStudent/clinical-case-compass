@@ -103,7 +103,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   actions
 }) => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-blue-700 dark:from-blue-900 dark:via-blue-800 dark:to-blue-900 md:flex">
+    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-blue-700 dark:from-blue-900 dark:via-blue-800 dark:to-blue-900">
       {/* Glassy background elements */}
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
@@ -111,9 +111,9 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/3 rounded-full blur-3xl"></div>
       </div>
 
-      <div className="relative z-10 w-full">
+      <div className="relative z-10 flex min-h-screen">
         <Sidebar />
-        <div className="flex-1 min-h-screen transition-all duration-300 ease-in-out">
+        <div className="flex-1 flex flex-col min-h-screen transition-all duration-300 ease-in-out">
           {/* Desktop Header */}
           <header className="hidden md:flex items-center justify-between px-6 py-4 sticky top-0 z-30">
             <div className="relative">
