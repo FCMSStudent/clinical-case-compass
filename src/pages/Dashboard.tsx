@@ -10,12 +10,19 @@ import {
 } from "@/features/dashboard";
 import { UserRound, TrendingUp, Activity, Sparkles, Target, Zap, Plus, BookOpen, Users, Settings } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDashboardData } from "@/features/dashboard/hooks/use-dashboard-data";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
+import { useParallaxScroll } from "@/lib/motion";
+import { useGestureDetection } from "@/lib/interactions";
+import { useDeepMemo } from "@/lib/performance";
+import { useAccessibility } from "@/lib/accessibility";
+import { usePerformanceMonitor } from "@/lib/performance";
+import { AccessibleMotion } from "@/lib/motion";
+import { useTheme } from "@/lib/themes";
 
 const Dashboard = () => {
   const [showWelcome, setShowWelcome] = useState(true);
@@ -23,11 +30,71 @@ const Dashboard = () => {
   const stats = getStatistics();
   const specialtyProgress = getSpecialtyProgress();
   const navigate = useNavigate();
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Performance monitoring
+  usePerformanceMonitor("Dashboard");
+
+  // Accessibility features
+  const accessibility = useAccessibility({
+    enableVoiceControl: true,
+    enableKeyboardNavigation: true,
+    enableFocusIndicators: true,
+  });
+
+  // Theme management
+  const { currentTheme } = useTheme();
+
+  // Parallax scroll effect
+  const { scrollYProgress } = useParallaxScroll(0.3);
+
+  // Gesture detection for interactive elements
+  const handleGesture = (event: any) => {
+    if (event.type === "swipe") {
+      if (event.direction === "left") {
+        navigate("/cases");
+      } else if (event.direction === "right") {
+        navigate("/settings");
+      }
+    }
+  };
+
+  useGestureDetection(handleGesture, {
+    threshold: 50,
+    direction: "any"
+  });
+
+  // Memoized data for performance
+  const memoizedStats = useDeepMemo(() => stats, [stats]);
+  const memoizedSpecialtyProgress = useDeepMemo(() => specialtyProgress, [specialtyProgress]);
 
   useEffect(() => {
     const timer = setTimeout(() => setShowWelcome(false), 6000);
     return () => clearTimeout(timer);
   }, []);
+
+  // Register dashboard-specific voice commands
+  useEffect(() => {
+    accessibility.registerVoiceCommand({
+      command: "show statistics",
+      action: () => {
+        const statsElement = document.querySelector('[data-testid="dashboard-stats"]');
+        statsElement?.scrollIntoView({ behavior: 'smooth' });
+      },
+      description: "Scroll to statistics section",
+      category: "navigation"
+    });
+
+    accessibility.registerVoiceCommand({
+      command: "show recent activity",
+      action: () => {
+        const activityElement = document.querySelector('[data-testid="recent-activity"]');
+        activityElement?.scrollIntoView({ behavior: 'smooth' });
+      },
+      description: "Scroll to recent activity section",
+      category: "navigation"
+    });
+  }, [accessibility]);
 
   const quickActions = [
     {
@@ -65,18 +132,32 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="w-full space-y-6">
-      {/* Glassy Medical Header */}
+    <AccessibleMotion
+      variants={{
+        initial: { opacity: 0, y: 20 },
+        animate: { opacity: 1, y: 0 },
+        exit: { opacity: 0, y: -20 }
+      }}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="w-full space-y-6"
+      ref={containerRef}
+    >
+      {/* Glassy Medical Header with Parallax */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
+        style={{ y: scrollYProgress.get() * -50 }}
         className="text-center space-y-3"
       >
         <div className="flex items-center justify-center gap-3 mb-4">
-          <div className="p-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20">
+          <motion.div 
+            className="p-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20"
+            whileHover={{ scale: 1.1, rotate: 5 }}
+            whileTap={{ scale: 0.95 }}
+          >
             <Activity className="h-8 w-8 text-white" />
-          </div>
+          </motion.div>
           <h1 className="text-4xl font-bold text-white">
             Clinical Dashboard
           </h1>
@@ -91,39 +172,33 @@ const Dashboard = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+        data-testid="dashboard-stats"
       >
         <div className="relative">
           <div className="absolute inset-0 bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10"></div>
           <div className="relative bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 p-8">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              <div className="text-center">
-                <div className="text-4xl font-bold text-white mb-2">
-                  {stats.totalCases}
-                </div>
-                <div className="text-white/80 text-sm font-medium">Total Cases</div>
-                <div className="text-white/60 text-xs mt-1">Medical Records</div>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl font-bold text-white mb-2">
-                  {stats.casesWithLearningPoints}
-                </div>
-                <div className="text-white/80 text-sm font-medium">With Insights</div>
-                <div className="text-white/60 text-xs mt-1">Learning Points</div>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl font-bold text-white mb-2">
-                  {stats.totalResources}
-                </div>
-                <div className="text-white/80 text-sm font-medium">Resources</div>
-                <div className="text-white/60 text-xs mt-1">Study Materials</div>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl font-bold text-white mb-2">
-                  {stats.thisWeekCases}
-                </div>
-                <div className="text-white/80 text-sm font-medium">This Week</div>
-                <div className="text-white/60 text-xs mt-1">Recent Activity</div>
-              </div>
+              {[
+                { value: memoizedStats.totalCases, label: "Total Cases", subtitle: "Medical Records" },
+                { value: memoizedStats.casesWithLearningPoints, label: "With Insights", subtitle: "Learning Points" },
+                { value: memoizedStats.totalResources, label: "Resources", subtitle: "Study Materials" },
+                { value: memoizedStats.thisWeekCases, label: "This Week", subtitle: "Recent Activity" }
+              ].map((stat, index) => (
+                <motion.div
+                  key={stat.label}
+                  className="text-center"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3, delay: index * 0.1 }}
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <div className="text-4xl font-bold text-white mb-2">
+                    {stat.value}
+                  </div>
+                  <div className="text-white/80 text-sm font-medium">{stat.label}</div>
+                  <div className="text-white/60 text-xs mt-1">{stat.subtitle}</div>
+                </motion.div>
+              ))}
             </div>
           </div>
         </div>
@@ -170,13 +245,19 @@ const Dashboard = () => {
               whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
               className="group relative"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: index * 0.1 }}
             >
               <div className="absolute inset-0 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10"></div>
               <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 transition-all duration-300 group-hover:bg-white/15 group-hover:shadow-xl">
                 <div className="text-center space-y-4">
-                  <div className="mx-auto w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <motion.div 
+                    className="mx-auto w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                    whileHover={{ rotate: 5 }}
+                  >
                     <IconComponent className="h-7 w-7 text-white" />
-                  </div>
+                  </motion.div>
                   <div>
                     <h3 className="font-semibold text-white text-base">
                       {action.title}
@@ -203,9 +284,12 @@ const Dashboard = () => {
           <div className="relative bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 p-8">
             <div className="space-y-6">
               <div className="flex items-center gap-4">
-                <div className="p-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20">
+                <motion.div 
+                  className="p-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20"
+                  whileHover={{ scale: 1.1 }}
+                >
                   <Activity className="h-6 w-6 text-white" />
-                </div>
+                </motion.div>
                 <h3 className="text-xl font-semibold text-white">Clinical Search</h3>
               </div>
               <SearchPanel 
@@ -214,13 +298,18 @@ const Dashboard = () => {
                 placeholder="Search cases, symptoms, diagnoses, or learning points..."
               />
               <div className="flex flex-wrap gap-3">
-                {["Recent cases", "Cardiology", "Neurology", "Emergency", "Learning points", "Resources"].map((tag) => (
-                  <span
+                {["Recent cases", "Cardiology", "Neurology", "Emergency", "Learning points", "Resources"].map((tag, index) => (
+                  <motion.span
                     key={tag}
                     className="px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white/90 text-sm font-medium cursor-pointer hover:bg-white/20 transition-colors"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.2, delay: index * 0.05 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                   >
                     {tag}
-                  </span>
+                  </motion.span>
                 ))}
               </div>
             </div>
@@ -236,14 +325,18 @@ const Dashboard = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.4, ease: "easeOut" }}
           className="lg:col-span-2"
+          data-testid="recent-activity"
         >
           <div className="relative h-full">
             <div className="absolute inset-0 bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10"></div>
             <div className="relative bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 p-8 h-full">
               <div className="flex items-center gap-4 mb-6">
-                <div className="p-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20">
+                <motion.div 
+                  className="p-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20"
+                  whileHover={{ scale: 1.1 }}
+                >
                   <Activity className="h-6 w-6 text-white" />
-                </div>
+                </motion.div>
                 <h3 className="text-xl font-semibold text-white">Recent Clinical Activity</h3>
               </div>
               <RecentActivityList />
@@ -261,19 +354,22 @@ const Dashboard = () => {
             <div className="absolute inset-0 bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10"></div>
             <div className="relative bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 p-8 h-full">
               <div className="flex items-center gap-4 mb-6">
-                <div className="p-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20">
+                <motion.div 
+                  className="p-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20"
+                  whileHover={{ scale: 1.1 }}
+                >
                   <TrendingUp className="h-6 w-6 text-white" />
-                </div>
+                </motion.div>
                 <h3 className="text-xl font-semibold text-white">Learning Progress</h3>
               </div>
-              <ProgressChart stats={stats} />
+              <ProgressChart stats={memoizedStats} />
             </div>
           </div>
         </motion.div>
       </div>
 
       {/* Glassy Medical Specialty Focus */}
-      {specialtyProgress.length > 0 && (
+      {memoizedSpecialtyProgress.length > 0 && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -283,17 +379,20 @@ const Dashboard = () => {
             <div className="absolute inset-0 bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10"></div>
             <div className="relative bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 p-8">
               <div className="flex items-center gap-4 mb-6">
-                <div className="p-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20">
+                <motion.div 
+                  className="p-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20"
+                  whileHover={{ scale: 1.1 }}
+                >
                   <Target className="h-6 w-6 text-white" />
-                </div>
+                </motion.div>
                 <h3 className="text-xl font-semibold text-white">Specialty Focus Areas</h3>
               </div>
-              <SpecialtyProgress data={specialtyProgress} />
+              <SpecialtyProgress data={memoizedSpecialtyProgress} />
             </div>
           </div>
         </motion.div>
       )}
-    </div>
+    </AccessibleMotion>
   );
 };
 
