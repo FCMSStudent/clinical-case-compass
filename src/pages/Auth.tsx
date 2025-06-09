@@ -156,35 +156,12 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      {/* Animated background elements */}
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-blue-600 via-blue-500 to-blue-700 dark:from-blue-900 dark:via-blue-800 dark:to-blue-900">
+      {/* Glassy background elements */}
       <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-purple-600/10 to-blue-600/10 rounded-full blur-3xl animate-spin-slow"></div>
-      </div>
-
-      {/* Floating particles */}
-      <div className="absolute inset-0 overflow-hidden">
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-white/30 rounded-full"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: [0, -100, 0],
-              opacity: [0, 1, 0],
-            }}
-            transition={{
-              duration: 3 + Math.random() * 2,
-              repeat: Infinity,
-              delay: Math.random() * 2,
-            }}
-          />
-        ))}
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/3 rounded-full blur-3xl"></div>
       </div>
 
       <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
@@ -203,342 +180,282 @@ const Auth = () => {
             <div className="relative bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 p-8 shadow-2xl">
               {/* Header */}
               <div className="text-center mb-8">
-                <motion.div
-                  initial={{ scale: 0, rotate: -180 }}
-                  animate={{ scale: 1, rotate: 0 }}
-                  transition={{ duration: 0.6, delay: 0.2, type: "spring" }}
-                  className="mx-auto mb-6 w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500/20 to-blue-500/20 backdrop-blur-sm border border-white/20 flex items-center justify-center"
-                >
-                  <Sparkles className="h-10 w-10 text-white" />
-                </motion.div>
-                
-                <motion.h1
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                  className="text-4xl font-bold text-white mb-2 tracking-tight"
-                >
-                  Medica
-                </motion.h1>
-                
-                <motion.p
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.6 }}
-                  className="text-white/70 text-sm"
-                >
-                  Sign in or create an account to manage your medical cases
-                </motion.p>
+                <div className="flex items-center justify-center gap-3 mb-4">
+                  <div className="p-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20">
+                    <Sparkles className="h-8 w-8 text-white" />
+                  </div>
+                  <h1 className="text-3xl font-bold text-white">
+                    Clinical Case Compass
+                  </h1>
+                </div>
+                <p className="text-white/80 text-lg">
+                  Medical Learning Platform
+                </p>
               </div>
 
               {/* Tabs */}
-              <div className="mb-8">
-                <div className="relative">
-                  {/* Tab background */}
-                  <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20"></div>
-                  
-                  <div className="relative flex p-1">
-                    <button
-                      onClick={() => setActiveTab("login")}
-                      className={cn(
-                        "flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all duration-300 relative",
-                        activeTab === "login"
-                          ? "text-white bg-white/20 backdrop-blur-sm shadow-lg"
-                          : "text-white/70 hover:text-white/90"
-                      )}
-                    >
-                      <div className="flex items-center justify-center gap-2">
-                        <Lock className="h-4 w-4" />
-                        Login
-                      </div>
-                    </button>
-                    
-                    <button
-                      onClick={() => setActiveTab("signup")}
-                      className={cn(
-                        "flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all duration-300 relative",
-                        activeTab === "signup"
-                          ? "text-white bg-white/20 backdrop-blur-sm shadow-lg"
-                          : "text-white/70 hover:text-white/90"
-                      )}
-                    >
-                      <div className="flex items-center justify-center gap-2">
-                        <UserPlus className="h-4 w-4" />
-                        Sign Up
-                      </div>
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Form content */}
-              <AnimatePresence mode="wait">
-                {activeTab === "login" ? (
-                  <motion.div
-                    key="login"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 20 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <Form {...loginForm}>
-                      <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-6">
-                        <FormField
-                          control={loginForm.control}
-                          name="email"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-white/90 text-sm font-medium">Email</FormLabel>
-                              <FormControl>
-                                <div className="relative">
-                                  <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
-                                  <div className="relative flex items-center">
-                                    <Mail className="absolute left-4 h-4 w-4 text-white/60" />
-                                    <Input
-                                      placeholder="m.smith@example.com"
-                                      className="pl-12 pr-4 py-3 bg-transparent border-0 text-white placeholder:text-white/50 focus:ring-0 focus:outline-none"
-                                      {...field}
-                                      disabled={isLoading}
-                                    />
-                                  </div>
-                                </div>
-                              </FormControl>
-                              <FormMessage className="text-red-300" />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={loginForm.control}
-                          name="password"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-white/90 text-sm font-medium">Password</FormLabel>
-                              <FormControl>
-                                <div className="relative">
-                                  <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
-                                  <div className="relative flex items-center">
-                                    <Lock className="absolute left-4 h-4 w-4 text-white/60" />
-                                    <Input
-                                      type={showPassword ? "text" : "password"}
-                                      className="pl-12 pr-12 py-3 bg-transparent border-0 text-white placeholder:text-white/50 focus:ring-0 focus:outline-none"
-                                      {...field}
-                                      disabled={isLoading}
-                                    />
-                                    <button
-                                      type="button"
-                                      onClick={() => setShowPassword(!showPassword)}
-                                      className="absolute right-4 text-white/60 hover:text-white/80 transition-colors"
-                                    >
-                                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                                    </button>
-                                  </div>
-                                </div>
-                              </FormControl>
-                              <FormMessage className="text-red-300" />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <motion.button
-                          type="submit"
-                          disabled={isLoading}
-                          className="w-full py-3 px-6 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                        >
-                          {isLoading ? (
-                            <div className="flex items-center justify-center gap-2">
-                              <Loader2 className="h-4 w-4 animate-spin" />
-                              Signing in...
-                            </div>
-                          ) : (
-                            "Sign In"
-                          )}
-                        </motion.button>
-                      </form>
-                    </Form>
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="signup"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    {verificationSent ? (
-                      <div className="bg-green-500/20 backdrop-blur-sm border border-green-500/30 rounded-xl p-4">
-                        <div className="flex items-center gap-3">
-                          <CheckCircle2 className="h-5 w-5 text-green-400" />
-                          <div>
-                            <h3 className="text-green-400 font-medium">Verification Email Sent</h3>
-                            <p className="text-green-300 text-sm">Please check your email to verify your account.</p>
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <Form {...signupForm}>
-                        <form onSubmit={signupForm.handleSubmit(onSignupSubmit)} className="space-y-6">
-                          <FormField
-                            control={signupForm.control}
-                            name="fullName"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel className="text-white/90 text-sm font-medium">Full Name</FormLabel>
-                                <FormControl>
-                                  <div className="relative">
-                                    <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
-                                    <div className="relative flex items-center">
-                                      <User className="absolute left-4 h-4 w-4 text-white/60" />
-                                      <Input
-                                        placeholder="Dr. Michael Smith"
-                                        className="pl-12 pr-4 py-3 bg-transparent border-0 text-white placeholder:text-white/50 focus:ring-0 focus:outline-none"
-                                        {...field}
-                                        disabled={isLoading}
-                                      />
-                                    </div>
-                                  </div>
-                                </FormControl>
-                                <FormMessage className="text-red-300" />
-                              </FormItem>
-                            )}
-                          />
-                          
-                          <FormField
-                            control={signupForm.control}
-                            name="email"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel className="text-white/90 text-sm font-medium">Email</FormLabel>
-                                <FormControl>
-                                  <div className="relative">
-                                    <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
-                                    <div className="relative flex items-center">
-                                      <Mail className="absolute left-4 h-4 w-4 text-white/60" />
-                                      <Input
-                                        placeholder="m.smith@example.com"
-                                        className="pl-12 pr-4 py-3 bg-transparent border-0 text-white placeholder:text-white/50 focus:ring-0 focus:outline-none"
-                                        {...field}
-                                        disabled={isLoading}
-                                      />
-                                    </div>
-                                  </div>
-                                </FormControl>
-                                <FormMessage className="text-red-300" />
-                              </FormItem>
-                            )}
-                          />
-                          
-                          <FormField
-                            control={signupForm.control}
-                            name="password"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel className="text-white/90 text-sm font-medium">Password</FormLabel>
-                                <FormControl>
-                                  <div className="relative">
-                                    <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
-                                    <div className="relative flex items-center">
-                                      <Lock className="absolute left-4 h-4 w-4 text-white/60" />
-                                      <Input
-                                        type={showPassword ? "text" : "password"}
-                                        className="pl-12 pr-12 py-3 bg-transparent border-0 text-white placeholder:text-white/50 focus:ring-0 focus:outline-none"
-                                        {...field}
-                                        disabled={isLoading}
-                                      />
-                                      <button
-                                        type="button"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute right-4 text-white/60 hover:text-white/80 transition-colors"
-                                      >
-                                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                                      </button>
-                                    </div>
-                                  </div>
-                                </FormControl>
-                                <FormDescription className="text-white/60 text-xs">
-                                  Must be at least 8 characters
-                                </FormDescription>
-                                <FormMessage className="text-red-300" />
-                              </FormItem>
-                            )}
-                          />
-                          
-                          <FormField
-                            control={signupForm.control}
-                            name="confirmPassword"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel className="text-white/90 text-sm font-medium">Confirm Password</FormLabel>
-                                <FormControl>
-                                  <div className="relative">
-                                    <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
-                                    <div className="relative flex items-center">
-                                      <Lock className="absolute left-4 h-4 w-4 text-white/60" />
-                                      <Input
-                                        type={showConfirmPassword ? "text" : "password"}
-                                        className="pl-12 pr-12 py-3 bg-transparent border-0 text-white placeholder:text-white/50 focus:ring-0 focus:outline-none"
-                                        {...field}
-                                        disabled={isLoading}
-                                      />
-                                      <button
-                                        type="button"
-                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                        className="absolute right-4 text-white/60 hover:text-white/80 transition-colors"
-                                      >
-                                        {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                                      </button>
-                                    </div>
-                                  </div>
-                                </FormControl>
-                                <FormMessage className="text-red-300" />
-                              </FormItem>
-                            )}
-                          />
-                          
-                          <motion.button
-                            type="submit"
-                            disabled={isLoading}
-                            className="w-full py-3 px-6 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                          >
-                            {isLoading ? (
-                              <div className="flex items-center justify-center gap-2">
-                                <Loader2 className="h-4 w-4 animate-spin" />
-                                Creating Account...
-                              </div>
-                            ) : (
-                              "Create Account"
-                            )}
-                          </motion.button>
-                        </form>
-                      </Form>
+              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                <TabsList className="grid w-full grid-cols-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-1 mb-6">
+                  <TabsTrigger 
+                    value="login" 
+                    className={cn(
+                      "rounded-xl text-sm font-medium transition-all",
+                      activeTab === "login" 
+                        ? "bg-white/20 text-white shadow-sm" 
+                        : "text-white/70 hover:text-white/90"
                     )}
+                  >
+                    Sign In
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="signup" 
+                    className={cn(
+                      "rounded-xl text-sm font-medium transition-all",
+                      activeTab === "signup" 
+                        ? "bg-white/20 text-white shadow-sm" 
+                        : "text-white/70 hover:text-white/90"
+                    )}
+                  >
+                    Sign Up
+                  </TabsTrigger>
+                </TabsList>
+
+                {/* Login Tab */}
+                <TabsContent value="login" className="space-y-6">
+                  <Form {...loginForm}>
+                    <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
+                      <FormField
+                        control={loginForm.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-white/90 text-sm font-medium">Email</FormLabel>
+                            <FormControl>
+                              <div className="relative">
+                                <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
+                                <div className="relative flex items-center">
+                                  <Mail className="h-4 w-4 text-white/70 ml-3" />
+                                  <Input
+                                    {...field}
+                                    type="email"
+                                    placeholder="Enter your email"
+                                    className="bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 pl-10"
+                                  />
+                                </div>
+                              </div>
+                            </FormControl>
+                            <FormMessage className="text-red-300" />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={loginForm.control}
+                        name="password"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-white/90 text-sm font-medium">Password</FormLabel>
+                            <FormControl>
+                              <div className="relative">
+                                <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
+                                <div className="relative flex items-center">
+                                  <Lock className="h-4 w-4 text-white/70 ml-3" />
+                                  <Input
+                                    {...field}
+                                    type={showPassword ? "text" : "password"}
+                                    placeholder="Enter your password"
+                                    className="bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 pl-10 pr-10"
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-3 text-white/70 hover:text-white transition-colors"
+                                  >
+                                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                  </button>
+                                </div>
+                              </div>
+                            </FormControl>
+                            <FormMessage className="text-red-300" />
+                          </FormItem>
+                        )}
+                      />
+
+                      <Button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-full bg-white/20 backdrop-blur-sm border border-white/20 text-white hover:bg-white/30 transition-all duration-300 rounded-xl h-12"
+                      >
+                        {isLoading ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          "Sign In"
+                        )}
+                      </Button>
+                    </form>
+                  </Form>
+                </TabsContent>
+
+                {/* Signup Tab */}
+                <TabsContent value="signup" className="space-y-6">
+                  <Form {...signupForm}>
+                    <form onSubmit={signupForm.handleSubmit(onSignupSubmit)} className="space-y-4">
+                      <FormField
+                        control={signupForm.control}
+                        name="fullName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-white/90 text-sm font-medium">Full Name</FormLabel>
+                            <FormControl>
+                              <div className="relative">
+                                <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
+                                <div className="relative flex items-center">
+                                  <User className="h-4 w-4 text-white/70 ml-3" />
+                                  <Input
+                                    {...field}
+                                    type="text"
+                                    placeholder="Enter your full name"
+                                    className="bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 pl-10"
+                                  />
+                                </div>
+                              </div>
+                            </FormControl>
+                            <FormMessage className="text-red-300" />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={signupForm.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-white/90 text-sm font-medium">Email</FormLabel>
+                            <FormControl>
+                              <div className="relative">
+                                <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
+                                <div className="relative flex items-center">
+                                  <Mail className="h-4 w-4 text-white/70 ml-3" />
+                                  <Input
+                                    {...field}
+                                    type="email"
+                                    placeholder="Enter your email"
+                                    className="bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 pl-10"
+                                  />
+                                </div>
+                              </div>
+                            </FormControl>
+                            <FormMessage className="text-red-300" />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={signupForm.control}
+                        name="password"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-white/90 text-sm font-medium">Password</FormLabel>
+                            <FormControl>
+                              <div className="relative">
+                                <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
+                                <div className="relative flex items-center">
+                                  <Lock className="h-4 w-4 text-white/70 ml-3" />
+                                  <Input
+                                    {...field}
+                                    type={showPassword ? "text" : "password"}
+                                    placeholder="Create a password"
+                                    className="bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 pl-10 pr-10"
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-3 text-white/70 hover:text-white transition-colors"
+                                  >
+                                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                  </button>
+                                </div>
+                              </div>
+                            </FormControl>
+                            <FormDescription className="text-white/60 text-xs">
+                              Must be at least 8 characters
+                            </FormDescription>
+                            <FormMessage className="text-red-300" />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={signupForm.control}
+                        name="confirmPassword"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-white/90 text-sm font-medium">Confirm Password</FormLabel>
+                            <FormControl>
+                              <div className="relative">
+                                <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
+                                <div className="relative flex items-center">
+                                  <Lock className="h-4 w-4 text-white/70 ml-3" />
+                                  <Input
+                                    {...field}
+                                    type={showConfirmPassword ? "text" : "password"}
+                                    placeholder="Confirm your password"
+                                    className="bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 pl-10 pr-10"
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    className="absolute right-3 text-white/70 hover:text-white transition-colors"
+                                  >
+                                    {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                  </button>
+                                </div>
+                              </div>
+                            </FormControl>
+                            <FormMessage className="text-red-300" />
+                          </FormItem>
+                        )}
+                      />
+
+                      <Button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-full bg-white/20 backdrop-blur-sm border border-white/20 text-white hover:bg-white/30 transition-all duration-300 rounded-xl h-12"
+                      >
+                        {isLoading ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <>
+                            <UserPlus className="h-4 w-4 mr-2" />
+                            Create Account
+                          </>
+                        )}
+                      </Button>
+                    </form>
+                  </Form>
+                </TabsContent>
+              </Tabs>
+
+              {/* Verification Success Message */}
+              <AnimatePresence>
+                {verificationSent && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3 }}
+                    className="mt-6"
+                  >
+                    <Alert className="bg-green-500/10 backdrop-blur-sm border border-green-400/20">
+                      <CheckCircle2 className="h-4 w-4 text-green-400" />
+                      <AlertTitle className="text-green-400">Verification Email Sent</AlertTitle>
+                      <AlertDescription className="text-green-300">
+                        Please check your email to verify your account before signing in.
+                      </AlertDescription>
+                    </Alert>
                   </motion.div>
                 )}
               </AnimatePresence>
-            </div>
-          </div>
-
-          {/* Footer */}
-          <div className="mt-8 text-center">
-            <div className="relative">
-              <div className="absolute inset-0 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10"></div>
-              <div className="relative p-4">
-                <p className="text-white/60 text-xs">
-                  By continuing, you agree to our{" "}
-                  <a href="#" className="text-white/80 hover:text-white underline underline-offset-2">
-                    Terms of Service
-                  </a>{" "}
-                  and{" "}
-                  <a href="#" className="text-white/80 hover:text-white underline underline-offset-2">
-                    Privacy Policy
-                  </a>
-                  .
-                </p>
-              </div>
             </div>
           </div>
         </motion.div>
