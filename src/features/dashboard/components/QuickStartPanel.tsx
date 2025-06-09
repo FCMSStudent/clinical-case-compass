@@ -181,3 +181,4 @@ const QuickStartPanel: React.FC = () => {
 };
 
 export default QuickStartPanel;
+export { QuickStartPanel };
