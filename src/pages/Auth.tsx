@@ -59,11 +59,7 @@ const signupSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
   password: z
     .string()
-    .min(8, "Password must be at least 8 characters")
-    .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-      "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
-    ),
+    .min(8, "Password must be at least 8 characters"),
   confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords do not match",
@@ -383,8 +379,7 @@ const Auth = () => {
                                   </div>
                                 </FormControl>
                                 <FormDescription>
-                                  Must be at least 8 characters with uppercase, lowercase,
-                                  number, and special character
+                                  Must be at least 8 characters
                                 </FormDescription>
                                 <FormMessage />
                               </FormItem>
