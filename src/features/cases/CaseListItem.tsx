@@ -67,22 +67,21 @@ export const CaseListItem = memo<CaseListItemProps>(({ medicalCase, className, o
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
     >
-      <Card 
-        className={cn(
-          "group relative overflow-hidden transition-all duration-200",
-          "hover:shadow-lg hover:border-primary/20",
-          "focus-within:ring-2 focus-within:ring-primary/20 focus-within:ring-offset-2",
+      <div className="relative">
+        <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
+        <div className={cn(
+          "relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-4 group overflow-hidden transition-all duration-200",
+          "hover:bg-white/15 hover:border-white/30",
+          "focus-within:ring-2 focus-within:ring-white/20 focus-within:ring-offset-2",
           className
-        )}
-      >
-        {/* Gradient overlay on hover */}
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-primary/5 to-primary/10 opacity-0"
-          animate={{ opacity: isHovered ? 1 : 0 }}
-          transition={{ duration: 0.2 }}
-        />
+        )}>
+          {/* Gradient overlay on hover */}
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-r from-white/5 to-white/10 opacity-0"
+            animate={{ opacity: isHovered ? 1 : 0 }}
+            transition={{ duration: 0.2 }}
+          />
 
-        <CardContent className="p-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             {/* Left Section: Main Info */}
             <div className="flex-grow space-y-2 min-w-0">
@@ -92,16 +91,16 @@ export const CaseListItem = memo<CaseListItemProps>(({ medicalCase, className, o
                   transition={{ duration: 0.2 }}
                   className="mt-1"
                 >
-                  <Sparkles className="h-5 w-5 text-primary/60" />
+                  <Sparkles className="h-5 w-5 text-white/80" />
                 </motion.div>
                 <div className="space-y-1">
                   <h3 
-                    className="font-semibold text-lg truncate group-hover:text-primary transition-colors"
+                    className="font-semibold text-lg truncate text-white group-hover:text-white transition-colors"
                     title={medicalCase.title}
                   >
                     {medicalCase.title}
                   </h3>
-                  <div className="flex items-center text-sm text-muted-foreground">
+                  <div className="flex items-center text-sm text-white/70">
                     <User className="h-4 w-4 mr-2 flex-shrink-0" aria-hidden="true" />
                     <span className="truncate">
                       {medicalCase.patient.name}, {medicalCase.patient.age} y/o {medicalCase.patient.gender}
@@ -110,14 +109,14 @@ export const CaseListItem = memo<CaseListItemProps>(({ medicalCase, className, o
                 </div>
               </div>
 
-              <div className="flex items-start text-sm text-muted-foreground">
+              <div className="flex items-start text-sm text-white/70">
                 <Clipboard className="h-4 w-4 mr-2 mt-1 flex-shrink-0" aria-hidden="true" />
                 <p className="truncate" title={medicalCase.chiefComplaint}>
                   {medicalCase.chiefComplaint}
                 </p>
               </div>
               
-              <div className="flex items-center text-xs text-muted-foreground pt-1">
+              <div className="flex items-center text-xs text-white/60 pt-1">
                 <CalendarDays className="h-3 w-3 mr-1 flex-shrink-0" aria-hidden="true" />
                 <time dateTime={new Date(medicalCase.createdAt).toISOString()}>
                   Created: {format(new Date(medicalCase.createdAt), "MMM d, yyyy")}
@@ -147,7 +146,7 @@ export const CaseListItem = memo<CaseListItemProps>(({ medicalCase, className, o
                     </motion.span>
                   )}
                   {medicalCase.tags && medicalCase.tags.length > 1 && (
-                    <Badge variant="secondary" className="text-xs">
+                    <Badge variant="secondary" className="text-xs bg-white/10 border-white/20 text-white/80">
                       +{medicalCase.tags.length - 1}
                     </Badge>
                   )}
@@ -163,7 +162,7 @@ export const CaseListItem = memo<CaseListItemProps>(({ medicalCase, className, o
                         variant="ghost" 
                         size="sm" 
                         asChild 
-                        className="relative group/btn"
+                        className="relative group/btn bg-white/10 hover:bg-white/20 text-white"
                       >
                         <Link to={`/cases/${medicalCase.id}`}>
                           <Eye className="h-4 w-4 transition-transform group-hover/btn:scale-110" />
@@ -171,7 +170,9 @@ export const CaseListItem = memo<CaseListItemProps>(({ medicalCase, className, o
                         </Link>
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent>View Case Details</TooltipContent>
+                    <TooltipContent className="bg-white/10 backdrop-blur-md border border-white/20 text-white">
+                      View Case Details
+                    </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
 
@@ -182,7 +183,7 @@ export const CaseListItem = memo<CaseListItemProps>(({ medicalCase, className, o
                         variant="ghost" 
                         size="sm" 
                         asChild
-                        className="relative group/btn"
+                        className="relative group/btn bg-white/10 hover:bg-white/20 text-white"
                       >
                         <Link to={`/cases/edit/${medicalCase.id}`}>
                           <Edit className="h-4 w-4 transition-transform group-hover/btn:scale-110" />
@@ -190,7 +191,9 @@ export const CaseListItem = memo<CaseListItemProps>(({ medicalCase, className, o
                         </Link>
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent>Edit Case</TooltipContent>
+                    <TooltipContent className="bg-white/10 backdrop-blur-md border border-white/20 text-white">
+                      Edit Case
+                    </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
 
@@ -199,24 +202,26 @@ export const CaseListItem = memo<CaseListItemProps>(({ medicalCase, className, o
                     <Button 
                       variant="ghost" 
                       size="sm"
-                      className="relative group/btn text-destructive hover:text-destructive/80"
+                      className="relative group/btn bg-white/10 hover:bg-red-400/10 text-red-300 hover:text-red-200"
                     >
                       <Trash2 className="h-4 w-4 transition-transform group-hover/btn:scale-110" />
                       <span className="sr-only">Delete Case</span>
                     </Button>
                   </AlertDialogTrigger>
-                  <AlertDialogContent>
+                  <AlertDialogContent className="bg-white/10 backdrop-blur-md border border-white/20">
                     <AlertDialogHeader>
-                      <AlertDialogTitle>Delete Case</AlertDialogTitle>
-                      <AlertDialogDescription>
+                      <AlertDialogTitle className="text-white">Delete Case</AlertDialogTitle>
+                      <AlertDialogDescription className="text-white/70">
                         Are you sure you want to delete this case? This action cannot be undone.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogCancel className="bg-white/10 border-white/20 hover:bg-white/20 text-white">
+                        Cancel
+                      </AlertDialogCancel>
                       <AlertDialogAction 
                         onClick={confirmDelete}
-                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        className="bg-red-400/20 border-red-400/30 hover:bg-red-400/30 text-red-300"
                       >
                         Delete
                       </AlertDialogAction>
@@ -229,7 +234,7 @@ export const CaseListItem = memo<CaseListItemProps>(({ medicalCase, className, o
 
           {/* Hover indicator */}
           <motion.div
-            className="absolute right-0 top-1/2 -translate-y-1/2 text-primary/40"
+            className="absolute right-0 top-1/2 -translate-y-1/2 text-white/60"
             animate={{ 
               x: isHovered ? -8 : 0,
               opacity: isHovered ? 1 : 0 
@@ -238,8 +243,8 @@ export const CaseListItem = memo<CaseListItemProps>(({ medicalCase, className, o
           >
             <ChevronRight className="h-6 w-6" />
           </motion.div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </motion.div>
   );
 });
