@@ -65,35 +65,11 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      {/* Animated background elements */}
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+      {/* Subtle background elements */}
       <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-purple-600/5 to-blue-600/5 rounded-full blur-3xl animate-spin-slow"></div>
-      </div>
-
-      {/* Floating particles */}
-      <div className="absolute inset-0 overflow-hidden">
-        {[...Array(15)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-white/20 rounded-full"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: [0, -80, 0],
-              opacity: [0, 1, 0],
-            }}
-            transition={{
-              duration: 4 + Math.random() * 2,
-              repeat: Infinity,
-              delay: Math.random() * 3,
-            }}
-          />
-        ))}
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-200/20 dark:bg-blue-900/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-200/20 dark:bg-indigo-900/10 rounded-full blur-3xl"></div>
       </div>
 
       <div className="relative z-10 min-h-screen">
@@ -108,25 +84,25 @@ const Dashboard = () => {
                 transition={{ duration: 0.4, ease: "easeOut" }}
               >
                 <div className="relative">
-                  <div className="absolute inset-0 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10"></div>
-                  <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
+                  <div className="absolute inset-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/20 shadow-lg"></div>
+                  <div className="relative bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl border border-white/30 dark:border-slate-700/30 p-6 shadow-xl">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
-                        <div className="p-3 rounded-xl bg-gradient-to-br from-purple-500/20 to-blue-500/20 backdrop-blur-sm border border-white/20">
-                          <Sparkles className="h-6 w-6 text-white" />
+                        <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500/20 to-indigo-500/20 backdrop-blur-sm border border-blue-200/30 dark:border-blue-600/30">
+                          <Sparkles className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                         </div>
                         <div>
-                          <h3 className="text-lg font-semibold text-white mb-1">
+                          <h3 className="text-lg font-semibold text-slate-800 dark:text-white mb-1">
                             Welcome to Clinical Case Compass
                           </h3>
-                          <p className="text-white/70 text-sm">
+                          <p className="text-slate-600 dark:text-slate-300 text-sm">
                             Your medical learning journey starts here
                           </p>
                         </div>
                       </div>
                       <button
                         onClick={() => setShowWelcome(false)}
-                        className="text-white/60 hover:text-white/80 transition-colors"
+                        className="text-slate-400 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-200 transition-colors"
                       >
                         ✕
                       </button>
@@ -144,10 +120,10 @@ const Dashboard = () => {
             transition={{ duration: 0.5, ease: "easeOut" }}
             className="text-center space-y-2"
           >
-            <h1 className="text-4xl font-bold text-white">
+            <h1 className="text-4xl font-bold text-slate-800 dark:text-white">
               Dashboard
             </h1>
-            <p className="text-white/70">
+            <p className="text-slate-600 dark:text-slate-300">
               Your clinical learning overview
             </p>
           </motion.div>
@@ -169,17 +145,17 @@ const Dashboard = () => {
                   whileTap={{ scale: 0.98 }}
                   className="group relative"
                 >
-                  <div className="absolute inset-0 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10"></div>
-                  <div className={`relative bg-gradient-to-br ${action.color} backdrop-blur-md rounded-2xl border ${action.border} p-6 transition-all duration-300 group-hover:shadow-xl`}>
+                  <div className="absolute inset-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/20 shadow-lg"></div>
+                  <div className="relative bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl border border-white/30 dark:border-slate-700/30 p-6 transition-all duration-300 group-hover:shadow-xl">
                     <div className="text-center space-y-3">
-                      <div className="mx-auto w-12 h-12 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                        <IconComponent className="h-6 w-6 text-white" />
+                      <div className="mx-auto w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-900/30 backdrop-blur-sm border border-blue-200/50 dark:border-blue-600/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <IconComponent className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                       </div>
                       <div>
-                        <h3 className="font-semibold text-white text-sm">
+                        <h3 className="font-semibold text-slate-800 dark:text-white text-sm">
                           {action.title}
                         </h3>
-                        <p className="text-white/60 text-xs mt-1">
+                        <p className="text-slate-600 dark:text-slate-300 text-xs mt-1">
                           {action.description}
                         </p>
                       </div>
@@ -197,32 +173,32 @@ const Dashboard = () => {
             transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
           >
             <div className="relative">
-              <div className="absolute inset-0 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10"></div>
-              <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
+              <div className="absolute inset-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/20 shadow-lg"></div>
+              <div className="relative bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl border border-white/30 dark:border-slate-700/30 p-6 shadow-xl">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-white mb-1">
+                    <div className="text-3xl font-bold text-slate-800 dark:text-white mb-1">
                       {stats.totalCases}
                     </div>
-                    <div className="text-white/70 text-sm">Total Cases</div>
+                    <div className="text-slate-600 dark:text-slate-300 text-sm">Total Cases</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-white mb-1">
+                    <div className="text-3xl font-bold text-slate-800 dark:text-white mb-1">
                       {stats.casesWithLearningPoints}
                     </div>
-                    <div className="text-white/70 text-sm">With Insights</div>
+                    <div className="text-slate-600 dark:text-slate-300 text-sm">With Insights</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-white mb-1">
+                    <div className="text-3xl font-bold text-slate-800 dark:text-white mb-1">
                       {stats.totalResources}
                     </div>
-                    <div className="text-white/70 text-sm">Resources</div>
+                    <div className="text-slate-600 dark:text-slate-300 text-sm">Resources</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-white mb-1">
+                    <div className="text-3xl font-bold text-slate-800 dark:text-white mb-1">
                       {stats.thisWeekCases}
                     </div>
-                    <div className="text-white/70 text-sm">This Week</div>
+                    <div className="text-slate-600 dark:text-slate-300 text-sm">This Week</div>
                   </div>
                 </div>
               </div>
@@ -236,14 +212,14 @@ const Dashboard = () => {
             transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}
           >
             <div className="relative">
-              <div className="absolute inset-0 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10"></div>
-              <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
+              <div className="absolute inset-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/20 shadow-lg"></div>
+              <div className="relative bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl border border-white/30 dark:border-slate-700/30 p-6 shadow-xl">
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20">
-                      <Activity className="h-5 w-5 text-white" />
+                    <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/30 backdrop-blur-sm border border-blue-200/50 dark:border-blue-600/30">
+                      <Activity className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                     </div>
-                    <h3 className="text-lg font-semibold text-white">Quick Search</h3>
+                    <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Quick Search</h3>
                   </div>
                   <SearchPanel 
                     value=""
@@ -254,7 +230,7 @@ const Dashboard = () => {
                     {["Recent cases", "Cardiology", "Learning points", "Resources"].map((tag) => (
                       <span
                         key={tag}
-                        className="px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white/80 text-sm cursor-pointer hover:bg-white/20 transition-colors"
+                        className="px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/30 backdrop-blur-sm border border-blue-200/50 dark:border-blue-600/30 text-slate-700 dark:text-slate-200 text-sm cursor-pointer hover:bg-blue-100 dark:hover:bg-blue-800/50 transition-colors"
                       >
                         {tag}
                       </span>
@@ -275,13 +251,13 @@ const Dashboard = () => {
               className="lg:col-span-2"
             >
               <div className="relative h-full">
-                <div className="absolute inset-0 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10"></div>
-                <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 h-full">
+                <div className="absolute inset-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/20 shadow-lg"></div>
+                <div className="relative bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl border border-white/30 dark:border-slate-700/30 p-6 h-full shadow-xl">
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20">
-                      <Activity className="h-5 w-5 text-white" />
+                    <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/30 backdrop-blur-sm border border-blue-200/50 dark:border-blue-600/30">
+                      <Activity className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                     </div>
-                    <h3 className="text-lg font-semibold text-white">Recent Activity</h3>
+                    <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Recent Activity</h3>
                   </div>
                   <RecentActivityList />
                 </div>
@@ -295,13 +271,13 @@ const Dashboard = () => {
               transition={{ duration: 0.5, delay: 0.5, ease: "easeOut" }}
             >
               <div className="relative h-full">
-                <div className="absolute inset-0 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10"></div>
-                <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 h-full">
+                <div className="absolute inset-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/20 shadow-lg"></div>
+                <div className="relative bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl border border-white/30 dark:border-slate-700/30 p-6 h-full shadow-xl">
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20">
-                      <TrendingUp className="h-5 w-5 text-white" />
+                    <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/30 backdrop-blur-sm border border-blue-200/50 dark:border-blue-600/30">
+                      <TrendingUp className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                     </div>
-                    <h3 className="text-lg font-semibold text-white">Progress</h3>
+                    <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Progress</h3>
                   </div>
                   <ProgressChart stats={stats} />
                 </div>
@@ -317,13 +293,13 @@ const Dashboard = () => {
               transition={{ duration: 0.5, delay: 0.6, ease: "easeOut" }}
             >
               <div className="relative">
-                <div className="absolute inset-0 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10"></div>
-                <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
+                <div className="absolute inset-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/20 shadow-lg"></div>
+                <div className="relative bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl border border-white/30 dark:border-slate-700/30 p-6 shadow-xl">
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20">
-                      <Target className="h-5 w-5 text-white" />
+                    <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/30 backdrop-blur-sm border border-blue-200/50 dark:border-blue-600/30">
+                      <Target className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                     </div>
-                    <h3 className="text-lg font-semibold text-white">Specialty Focus</h3>
+                    <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Specialty Focus</h3>
                   </div>
                   <SpecialtyProgress data={specialtyProgress} />
                 </div>
