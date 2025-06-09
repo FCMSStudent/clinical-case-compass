@@ -35,39 +35,39 @@ const StatCard = ({
 }: StatCardProps) => {
   const colorClasses = {
     blue: {
-      bg: "bg-blue-500/10",
-      text: "text-blue-600",
-      border: "border-blue-200",
-      gradient: "from-blue-500/20 to-blue-600/20",
-      progress: "bg-blue-500"
+      bg: "bg-blue-400/20",
+      text: "text-blue-300",
+      border: "border-blue-300/30",
+      gradient: "from-blue-400/30 to-blue-500/30",
+      progress: "bg-blue-300"
     },
     green: {
-      bg: "bg-green-500/10",
-      text: "text-green-600",
-      border: "border-green-200",
-      gradient: "from-green-500/20 to-green-600/20",
-      progress: "bg-green-500"
+      bg: "bg-green-400/20",
+      text: "text-green-300",
+      border: "border-green-300/30",
+      gradient: "from-green-400/30 to-green-500/30",
+      progress: "bg-green-300"
     },
     orange: {
-      bg: "bg-orange-500/10",
-      text: "text-orange-600",
-      border: "border-orange-200",
-      gradient: "from-orange-500/20 to-orange-600/20",
-      progress: "bg-orange-500"
+      bg: "bg-orange-400/20",
+      text: "text-orange-300",
+      border: "border-orange-300/30",
+      gradient: "from-orange-400/30 to-orange-500/30",
+      progress: "bg-orange-300"
     },
     purple: {
-      bg: "bg-purple-500/10",
-      text: "text-purple-600",
-      border: "border-purple-200",
-      gradient: "from-purple-500/20 to-purple-600/20",
-      progress: "bg-purple-500"
+      bg: "bg-purple-400/20",
+      text: "text-purple-300",
+      border: "border-purple-300/30",
+      gradient: "from-purple-400/30 to-purple-500/30",
+      progress: "bg-purple-300"
     },
     indigo: {
-      bg: "bg-indigo-500/10",
-      text: "text-indigo-600",
-      border: "border-indigo-200",
-      gradient: "from-indigo-500/20 to-indigo-600/20",
-      progress: "bg-indigo-500"
+      bg: "bg-indigo-400/20",
+      text: "text-indigo-300",
+      border: "border-indigo-300/30",
+      gradient: "from-indigo-400/30 to-indigo-500/30",
+      progress: "bg-indigo-300"
     }
   };
 
@@ -78,89 +78,93 @@ const StatCard = ({
       whileHover={{ scale: 1.02, y: -2 }}
       transition={{ duration: 0.2, ease: "easeOut" }}
     >
-      <Card className={cn(
-        "group relative overflow-hidden border-0 bg-gradient-to-br from-card via-card to-card/90 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300",
-        "before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/5 before:to-transparent before:translate-x-[-100%] before:group-hover:translate-x-[100%] before:transition-transform before:duration-700",
-        className
-      )}>
-        <CardHeader className="flex flex-row items-center justify-between pb-4">
-          <div className="space-y-1">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              {title}
-            </CardTitle>
-            {subtitle && (
-              <p className="text-xs text-muted-foreground/70">{subtitle}</p>
-            )}
-          </div>
-          <div className={cn(
-            "relative h-12 w-12 rounded-xl flex items-center justify-center border transition-all duration-300 group-hover:scale-110",
-            currentColor.bg,
-            currentColor.text,
-            currentColor.border
-          )}>
-            <div className={cn(
-              "absolute inset-0 rounded-xl bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-300",
-              currentColor.gradient
-            )} />
-            <div className="relative z-10">
-              {icon}
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <div className="flex items-baseline gap-2">
-              <motion.span 
-                className="text-3xl font-bold"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3, delay: 0.1 }}
-              >
-                {value}
-              </motion.span>
-              {trend && (
-                <motion.div
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, delay: 0.2 }}
-                  className="flex items-center gap-1"
-                >
-                  <TrendingUp className={cn(
-                    "h-4 w-4",
-                    trend.isPositive ? "text-green-600" : "text-red-600 rotate-180"
-                  )} />
-                  <span className={cn(
-                    "text-sm font-medium",
-                    trend.isPositive ? "text-green-600" : "text-red-600"
-                  )}>
-                    {trend.value}%
-                  </span>
-                </motion.div>
+      <div className="relative">
+        <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
+        <div className={cn(
+          "relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 group overflow-hidden transition-all duration-300",
+          "hover:bg-white/15 hover:border-white/30",
+          "before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/5 before:to-transparent before:translate-x-[-100%] before:group-hover:translate-x-[100%] before:transition-transform before:duration-700",
+          className
+        )}>
+          <div className="flex flex-row items-center justify-between pb-4">
+            <div className="space-y-1">
+              <h3 className="text-sm font-medium text-white/80">
+                {title}
+              </h3>
+              {subtitle && (
+                <p className="text-xs text-white/60">{subtitle}</p>
               )}
             </div>
-            {description && (
-              <p className="text-sm text-muted-foreground">{description}</p>
-            )}
-          </div>
-          
-          {progress !== undefined && (
-            <div className="space-y-2">
-              <div className="flex justify-between text-xs">
-                <span className="text-muted-foreground">Progress</span>
-                <span className="font-medium">{Math.round(progress)}%</span>
-              </div>
-              <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
-                <motion.div
-                  className={cn("h-2 rounded-full", currentColor.progress)}
-                  initial={{ width: 0 }}
-                  animate={{ width: `${progress}%` }}
-                  transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
-                />
+            <div className={cn(
+              "relative h-12 w-12 rounded-xl flex items-center justify-center border transition-all duration-300 group-hover:scale-110",
+              currentColor.bg,
+              currentColor.text,
+              currentColor.border
+            )}>
+              <div className={cn(
+                "absolute inset-0 rounded-xl bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-300",
+                currentColor.gradient
+              )} />
+              <div className="relative z-10">
+                {icon}
               </div>
             </div>
-          )}
-        </CardContent>
-      </Card>
+          </div>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <div className="flex items-baseline gap-2">
+                <motion.span 
+                  className="text-3xl font-bold text-white"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3, delay: 0.1 }}
+                >
+                  {value}
+                </motion.span>
+                {trend && (
+                  <motion.div
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: 0.2 }}
+                    className="flex items-center gap-1"
+                  >
+                    <TrendingUp className={cn(
+                      "h-4 w-4",
+                      trend.isPositive ? "text-green-300" : "text-red-300 rotate-180"
+                    )} />
+                    <span className={cn(
+                      "text-sm font-medium",
+                      trend.isPositive ? "text-green-300" : "text-red-300"
+                    )}>
+                      {trend.value}%
+                    </span>
+                  </motion.div>
+                )}
+              </div>
+              {description && (
+                <p className="text-sm text-white/70">{description}</p>
+              )}
+            </div>
+            
+            {progress !== undefined && (
+              <div className="space-y-2">
+                <div className="flex justify-between text-xs">
+                  <span className="text-white/70">Progress</span>
+                  <span className="font-medium text-white">{Math.round(progress)}%</span>
+                </div>
+                <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden">
+                  <motion.div
+                    className={cn("h-2 rounded-full", currentColor.progress)}
+                    initial={{ width: 0 }}
+                    animate={{ width: `${progress}%` }}
+                    transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
     </motion.div>
   );
 };
@@ -182,16 +186,15 @@ export const StatCards = ({ stats, isLoading }: StatCardsProps) => {
     return (
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         {[...Array(4)].map((_, i) => (
-          <Card key={i} className="animate-pulse">
-            <CardHeader className="pb-4">
-              <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>
-              <div className="h-10 w-10 bg-muted rounded-xl"></div>
-            </CardHeader>
-            <CardContent>
-              <div className="h-8 bg-muted rounded w-1/2 mb-2"></div>
-              <div className="h-4 bg-muted rounded w-full"></div>
-            </CardContent>
-          </Card>
+          <div key={i} className="relative">
+            <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
+            <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 animate-pulse">
+              <div className="h-4 bg-white/20 rounded w-3/4 mb-2"></div>
+              <div className="h-10 w-10 bg-white/20 rounded-xl"></div>
+              <div className="h-8 bg-white/20 rounded w-1/2 mb-2 mt-4"></div>
+              <div className="h-4 bg-white/20 rounded w-full"></div>
+            </div>
+          </div>
         ))}
       </div>
     );
@@ -205,10 +208,10 @@ export const StatCards = ({ stats, isLoading }: StatCardsProps) => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Key Metrics</h2>
-          <p className="text-muted-foreground">Your learning progress at a glance</p>
+          <h2 className="text-2xl font-bold text-white">Key Metrics</h2>
+          <p className="text-white/70">Your learning progress at a glance</p>
         </div>
-        <Badge variant="outline" className="border-primary/30 text-primary">
+        <Badge variant="outline" className="border-white/30 text-white bg-white/10">
           <Target className="h-3 w-3 mr-1" />
           Real-time data
         </Badge>
