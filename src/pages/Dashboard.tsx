@@ -65,97 +65,139 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-      {/* Subtle background elements */}
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-blue-100 dark:from-slate-900 dark:via-slate-800 dark:to-blue-900">
+      {/* Medical-themed background elements */}
       <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-200/20 dark:bg-blue-900/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-200/20 dark:bg-indigo-900/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-100/30 dark:bg-blue-800/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-50/40 dark:bg-blue-900/10 rounded-full blur-3xl"></div>
       </div>
 
       <div className="relative z-10 min-h-screen">
-        <div className="w-full max-w-6xl mx-auto space-y-6 p-6">
-          {/* Simplified Welcome Banner */}
-          <AnimatePresence>
-            {showWelcome && (
-              <motion.div
-                initial={{ opacity: 0, y: -20, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -20, scale: 0.95 }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
-              >
-                <div className="relative">
-                  <div className="absolute inset-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/20 shadow-lg"></div>
-                  <div className="relative bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl border border-white/30 dark:border-slate-700/30 p-6 shadow-xl">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4">
-                        <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500/20 to-indigo-500/20 backdrop-blur-sm border border-blue-200/30 dark:border-blue-600/30">
-                          <Sparkles className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-                        </div>
-                        <div>
-                          <h3 className="text-lg font-semibold text-slate-800 dark:text-white mb-1">
-                            Welcome to Clinical Case Compass
-                          </h3>
-                          <p className="text-slate-600 dark:text-slate-300 text-sm">
-                            Your medical learning journey starts here
-                          </p>
-                        </div>
-                      </div>
-                      <button
-                        onClick={() => setShowWelcome(false)}
-                        className="text-slate-400 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-200 transition-colors"
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* Simplified Header */}
+        <div className="w-full max-w-7xl mx-auto space-y-6 p-6">
+          {/* Medical Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
-            className="text-center space-y-2"
+            className="text-center space-y-3"
           >
-            <h1 className="text-4xl font-bold text-slate-800 dark:text-white">
-              Dashboard
-            </h1>
-            <p className="text-slate-600 dark:text-slate-300">
-              Your clinical learning overview
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="p-3 rounded-2xl bg-blue-500/10 backdrop-blur-sm border border-blue-200/30 dark:border-blue-600/30">
+                <Activity className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+              </div>
+              <h1 className="text-4xl font-bold text-blue-900 dark:text-blue-100">
+                Clinical Dashboard
+              </h1>
+            </div>
+            <p className="text-blue-700 dark:text-blue-300 text-lg">
+              Medical Learning & Case Management
             </p>
           </motion.div>
 
-          {/* Simplified Quick Actions */}
+          {/* Core Medical Metrics */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+          >
+            <div className="relative">
+              <div className="absolute inset-0 bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl rounded-3xl border border-blue-200/30 dark:border-blue-700/30 shadow-xl"></div>
+              <div className="relative bg-white/95 dark:bg-slate-800/95 backdrop-blur-md rounded-3xl border border-blue-300/40 dark:border-blue-600/40 p-8 shadow-2xl">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                  <div className="text-center">
+                    <div className="text-4xl font-bold text-blue-900 dark:text-blue-100 mb-2">
+                      {stats.totalCases}
+                    </div>
+                    <div className="text-blue-700 dark:text-blue-300 text-sm font-medium">Total Cases</div>
+                    <div className="text-blue-500 dark:text-blue-400 text-xs mt-1">Medical Records</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-4xl font-bold text-blue-900 dark:text-blue-100 mb-2">
+                      {stats.casesWithLearningPoints}
+                    </div>
+                    <div className="text-blue-700 dark:text-blue-300 text-sm font-medium">With Insights</div>
+                    <div className="text-blue-500 dark:text-blue-400 text-xs mt-1">Learning Points</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-4xl font-bold text-blue-900 dark:text-blue-100 mb-2">
+                      {stats.totalResources}
+                    </div>
+                    <div className="text-blue-700 dark:text-blue-300 text-sm font-medium">Resources</div>
+                    <div className="text-blue-500 dark:text-blue-400 text-xs mt-1">Study Materials</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-4xl font-bold text-blue-900 dark:text-blue-100 mb-2">
+                      {stats.thisWeekCases}
+                    </div>
+                    <div className="text-blue-700 dark:text-blue-300 text-sm font-medium">This Week</div>
+                    <div className="text-blue-500 dark:text-blue-400 text-xs mt-1">Recent Activity</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Essential Medical Actions */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
             className="grid grid-cols-2 md:grid-cols-4 gap-4"
           >
-            {quickActions.map((action, index) => {
+            {[
+              {
+                title: "Add Case",
+                description: "Record new patient case",
+                icon: Plus,
+                action: "/cases/new",
+                color: "from-blue-500/20 to-blue-600/20",
+                border: "border-blue-300/50 dark:border-blue-600/50"
+              },
+              {
+                title: "View Cases",
+                description: "Browse all cases",
+                icon: BookOpen,
+                action: "/cases",
+                color: "from-blue-500/20 to-indigo-500/20",
+                border: "border-blue-300/50 dark:border-blue-600/50"
+              },
+              {
+                title: "Search",
+                description: "Find specific cases",
+                icon: Activity,
+                action: "/search",
+                color: "from-indigo-500/20 to-purple-500/20",
+                border: "border-indigo-300/50 dark:border-indigo-600/50"
+              },
+              {
+                title: "Settings",
+                description: "Configure preferences",
+                icon: Settings,
+                action: "/settings",
+                color: "from-purple-500/20 to-blue-500/20",
+                border: "border-purple-300/50 dark:border-purple-600/50"
+              }
+            ].map((action, index) => {
               const IconComponent = action.icon;
               return (
                 <motion.button
                   key={action.title}
                   onClick={() => navigate(action.action)}
-                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileHover={{ scale: 1.02, y: -2 }}
                   whileTap={{ scale: 0.98 }}
                   className="group relative"
                 >
-                  <div className="absolute inset-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/20 shadow-lg"></div>
-                  <div className="relative bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl border border-white/30 dark:border-slate-700/30 p-6 transition-all duration-300 group-hover:shadow-xl">
-                    <div className="text-center space-y-3">
-                      <div className="mx-auto w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-900/30 backdrop-blur-sm border border-blue-200/50 dark:border-blue-600/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                        <IconComponent className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                  <div className="absolute inset-0 bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl rounded-2xl border border-blue-200/30 dark:border-blue-700/30 shadow-lg"></div>
+                  <div className={`relative bg-gradient-to-br ${action.color} backdrop-blur-md rounded-2xl border ${action.border} p-6 transition-all duration-300 group-hover:shadow-xl`}>
+                    <div className="text-center space-y-4">
+                      <div className="mx-auto w-14 h-14 rounded-2xl bg-white/80 dark:bg-slate-700/80 backdrop-blur-sm border border-white/50 dark:border-slate-600/50 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <IconComponent className="h-7 w-7 text-blue-700 dark:text-blue-300" />
                       </div>
                       <div>
-                        <h3 className="font-semibold text-slate-800 dark:text-white text-sm">
+                        <h3 className="font-semibold text-blue-900 dark:text-blue-100 text-base">
                           {action.title}
                         </h3>
-                        <p className="text-slate-600 dark:text-slate-300 text-xs mt-1">
+                        <p className="text-blue-700 dark:text-blue-300 text-sm mt-1">
                           {action.description}
                         </p>
                       </div>
@@ -166,71 +208,32 @@ const Dashboard = () => {
             })}
           </motion.div>
 
-          {/* Simplified Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
-          >
-            <div className="relative">
-              <div className="absolute inset-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/20 shadow-lg"></div>
-              <div className="relative bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl border border-white/30 dark:border-slate-700/30 p-6 shadow-xl">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-slate-800 dark:text-white mb-1">
-                      {stats.totalCases}
-                    </div>
-                    <div className="text-slate-600 dark:text-slate-300 text-sm">Total Cases</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-slate-800 dark:text-white mb-1">
-                      {stats.casesWithLearningPoints}
-                    </div>
-                    <div className="text-slate-600 dark:text-slate-300 text-sm">With Insights</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-slate-800 dark:text-white mb-1">
-                      {stats.totalResources}
-                    </div>
-                    <div className="text-slate-600 dark:text-slate-300 text-sm">Resources</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-slate-800 dark:text-white mb-1">
-                      {stats.thisWeekCases}
-                    </div>
-                    <div className="text-slate-600 dark:text-slate-300 text-sm">This Week</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Simplified Search */}
+          {/* Medical Search Interface */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}
           >
             <div className="relative">
-              <div className="absolute inset-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/20 shadow-lg"></div>
-              <div className="relative bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl border border-white/30 dark:border-slate-700/30 p-6 shadow-xl">
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/30 backdrop-blur-sm border border-blue-200/50 dark:border-blue-600/30">
-                      <Activity className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+              <div className="absolute inset-0 bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl rounded-3xl border border-blue-200/30 dark:border-blue-700/30 shadow-xl"></div>
+              <div className="relative bg-white/95 dark:bg-slate-800/95 backdrop-blur-md rounded-3xl border border-blue-300/40 dark:border-blue-600/40 p-8 shadow-2xl">
+                <div className="space-y-6">
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 rounded-2xl bg-blue-500/10 backdrop-blur-sm border border-blue-200/30 dark:border-blue-600/30">
+                      <Activity className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                     </div>
-                    <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Quick Search</h3>
+                    <h3 className="text-xl font-semibold text-blue-900 dark:text-blue-100">Clinical Search</h3>
                   </div>
                   <SearchPanel 
                     value=""
                     onChange={() => {}}
-                    placeholder="Search cases, symptoms, or learning points..."
+                    placeholder="Search cases, symptoms, diagnoses, or learning points..."
                   />
-                  <div className="flex flex-wrap gap-2">
-                    {["Recent cases", "Cardiology", "Learning points", "Resources"].map((tag) => (
+                  <div className="flex flex-wrap gap-3">
+                    {["Recent cases", "Cardiology", "Neurology", "Emergency", "Learning points", "Resources"].map((tag) => (
                       <span
                         key={tag}
-                        className="px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/30 backdrop-blur-sm border border-blue-200/50 dark:border-blue-600/30 text-slate-700 dark:text-slate-200 text-sm cursor-pointer hover:bg-blue-100 dark:hover:bg-blue-800/50 transition-colors"
+                        className="px-4 py-2 rounded-full bg-blue-50 dark:bg-blue-900/30 backdrop-blur-sm border border-blue-200/50 dark:border-blue-600/50 text-blue-700 dark:text-blue-200 text-sm font-medium cursor-pointer hover:bg-blue-100 dark:hover:bg-blue-800/50 transition-colors"
                       >
                         {tag}
                       </span>
@@ -241,9 +244,9 @@ const Dashboard = () => {
             </div>
           </motion.div>
 
-          {/* Simplified Content Grid */}
+          {/* Medical Content Grid */}
           <div className="grid gap-6 lg:grid-cols-3">
-            {/* Recent Activity */}
+            {/* Recent Medical Activity */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -251,33 +254,33 @@ const Dashboard = () => {
               className="lg:col-span-2"
             >
               <div className="relative h-full">
-                <div className="absolute inset-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/20 shadow-lg"></div>
-                <div className="relative bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl border border-white/30 dark:border-slate-700/30 p-6 h-full shadow-xl">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/30 backdrop-blur-sm border border-blue-200/50 dark:border-blue-600/30">
-                      <Activity className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                <div className="absolute inset-0 bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl rounded-3xl border border-blue-200/30 dark:border-blue-700/30 shadow-xl"></div>
+                <div className="relative bg-white/95 dark:bg-slate-800/95 backdrop-blur-md rounded-3xl border border-blue-300/40 dark:border-blue-600/40 p-8 h-full shadow-2xl">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="p-3 rounded-2xl bg-blue-500/10 backdrop-blur-sm border border-blue-200/30 dark:border-blue-600/30">
+                      <Activity className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                     </div>
-                    <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Recent Activity</h3>
+                    <h3 className="text-xl font-semibold text-blue-900 dark:text-blue-100">Recent Clinical Activity</h3>
                   </div>
                   <RecentActivityList />
                 </div>
               </div>
             </motion.div>
 
-            {/* Progress Overview */}
+            {/* Medical Progress */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.5, ease: "easeOut" }}
             >
               <div className="relative h-full">
-                <div className="absolute inset-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/20 shadow-lg"></div>
-                <div className="relative bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl border border-white/30 dark:border-slate-700/30 p-6 h-full shadow-xl">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/30 backdrop-blur-sm border border-blue-200/50 dark:border-blue-600/30">
-                      <TrendingUp className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                <div className="absolute inset-0 bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl rounded-3xl border border-blue-200/30 dark:border-blue-700/30 shadow-xl"></div>
+                <div className="relative bg-white/95 dark:bg-slate-800/95 backdrop-blur-md rounded-3xl border border-blue-300/40 dark:border-blue-600/40 p-8 h-full shadow-2xl">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="p-3 rounded-2xl bg-blue-500/10 backdrop-blur-sm border border-blue-200/30 dark:border-blue-600/30">
+                      <TrendingUp className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                     </div>
-                    <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Progress</h3>
+                    <h3 className="text-xl font-semibold text-blue-900 dark:text-blue-100">Learning Progress</h3>
                   </div>
                   <ProgressChart stats={stats} />
                 </div>
@@ -285,7 +288,7 @@ const Dashboard = () => {
             </motion.div>
           </div>
 
-          {/* Specialty Progress (simplified) */}
+          {/* Medical Specialty Focus */}
           {specialtyProgress.length > 0 && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -293,13 +296,13 @@ const Dashboard = () => {
               transition={{ duration: 0.5, delay: 0.6, ease: "easeOut" }}
             >
               <div className="relative">
-                <div className="absolute inset-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700/20 shadow-lg"></div>
-                <div className="relative bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl border border-white/30 dark:border-slate-700/30 p-6 shadow-xl">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/30 backdrop-blur-sm border border-blue-200/50 dark:border-blue-600/30">
-                      <Target className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                <div className="absolute inset-0 bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl rounded-3xl border border-blue-200/30 dark:border-blue-700/30 shadow-xl"></div>
+                <div className="relative bg-white/95 dark:bg-slate-800/95 backdrop-blur-md rounded-3xl border border-blue-300/40 dark:border-blue-600/40 p-8 shadow-2xl">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="p-3 rounded-2xl bg-blue-500/10 backdrop-blur-sm border border-blue-200/30 dark:border-blue-600/30">
+                      <Target className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                     </div>
-                    <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Specialty Focus</h3>
+                    <h3 className="text-xl font-semibold text-blue-900 dark:text-blue-100">Specialty Focus Areas</h3>
                   </div>
                   <SpecialtyProgress data={specialtyProgress} />
                 </div>
