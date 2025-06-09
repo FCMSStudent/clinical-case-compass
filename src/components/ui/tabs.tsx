@@ -1,6 +1,6 @@
 import * as React from "react"
 import * as TabsPrimitive from "@radix-ui/react-tabs"
-import { AlertCircle } from "lucide-react" // Changed from AlertCircleIcon to AlertCircle as per lucide-react examples
+import { AlertCircle } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
@@ -13,7 +13,7 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground",
+      "inline-flex h-10 items-center justify-center rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 p-1 text-white/70",
       className
     )}
     {...props}
@@ -21,8 +21,7 @@ const TabsList = React.forwardRef<
 ))
 TabsList.displayName = TabsPrimitive.List.displayName
 
-interface TabsTriggerProps
-  extends React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> {
+interface TabsTriggerProps extends React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> {
   hasError?: boolean
 }
 
@@ -33,14 +32,14 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm",
-      hasError && "text-destructive", // Apply text color for error state
+      "inline-flex items-center justify-center whitespace-nowrap rounded-lg px-3 py-1 text-sm font-medium text-white/70 ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-white/20 data-[state=active]:text-white data-[state=active]:shadow-sm",
+      hasError && "text-red-300", // Apply text color for error state
       className
     )}
     {...props}
   >
     {children}
-    {hasError && <AlertCircle className="ml-2 h-4 w-4 text-destructive" />}
+    {hasError && <AlertCircle className="ml-2 h-4 w-4 text-red-300" />}
   </TabsPrimitive.Trigger>
 ))
 TabsTrigger.displayName = TabsPrimitive.Trigger.displayName
@@ -52,7 +51,7 @@ const TabsContent = React.forwardRef<
   <TabsPrimitive.Content
     ref={ref}
     className={cn(
-      "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+      "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:ring-offset-2",
       className
     )}
     {...props}
