@@ -46,6 +46,7 @@ import {
   UserPlus,
   AlertCircle,
   CheckCircle2,
+  Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -155,326 +156,393 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-medical-50 via-background to-medical-100 dark:from-background dark:via-background dark:to-medical-950 py-12 px-4 sm:px-6 lg:px-8">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-md"
-      >
-        <Card className="shadow-xl border-2">
-          <CardHeader className="space-y-2 pb-6 text-center">
-            <motion.div
-              initial={{ scale: 0.8 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.2, type: "spring" }}
-              className="mx-auto mb-4 h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center"
-            >
-              <UserPlus className="h-8 w-8 text-primary" />
-            </motion.div>
-            <CardTitle className="text-3xl font-semibold tracking-tight">
-              Medica
-            </CardTitle>
-            <CardDescription className="text-sm text-muted-foreground">
-              Sign in or create an account to manage your medical cases
-            </CardDescription>
-          </CardHeader>
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      {/* Animated background elements */}
+      <div className="absolute inset-0">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-purple-600/10 to-blue-600/10 rounded-full blur-3xl animate-spin-slow"></div>
+      </div>
 
-          <CardContent>
-            <Tabs
-              value={activeTab}
-              onValueChange={setActiveTab}
-              className="w-full"
-            >
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="login" className="flex items-center gap-2">
-                  <Lock className="h-4 w-4" />
-                  Login
-                </TabsTrigger>
-                <TabsTrigger value="signup" className="flex items-center gap-2">
-                  <UserPlus className="h-4 w-4" />
-                  Sign Up
-                </TabsTrigger>
-              </TabsList>
+      {/* Floating particles */}
+      <div className="absolute inset-0 overflow-hidden">
+        {[...Array(20)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 bg-white/30 rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              y: [0, -100, 0],
+              opacity: [0, 1, 0],
+            }}
+            transition={{
+              duration: 3 + Math.random() * 2,
+              repeat: Infinity,
+              delay: Math.random() * 2,
+            }}
+          />
+        ))}
+      </div>
 
+      <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8, y: 50 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="w-full max-w-md"
+        >
+          {/* Main glassmorphic card */}
+          <div className="relative">
+            {/* Backdrop blur layer */}
+            <div className="absolute inset-0 bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl"></div>
+            
+            {/* Main content */}
+            <div className="relative bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 p-8 shadow-2xl">
+              {/* Header */}
+              <div className="text-center mb-8">
+                <motion.div
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ duration: 0.6, delay: 0.2, type: "spring" }}
+                  className="mx-auto mb-6 w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500/20 to-blue-500/20 backdrop-blur-sm border border-white/20 flex items-center justify-center"
+                >
+                  <Sparkles className="h-10 w-10 text-white" />
+                </motion.div>
+                
+                <motion.h1
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                  className="text-4xl font-bold text-white mb-2 tracking-tight"
+                >
+                  Medica
+                </motion.h1>
+                
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.6 }}
+                  className="text-white/70 text-sm"
+                >
+                  Sign in or create an account to manage your medical cases
+                </motion.p>
+              </div>
+
+              {/* Tabs */}
+              <div className="mb-8">
+                <div className="relative">
+                  {/* Tab background */}
+                  <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20"></div>
+                  
+                  <div className="relative flex p-1">
+                    <button
+                      onClick={() => setActiveTab("login")}
+                      className={cn(
+                        "flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all duration-300 relative",
+                        activeTab === "login"
+                          ? "text-white bg-white/20 backdrop-blur-sm shadow-lg"
+                          : "text-white/70 hover:text-white/90"
+                      )}
+                    >
+                      <div className="flex items-center justify-center gap-2">
+                        <Lock className="h-4 w-4" />
+                        Login
+                      </div>
+                    </button>
+                    
+                    <button
+                      onClick={() => setActiveTab("signup")}
+                      className={cn(
+                        "flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all duration-300 relative",
+                        activeTab === "signup"
+                          ? "text-white bg-white/20 backdrop-blur-sm shadow-lg"
+                          : "text-white/70 hover:text-white/90"
+                      )}
+                    >
+                      <div className="flex items-center justify-center gap-2">
+                        <UserPlus className="h-4 w-4" />
+                        Sign Up
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Form content */}
               <AnimatePresence mode="wait">
-                <TabsContent value="login" className="mt-6">
+                {activeTab === "login" ? (
                   <motion.div
+                    key="login"
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 20 }}
-                    transition={{ duration: 0.2 }}
+                    transition={{ duration: 0.3 }}
                   >
                     <Form {...loginForm}>
-                      <form
-                        onSubmit={loginForm.handleSubmit(onLoginSubmit)}
-                        className="space-y-4"
-                      >
+                      <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-6">
                         <FormField
                           control={loginForm.control}
                           name="email"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Email</FormLabel>
+                              <FormLabel className="text-white/90 text-sm font-medium">Email</FormLabel>
                               <FormControl>
                                 <div className="relative">
-                                  <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                                  <Input
-                                    placeholder="m.smith@example.com"
-                                    className="pl-9"
-                                    {...field}
-                                    disabled={isLoading}
-                                  />
+                                  <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
+                                  <div className="relative flex items-center">
+                                    <Mail className="absolute left-4 h-4 w-4 text-white/60" />
+                                    <Input
+                                      placeholder="m.smith@example.com"
+                                      className="pl-12 pr-4 py-3 bg-transparent border-0 text-white placeholder:text-white/50 focus:ring-0 focus:outline-none"
+                                      {...field}
+                                      disabled={isLoading}
+                                    />
+                                  </div>
                                 </div>
                               </FormControl>
-                              <FormMessage />
+                              <FormMessage className="text-red-300" />
                             </FormItem>
                           )}
                         />
+                        
                         <FormField
                           control={loginForm.control}
                           name="password"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Password</FormLabel>
+                              <FormLabel className="text-white/90 text-sm font-medium">Password</FormLabel>
                               <FormControl>
                                 <div className="relative">
-                                  <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                                  <Input
-                                    type={showPassword ? "text" : "password"}
-                                    className="pl-9"
-                                    {...field}
-                                    disabled={isLoading}
-                                  />
-                                  <Button
-                                    type="button"
-                                    variant="ghost"
-                                    size="sm"
-                                    className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6 p-0"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                  >
-                                    {showPassword ? (
-                                      <EyeOff className="h-4 w-4" />
-                                    ) : (
-                                      <Eye className="h-4 w-4" />
-                                    )}
-                                  </Button>
+                                  <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
+                                  <div className="relative flex items-center">
+                                    <Lock className="absolute left-4 h-4 w-4 text-white/60" />
+                                    <Input
+                                      type={showPassword ? "text" : "password"}
+                                      className="pl-12 pr-12 py-3 bg-transparent border-0 text-white placeholder:text-white/50 focus:ring-0 focus:outline-none"
+                                      {...field}
+                                      disabled={isLoading}
+                                    />
+                                    <button
+                                      type="button"
+                                      onClick={() => setShowPassword(!showPassword)}
+                                      className="absolute right-4 text-white/60 hover:text-white/80 transition-colors"
+                                    >
+                                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                    </button>
+                                  </div>
                                 </div>
                               </FormControl>
-                              <FormMessage />
+                              <FormMessage className="text-red-300" />
                             </FormItem>
                           )}
                         />
-                        <Button
+                        
+                        <motion.button
                           type="submit"
-                          className="w-full"
                           disabled={isLoading}
+                          className="w-full py-3 px-6 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
                         >
                           {isLoading ? (
-                            <>
-                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            <div className="flex items-center justify-center gap-2">
+                              <Loader2 className="h-4 w-4 animate-spin" />
                               Signing in...
-                            </>
+                            </div>
                           ) : (
                             "Sign In"
                           )}
-                        </Button>
+                        </motion.button>
                       </form>
                     </Form>
                   </motion.div>
-                </TabsContent>
-
-                <TabsContent value="signup" className="mt-6">
+                ) : (
                   <motion.div
+                    key="signup"
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
-                    transition={{ duration: 0.2 }}
+                    transition={{ duration: 0.3 }}
                   >
                     {verificationSent ? (
-                      <Alert className="bg-green-50 border-green-200">
-                        <CheckCircle2 className="h-4 w-4 text-green-600" />
-                        <AlertTitle>Verification Email Sent</AlertTitle>
-                        <AlertDescription>
-                          Please check your email to verify your account. You can close this window
-                          and return once you've verified your email.
-                        </AlertDescription>
-                      </Alert>
+                      <div className="bg-green-500/20 backdrop-blur-sm border border-green-500/30 rounded-xl p-4">
+                        <div className="flex items-center gap-3">
+                          <CheckCircle2 className="h-5 w-5 text-green-400" />
+                          <div>
+                            <h3 className="text-green-400 font-medium">Verification Email Sent</h3>
+                            <p className="text-green-300 text-sm">Please check your email to verify your account.</p>
+                          </div>
+                        </div>
+                      </div>
                     ) : (
                       <Form {...signupForm}>
-                        <form
-                          onSubmit={signupForm.handleSubmit(onSignupSubmit)}
-                          className="space-y-4"
-                        >
+                        <form onSubmit={signupForm.handleSubmit(onSignupSubmit)} className="space-y-6">
                           <FormField
                             control={signupForm.control}
                             name="fullName"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Full Name</FormLabel>
+                                <FormLabel className="text-white/90 text-sm font-medium">Full Name</FormLabel>
                                 <FormControl>
                                   <div className="relative">
-                                    <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                                    <Input
-                                      placeholder="Dr. Michael Smith"
-                                      className="pl-9"
-                                      {...field}
-                                      disabled={isLoading}
-                                    />
+                                    <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
+                                    <div className="relative flex items-center">
+                                      <User className="absolute left-4 h-4 w-4 text-white/60" />
+                                      <Input
+                                        placeholder="Dr. Michael Smith"
+                                        className="pl-12 pr-4 py-3 bg-transparent border-0 text-white placeholder:text-white/50 focus:ring-0 focus:outline-none"
+                                        {...field}
+                                        disabled={isLoading}
+                                      />
+                                    </div>
                                   </div>
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage className="text-red-300" />
                               </FormItem>
                             )}
                           />
+                          
                           <FormField
                             control={signupForm.control}
                             name="email"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Email</FormLabel>
+                                <FormLabel className="text-white/90 text-sm font-medium">Email</FormLabel>
                                 <FormControl>
                                   <div className="relative">
-                                    <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                                    <Input
-                                      placeholder="m.smith@example.com"
-                                      className="pl-9"
-                                      {...field}
-                                      disabled={isLoading}
-                                    />
+                                    <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
+                                    <div className="relative flex items-center">
+                                      <Mail className="absolute left-4 h-4 w-4 text-white/60" />
+                                      <Input
+                                        placeholder="m.smith@example.com"
+                                        className="pl-12 pr-4 py-3 bg-transparent border-0 text-white placeholder:text-white/50 focus:ring-0 focus:outline-none"
+                                        {...field}
+                                        disabled={isLoading}
+                                      />
+                                    </div>
                                   </div>
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage className="text-red-300" />
                               </FormItem>
                             )}
                           />
+                          
                           <FormField
                             control={signupForm.control}
                             name="password"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Password</FormLabel>
+                                <FormLabel className="text-white/90 text-sm font-medium">Password</FormLabel>
                                 <FormControl>
                                   <div className="relative">
-                                    <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                                    <Input
-                                      type={showPassword ? "text" : "password"}
-                                      className="pl-9"
-                                      {...field}
-                                      disabled={isLoading}
-                                    />
-                                    <Button
-                                      type="button"
-                                      variant="ghost"
-                                      size="sm"
-                                      className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6 p-0"
-                                      onClick={() => setShowPassword(!showPassword)}
-                                    >
-                                      {showPassword ? (
-                                        <EyeOff className="h-4 w-4" />
-                                      ) : (
-                                        <Eye className="h-4 w-4" />
-                                      )}
-                                    </Button>
+                                    <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
+                                    <div className="relative flex items-center">
+                                      <Lock className="absolute left-4 h-4 w-4 text-white/60" />
+                                      <Input
+                                        type={showPassword ? "text" : "password"}
+                                        className="pl-12 pr-12 py-3 bg-transparent border-0 text-white placeholder:text-white/50 focus:ring-0 focus:outline-none"
+                                        {...field}
+                                        disabled={isLoading}
+                                      />
+                                      <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-4 text-white/60 hover:text-white/80 transition-colors"
+                                      >
+                                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                      </button>
+                                    </div>
                                   </div>
                                 </FormControl>
-                                <FormDescription>
+                                <FormDescription className="text-white/60 text-xs">
                                   Must be at least 8 characters
                                 </FormDescription>
-                                <FormMessage />
+                                <FormMessage className="text-red-300" />
                               </FormItem>
                             )}
                           />
+                          
                           <FormField
                             control={signupForm.control}
                             name="confirmPassword"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Confirm Password</FormLabel>
+                                <FormLabel className="text-white/90 text-sm font-medium">Confirm Password</FormLabel>
                                 <FormControl>
                                   <div className="relative">
-                                    <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                                    <Input
-                                      type={showConfirmPassword ? "text" : "password"}
-                                      className="pl-9"
-                                      {...field}
-                                      disabled={isLoading}
-                                    />
-                                    <Button
-                                      type="button"
-                                      variant="ghost"
-                                      size="sm"
-                                      className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6 p-0"
-                                      onClick={() =>
-                                        setShowConfirmPassword(!showConfirmPassword)
-                                      }
-                                    >
-                                      {showConfirmPassword ? (
-                                        <EyeOff className="h-4 w-4" />
-                                      ) : (
-                                        <Eye className="h-4 w-4" />
-                                      )}
-                                    </Button>
+                                    <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
+                                    <div className="relative flex items-center">
+                                      <Lock className="absolute left-4 h-4 w-4 text-white/60" />
+                                      <Input
+                                        type={showConfirmPassword ? "text" : "password"}
+                                        className="pl-12 pr-12 py-3 bg-transparent border-0 text-white placeholder:text-white/50 focus:ring-0 focus:outline-none"
+                                        {...field}
+                                        disabled={isLoading}
+                                      />
+                                      <button
+                                        type="button"
+                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                        className="absolute right-4 text-white/60 hover:text-white/80 transition-colors"
+                                      >
+                                        {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                      </button>
+                                    </div>
                                   </div>
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage className="text-red-300" />
                               </FormItem>
                             )}
                           />
-                          <Button
+                          
+                          <motion.button
                             type="submit"
-                            className="w-full"
                             disabled={isLoading}
+                            className="w-full py-3 px-6 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
                           >
                             {isLoading ? (
-                              <>
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              <div className="flex items-center justify-center gap-2">
+                                <Loader2 className="h-4 w-4 animate-spin" />
                                 Creating Account...
-                              </>
+                              </div>
                             ) : (
                               "Create Account"
                             )}
-                          </Button>
+                          </motion.button>
                         </form>
                       </Form>
                     )}
                   </motion.div>
-                </TabsContent>
+                )}
               </AnimatePresence>
-            </Tabs>
-          </CardContent>
+            </div>
+          </div>
 
-          <CardFooter className="flex flex-col space-y-4">
+          {/* Footer */}
+          <div className="mt-8 text-center">
             <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">
-                  Terms and Privacy
-                </span>
+              <div className="absolute inset-0 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10"></div>
+              <div className="relative p-4">
+                <p className="text-white/60 text-xs">
+                  By continuing, you agree to our{" "}
+                  <a href="#" className="text-white/80 hover:text-white underline underline-offset-2">
+                    Terms of Service
+                  </a>{" "}
+                  and{" "}
+                  <a href="#" className="text-white/80 hover:text-white underline underline-offset-2">
+                    Privacy Policy
+                  </a>
+                  .
+                </p>
               </div>
             </div>
-            <p className="text-xs text-center text-muted-foreground">
-              By continuing, you agree to our{" "}
-              <a
-                href="#"
-                className="underline underline-offset-4 hover:text-primary"
-              >
-                Terms of Service
-              </a>{" "}
-              and{" "}
-              <a
-                href="#"
-                className="underline underline-offset-4 hover:text-primary"
-              >
-                Privacy Policy
-              </a>
-              .
-            </p>
-          </CardFooter>
-        </Card>
-      </motion.div>
+          </div>
+        </motion.div>
+      </div>
     </div>
   );
 };
