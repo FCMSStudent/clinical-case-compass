@@ -1,3 +1,4 @@
+import React from "react";
 import { motion, Variants, Transition, useMotionValue, useTransform, useSpring } from "framer-motion";
 
 // ────────────────────────────────────────────────────────────────────────────────
@@ -338,16 +339,16 @@ export const AccessibleMotion = ({
 }) => {
   const motionVariants = getMotionVariants(variants, reducedVariants);
   
-  return (
-    <motion.div
-      variants={motionVariants}
-      initial="initial"
-      animate="visible"
-      exit="exit"
-      {...props}
-    >
-      {children}
-    </motion.div>
+  return React.createElement(
+    motion.div,
+    {
+      variants: motionVariants,
+      initial: "initial",
+      animate: "visible",
+      exit: "exit",
+      ...props
+    },
+    children
   );
 };
 

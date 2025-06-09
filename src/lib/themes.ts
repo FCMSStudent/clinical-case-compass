@@ -1,3 +1,4 @@
+import React from "react";
 import { createContext, useContext, useState, useEffect } from "react";
 
 // ────────────────────────────────────────────────────────────────────────────────
@@ -396,17 +397,17 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     document.body.style.background = currentTheme.colors.background;
   }, [currentTheme]);
 
-  return (
-    <ThemeContext.Provider
-      value={{
+  return React.createElement(
+    ThemeContext.Provider,
+    {
+      value: {
         currentTheme,
         setTheme,
         availableThemes,
         getThemeNames,
-      }}
-    >
-      {children}
-    </ThemeContext.Provider>
+      }
+    },
+    children
   );
 };
 
@@ -477,48 +478,55 @@ export const ThemeSwitcher: React.FC = () => {
 
   const themeNames = getThemeNames();
 
-  return (
-    <div className="relative">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-4 py-2 rounded-lg text-white bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/15 transition-all duration-200"
-        style={getGlassmorphicStyles(currentTheme)}
-      >
-        <div
-          className="w-4 h-4 rounded-full"
-          style={{ backgroundColor: currentTheme.colors.primary }}
-        />
-        <span>{currentTheme.name}</span>
-      </button>
-
-      {isOpen && (
-        <div
-          className="absolute top-full mt-2 right-0 w-64 rounded-lg p-2 z-50"
-          style={getGlassmorphicStyles(currentTheme, "elevated")}
-        >
-          {themeNames.map((theme) => (
-            <button
-              key={theme.name}
-              onClick={() => {
-                setTheme(theme.name.toLowerCase().replace(" ", ""));
-                setIsOpen(false);
-              }}
-              className="w-full text-left px-3 py-2 rounded-md text-white hover:bg-white/10 transition-colors duration-200"
-            >
-              <div className="flex items-center gap-3">
-                <div
-                  className="w-3 h-3 rounded-full"
-                  style={{ backgroundColor: themes[theme.name.toLowerCase().replace(" ", "")]?.colors.primary }}
-                />
-                <div>
-                  <div className="font-medium">{theme.name}</div>
-                  <div className="text-xs text-white/60">{theme.description}</div>
-                </div>
-              </div>
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
+  return React.createElement(
+    'div',
+    { className: 'relative' },
+    React.createElement(
+      'button',
+      {
+        onClick: () => setIsOpen(!isOpen),
+        className: 'flex items-center gap-2 px-4 py-2 rounded-lg text-white bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/15 transition-all duration-200',
+        style: getGlassmorphicStyles(currentTheme)
+      },
+      React.createElement('div', {
+        className: 'w-4 h-4 rounded-full',
+        style: { backgroundColor: currentTheme.colors.primary }
+      }),
+      React.createElement('span', null, currentTheme.name)
+    ),
+    isOpen && React.createElement(
+      'div',
+      {
+        className: 'absolute top-full mt-2 right-0 w-64 rounded-lg p-2 z-50',
+        style: getGlassmorphicStyles(currentTheme, 'elevated')
+      },
+      themeNames.map((theme) =>
+        React.createElement(
+          'button',
+          {
+            key: theme.name,
+            onClick: () => {
+              setTheme(theme.name.toLowerCase().replace(' ', ''));
+              setIsOpen(false);
+            },
+            className: 'w-full text-left px-3 py-2 rounded-md text-white hover:bg-white/10 transition-colors duration-200'
+          },
+          React.createElement(
+            'div',
+            { className: 'flex items-center gap-3' },
+            React.createElement('div', {
+              className: 'w-3 h-3 rounded-full',
+              style: { backgroundColor: themes[theme.name.toLowerCase().replace(' ', '')]?.colors.primary }
+            }),
+            React.createElement(
+              'div',
+              null,
+              React.createElement('div', { className: 'font-medium' }, theme.name),
+              React.createElement('div', { className: 'text-xs text-white/60' }, theme.description)
+            )
+          )
+        )
+      )
+    )
   );
 }; 

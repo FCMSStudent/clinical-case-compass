@@ -1,4 +1,6 @@
+import React from "react";
 import { useMemo, useCallback, useRef, useEffect, useState } from "react";
+import { flushSync } from "react-dom";
 
 // ────────────────────────────────────────────────────────────────────────────────
 // PERFORMANCE OPTIMIZATION UTILITIES FOR GLASSY VISIONOS UI
@@ -186,7 +188,7 @@ export const useBatchUpdate = () => {
       batchRef.current = [];
       
       // Use React's batching mechanism
-      ReactDOM.flushSync(() => {
+      flushSync(() => {
         updates.forEach(update => update());
       });
     }, 0);
@@ -214,7 +216,7 @@ export const useListOptimization = <T>(
 };
 
 /**
- * Component lazy loading with error boundary
+ * Create a lazy-loaded component wrapper
  */
 export const createLazyComponent = <T extends React.ComponentType<any>>(
   importFunc: () => Promise<{ default: T }>,
@@ -222,11 +224,13 @@ export const createLazyComponent = <T extends React.ComponentType<any>>(
 ) => {
   const LazyComponent = React.lazy(importFunc);
   
-  return (props: React.ComponentProps<T>) => (
-    <React.Suspense fallback={fallback || <div>Loading...</div>}>
-      <LazyComponent {...props} />
-    </React.Suspense>
-  );
+  return (props: React.ComponentProps<T>) => {
+    return React.createElement(
+      React.Suspense,
+      { fallback: fallback || React.createElement('div', null, 'Loading...') },
+      React.createElement(LazyComponent, props)
+    );
+  };
 };
 
 /**

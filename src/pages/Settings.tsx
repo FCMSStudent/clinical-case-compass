@@ -539,7 +539,7 @@ const Settings = () => {
               </Tabs>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       </motion.div>
     </motion.div>
   );

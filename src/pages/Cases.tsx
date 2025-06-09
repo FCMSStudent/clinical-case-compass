@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useRef, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Plus, Search, Filter, Grid, List } from "lucide-react";
+import { Plus, Search, Filter, Grid, List, Eye, Edit, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,10 +22,16 @@ import { AccessibleMotion } from "@/lib/motion";
 import { useTheme } from "@/lib/themes";
 import { useDebounce } from "@/lib/performance";
 import { useLazyLoad } from "@/lib/performance";
+import { useSpatialAudioCues } from "@/lib/interactions";
+import { useMotionResponsiveHover } from "@/lib/motion";
+import { useEyeTracking } from "@/lib/accessibility";
+import { useBatchUpdate } from "@/lib/performance";
 
 const Cases = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [selectedCases, setSelectedCases] = useState<Set<string>>(new Set());
+  const [isMultiSelectMode, setIsMultiSelectMode] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Performance monitoring
@@ -36,6 +42,7 @@ const Cases = () => {
     enableVoiceControl: true,
     enableKeyboardNavigation: true,
     enableFocusIndicators: true,
+    enableEyeTracking: true,
   });
 
   // Theme management
@@ -44,11 +51,26 @@ const Cases = () => {
   // Debounced search
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
+  // Spatial audio cues
+  const { playNavigationCue, playSuccessCue, playErrorCue } = useSpatialAudioCues();
+
+  // Eye tracking for focus detection
+  const { focusedElement, isFocused } = useEyeTracking({
+    dwellTime: 600,
+    enableFocusIndicators: true,
+  });
+
   // Lazy loading for images
-  const { ref: lazyLoadRef } = useLazyLoad({
+  const { elementRef: lazyLoadRef, isVisible } = useLazyLoad({
     threshold: 0.1,
     rootMargin: "50px"
   });
+
+  // Motion responsive hover effects
+  const { scale, rotateX, rotateY, handleMouseMove, handleMouseLeave } = useMotionResponsiveHover();
+
+  // Batch updates for performance
+  const batchUpdate = useBatchUpdate();
 
   const queryClient = useQueryClient();
   const { handleError } = useErrorHandler();
@@ -60,8 +82,12 @@ const Cases = () => {
         { queryKey: ["cases"] },
         (old = []) => old.filter((c) => c.id !== caseId)
       );
+      playSuccessCue();
     },
-    onError: (err) => handleError(err, "deleting case"),
+    onError: (err) => {
+      handleError(err, "deleting case");
+      playErrorCue();
+    },
   });
 
   const { data: cases, isLoading, isError } = useQuery({
@@ -73,14 +99,16 @@ const Cases = () => {
   const filteredCases = useDeepMemo(() => {
     if (!cases) return [];
     return cases.filter((caseItem) =>
-      caseItem.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
+      caseItem.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+      caseItem.patient.name.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+      caseItem.chiefComplaint.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
     );
   }, [cases, debouncedSearchQuery]);
 
   // Virtual scrolling for large lists
   const itemHeight = viewMode === "list" ? 120 : 300;
   const containerHeight = 600;
-  const { virtualItems, totalSize, scrollTop, setScrollTop } = useVirtualScroll(
+  const { visibleItems, totalHeight, offsetY, onScroll } = useVirtualScroll(
     filteredCases,
     itemHeight,
     containerHeight,
@@ -91,186 +119,281 @@ const Cases = () => {
   const handleGesture = useCallback((event: any) => {
     if (event.type === "swipe") {
       if (event.direction === "left" && viewMode === "grid") {
+        playNavigationCue("right");
         setViewMode("list");
       } else if (event.direction === "right" && viewMode === "list") {
+        playNavigationCue("left");
         setViewMode("grid");
       }
+    } else if (event.type === "doubleTap") {
+      playSuccessCue();
+      // Quick action on double tap
+      window.location.href = "/cases/new";
+    } else if (event.type === "longPress") {
+      setIsMultiSelectMode(true);
+      playNavigationCue("up");
     }
-  }, [viewMode]);
+  }, [viewMode, playNavigationCue, playSuccessCue]);
 
   useGestureDetection(handleGesture, {
     threshold: 50,
     direction: "any"
   });
 
-  const handleDelete = (caseId: string) => {
+  const handleDelete = useCallback((caseId: string) => {
     deleteMutation.mutate(caseId);
-  };
+  }, [deleteMutation]);
+
+  const handleCaseSelect = useCallback((caseId: string) => {
+    if (isMultiSelectMode) {
+      batchUpdate(() => {
+        setSelectedCases(prev => {
+          const newSet = new Set(prev);
+          if (newSet.has(caseId)) {
+            newSet.delete(caseId);
+          } else {
+            newSet.add(caseId);
+          }
+          return newSet;
+        });
+      });
+    }
+  }, [isMultiSelectMode, batchUpdate]);
+
+  const handleBulkDelete = useCallback(() => {
+    if (selectedCases.size === 0) return;
+    
+    batchUpdate(() => {
+      selectedCases.forEach(caseId => {
+        deleteMutation.mutate(caseId);
+      });
+      setSelectedCases(new Set());
+      setIsMultiSelectMode(false);
+    });
+  }, [selectedCases, deleteMutation, batchUpdate]);
 
   // Register voice commands
   React.useEffect(() => {
     accessibility.registerVoiceCommand({
       command: "switch to grid view",
-      action: () => setViewMode("grid"),
+      action: () => {
+        setViewMode("grid");
+        playNavigationCue("up");
+      },
       description: "Switch to grid view",
       category: "interaction"
     });
 
     accessibility.registerVoiceCommand({
       command: "switch to list view",
-      action: () => setViewMode("list"),
+      action: () => {
+        setViewMode("list");
+        playNavigationCue("down");
+      },
       description: "Switch to list view",
       category: "interaction"
     });
 
     accessibility.registerVoiceCommand({
       command: "create new case",
-      action: () => window.location.href = "/cases/new",
+      action: () => {
+        window.location.href = "/cases/new";
+        playSuccessCue();
+      },
       description: "Navigate to create new case",
       category: "navigation"
     });
-  }, [accessibility]);
 
-  if (isError) {
-    return (
-      <AccessibleMotion
-        variants={{
-          initial: { opacity: 0, y: 20 },
-          animate: { opacity: 1, y: 0 },
-          exit: { opacity: 0, y: -20 }
-        }}
-        initial="initial"
-        animate="animate"
-        exit="exit"
-        transition={{ duration: 0.5 }}
-      >
-        <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-blue-700 dark:from-blue-900 dark:via-blue-800 dark:to-blue-900 relative">
-          <div className="absolute inset-0">
-            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/3 rounded-full blur-3xl"></div>
-          </div>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex items-center justify-center min-h-[400px] relative z-10"
-          >
-            <div className="relative w-full max-w-md">
-              <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-              <Card className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20">
-                <CardHeader>
-                  <CardTitle className="text-destructive">Error</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-white/70">Error loading cases. Please try again.</p>
-                </CardContent>
-              </Card>
-            </div>
-          </motion.div>
-        </div>
-      </AccessibleMotion>
-    );
-  }
+    accessibility.registerVoiceCommand({
+      command: "enable multi select",
+      action: () => {
+        setIsMultiSelectMode(true);
+        playNavigationCue("up");
+      },
+      description: "Enable multi-select mode",
+      category: "interaction"
+    });
+
+    accessibility.registerVoiceCommand({
+      command: "delete selected",
+      action: () => {
+        handleBulkDelete();
+        playErrorCue();
+      },
+      description: "Delete selected cases",
+      category: "interaction"
+    });
+  }, [accessibility, playNavigationCue, playSuccessCue, playErrorCue, handleBulkDelete]);
 
   return (
-    <AccessibleMotion
-      variants={{
-        initial: { opacity: 0, y: 20 },
-        animate: { opacity: 1, y: 0 },
-        exit: { opacity: 0, y: -20 }
-      }}
-      initial="initial"
-      animate="animate"
-      exit="exit"
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-blue-700 dark:from-blue-900 dark:via-blue-800 dark:to-blue-900 relative"
+      className="w-full space-y-6"
     >
-      {/* Glassy background elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/3 rounded-full blur-3xl"></div>
-      </div>
-      <div className="relative z-10 w-full max-w-6xl mx-auto space-y-6 p-4 md:p-6">
+      {/* Enhanced Header with Motion */}
+      <motion.div
+        className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
+        variants={{
+          hidden: { opacity: 0, y: -20 },
+          visible: { opacity: 1, y: 0 },
+        }}
+        initial="hidden"
+        animate="visible"
+      >
+        <div className="flex items-center gap-3">
+          <motion.div
+            className="p-2 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20"
+            whileHover={{ scale: 1.1, rotate: 5 }}
+            whileTap={{ scale: 0.95 }}
+            style={{ scale, rotateX, rotateY }}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+          >
+            <Search className="h-5 w-5 text-white" />
+          </motion.div>
+          <div>
+            <h1 className="text-2xl font-bold text-white">Clinical Cases</h1>
+            <p className="text-white/70 text-sm">
+              {filteredCases.length} case{filteredCases.length !== 1 ? 's' : ''} found
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          {/* Multi-select mode indicator */}
+          {isMultiSelectMode && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/20 border border-orange-500/30"
+            >
+              <Eye className="h-4 w-4 text-orange-300" />
+              <span className="text-orange-300 text-sm font-medium">
+                {selectedCases.size} selected
+              </span>
+            </motion.div>
+          )}
+
+          {/* View mode toggle */}
+          <motion.div
+            className="flex items-center bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 p-1"
+            whileHover={{ scale: 1.05 }}
+          >
+            <Button
+              variant={viewMode === "grid" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setViewMode("grid")}
+              className="text-white hover:bg-white/20"
+            >
+              <Grid className="h-4 w-4" />
+            </Button>
+            <Button
+              variant={viewMode === "list" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setViewMode("list")}
+              className="text-white hover:bg-white/20"
+            >
+              <List className="h-4 w-4" />
+            </Button>
+          </motion.div>
+
+          {/* Create new case button */}
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Button
+              onClick={() => {
+                window.location.href = "/cases/new";
+                playSuccessCue();
+              }}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              New Case
+            </Button>
+          </motion.div>
+        </div>
+      </motion.div>
+
+      {/* Enhanced Search Bar */}
+      <motion.div
+        variants={{
+          hidden: { opacity: 0, y: 20 },
+          visible: { opacity: 1, y: 0 },
+        }}
+        initial="hidden"
+        animate="visible"
+        transition={{ delay: 0.1 }}
+      >
+        <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <Search className="h-5 w-5 text-white/70" />
+              <Input
+                type="text"
+                placeholder="Search cases, patients, symptoms, or diagnoses..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="flex-1 bg-transparent border-none text-white placeholder:text-white/50 focus:ring-0"
+              />
+              {searchQuery && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSearchQuery("")}
+                  className="text-white/70 hover:text-white"
+                >
+                  Clear
+                </Button>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+
+      {/* Multi-select actions */}
+      {isMultiSelectMode && (
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          exit={{ opacity: 0, y: -20 }}
+          className="flex items-center justify-between p-4 bg-orange-500/10 backdrop-blur-sm rounded-lg border border-orange-500/20"
         >
-          <PageHeader 
-            title="Cases" 
-            description="Manage and review clinical cases"
-            className="text-white"
-          >
-            <Link to="/cases/new">
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Button className="bg-white/10 border border-white/20 text-white hover:bg-white/20">
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add Case
-                </Button>
-              </motion.div>
-            </Link>
-          </PageHeader>
+          <span className="text-orange-300 font-medium">
+            {selectedCases.size} case{selectedCases.size !== 1 ? 's' : ''} selected
+          </span>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setIsMultiSelectMode(false);
+                setSelectedCases(new Set());
+              }}
+              className="text-orange-300 border-orange-500/30 hover:bg-orange-500/20"
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={handleBulkDelete}
+              disabled={selectedCases.size === 0}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              Delete Selected
+            </Button>
+          </div>
         </motion.div>
+      )}
 
-        {/* Search and Filter Controls */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="relative"
-        >
-          <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 shadow-xl"></div>
-          <Card className="relative bg-white/10 backdrop-blur-md rounded-xl border border-white/20">
-            <CardContent className="p-4">
-              <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-                <div className="flex-1 relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/70" />
-                  <Input
-                    type="text"
-                    placeholder="Search cases by title, patient, or complaint..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-9 bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0"
-                  />
-                </div>
-                <div className="flex gap-2">
-                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <Button variant="outline" size="sm" className="bg-white/10 border border-white/20 text-white hover:bg-white/20">
-                      <Filter className="mr-2 h-4 w-4" />
-                      Filter
-                    </Button>
-                  </motion.div>
-                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      className="bg-white/10 border border-white/20 text-white hover:bg-white/20"
-                      onClick={() => setViewMode(viewMode === "grid" ? "list" : "grid")}
-                    >
-                      {viewMode === "grid" ? (
-                        <>
-                          <List className="mr-2 h-4 w-4" />
-                          List
-                        </>
-                      ) : (
-                        <>
-                          <Grid className="mr-2 h-4 w-4" />
-                          Grid
-                        </>
-                      )}
-                    </Button>
-                  </motion.div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Cases Display */}
+      {/* Cases Content */}
+      <div className="relative">
         <AnimatePresence mode="wait">
           {isLoading ? (
             <motion.div
@@ -279,11 +402,17 @@ const Cases = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              {viewMode === "grid" ? (
-                <CaseGridSkeleton count={6} />
-              ) : (
-                <CaseListSkeleton count={4} />
-              )}
+              {viewMode === "grid" ? <CaseGridSkeleton /> : <CaseListSkeleton />}
+            </motion.div>
+          ) : isError ? (
+            <motion.div
+              key="error"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="text-center py-12"
+            >
+              <p className="text-white/70">Failed to load cases. Please try again.</p>
             </motion.div>
           ) : filteredCases.length === 0 ? (
             <motion.div
@@ -291,23 +420,9 @@ const Cases = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
+              className="text-center py-12"
             >
-              <div className="relative w-full max-w-md mx-auto">
-                <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-                <Card className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20">
-                  <CardHeader>
-                    <CardTitle className="text-white">No cases found</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-white/70">
-                      {searchQuery 
-                        ? "No cases match your search criteria. Try adjusting your search terms."
-                        : "No cases have been created yet. Click 'Add Case' to create your first case."
-                      }
-                    </p>
-                  </CardContent>
-                </Card>
-              </div>
+              <p className="text-white/70">No cases found.</p>
             </motion.div>
           ) : (
             <motion.div
@@ -331,9 +446,17 @@ const Cases = () => {
                         exit={{ opacity: 0, scale: 0.9 }}
                         transition={{ duration: 0.2, delay: index * 0.05 }}
                         whileHover={{ scale: 1.02, y: -2 }}
-                        ref={lazyLoadRef}
+                        onClick={() => handleCaseSelect(caseItem.id)}
+                        className={`cursor-pointer transition-all duration-200 ${
+                          selectedCases.has(caseItem.id) 
+                            ? 'ring-2 ring-orange-500 bg-orange-500/10' 
+                            : ''
+                        }`}
                       >
-                        <CaseCard medicalCase={caseItem} onDelete={handleDelete} />
+                        <CaseCard 
+                          medicalCase={caseItem} 
+                          onDelete={handleDelete}
+                        />
                       </motion.div>
                     ))}
                   </AnimatePresence>
@@ -342,10 +465,10 @@ const Cases = () => {
                 <div 
                   className="space-y-4 overflow-auto"
                   style={{ height: containerHeight }}
-                  onScroll={(e) => setScrollTop(e.currentTarget.scrollTop)}
+                  onScroll={onScroll}
                 >
-                  <div style={{ height: totalSize, position: 'relative' }}>
-                    {virtualItems.map((virtualItem) => {
+                  <div style={{ height: totalHeight, position: 'relative' }}>
+                    {visibleItems.map((virtualItem) => {
                       const caseItem = filteredCases[virtualItem.index];
                       return (
                         <div
@@ -366,9 +489,17 @@ const Cases = () => {
                             exit={{ opacity: 0, y: -20 }}
                             transition={{ duration: 0.2 }}
                             whileHover={{ scale: 1.01 }}
-                            ref={lazyLoadRef}
+                            onClick={() => handleCaseSelect(caseItem.id)}
+                            className={`cursor-pointer transition-all duration-200 ${
+                              selectedCases.has(caseItem.id) 
+                                ? 'ring-2 ring-orange-500 bg-orange-500/10' 
+                                : ''
+                            }`}
                           >
-                            <CaseListItem medicalCase={caseItem} onDelete={handleDelete} />
+                            <CaseListItem 
+                              medicalCase={caseItem} 
+                              onDelete={handleDelete}
+                            />
                           </motion.div>
                         </div>
                       );
@@ -380,7 +511,7 @@ const Cases = () => {
           )}
         </AnimatePresence>
       </div>
-    </AccessibleMotion>
+    </motion.div>
   );
 };
 
