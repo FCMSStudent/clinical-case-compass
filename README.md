@@ -129,6 +129,20 @@ If npm reports vulnerabilities, you may attempt to automatically fix them with:
 npm audit fix
 ```
 
+## Deployment
+
+If you deploy this project under a subpath (for example on GitHub Pages),
+Vite needs to know the base URL so that asset links resolve correctly. The
+`vite.config.ts` file includes a `base` option set to `/clinical-case-compass/`.
+Adjust this value if your deployment path differs, then rebuild the project:
+
+```bash
+npm run build
+```
+
+After uploading the `dist/` directory to your hosting provider, the site should
+load without the blank 404-style page.
+
 ## Project Structure
 
 ```
