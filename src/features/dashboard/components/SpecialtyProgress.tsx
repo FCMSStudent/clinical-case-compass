@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Brain, Heart, Lungs, Bone, Eye, Stethoscope } from "lucide-react";
+import { Brain, Heart, Activity, Bone, Eye, Stethoscope } from "lucide-react";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 
@@ -10,7 +10,7 @@ interface SpecialtyProgressProps {
 const specialtyIcons: Record<string, React.ComponentType<any>> = {
   "Neurology": Brain,
   "Cardiology": Heart,
-  "Pulmonology": Lungs,
+  "Pulmonology": Activity,
   "Orthopedics": Bone,
   "Ophthalmology": Eye,
   "default": Stethoscope
