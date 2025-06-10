@@ -7,6 +7,9 @@ import { componentTagger } from "lovable-tagger";
 export default defineConfig(({ mode }) => {
   loadEnv(mode, process.cwd(), "");
   return {
+    // When deploying under a subpath (e.g. GitHub Pages),
+    // specify the base path so asset URLs resolve correctly.
+    base: "/clinical-case-compass/",
     envPrefix: "VITE_",
     server: {
       host: "::",
