@@ -134,7 +134,14 @@ npm audit fix
 If you deploy this project under a subpath (for example on GitHub Pages),
 Vite needs to know the base URL so that asset links resolve correctly. The
 `vite.config.ts` file includes a `base` option set to `/clinical-case-compass/`.
-Adjust this value if your deployment path differs, then rebuild the project:
+You can override this by setting the `BASE_PATH` environment variable before
+building. For example, if you deploy at the root of a domain, run:
+
+```bash
+BASE_PATH=/ npm run build
+```
+
+Adjust the value to match your hosting path, then rebuild the project:
 
 ```bash
 npm run build

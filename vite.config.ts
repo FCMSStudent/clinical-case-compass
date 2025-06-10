@@ -6,10 +6,12 @@ import { componentTagger } from "lovable-tagger";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   loadEnv(mode, process.cwd(), "");
+  const basePath = process.env.BASE_PATH ?? "/clinical-case-compass/";
   return {
     // When deploying under a subpath (e.g. GitHub Pages),
     // specify the base path so asset URLs resolve correctly.
-    base: "/clinical-case-compass/",
+    // Set the BASE_PATH environment variable to override this value.
+    base: basePath,
     envPrefix: "VITE_",
     server: {
       host: "::",
