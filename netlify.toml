@@ -4,6 +4,7 @@
 
 [build.environment]
   NODE_VERSION = "18"
+  NPM_FLAGS = "--legacy-peer-deps"
 
 [[redirects]]
   from = "/*"
@@ -25,4 +26,13 @@
   pretty_urls = true
 
 [build.processing.images]
-  compress = true 
+  compress = true
+
+# Add headers for better debugging
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin" 

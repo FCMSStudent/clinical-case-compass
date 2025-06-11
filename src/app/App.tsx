@@ -9,6 +9,7 @@ import { AppLayout } from "@/features/navigation/components/AppLayout";
 import { SidebarProvider } from "@/features/navigation/components/Sidebar";
 import { PrivateRoute } from "@/features/auth/PrivateRoute";
 import { OfflineBanner } from "@/components/ui/OfflineBanner";
+import { NetlifyDebug } from "@/components/ui/NetlifyDebug";
 
 // Pages
 import Dashboard from "@/pages/Dashboard";
@@ -46,6 +47,20 @@ const AppContent = () => {
   const { session, loading, isOfflineMode } = useAuth();
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll();
+
+  // Debug information for deployment troubleshooting
+  useEffect(() => {
+    console.log('=== DEPLOYMENT DEBUG INFO ===');
+    console.log('Environment variables:');
+    console.log('VITE_SUPABASE_URL:', import.meta.env.VITE_SUPABASE_URL ? 'SET' : 'NOT SET');
+    console.log('VITE_SUPABASE_ANON_KEY:', import.meta.env.VITE_SUPABASE_ANON_KEY ? 'SET' : 'NOT SET');
+    console.log('NODE_ENV:', import.meta.env.MODE);
+    console.log('Base URL:', import.meta.env.BASE_URL);
+    console.log('Is Offline Mode:', isOfflineMode);
+    console.log('Loading:', loading);
+    console.log('Session:', session ? 'EXISTS' : 'NONE');
+    console.log('==============================');
+  }, [isOfflineMode, loading, session]);
 
   // Initialize accessibility features
   const accessibility = useAccessibility({
@@ -168,6 +183,19 @@ const AppContent = () => {
       <Router>
         <SidebarProvider>
           <AppLayout>
+            <NetlifyDebug 
+              debugInfo={{
+                envVars: {
+                  supabaseUrl: !!import.meta.env.VITE_SUPABASE_URL,
+                  supabaseKey: !!import.meta.env.VITE_SUPABASE_ANON_KEY,
+                },
+                mode: import.meta.env.MODE,
+                baseUrl: import.meta.env.BASE_URL,
+                isOfflineMode,
+                loading,
+                hasSession: !!session,
+              }}
+            />
             {isOfflineMode && (
               <div className="mb-4">
                 <OfflineBanner />
