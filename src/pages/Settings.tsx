@@ -26,7 +26,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAccessibility } from "@/lib/accessibility";
 import { usePerformanceMonitor } from "@/lib/performance";
-import { useTheme } from "@/lib/themes";
+import { useTheme } from "@/app/ThemeContext";
 import { useGestureDetection } from "@/lib/interactions";
 
 // Form schemas
