@@ -137,11 +137,7 @@ export class AccessibilityManager {
           if (event.error === 'not-allowed') {
             console.warn("Microphone access denied. Voice control disabled.");
             if (typeof toast === 'function') {
-              toast({
-                title: "Microphone Access Denied",
-                description: "Voice control is disabled because microphone access was denied. Please allow microphone permissions in your browser settings.",
-                variant: "destructive"
-              });
+              toast.error("Microphone Access Denied", { description: "Voice control is disabled because microphone access was denied. Please allow microphone permissions in your browser settings." });
             } else {
               alert("Microphone access denied. Voice control disabled. Please allow microphone permissions in your browser settings.");
             }
