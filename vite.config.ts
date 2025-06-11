@@ -5,11 +5,14 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
-  loadEnv(mode, process.cwd(), "");
+  const env = loadEnv(mode, process.cwd(), "");
+  
+  // Only use base path for GitHub Pages deployment
+  const isGitHubPages = env.VITE_DEPLOY_TARGET === 'github-pages';
+  
   return {
-    // When deploying under a subpath (e.g. GitHub Pages),
-    // specify the base path so asset URLs resolve correctly.
-    base: "/clinical-case-compass/",
+    // Set base path only for GitHub Pages, leave empty for other deployments
+    base: isGitHubPages ? "/clinical-case-compass/" : "/",
     envPrefix: "VITE_",
     server: {
       host: "::",
