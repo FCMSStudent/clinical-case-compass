@@ -7,6 +7,7 @@ type AuthContextType = {
   session: Session | null;
   user: User | null;
   loading: boolean;
+  isOfflineMode: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string, fullName?: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -19,9 +20,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isOfflineMode, setIsOfflineMode] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
+    // Check if we're in offline mode (missing Supabase credentials)
+    const isCredentialsMissing = 
+      import.meta.env.VITE_SUPABASE_URL === undefined || 
+      import.meta.env.VITE_SUPABASE_ANON_KEY === undefined ||
+      import.meta.env.VITE_SUPABASE_URL === "YOUR_SUPABASE_URL" ||
+      import.meta.env.VITE_SUPABASE_ANON_KEY === "YOUR_SUPABASE_ANON_KEY";
+
+    if (isCredentialsMissing) {
+      setIsOfflineMode(true);
+      setLoading(false);
+      console.warn("Running in offline mode - Supabase credentials not configured");
+      return;
+    }
+
     // Set up auth state listener first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, currentSession) => {
@@ -31,7 +47,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (event === 'SIGNED_IN') {
           toast({
             title: "Signed in successfully",
-            description: "Welcome to Medica",
+            description: "Welcome to Clinical Case Compass",
           });
         }
         
@@ -49,17 +65,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setSession(currentSession);
       setUser(currentSession?.user ?? null);
       setLoading(false);
+    }).catch((error) => {
+      console.error("Error getting session:", error);
+      setLoading(false);
     });
-
-    // Check for placeholder Supabase credentials
-    if (
-      import.meta.env.VITE_SUPABASE_URL === "YOUR_SUPABASE_URL" ||
-      import.meta.env.VITE_SUPABASE_ANON_KEY === "YOUR_SUPABASE_ANON_KEY"
-    ) {
-      console.warn(
-        "Supabase credentials are using placeholder values. Please update them in your .env file for full functionality."
-      );
-    }
 
     return () => {
       subscription.unsubscribe();
@@ -67,6 +76,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [toast]);
 
   const signIn = async (email: string, password: string) => {
+    if (isOfflineMode) {
+      toast({
+        variant: "destructive",
+        title: "Offline Mode",
+        description: "Authentication is not available in offline mode. Please configure Supabase credentials.",
+      });
+      return;
+    }
+
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
@@ -82,6 +100,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signUp = async (email: string, password: string, fullName?: string) => {
+    if (isOfflineMode) {
+      toast({
+        variant: "destructive",
+        title: "Offline Mode",
+        description: "Authentication is not available in offline mode. Please configure Supabase credentials.",
+      });
+      return;
+    }
+
     try {
       const { error } = await supabase.auth.signUp({
         email,
@@ -108,6 +135,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signOut = async () => {
+    if (isOfflineMode) {
+      return;
+    }
+
     try {
       await supabase.auth.signOut();
     } catch (error: unknown) {
@@ -121,6 +152,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const updateProfile = async (data: { full_name?: string; specialty?: string; avatar_url?: string }) => {
+    if (isOfflineMode) {
+      toast({
+        variant: "destructive",
+        title: "Offline Mode",
+        description: "Profile updates are not available in offline mode.",
+      });
+      return;
+    }
+
     try {
       if (!user) throw new Error("No user logged in");
 
@@ -153,6 +193,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     session,
     user,
     loading,
+    isOfflineMode,
     signIn,
     signUp,
     signOut,

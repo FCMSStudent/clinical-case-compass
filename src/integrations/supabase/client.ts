@@ -5,13 +5,24 @@ import type { Database } from './types';
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string | undefined;
 const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
 
+// Create a default/mock client if credentials are missing
+let supabaseClient;
+
 if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
-  throw new Error(
-    "Missing Supabase credentials. Please copy .env.example to .env and add your VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY."
+  console.warn(
+    "Missing Supabase credentials. The app will run in offline mode. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY environment variables."
   );
+  
+  // Create a mock client that prevents crashes
+  supabaseClient = createClient(
+    'https://placeholder.supabase.co', 
+    'placeholder-anon-key'
+  );
+} else {
+  supabaseClient = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 }
 
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
-export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+export const supabase = supabaseClient;

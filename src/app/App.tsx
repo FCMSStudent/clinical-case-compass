@@ -8,6 +8,7 @@ import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 import { AppLayout } from "@/features/navigation/components/AppLayout";
 import { SidebarProvider } from "@/features/navigation/components/Sidebar";
 import { PrivateRoute } from "@/features/auth/PrivateRoute";
+import { OfflineBanner } from "@/components/ui/OfflineBanner";
 
 // Pages
 import Dashboard from "@/pages/Dashboard";
@@ -42,7 +43,7 @@ const queryClient = new QueryClient({
 
 // Enhanced App component with utilities
 const AppContent = () => {
-  const { session, loading } = useAuth();
+  const { session, loading, isOfflineMode } = useAuth();
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll();
 
@@ -167,6 +168,11 @@ const AppContent = () => {
       <Router>
         <SidebarProvider>
           <AppLayout>
+            {isOfflineMode && (
+              <div className="mb-4">
+                <OfflineBanner />
+              </div>
+            )}
             <Routes>
               <Route path="/auth" element={<Auth />} />
               <Route
