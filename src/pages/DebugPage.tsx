@@ -1,90 +1,64 @@
 import React from "react";
 import { useAuth } from "@/app/AuthContext";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 
 export default function DebugPage() {
   const { session, user, loading, isOfflineMode } = useAuth();
 
   return (
-    <div className="min-h-screen bg-background p-8">
-      <div className="max-w-4xl mx-auto space-y-6">
-        <h1 className="text-3xl font-bold">Debug Page - Authentication Status</h1>
-        
-        <Card>
-          <CardHeader>
-            <CardTitle>Authentication Debug Information</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <span className="font-medium">Loading:</span>
-                <Badge variant={loading ? "secondary" : "default"} className="ml-2">
-                  {loading ? 'TRUE' : 'FALSE'}
-                </Badge>
-              </div>
-              
-              <div>
-                <span className="font-medium">Offline Mode:</span>
-                <Badge variant={isOfflineMode ? "destructive" : "default"} className="ml-2">
-                  {isOfflineMode ? 'TRUE' : 'FALSE'}
-                </Badge>
-              </div>
-              
-              <div>
-                <span className="font-medium">Has Session:</span>
-                <Badge variant={session ? "default" : "outline"} className="ml-2">
-                  {session ? 'TRUE' : 'FALSE'}
-                </Badge>
-              </div>
-              
-              <div>
-                <span className="font-medium">Has User:</span>
-                <Badge variant={user ? "default" : "outline"} className="ml-2">
-                  {user ? 'TRUE' : 'FALSE'}
-                </Badge>
-              </div>
-            </div>
-            
-            {session && (
-              <div className="mt-4 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                <h3 className="font-semibold text-green-800 dark:text-green-200">Session Details:</h3>
-                <pre className="text-sm mt-2 text-green-700 dark:text-green-300">
-                  {JSON.stringify({
-                    user_id: session.user?.id,
-                    email: session.user?.email,
-                    created_at: session.user?.created_at,
-                    expires_at: session.expires_at,
-                  }, null, 2)}
-                </pre>
-              </div>
-            )}
-            
-            {user && (
-              <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                <h3 className="font-semibold text-blue-800 dark:text-blue-200">User Details:</h3>
-                <pre className="text-sm mt-2 text-blue-700 dark:text-blue-300">
-                  {JSON.stringify({
-                    id: user.id,
-                    email: user.email,
-                    created_at: user.created_at,
-                    email_confirmed_at: user.email_confirmed_at,
-                  }, null, 2)}
-                </pre>
-              </div>
-            )}
-            
-            <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-900/20 rounded-lg">
-              <h3 className="font-semibold">Environment:</h3>
-              <ul className="text-sm mt-2 space-y-1">
-                <li>Mode: {import.meta.env.MODE}</li>
-                <li>Base URL: {import.meta.env.BASE_URL}</li>
-                <li>Supabase URL: {import.meta.env.VITE_SUPABASE_URL ? 'Set' : 'Not Set'}</li>
-                <li>Supabase Key: {import.meta.env.VITE_SUPABASE_ANON_KEY ? 'Set' : 'Not Set'}</li>
-              </ul>
-            </div>
-          </CardContent>
-        </Card>
+    <div style={{ 
+      minHeight: '100vh', 
+      padding: '20px', 
+      backgroundColor: 'white', 
+      color: 'black',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <h1 style={{ fontSize: '24px', marginBottom: '20px' }}>🔍 Debug Page - Rendering Test</h1>
+      
+      <div style={{ backgroundColor: '#f0f0f0', padding: '15px', marginBottom: '20px' }}>
+        <h2 style={{ fontSize: '18px', marginBottom: '10px' }}>✅ This page is rendering!</h2>
+        <p>If you can see this, React routing and component rendering are working.</p>
+      </div>
+      
+      <div style={{ backgroundColor: '#e8f5e8', padding: '15px', marginBottom: '20px' }}>
+        <h3 style={{ fontSize: '16px', marginBottom: '10px' }}>Authentication Status:</h3>
+        <ul style={{ margin: 0, paddingLeft: '20px' }}>
+          <li>Loading: {loading ? '⏳ TRUE' : '✅ FALSE'}</li>
+          <li>Offline Mode: {isOfflineMode ? '❌ TRUE' : '✅ FALSE'}</li>
+          <li>Has Session: {session ? '✅ TRUE' : '❌ FALSE'}</li>
+          <li>Has User: {user ? '✅ TRUE' : '❌ FALSE'}</li>
+          <li>User Email: {user?.email || 'Not available'}</li>
+        </ul>
+      </div>
+      
+      <div style={{ backgroundColor: '#fff3cd', padding: '15px', marginBottom: '20px' }}>
+        <h3 style={{ fontSize: '16px', marginBottom: '10px' }}>Environment:</h3>
+        <ul style={{ margin: 0, paddingLeft: '20px' }}>
+          <li>Mode: {import.meta.env.MODE}</li>
+          <li>Base URL: {import.meta.env.BASE_URL}</li>
+          <li>Supabase URL: {import.meta.env.VITE_SUPABASE_URL ? '✅ Set' : '❌ Not Set'}</li>
+          <li>Supabase Key: {import.meta.env.VITE_SUPABASE_ANON_KEY ? '✅ Set' : '❌ Not Set'}</li>
+        </ul>
+      </div>
+      
+      <div style={{ backgroundColor: '#f8d7da', padding: '15px' }}>
+        <h3 style={{ fontSize: '16px', marginBottom: '10px' }}>🚨 Main Issue:</h3>
+        <p>Authentication is working perfectly, but other pages aren't rendering.</p>
+        <p>This suggests a problem with:</p>
+        <ul style={{ margin: '10px 0', paddingLeft: '20px' }}>
+          <li>Component library imports (Radix UI components)</li>
+          <li>CSS/styling making content invisible</li>
+          <li>AppLayout component</li>
+          <li>JavaScript errors in page components</li>
+        </ul>
+      </div>
+      
+      <div style={{ marginTop: '20px', padding: '15px', border: '2px solid #007bff' }}>
+        <h3 style={{ fontSize: '16px', color: '#007bff' }}>🔧 Next Steps:</h3>
+        <ol style={{ margin: '10px 0', paddingLeft: '20px' }}>
+          <li>Visit <strong>/dashboard</strong> - should work now with auth passing</li>
+          <li>Check browser console for JavaScript errors</li>
+          <li>Check if content is rendered but invisible (inspect element)</li>
+        </ol>
       </div>
     </div>
   );

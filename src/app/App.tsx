@@ -184,27 +184,28 @@ const AppContent = () => {
       }}
     >
       <Router>
-        <SidebarProvider>
-          <AppLayout>
-            <NetlifyDebug 
-              debugInfo={{
-                envVars: {
-                  supabaseUrl: !!import.meta.env.VITE_SUPABASE_URL,
-                  supabaseKey: !!import.meta.env.VITE_SUPABASE_ANON_KEY,
-                },
-                mode: import.meta.env.MODE,
-                baseUrl: import.meta.env.BASE_URL,
-                isOfflineMode,
-                loading,
-                hasSession: !!session,
-                hasUser: !!user,
-              }}
-            />
-            {isOfflineMode && (
-              <div className="mb-4">
-                <OfflineBanner />
-              </div>
-            )}
+        {/* Temporarily bypass SidebarProvider for debugging */}
+        <div style={{ minHeight: '100vh', backgroundColor: '#f8f9fa', padding: '20px' }}>
+          <div style={{ backgroundColor: '#fff3cd', padding: '15px', marginBottom: '20px', border: '1px solid orange' }}>
+            <h3 style={{ fontSize: '16px', marginBottom: '10px' }}>🔍 Environment Check:</h3>
+            <ul style={{ margin: 0, paddingLeft: '20px' }}>
+              <li>Supabase URL: {import.meta.env.VITE_SUPABASE_URL ? '✅ Set' : '❌ Not Set'}</li>
+              <li>Supabase Key: {import.meta.env.VITE_SUPABASE_ANON_KEY ? '✅ Set' : '❌ Not Set'}</li>
+              <li>Mode: {import.meta.env.MODE}</li>
+              <li>Offline Mode: {isOfflineMode ? '❌ TRUE' : '✅ FALSE'}</li>
+              <li>Loading: {loading ? '⏳ TRUE' : '✅ FALSE'}</li>
+              <li>Has Session: {!!session ? '✅ TRUE' : '❌ FALSE'}</li>
+              <li>Has User: {!!user ? '✅ TRUE' : '❌ FALSE'}</li>
+            </ul>
+          </div>
+          {isOfflineMode && (
+            <div style={{ backgroundColor: '#f8d7da', padding: '15px', marginBottom: '20px', border: '1px solid red' }}>
+              <strong>Offline Mode:</strong> The application is running with limited functionality. 
+              Database features are unavailable. Please configure Supabase credentials for full functionality.
+            </div>
+          )}
+          <div style={{ backgroundColor: 'white', padding: '20px', marginTop: '20px', border: '1px solid #ddd' }}>
+            <h1 style={{ fontSize: '24px', marginBottom: '20px', color: '#333' }}>🚀 Layout Bypass Test</h1>
             <Routes>
               <Route path="/auth" element={<Auth />} />
               <Route path="/debug" element={<DebugPage />} />
@@ -212,7 +213,11 @@ const AppContent = () => {
                 path="/dashboard"
                 element={
                   <PrivateRoute>
-                    <Dashboard />
+                    <div style={{ padding: '20px', backgroundColor: '#e8f5e8', border: '1px solid green' }}>
+                      <h2>✅ Dashboard Component Loaded!</h2>
+                      <p>If you see this, the Dashboard route is working without AppLayout.</p>
+                      <Dashboard />
+                    </div>
                   </PrivateRoute>
                 }
               />
@@ -220,7 +225,11 @@ const AppContent = () => {
                 path="/cases"
                 element={
                   <PrivateRoute>
-                    <Cases />
+                    <div style={{ padding: '20px', backgroundColor: '#fff3cd', border: '1px solid orange' }}>
+                      <h2>📋 Cases Component Loaded!</h2>
+                      <p>If you see this, the Cases route is working without AppLayout.</p>
+                      <Cases />
+                    </div>
                   </PrivateRoute>
                 }
               />
@@ -267,8 +276,8 @@ const AppContent = () => {
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
-          </AppLayout>
-        </SidebarProvider>
+          </div>
+        </div>
       </Router>
     </AccessibleMotion>
   );
