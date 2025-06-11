@@ -1,9 +1,15 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
+interface Activity {
+  id: string;
+  description: string;
+  created_at: string;
+}
+
 function RecentActivityList() {
   // 1. Initialize state with an empty array
-  const [activities, setActivities] = useState([]);
+  const [activities, setActivities] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -55,7 +61,7 @@ function RecentActivityList() {
           {/* You'll need to adjust how you render each activity based on your 'activities' table schema.
             For example, if each activity has a 'description' and 'timestamp' column:
           */}
-          {activities.map((activity: any) => ( // Consider defining a proper type for 'activity'
+          {activities.map((activity: Activity) => (
             <li key={activity.id}> {/* Assuming each activity has a unique 'id' */}
               {/* Replace with your actual activity data fields */}
               {activity.description} - {new Date(activity.created_at).toLocaleString()}

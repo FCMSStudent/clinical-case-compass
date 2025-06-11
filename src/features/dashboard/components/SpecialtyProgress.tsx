@@ -2,12 +2,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Brain, Heart, Activity, Bone, Eye, Stethoscope } from "lucide-react";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
+import { ComponentType } from "react";
 
 interface SpecialtyProgressProps {
   data: [string, number][];
 }
 
-const specialtyIcons: Record<string, React.ComponentType<any>> = {
+const specialtyIcons: Record<string, ComponentType<{ className?: string }>> = {
   "Neurology": Brain,
   "Cardiology": Heart,
   "Pulmonology": Activity,

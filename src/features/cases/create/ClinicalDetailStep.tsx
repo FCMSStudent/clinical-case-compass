@@ -211,25 +211,28 @@ const SystemsReviewTab = memo(() => {
   const [systemSymptoms, setSystemSymptoms] = React.useState<Record<string, string[]>>({});
   const [vitals, setVitals] = React.useState<Record<string, string>>({});
 
+  // Memoize selectedBodyParts to prevent unnecessary re-renders
+  const memoizedSelectedBodyParts = useMemo(() => selectedBodyParts, [selectedBodyParts]);
+
   const handleBodyPartSelected = useCallback((selection: BodyPartSelection) => {
     const partName = selection.name || selection.id;
     if (!partName) return;
     
-    const updatedParts = selectedBodyParts.includes(partName)
-      ? selectedBodyParts.filter((p) => p !== partName)
-      : [...selectedBodyParts, partName];
+    const updatedParts = memoizedSelectedBodyParts.includes(partName)
+      ? memoizedSelectedBodyParts.filter((p) => p !== partName)
+      : [...memoizedSelectedBodyParts, partName];
     setValue(FORM_FIELDS.SELECTED_BODY_PARTS, updatedParts, { shouldValidate: true });
-  }, [selectedBodyParts, setValue]);
+  }, [memoizedSelectedBodyParts, setValue]);
 
   const PartBadges = useMemo(() => (
-    selectedBodyParts.length > 0 && (
+    memoizedSelectedBodyParts.length > 0 && (
       <div className="mt-3 flex flex-wrap gap-1">
-        {selectedBodyParts.map((p) => (
+        {memoizedSelectedBodyParts.map((p) => (
           <Badge key={p} variant="secondary" className="text-xs bg-blue-100 text-blue-800">{p}</Badge>
         ))}
       </div>
     )
-  ), [selectedBodyParts]);
+  ), [memoizedSelectedBodyParts]);
 
   return (
     <TabsContent value="systems" className="space-y-6">

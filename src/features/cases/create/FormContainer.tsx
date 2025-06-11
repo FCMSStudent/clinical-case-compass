@@ -4,37 +4,37 @@ import { FormProgressIndicator } from "@/features/cases/FormProgressIndicator";
 import { cn } from "@/lib/utils";
 
 /**
- * Lightweight meta-data contract for each form step.  
- * Re-exported in case consumers want to share the type without re-declaring it.
- */
+ * Lightweight meta-data contract for each form step.
+ * Re-exported in case consumers want to share the type without re-declaring it.
+ */
 export interface StepMeta {
-  id: string;
-  label: string;
-  icon: React.ReactNode;
-  isCompleted: boolean;
-  isNavigable: boolean;
+  id: string;
+  label: string;
+  icon: React.ReactNode;
+  isCompleted: boolean;
+  isNavigable: boolean;
 }
 
 export interface FormContainerProps {
-  /** Index (0-based) of the currently active step. */
-  currentStepIndex: number;
-  /** Ordered list of step definitions. The total number of steps is derived from this array's length. */
-  steps: StepMeta[];
-  /** * Callback when the user clicks a step in the progress indicator.
+  /** Index (0-based) of the currently active step. */
+  currentStepIndex: number;
+  /** Ordered list of step definitions. The total number of steps is derived from this array's length. */
+  steps: StepMeta[];
+  /** * Callback when the user clicks a step in the progress indicator.
    * Receives the index of the clicked step.
    */
-  onStepChange?: (stepIndex: number) => void;
-  /** Main content of the current step. */
-  children: ReactNode;
-  /** Extra classes for the outer wrapper. */
-  className?: string;
+  onStepChange?: (stepIndex: number) => void;
+  /** Main content of the current step. */
+  children: ReactNode;
+  /** Extra classes for the outer wrapper. */
+  className?: string;
 }
 
 /**
- * A generic, stylized wrapper that pairs a step-based progress indicator 
+ * A generic, stylized wrapper that pairs a step-based progress indicator 
  * with a clean card to house the active form section. It manages the layout 
  * and progress visualization for a multi-step form.
- */
+ */
 // 1. MODERNIZED DEFINITION: Using a standard function with typed props is a more
 // modern and slightly less verbose pattern than `React.FC`.
 export const FormContainer = memo(
