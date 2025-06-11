@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { CheckCheck, Save, AlertCircle } from "lucide-react";
@@ -34,23 +33,23 @@ export function AutosaveIndicator({
   if (!visible) return null;
 
   return (
-    <div className={`flex items-center text-xs ${className}`}>
+    <div className={`flex items-center text-xs px-3 py-1 rounded-full shadow-md border border-white/20 bg-white/10 backdrop-blur-md ${className}`} style={{ minWidth: 100 }}>
       {status === "saving" ? (
         <>
-          <Save className="animate-pulse mr-1 h-3 w-3 text-medical-500" />
-          <span className="text-medical-500">Saving...</span>
+          <Save className="animate-pulse mr-1 h-3 w-3 text-blue-300" />
+          <span className="text-blue-100">Saving...</span>
         </>
       ) : status === "saved" ? (
         <>
-          <CheckCheck className="mr-1 h-3 w-3 text-green-600" />
-          <span className="text-green-600">
+          <CheckCheck className="mr-1 h-3 w-3 text-green-300" />
+          <span className="text-green-100">
             Saved {lastSaved ? format(lastSaved, "h:mm a") : ""}
           </span>
         </>
       ) : status === "error" ? (
         <>
-          <AlertCircle className="mr-1 h-3 w-3 text-red-600" />
-          <span className="text-red-600">Save failed</span>
+          <AlertCircle className="mr-1 h-3 w-3 text-red-300" />
+          <span className="text-red-100">Save failed</span>
         </>
       ) : null}
     </div>

@@ -2,7 +2,6 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { LucideIcon, Info, AlertCircle, CheckCircle2, ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -32,48 +31,38 @@ interface FormFieldCardProps {
   isDisabled?: boolean;
 }
 
-const gradients = {
-  emerald: "from-emerald-50 to-teal-50",
-  rose: "from-rose-50 to-pink-50",
-  violet: "from-violet-50 to-purple-50",
-  amber: "from-amber-50 to-orange-50",
-  blue: "from-blue-50 to-indigo-50",
-  teal: "from-teal-50 to-cyan-50",
-  purple: "from-purple-50 to-indigo-50",
-} as const;
-
 const iconColors = {
-  emerald: "text-emerald-600",
-  rose: "text-rose-600",
-  violet: "text-violet-600",
-  amber: "text-amber-600",
-  blue: "text-blue-600",
-  teal: "text-teal-600",
-  purple: "text-purple-600",
+  emerald: "text-emerald-400",
+  rose: "text-rose-400",
+  violet: "text-violet-400",
+  amber: "text-amber-400",
+  blue: "text-blue-400",
+  teal: "text-teal-400",
+  purple: "text-purple-400",
 } as const;
 
 const iconBgColors = {
-  emerald: "bg-emerald-100",
-  rose: "bg-rose-100",
-  violet: "bg-violet-100",
-  amber: "bg-amber-100",
-  blue: "bg-blue-100",
-  teal: "bg-teal-100",
-  purple: "bg-purple-100",
+  emerald: "bg-emerald-400/20",
+  rose: "bg-rose-400/20",
+  violet: "bg-violet-400/20",
+  amber: "bg-amber-400/20",
+  blue: "bg-blue-400/20",
+  teal: "bg-teal-400/20",
+  purple: "bg-purple-400/20",
 } as const;
 
 const statusStyles = {
-  default: "border-gray-200",
-  success: "border-emerald-200 bg-emerald-50/50",
-  warning: "border-amber-200 bg-amber-50/50",
-  error: "border-red-200 bg-red-50/50",
+  default: "border-white/20",
+  success: "border-emerald-400/30 bg-emerald-400/10",
+  warning: "border-amber-400/30 bg-amber-400/10",
+  error: "border-red-400/30 bg-red-400/10",
 } as const;
 
 const statusIcons = {
   default: null,
-  success: <CheckCircle2 className="h-4 w-4 text-emerald-600" />,
-  warning: <AlertCircle className="h-4 w-4 text-amber-600" />,
-  error: <AlertCircle className="h-4 w-4 text-red-600" />,
+  success: <CheckCircle2 className="h-4 w-4 text-emerald-400" />,
+  warning: <AlertCircle className="h-4 w-4 text-amber-400" />,
+  error: <AlertCircle className="h-4 w-4 text-red-400" />,
 } as const;
 
 export const FormFieldCard = React.memo(function FormFieldCard({
@@ -117,117 +106,119 @@ export const FormFieldCard = React.memo(function FormFieldCard({
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
     >
-      <Card
-        ref={cardRef}
-        className={cn(
-          "overflow-hidden border-2 transition-all duration-200",
-          `bg-gradient-to-br ${gradients[gradient]}`,
-          statusStyles[status],
-          isHighlighted && "ring-2 ring-primary ring-offset-2",
-          isDisabled && "opacity-50 cursor-not-allowed",
-          isHovered && "shadow-lg -translate-y-0.5",
-          !isDisabled && "hover:shadow-md",
-          "space-y-4"
-        )}
-      >
-        <Collapsible open={!isCollapsible || !isCollapsed} onOpenChange={setIsCollapsed}>
-          <CardHeader className="pb-2">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <motion.div
-                  whileHover={{ scale: 1.1 }}
-                  className={cn(
-                    "p-2 rounded-lg shadow-sm transition-colors duration-200",
-                    iconBgColors[gradient],
-                    !isDisabled && "hover:shadow-md"
-                  )}
-                >
-                  <Icon className={cn("h-5 w-5", iconColors[gradient])} />
-                </motion.div>
-                <div className="flex items-center gap-2">
-                  <CardTitle className="text-lg font-semibold flex items-center gap-2">
-                    {title}
-                    {isRequired && (
-                      <span className="text-red-500 text-sm">*</span>
+      <div className="relative">
+        <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
+        <div
+          ref={cardRef}
+          className={cn(
+            "relative bg-white/10 backdrop-blur-md rounded-2xl border transition-all duration-200",
+            statusStyles[status],
+            isHighlighted && "ring-2 ring-white/30 ring-offset-2",
+            isDisabled && "opacity-50 cursor-not-allowed",
+            isHovered && "shadow-lg -translate-y-0.5",
+            !isDisabled && "hover:shadow-md",
+            "space-y-4"
+          )}
+        >
+          <Collapsible open={!isCollapsible || !isCollapsed} onOpenChange={setIsCollapsed}>
+            <div className="p-6 pb-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <motion.div
+                    whileHover={{ scale: 1.1 }}
+                    className={cn(
+                      "p-2 rounded-xl shadow-sm transition-colors duration-200",
+                      iconBgColors[gradient],
+                      !isDisabled && "hover:shadow-md"
                     )}
-                  </CardTitle>
-                  {badge && (
-                    <Badge variant="outline" className="ml-2">
-                      {badge}
-                    </Badge>
+                  >
+                    <Icon className={cn("h-5 w-5", iconColors[gradient])} />
+                  </motion.div>
+                  <div className="flex items-center gap-2">
+                    <div className="text-lg font-semibold flex items-center gap-2 text-white">
+                      {title}
+                      {isRequired && (
+                        <span className="text-red-400 text-sm">*</span>
+                      )}
+                    </div>
+                    {badge && (
+                      <Badge variant="outline" className="ml-2 bg-white/10 border-white/20 text-white">
+                        {badge}
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  {status !== "default" && (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="p-1 rounded-full bg-white/20">
+                            {statusIcons[status]}
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent className="bg-white/10 backdrop-blur-md border border-white/20 text-white">
+                          <p className="text-sm">
+                            {status === "success" && "All validations passed"}
+                            {status === "warning" && "Some fields need attention"}
+                            {status === "error" && "Please fix the errors"}
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )}
+                  {tooltip && (
+                    <TooltipProvider delayDuration={0}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="flex items-center justify-center h-8 w-8 rounded-full hover:bg-white/20 cursor-help transition-colors">
+                            <Info className="h-4 w-4 text-white/70 hover:text-white" />
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent 
+                          side="right" 
+                          align="start"
+                          className="max-w-xs p-4 bg-white/10 backdrop-blur-md border border-white/20 text-white"
+                          sideOffset={5}
+                        >
+                          <p className="text-sm leading-relaxed">{tooltip}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )}
+                  {actions}
+                  {isCollapsible && (
+                    <CollapsibleTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 rounded-full hover:bg-white/20 text-white"
+                        disabled={isDisabled}
+                      >
+                        {isCollapsed ? (
+                          <ChevronDown className="h-4 w-4" />
+                        ) : (
+                          <ChevronUp className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </CollapsibleTrigger>
                   )}
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                {status !== "default" && (
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div className="p-1 rounded-full bg-white/50">
-                          {statusIcons[status]}
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p className="text-sm">
-                          {status === "success" && "All validations passed"}
-                          {status === "warning" && "Some fields need attention"}
-                          {status === "error" && "Please fix the errors"}
-                        </p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                )}
-                {tooltip && (
-                  <TooltipProvider delayDuration={0}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div className="flex items-center justify-center h-8 w-8 rounded-full hover:bg-white/50 cursor-help transition-colors">
-                          <Info className="h-4 w-4 text-gray-500 hover:text-gray-700" />
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent 
-                        side="right" 
-                        align="start"
-                        className="max-w-xs p-4 bg-white shadow-lg border border-gray-200"
-                        sideOffset={5}
-                      >
-                        <p className="text-sm text-gray-700 leading-relaxed">{tooltip}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                )}
-                {actions}
-                {isCollapsible && (
-                  <CollapsibleTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 rounded-full hover:bg-white/50"
-                      disabled={isDisabled}
-                    >
-                      {isCollapsed ? (
-                        <ChevronDown className="h-4 w-4" />
-                      ) : (
-                        <ChevronUp className="h-4 w-4" />
-                      )}
-                    </Button>
-                  </CollapsibleTrigger>
-                )}
-              </div>
             </div>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <CollapsibleContent>
-              {children}
-            </CollapsibleContent>
-          </CardContent>
-          {footer && (
-            <CardFooter className="pt-0">
-              {footer}
-            </CardFooter>
-          )}
-        </Collapsible>
-      </Card>
+            <div className="px-6 pb-6">
+              <CollapsibleContent>
+                {children}
+              </CollapsibleContent>
+            </div>
+            {footer && (
+              <div className="px-6 pb-6">
+                {footer}
+              </div>
+            )}
+          </Collapsible>
+        </div>
+      </div>
     </motion.div>
   );
 });

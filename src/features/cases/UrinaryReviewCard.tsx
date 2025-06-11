@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -65,71 +64,71 @@ export function UrinaryReviewCard({ onSelectionChange, initialSelections = [] }:
   };
 
   return (
-    <Card className="border-medical-200 shadow-sm">
-      <CardHeader className="pb-2 pt-4 px-4 bg-medical-50/70 flex flex-row items-center justify-between">
-        <div className="flex items-center space-x-2">
-          <Droplet className="h-4 w-4 text-medical-600" />
-          <CardTitle className="text-sm font-medium text-medical-800">Urinary System Review</CardTitle>
+    <div className="relative">
+      <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
+      <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20">
+        <div className="pb-2 pt-4 px-6 flex items-center gap-2">
+          <Droplet className="h-5 w-5 text-white/80" />
+          <h3 className="text-sm font-medium text-white">Urinary System Review</h3>
           {selections.length > 0 && (
-            <Badge variant="outline" className="bg-medical-100 text-xs font-normal">
+            <Badge variant="outline" className="bg-white/20 text-xs font-normal text-white ml-2">
               {selections.length}/{URINARY_SYMPTOMS.length}
             </Badge>
           )}
-        </div>
-        
-        <div className="flex items-center space-x-1">
-          <Button 
-            variant="outline" 
-            size="sm"
-            className="h-7 text-xs border-medical-300"
-            onClick={handleSelectAll}
-          >
-            <Check className="h-3 w-3 mr-1" />
-            All
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm"
-            className="h-7 text-xs border-medical-300"
-            onClick={handleClearAll}
-          >
-            <X className="h-3 w-3 mr-1" />
-            Clear
-          </Button>
-        </div>
-      </CardHeader>
-      <CardContent className="p-4">
-        <div className="grid grid-cols-2 gap-2">
-          {URINARY_SYMPTOMS.map((symptom) => (
-            <div 
-              key={symptom} 
-              className={cn(
-                "flex items-center space-x-2 p-1 rounded transition-colors",
-                selections.includes(symptom) && "bg-medical-50"
-              )}
+          <div className="flex items-center space-x-1 ml-auto">
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="h-7 text-xs border-white/20 bg-white/10 text-white"
+              onClick={handleSelectAll}
             >
-              <Checkbox 
-                id={`urinary-${symptom}`}
-                checked={selections.includes(symptom)}
-                onCheckedChange={(checked) => handleCheckboxChange(symptom, checked === true)}
+              <Check className="h-3 w-3 mr-1" />
+              All
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="h-7 text-xs border-white/20 bg-white/10 text-white"
+              onClick={handleClearAll}
+            >
+              <X className="h-3 w-3 mr-1" />
+              Clear
+            </Button>
+          </div>
+        </div>
+        <div className="p-6">
+          <div className="grid grid-cols-2 gap-2">
+            {URINARY_SYMPTOMS.map((symptom) => (
+              <div 
+                key={symptom} 
                 className={cn(
-                  "border-medical-300 transition-all duration-200",
-                  selections.includes(symptom) && "bg-medical-600 border-medical-600"
-                )}
-              />
-              <Label 
-                htmlFor={`urinary-${symptom}`}
-                className={cn(
-                  "text-xs cursor-pointer",
-                  selections.includes(symptom) && "text-medical-900"
+                  "flex items-center space-x-2 p-1 rounded transition-colors",
+                  selections.includes(symptom) && "bg-white/10"
                 )}
               >
-                {symptom}
-              </Label>
-            </div>
-          ))}
+                <Checkbox 
+                  id={`urinary-${symptom}`}
+                  checked={selections.includes(symptom)}
+                  onCheckedChange={(checked) => handleCheckboxChange(symptom, checked === true)}
+                  className={cn(
+                    "border-white/20 transition-all duration-200",
+                    selections.includes(symptom) && "bg-blue-500 border-blue-500"
+                  )}
+                />
+                <Label 
+                  htmlFor={`urinary-${symptom}`}
+                  className={cn(
+                    "text-xs cursor-pointer text-white",
+                    selections.includes(symptom) && "font-semibold"
+                  )}
+                >
+                  {symptom}
+                </Label>
+              </div>
+            ))}
+          </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

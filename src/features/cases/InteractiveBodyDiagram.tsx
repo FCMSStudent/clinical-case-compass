@@ -534,51 +534,90 @@ export const InteractiveBodyDiagram: React.FC<InteractiveBodyDiagramProps> = ({
 
   // ——— COMPONENT UI ———————————————————————————————————————————————————————
   return (
-    <div
-      ref={containerRef}
-      className={cn("relative flex flex-col items-center", className)}
-    >
-      {/* Mobile Help Alert */}
-      {isMobile && showMobileHelp && (
-        <Alert className="mb-4 bg-primary/5 border-primary/20">
-          <AlertCircle className="h-4 w-4 text-primary" />
-          <AlertTitle className="text-primary">Mobile Controls</AlertTitle>
-          <AlertDescription className="text-primary/80">
-            <ul className="list-disc list-inside space-y-1 mt-1">
-              <li>Pinch to zoom in/out</li>
-              <li>Double tap to zoom in/out quickly</li>
-              <li>Drag to pan the diagram</li>
-              <li>Tap body parts to select them</li>
-            </ul>
-          </AlertDescription>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="absolute top-2 right-2"
-            onClick={() => setShowMobileHelp(false)}
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </Alert>
-      )}
+    <div className={cn("relative w-full h-full", className)}>
+      <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl z-0"></div>
+      <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-4 z-10">
+        {/* Mobile Help Alert */}
+        {isMobile && showMobileHelp && (
+          <Alert className="mb-4 bg-primary/5 border-primary/20">
+            <AlertCircle className="h-4 w-4 text-primary" />
+            <AlertTitle className="text-primary">Mobile Controls</AlertTitle>
+            <AlertDescription className="text-primary/80">
+              <ul className="list-disc list-inside space-y-1 mt-1">
+                <li>Pinch to zoom in/out</li>
+                <li>Double tap to zoom in/out quickly</li>
+                <li>Drag to pan the diagram</li>
+                <li>Tap body parts to select them</li>
+              </ul>
+            </AlertDescription>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="absolute top-2 right-2"
+              onClick={() => setShowMobileHelp(false)}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </Alert>
+        )}
 
-      {/* Controls */}
-      <div className="mb-4 flex flex-wrap items-center gap-2">
-        <TooltipProvider>
-          <div className="flex items-center gap-2">
+        {/* Controls */}
+        <div className="mb-4 flex flex-wrap items-center gap-2">
+          <TooltipProvider>
+            <div className="flex items-center gap-2">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    size="icon"
+                    variant="outline"
+                    onClick={handleZoomIn}
+                    disabled={zoom >= ZOOM_MAX}
+                    aria-label="Zoom in"
+                  >
+                    <ZoomIn className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Zoom in</TooltipContent>
+              </Tooltip>
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    size="icon"
+                    variant="outline"
+                    onClick={handleZoomOut}
+                    disabled={zoom <= ZOOM_MIN}
+                    aria-label="Zoom out"
+                  >
+                    <ZoomOut className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Zoom out</TooltipContent>
+              </Tooltip>
+
+              <Slider
+                value={[zoom]}
+                min={ZOOM_MIN}
+                max={ZOOM_MAX}
+                step={ZOOM_STEP}
+                onValueChange={handleZoomChange}
+                className="w-32"
+                aria-label="Zoom level"
+              />
+            </div>
+
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
                   size="icon"
                   variant="outline"
-                  onClick={handleZoomIn}
-                  disabled={zoom >= ZOOM_MAX}
-                  aria-label="Zoom in"
+                  onClick={toggleView}
+                  aria-label={`Switch to ${viewType === "anterior" ? "posterior" : "anterior"} view`}
                 >
-                  <ZoomIn className="h-4 w-4" />
+                  <RotateCw className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Zoom in</TooltipContent>
+              <TooltipContent>Switch view</TooltipContent>
             </Tooltip>
 
             <Tooltip>
@@ -586,198 +625,159 @@ export const InteractiveBodyDiagram: React.FC<InteractiveBodyDiagramProps> = ({
                 <Button
                   size="icon"
                   variant="outline"
-                  onClick={handleZoomOut}
-                  disabled={zoom <= ZOOM_MIN}
-                  aria-label="Zoom out"
+                  onClick={clearSelection}
+                  disabled={selectedParts.size === 0}
+                  aria-label="Clear selection"
                 >
-                  <ZoomOut className="h-4 w-4" />
+                  <X className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Zoom out</TooltipContent>
+              <TooltipContent>Clear selection</TooltipContent>
             </Tooltip>
+          </TooltipProvider>
 
-            <Slider
-              value={[zoom]}
-              min={ZOOM_MIN}
-              max={ZOOM_MAX}
-              step={ZOOM_STEP}
-              onValueChange={handleZoomChange}
-              className="w-32"
-              aria-label="Zoom level"
+          <div className="relative flex items-center">
+            <Search className="absolute left-2 h-4 w-4 text-muted-foreground" />
+            <Input
+              value={searchFilter}
+              onChange={(e) => setSearchFilter(e.target.value)}
+              placeholder="Search symptoms / parts"
+              className="pl-8 w-48"
+              aria-label="Search body parts and symptoms"
             />
+          </div>
+
+          <div className="flex items-center gap-1">
+            <Filter className="h-4 w-4 text-muted-foreground" />
+            <select
+              value={severityFilter}
+              onChange={(e) => setSeverityFilter(e.target.value as SeverityLevel | "all")}
+              className="border rounded-md text-sm px-2 py-1"
+              aria-label="Filter by severity level"
+            >
+              <option value="all">All severities</option>
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+              <option value="critical">Critical</option>
+            </select>
           </div>
 
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
                 size="icon"
-                variant="outline"
-                onClick={toggleView}
-                aria-label={`Switch to ${viewType === "anterior" ? "posterior" : "anterior"} view`}
+                variant={showTooltip ? "default" : "outline"}
+                onClick={() => setShowTooltip((p) => !p)}
+                aria-label="Toggle tooltips"
               >
-                <RotateCw className="h-4 w-4" />
+                <BookOpen className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Switch view</TooltipContent>
+            <TooltipContent>Toggle tooltips</TooltipContent>
           </Tooltip>
-
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                size="icon"
-                variant="outline"
-                onClick={clearSelection}
-                disabled={selectedParts.size === 0}
-                aria-label="Clear selection"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Clear selection</TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-
-        <div className="relative flex items-center">
-          <Search className="absolute left-2 h-4 w-4 text-muted-foreground" />
-          <Input
-            value={searchFilter}
-            onChange={(e) => setSearchFilter(e.target.value)}
-            placeholder="Search symptoms / parts"
-            className="pl-8 w-48"
-            aria-label="Search body parts and symptoms"
-          />
         </div>
 
-        <div className="flex items-center gap-1">
-          <Filter className="h-4 w-4 text-muted-foreground" />
-          <select
-            value={severityFilter}
-            onChange={(e) => setSeverityFilter(e.target.value as SeverityLevel | "all")}
-            className="border rounded-md text-sm px-2 py-1"
-            aria-label="Filter by severity level"
-          >
-            <option value="all">All severities</option>
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-            <option value="critical">Critical</option>
-          </select>
-        </div>
-
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              size="icon"
-              variant={showTooltip ? "default" : "outline"}
-              onClick={() => setShowTooltip((p) => !p)}
-              aria-label="Toggle tooltips"
-            >
-              <BookOpen className="h-4 w-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Toggle tooltips</TooltipContent>
-        </Tooltip>
-      </div>
-
-      {/* Diagram container */}
-      <motion.div
-        className="relative overflow-auto touch-none"
-        style={{
-          cursor: isDragging ? "grabbing" : "grab",
-        }}
-        onMouseDown={handlePanStart}
-        onTouchStart={handlePanStart}
-      >
+        {/* Diagram container */}
         <motion.div
+          className="relative overflow-auto touch-none"
           style={{
-            transform: `${transformTranslate} ${transformScale}`,
-            transformOrigin: "center center",
+            cursor: isDragging ? "grabbing" : "grab",
           }}
-          animate={{
-            scale: zoom / 100,
-            x: x.get(),
-            y: y.get(),
-          }}
-          transition={{
-            type: "spring",
-            stiffness: 300,
-            damping: 30,
-          }}
+          onMouseDown={handlePanStart}
+          onTouchStart={handlePanStart}
         >
-          {BodySvg}
-        </motion.div>
-
-        {/* Hidden descriptions for screen readers */}
-        <div className="sr-only" aria-live="polite">
-          {selectedParts.size === 0
-            ? "No body parts selected"
-            : `Selected: ${Array.from(selectedParts)
-                .map((id) => BODY_PARTS[id].name)
-                .join(", ")}`}
-        </div>
-      </motion.div>
-
-      {/* Tooltip */}
-      <AnimatePresence>
-        {hoveredPart && showTooltip && (
           <motion.div
-            key={hoveredPart}
-            initial={{ opacity: 0, y: -5 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -5 }}
-            transition={{ duration: 0.2 }}
-            className="absolute z-50 pointer-events-none bg-popover text-popover-foreground border rounded-md shadow-lg p-2 text-sm"
             style={{
-              left: tooltipPosition.x + 8,
-              top: tooltipPosition.y + 8,
-              maxWidth: "200px",
+              transform: `${transformTranslate} ${transformScale}`,
+              transformOrigin: "center center",
+            }}
+            animate={{
+              scale: zoom / 100,
+              x: x.get(),
+              y: y.get(),
+            }}
+            transition={{
+              type: "spring",
+              stiffness: 300,
+              damping: 30,
             }}
           >
-            <div className="font-medium">{BODY_PARTS[hoveredPart].name}</div>
-            <div className="text-xs text-muted-foreground mt-1">
-              {BODY_PARTS[hoveredPart].anatomicalRegion}
-            </div>
-            <div className="text-xs text-muted-foreground">
-              {BODY_PARTS[hoveredPart].relatedSystems.join(", ")}
-            </div>
+            {BodySvg}
           </motion.div>
-        )}
-      </AnimatePresence>
 
-      {/* Selected parts accordion */}
-      <Accordion type="single" collapsible className="mt-4 w-full max-w-sm">
-        <AccordionItem value="selected">
-          <AccordionTrigger>
-            Selected ({selectedParts.size})
-          </AccordionTrigger>
-          <AccordionContent>
-            {selectedParts.size === 0 ? (
-              <p className="text-muted-foreground text-sm">No part selected.</p>
-            ) : (
-              <ul className="text-sm space-y-1">
-                {Array.from(selectedParts).map((id) => {
-                  const part = BODY_PARTS[id];
-                  return (
-                    <li
-                      key={id}
-                      className="flex items-start gap-1"
-                      id={`part-description-${id}`}
-                    >
-                      <CheckCircle2 className="h-4 w-4 text-primary mt-1" />
-                      <div>
-                        <span className="font-medium">{part.name}</span>
-                        <div className="text-xs text-muted-foreground">
-                          {part.anatomicalRegion} • {part.relatedSystems.join(", ")}
+          {/* Hidden descriptions for screen readers */}
+          <div className="sr-only" aria-live="polite">
+            {selectedParts.size === 0
+              ? "No body parts selected"
+              : `Selected: ${Array.from(selectedParts)
+                  .map((id) => BODY_PARTS[id].name)
+                  .join(", ")}`}
+          </div>
+        </motion.div>
+
+        {/* Tooltip */}
+        <AnimatePresence>
+          {hoveredPart && showTooltip && (
+            <motion.div
+              key={hoveredPart}
+              initial={{ opacity: 0, y: -5 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -5 }}
+              transition={{ duration: 0.2 }}
+              className="absolute z-50 pointer-events-none bg-popover text-popover-foreground border rounded-md shadow-lg p-2 text-sm"
+              style={{
+                left: tooltipPosition.x + 8,
+                top: tooltipPosition.y + 8,
+                maxWidth: "200px",
+              }}
+            >
+              <div className="font-medium">{BODY_PARTS[hoveredPart].name}</div>
+              <div className="text-xs text-muted-foreground mt-1">
+                {BODY_PARTS[hoveredPart].anatomicalRegion}
+              </div>
+              <div className="text-xs text-muted-foreground">
+                {BODY_PARTS[hoveredPart].relatedSystems.join(", ")}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Selected parts accordion */}
+        <Accordion type="single" collapsible className="mt-4 w-full max-w-sm">
+          <AccordionItem value="selected">
+            <AccordionTrigger>
+              Selected ({selectedParts.size})
+            </AccordionTrigger>
+            <AccordionContent>
+              {selectedParts.size === 0 ? (
+                <p className="text-muted-foreground text-sm">No part selected.</p>
+              ) : (
+                <ul className="text-sm space-y-1">
+                  {Array.from(selectedParts).map((id) => {
+                    const part = BODY_PARTS[id];
+                    return (
+                      <li
+                        key={id}
+                        className="flex items-start gap-1"
+                        id={`part-description-${id}`}
+                      >
+                        <CheckCircle2 className="h-4 w-4 text-primary mt-1" />
+                        <div>
+                          <span className="font-medium">{part.name}</span>
+                          <div className="text-xs text-muted-foreground">
+                            {part.anatomicalRegion} • {part.relatedSystems.join(", ")}
+                          </div>
                         </div>
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </div>
     </div>
   );
 };

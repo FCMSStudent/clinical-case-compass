@@ -166,14 +166,18 @@ export function LabResultsCard({ onLabResultsChange, initialResults = [] }: LabR
   };
 
   return (
-    <Card className="border-medical-200 shadow-sm">
-      <CardHeader className="pb-4">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg font-semibold">Laboratory Studies</CardTitle>
+    <div className="relative">
+      <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
+      <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20">
+        <div className="pb-4 pt-6 px-6 flex items-center justify-between">
+          <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+            <FileText className="h-5 w-5 text-white/80" />
+            Laboratory Studies
+          </h3>
           <Button
             variant="outline"
             size="sm"
-            className="h-8"
+            className="h-8 bg-white/10 border-white/20 hover:bg-white/20 text-white"
             onClick={() => setShowAddForm(!showAddForm)}
           >
             {showAddForm ? (
@@ -184,49 +188,45 @@ export function LabResultsCard({ onLabResultsChange, initialResults = [] }: LabR
             {showAddForm ? "Cancel" : "Add Test"}
           </Button>
         </div>
-      </CardHeader>
-
-      <CardContent className="space-y-4">
-        <AnimatePresence mode="wait">
-          {showAddForm && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="space-y-4 p-4 border rounded-lg bg-medical-50"
-            >
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label>Test Type</Label>
-                  <Select
-                    value={selectedTest}
-                    onValueChange={(value) => {
-                      setSelectedTest(value);
-                      if (value) {
-                        const test = COMMON_LAB_TESTS.find(t => t.id === value);
-                        if (test) {
-                          setCustomTest({ name: "", unit: "" });
-                        }
-                      }
-                    }}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a test" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="">Custom Test</SelectItem>
-                      {COMMON_LAB_TESTS.map((test) => (
-                        <SelectItem key={test.id} value={test.id}>
-                          {test.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {selectedTest ? (
+        <div className="p-6 space-y-4">
+          <AnimatePresence mode="wait">
+            {showAddForm && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                className="space-y-4 p-4 border rounded-lg bg-white/10 backdrop-blur-md border-white/20"
+              >
+                <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label>Value</Label>
+                    <Label className="text-white">Test Type</Label>
+                    <Select
+                      value={selectedTest}
+                      onValueChange={(value) => {
+                        setSelectedTest(value);
+                        if (value) {
+                          const test = COMMON_LAB_TESTS.find(t => t.id === value);
+                          if (test) {
+                            setCustomTest({ name: "", unit: "" });
+                          }
+                        }
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a test" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="">Custom Test</SelectItem>
+                        {COMMON_LAB_TESTS.map((test) => (
+                          <SelectItem key={test.id} value={test.id}>
+                            {test.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-white">Value</Label>
                     <div className="flex gap-2">
                       <Input
                         type="number"
@@ -239,72 +239,47 @@ export function LabResultsCard({ onLabResultsChange, initialResults = [] }: LabR
                       </div>
                     </div>
                   </div>
-                ) : (
-                  <>
-                    <div className="space-y-2">
-                      <Label>Test Name</Label>
-                      <Input
-                        value={customTest.name}
-                        onChange={(e) => setCustomTest(prev => ({ ...prev, name: e.target.value }))}
-                        placeholder="Enter test name"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Value</Label>
-                      <div className="flex gap-2">
-                        <Input
-                          type="number"
-                          value={testValue}
-                          onChange={(e) => setTestValue(e.target.value)}
-                          placeholder="Enter value"
-                        />
-                        <Input
-                          value={customTest.unit}
-                          onChange={(e) => setCustomTest(prev => ({ ...prev, unit: e.target.value }))}
-                          placeholder="Unit"
-                          className="w-24"
-                        />
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
-
-              <div className="flex justify-end">
-                <Button
-                  onClick={handleAddTest}
-                  disabled={!testValue || (!selectedTest && !customTest.name)}
-                >
-                  Add Test
-                </Button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <div className="space-y-3">
-          <AnimatePresence mode="popLayout">
-            {labResults.length === 0 ? (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
-                <Alert variant="default" className="bg-medical-50">
-                  <FileText className="h-4 w-4" />
-                  <AlertDescription>
-                    No laboratory tests added yet. Click "Add Test" to begin.
-                  </AlertDescription>
-                </Alert>
+                </div>
+                <div className="flex gap-2 justify-end">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="bg-white/10 border-white/20 hover:bg-white/20 text-white"
+                    onClick={() => setShowAddForm(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="default"
+                    size="sm"
+                    className="bg-blue-500/80 hover:bg-blue-600 text-white"
+                    onClick={handleAddTest}
+                  >
+                    Add
+                  </Button>
+                </div>
               </motion.div>
-            ) : (
-              labResults.map((test) => (
-                <LabTestItem key={test.id} test={test} />
-              ))
             )}
           </AnimatePresence>
+          <div className="space-y-3">
+            <AnimatePresence>
+              {labResults.length === 0 && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="text-white/70 text-sm"
+                >
+                  No lab results added yet.
+                </motion.div>
+              )}
+              {labResults.map((test) => (
+                <LabTestItem key={test.id} test={test} />
+              ))}
+            </AnimatePresence>
+          </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

@@ -97,15 +97,15 @@ export const SidebarTrigger = ({ className }: { className?: string }) => {
     <button
       type="button"
       className={cn(
-        "inline-flex items-center justify-center p-2 rounded-lg transition-colors",
-        "hover:bg-accent hover:text-accent-foreground",
-        "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+        "inline-flex items-center justify-center p-2 rounded-xl transition-colors",
+        "bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20",
+        "focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2",
         className
       )}
       onClick={toggle}
       aria-label="Toggle sidebar"
     >
-      <Menu className={ICON_SIZE} />
+      <Menu className={cn(ICON_SIZE, "text-white")} />
     </button>
   );
 };
@@ -142,25 +142,28 @@ const NavItem: React.FC<NavItemProps> = ({ item, collapsed, isMobile, onNavigate
       onClick={onNavigate}
       className={({ isActive }) =>
         cn(
-          'group relative flex items-center rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200',
-          'hover:bg-accent hover:text-accent-foreground',
-          'focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
-          isActive && 'bg-accent text-accent-foreground shadow-sm',
+          'group relative flex items-center rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200',
+          'bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20',
+          'focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2',
+          isActive && 'bg-white/20 text-white shadow-sm border-white/30',
           collapsed && !isMobile && 'justify-center px-2'
         )
       }
     >
-      <item.icon className={cn(ICON_SIZE, "flex-shrink-0")} />
+      <item.icon className={cn(ICON_SIZE, "flex-shrink-0 text-white")} />
 
       {(!collapsed || isMobile) && (
-        <span className="ml-3 truncate">{item.label}</span>
+        <span className="ml-3 truncate text-white">{item.label}</span>
       )}
 
       {/* Tooltip for collapsed state */}
       {collapsed && !isMobile && (
         <div className="absolute top-1/2 left-full ml-2 -translate-y-1/2 z-50 hidden group-hover:block">
-          <div className="rounded-md bg-popover px-2 py-1 text-xs text-popover-foreground shadow-md border">
-            {item.label}
+          <div className="relative">
+            <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 shadow-xl"></div>
+            <div className="relative bg-white/10 backdrop-blur-md rounded-xl border border-white/20 px-3 py-2 text-xs text-white shadow-md">
+              {item.label}
+            </div>
           </div>
         </div>
       )}
@@ -182,19 +185,22 @@ const UserProfile: React.FC<{ collapsed: boolean; isMobile: boolean }> = ({ coll
     return (
       <div className="group relative">
         <button
-          className="flex w-full items-center justify-center rounded-lg p-2 hover:bg-accent"
+          className="flex w-full items-center justify-center rounded-xl p-2 bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-colors"
           onClick={() => navigate("/settings")}
         >
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
-            <User className="h-4 w-4" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm border border-white/30">
+            <User className="h-4 w-4 text-white" />
           </div>
         </button>
 
         {/* Tooltip */}
         <div className="absolute top-1/2 left-full ml-2 -translate-y-1/2 z-50 hidden group-hover:block">
-          <div className="rounded-md bg-popover px-3 py-2 text-xs text-popover-foreground shadow-md border min-w-[200px]">
-            <div className="font-medium">{fullName}</div>
-            <div className="text-muted-foreground">{user.email}</div>
+          <div className="relative">
+            <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 shadow-xl"></div>
+            <div className="relative bg-white/10 backdrop-blur-md rounded-xl border border-white/20 px-3 py-2 text-xs text-white shadow-md min-w-[200px]">
+              <div className="font-medium">{fullName}</div>
+              <div className="text-white/70">{user.email}</div>
+            </div>
           </div>
         </div>
       </div>
@@ -202,24 +208,24 @@ const UserProfile: React.FC<{ collapsed: boolean; isMobile: boolean }> = ({ coll
   }
 
   return (
-    <div className="border-t pt-4">
+    <div className="border-t border-white/20 pt-4">
       <div
-        className="flex items-center space-x-3 rounded-lg p-3 hover:bg-accent transition-colors cursor-pointer"
+        className="flex items-center space-x-3 rounded-xl p-3 bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-colors cursor-pointer"
         onClick={() => navigate("/settings")}
       >
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground">
-          <User className="h-5 w-5" />
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm border border-white/30">
+          <User className="h-5 w-5 text-white" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="truncate text-sm font-medium">{fullName}</p>
-          <p className="truncate text-xs text-muted-foreground">{user.email}</p>
+          <p className="truncate text-sm font-medium text-white">{fullName}</p>
+          <p className="truncate text-xs text-white/70">{user.email}</p>
         </div>
         <button
-          className="p-1 hover:bg-accent rounded transition-colors"
+          className="p-1 bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 rounded-lg transition-colors"
           aria-label="Sign out"
           onClick={e => { e.stopPropagation(); signOut(); }}
         >
-          <LogOut className="h-4 w-4" />
+          <LogOut className="h-4 w-4 text-white" />
         </button>
       </div>
     </div>
@@ -233,30 +239,30 @@ const Sidebar = React.memo(function Sidebar() {
     <div className="flex h-full flex-col">
       {/* Header */}
       <div className={cn(
-        "flex items-center border-b px-4 py-4",
+        "flex items-center border-b border-white/20 px-4 py-4",
         collapsed && !isMobile && "justify-center px-2"
       )}>
         {(!collapsed || isMobile) && (
-          <h1 className="text-xl font-bold text-primary">Medica</h1>
+          <h1 className="text-xl font-bold text-white">Clinical Case Compass</h1>
         )}
         {collapsed && !isMobile && (
-          <div className="text-xl font-bold text-primary">CCC</div>
+          <div className="text-xl font-bold text-white">CCC</div>
         )}
 
         {isMobile && (
           <button
-            className="ml-auto p-1 hover:bg-accent rounded transition-colors"
+            className="ml-auto p-1 bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 rounded-lg transition-colors"
             onClick={closeSidebar}
             aria-label="Close sidebar"
           >
-            <X className={ICON_SIZE} />
+            <X className={cn(ICON_SIZE, "text-white")} />
           </button>
         )}
       </div>
 
       {/* Navigation */}
       <nav className={cn("flex-1 p-4", collapsed && !isMobile ? "overflow-visible" : "overflow-y-auto")}>
-        <ul className="space-y-1">
+        <ul className="space-y-2">
           {navItems.map((item) => (
             <li key={item.href}>
               <NavItem
@@ -277,15 +283,15 @@ const Sidebar = React.memo(function Sidebar() {
 
       {/* Collapse Toggle (Desktop only) */}
       {!isMobile && (
-        <div className="border-t p-2">
+        <div className="border-t border-white/20 p-2">
           <button
             onClick={toggleCollapsed}
-            className="flex w-full items-center justify-center rounded-lg p-2 hover:bg-accent transition-colors"
+            className="flex w-full items-center justify-center rounded-xl p-2 bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-colors"
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             <ChevronLeft className={cn(
               ICON_SIZE,
-              "transition-transform duration-200",
+              "transition-transform duration-200 text-white",
               collapsed && "rotate-180"
             )} />
           </button>
@@ -300,7 +306,7 @@ const Sidebar = React.memo(function Sidebar() {
         {/* Backdrop */}
         {open && (
           <div
-            className="fixed inset-0 z-40 bg-black/50 transition-opacity"
+            className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity"
             onClick={closeSidebar}
             aria-hidden="true"
           />
@@ -309,11 +315,16 @@ const Sidebar = React.memo(function Sidebar() {
         {/* Mobile Sidebar */}
         <div
           className={cn(
-            "fixed inset-y-0 left-0 z-50 w-[var(--sidebar-width-mobile)] bg-background border-r shadow-lg transform transition-transform duration-300 ease-in-out",
+            "fixed inset-y-0 left-0 z-50 w-[var(--sidebar-width-mobile)] transform transition-transform duration-300 ease-in-out",
             open ? "translate-x-0" : "-translate-x-full"
           )}
         >
-          {content}
+          <div className="relative h-full w-full">
+            <div className="absolute inset-0 bg-white/10 backdrop-blur-xl border-r border-white/20 shadow-xl"></div>
+            <div className="relative bg-white/10 backdrop-blur-md border-r border-white/20 h-full">
+              {content}
+            </div>
+          </div>
         </div>
       </>
     );
@@ -325,12 +336,17 @@ const Sidebar = React.memo(function Sidebar() {
         open
           ? "sticky top-0 z-20 h-screen"
           : "fixed inset-y-0 left-0 z-40",
-        "bg-background border-r shadow-sm transform transition-all duration-300 ease-in-out",
+        "transform transition-all duration-300 ease-in-out",
         "w-[var(--sidebar-width)]",
         open ? "" : "-translate-x-full"
       )}
     >
-      {content}
+      <div className="relative h-full w-full">
+        <div className="absolute inset-0 bg-white/10 backdrop-blur-xl border-r border-white/20 shadow-xl"></div>
+        <div className="relative bg-white/10 backdrop-blur-md border-r border-white/20 h-full">
+          {content}
+        </div>
+      </div>
     </div>
   );
 });

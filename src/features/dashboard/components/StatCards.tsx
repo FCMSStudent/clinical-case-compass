@@ -1,10 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Briefcase, CheckCircle, FileEdit, TrendingUp, Clock, BookOpen } from "lucide-react";
+import { Briefcase, CheckCircle, FileEdit, TrendingUp, Clock, BookOpen, Target, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ICON_SIZE } from "@/constants/ui";
 import React from "react";
 import { motion } from "framer-motion";
 import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
 
 interface StatCardProps {
   title: string;
@@ -17,7 +18,8 @@ interface StatCardProps {
     isPositive: boolean;
   };
   progress?: number;
-  color?: "blue" | "green" | "orange" | "purple";
+  color?: "blue" | "green" | "orange" | "purple" | "indigo";
+  subtitle?: string;
 }
 
 const StatCard = ({ 
@@ -28,65 +30,141 @@ const StatCard = ({
   className, 
   trend,
   progress,
-  color = "blue"
+  color = "blue",
+  subtitle
 }: StatCardProps) => {
   const colorClasses = {
-    blue: "bg-blue-500/10 text-blue-600 border-blue-200",
-    green: "bg-green-500/10 text-green-600 border-green-200",
-    orange: "bg-orange-500/10 text-orange-600 border-orange-200",
-    purple: "bg-purple-500/10 text-purple-600 border-purple-200"
+    blue: {
+      bg: "bg-blue-400/20",
+      text: "text-blue-300",
+      border: "border-blue-300/30",
+      gradient: "from-blue-400/30 to-blue-500/30",
+      progress: "bg-blue-300"
+    },
+    green: {
+      bg: "bg-green-400/20",
+      text: "text-green-300",
+      border: "border-green-300/30",
+      gradient: "from-green-400/30 to-green-500/30",
+      progress: "bg-green-300"
+    },
+    orange: {
+      bg: "bg-orange-400/20",
+      text: "text-orange-300",
+      border: "border-orange-300/30",
+      gradient: "from-orange-400/30 to-orange-500/30",
+      progress: "bg-orange-300"
+    },
+    purple: {
+      bg: "bg-purple-400/20",
+      text: "text-purple-300",
+      border: "border-purple-300/30",
+      gradient: "from-purple-400/30 to-purple-500/30",
+      progress: "bg-purple-300"
+    },
+    indigo: {
+      bg: "bg-indigo-400/20",
+      text: "text-indigo-300",
+      border: "border-indigo-300/30",
+      gradient: "from-indigo-400/30 to-indigo-500/30",
+      progress: "bg-indigo-300"
+    }
   };
+
+  const currentColor = colorClasses[color];
 
   return (
     <motion.div
-      whileHover={{ scale: 1.02 }}
-      transition={{ duration: 0.2 }}
+      whileHover={{ scale: 1.02, y: -2 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
     >
-      <Card className={cn(
-        "hover:shadow-lg transition-all duration-300 border-0 bg-gradient-to-br from-card to-card/80 backdrop-blur-sm",
-        className
-      )}>
-        <CardHeader className="flex flex-row items-center justify-between pb-3">
-          <CardTitle className="text-sm font-medium text-muted-foreground">
-            {title}
-          </CardTitle>
-          <div className={cn(
-            "h-10 w-10 rounded-xl flex items-center justify-center border",
-            colorClasses[color]
-          )}>
-            {icon}
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="flex items-baseline space-x-2">
-            <div className="text-3xl font-bold text-foreground">{value}</div>
-            {trend && (
+      <div className="relative">
+        <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
+        <div className={cn(
+          "relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 group overflow-hidden transition-all duration-300",
+          "hover:bg-white/15 hover:border-white/30",
+          "before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/5 before:to-transparent before:translate-x-[-100%] before:group-hover:translate-x-[100%] before:transition-transform before:duration-700",
+          className
+        )}>
+          <div className="flex flex-row items-center justify-between pb-4">
+            <div className="space-y-1">
+              <h3 className="text-sm font-medium text-white/80">
+                {title}
+              </h3>
+              {subtitle && (
+                <p className="text-xs text-white/60">{subtitle}</p>
+              )}
+            </div>
+            <div className={cn(
+              "relative h-12 w-12 rounded-xl flex items-center justify-center border transition-all duration-300 group-hover:scale-110",
+              currentColor.bg,
+              currentColor.text,
+              currentColor.border
+            )}>
               <div className={cn(
-                "flex items-center text-sm font-medium",
-                trend.isPositive ? "text-green-600" : "text-red-600"
-              )}>
-                <TrendingUp className={cn(
-                  "h-4 w-4 mr-1",
-                  !trend.isPositive && "rotate-180"
-                )} />
-                {trend.value}%
+                "absolute inset-0 rounded-xl bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-300",
+                currentColor.gradient
+              )} />
+              <div className="relative z-10">
+                {icon}
+              </div>
+            </div>
+          </div>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <div className="flex items-baseline gap-2">
+                <motion.span 
+                  className="text-3xl font-bold text-white"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3, delay: 0.1 }}
+                >
+                  {value}
+                </motion.span>
+                {trend && (
+                  <motion.div
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: 0.2 }}
+                    className="flex items-center gap-1"
+                  >
+                    <TrendingUp className={cn(
+                      "h-4 w-4",
+                      trend.isPositive ? "text-green-300" : "text-red-300 rotate-180"
+                    )} />
+                    <span className={cn(
+                      "text-sm font-medium",
+                      trend.isPositive ? "text-green-300" : "text-red-300"
+                    )}>
+                      {trend.value}%
+                    </span>
+                  </motion.div>
+                )}
+              </div>
+              {description && (
+                <p className="text-sm text-white/70">{description}</p>
+              )}
+            </div>
+            
+            {progress !== undefined && (
+              <div className="space-y-2">
+                <div className="flex justify-between text-xs">
+                  <span className="text-white/70">Progress</span>
+                  <span className="font-medium text-white">{Math.round(progress)}%</span>
+                </div>
+                <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden">
+                  <motion.div
+                    className={cn("h-2 rounded-full", currentColor.progress)}
+                    initial={{ width: 0 }}
+                    animate={{ width: `${progress}%` }}
+                    transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
+                  />
+                </div>
               </div>
             )}
           </div>
-          {description && (
-            <p className="text-sm text-muted-foreground">{description}</p>
-          )}
-          {progress !== undefined && (
-            <div className="space-y-2">
-              <div className="flex justify-between text-xs text-muted-foreground">
-                <span>Progress</span>
-                <span>{progress}%</span>
-              </div>
-              <Progress value={progress} className="h-2" />
-            </div>
-          )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </motion.div>
   );
 };
@@ -108,16 +186,15 @@ export const StatCards = ({ stats, isLoading }: StatCardsProps) => {
     return (
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         {[...Array(4)].map((_, i) => (
-          <Card key={i} className="animate-pulse">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <div className="h-4 bg-muted rounded w-20"></div>
-              <div className="h-8 w-8 bg-muted rounded-full"></div>
-            </CardHeader>
-            <CardContent>
-              <div className="h-8 bg-muted rounded w-16 mb-2"></div>
-              <div className="h-4 bg-muted rounded w-32"></div>
-            </CardContent>
-          </Card>
+          <div key={i} className="relative">
+            <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
+            <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 animate-pulse">
+              <div className="h-4 bg-white/20 rounded w-3/4 mb-2"></div>
+              <div className="h-10 w-10 bg-white/20 rounded-xl"></div>
+              <div className="h-8 bg-white/20 rounded w-1/2 mb-2 mt-4"></div>
+              <div className="h-4 bg-white/20 rounded w-full"></div>
+            </div>
+          </div>
         ))}
       </div>
     );
@@ -125,41 +202,58 @@ export const StatCards = ({ stats, isLoading }: StatCardsProps) => {
 
   const totalCases = stats.totalCases;
   const completionRate = totalCases > 0 ? Math.round((stats.casesWithLearningPoints / totalCases) * 100) : 0;
-  const weeklyGrowth = stats.thisWeekCases > 0 ? Math.round((stats.thisWeekCases / totalCases) * 100) : 0;
+  const weeklyGrowth = totalCases > 0 ? Math.round((stats.thisWeekCases / totalCases) * 100) : 0;
 
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-      <StatCard
-        title="Total Cases"
-        value={totalCases}
-        icon={<BookOpen className={`${ICON_SIZE} text-current`} />}
-        description="All documented cases"
-        color="blue"
-        progress={completionRate}
-      />
-      <StatCard
-        title="Learning Points"
-        value={stats.casesWithLearningPoints}
-        icon={<CheckCircle className={`${ICON_SIZE} text-current`} />}
-        description="Cases with insights captured"
-        color="green"
-        trend={{ value: completionRate, isPositive: completionRate > 50 }}
-      />
-      <StatCard
-        title="Resources Added"
-        value={stats.totalResources}
-        icon={<FileEdit className={`${ICON_SIZE} text-current`} />}
-        description="Total learning resources"
-        color="orange"
-      />
-      <StatCard
-        title="This Week"
-        value={stats.thisWeekCases}
-        icon={<Clock className={`${ICON_SIZE} text-current`} />}
-        description="New cases this week"
-        color="purple"
-        trend={{ value: weeklyGrowth, isPositive: weeklyGrowth > 0 }}
-      />
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-white">Key Metrics</h2>
+          <p className="text-white/70">Your learning progress at a glance</p>
+        </div>
+        <Badge variant="outline" className="border-white/30 text-white bg-white/10">
+          <Target className="h-3 w-3 mr-1" />
+          Real-time data
+        </Badge>
+      </div>
+      
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <StatCard
+          title="Total Cases"
+          value={totalCases}
+          icon={<BookOpen className={`${ICON_SIZE} text-current`} />}
+          description="All documented cases"
+          color="blue"
+          progress={Math.min((totalCases / 50) * 100, 100)}
+          subtitle="Your case library"
+        />
+        <StatCard
+          title="Learning Points"
+          value={stats.casesWithLearningPoints}
+          icon={<CheckCircle className={`${ICON_SIZE} text-current`} />}
+          description="Cases with insights captured"
+          color="green"
+          trend={{ value: completionRate, isPositive: completionRate > 50 }}
+          subtitle="Knowledge captured"
+        />
+        <StatCard
+          title="Resources Added"
+          value={stats.totalResources}
+          icon={<FileEdit className={`${ICON_SIZE} text-current`} />}
+          description="Total learning resources"
+          color="orange"
+          subtitle="Study materials"
+        />
+        <StatCard
+          title="This Week"
+          value={stats.thisWeekCases}
+          icon={<Clock className={`${ICON_SIZE} text-current`} />}
+          description="New cases this week"
+          color="purple"
+          trend={{ value: weeklyGrowth, isPositive: weeklyGrowth > 0 }}
+          subtitle="Recent activity"
+        />
+      </div>
     </div>
   );
 };

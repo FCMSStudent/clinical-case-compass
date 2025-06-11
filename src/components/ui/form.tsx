@@ -94,7 +94,11 @@ const FormLabel = React.forwardRef<
   return (
     <Label
       ref={ref}
-      className={cn(error && "text-destructive", className)}
+      className={cn(
+        "text-sm font-medium text-white/90 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
+        error && "text-red-300",
+        className
+      )}
       htmlFor={formItemId}
       {...props}
     />
@@ -140,9 +144,9 @@ const FormDescription = React.forwardRef<
       ref={ref}
       id={formDescriptionId}
       className={cn(
-        "text-sm text-gray-600 mt-2 leading-relaxed",
+        "text-sm text-white/70 mt-2 leading-relaxed",
         "flex items-start gap-2",
-        "bg-gray-50/50 p-3 rounded-lg border border-gray-100",
+        "bg-white/10 backdrop-blur-md p-3 rounded-lg border border-white/20",
         className
       )}
       {...props}
@@ -166,7 +170,10 @@ const FormMessage = React.forwardRef<
     <p
       ref={ref}
       id={formMessageId}
-      className={cn("text-sm font-medium text-destructive", className)}
+      className={cn(
+        "text-sm font-medium text-red-300 bg-red-500/10 backdrop-blur-sm p-2 rounded-lg border border-red-500/20",
+        className
+      )}
       {...props}
     >
       <AlertCircleIcon className="inline h-4 w-4 mr-1" />

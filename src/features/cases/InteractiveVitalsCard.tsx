@@ -400,8 +400,9 @@ export function InteractiveVitalsCard({
   }, [normalRanges]);
 
   return (
-    <Card className="shadow-sm border-medical-200">
-      <CardContent className="pt-4">
+    <div className="relative">
+      <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
+      <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
         <div className="flex justify-end gap-1 mb-4">
           <TooltipProvider>
             <Tooltip>
@@ -461,7 +462,7 @@ export function InteractiveVitalsCard({
             />
           ))}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
