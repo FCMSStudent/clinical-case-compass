@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 
 // ────────────────────────────────────────────────────────────────────────────────
 // ACCESSIBILITY ENHANCEMENTS FOR GLASSY VISIONOS UI
@@ -557,7 +557,27 @@ export const useAccessibility = (config?: AccessibilityConfig) => {
     };
   }, [config]);
   
-  return managerRef.current;
+  // Return a stable object with safe method calls
+  return useMemo(() => ({
+    registerVoiceCommand: (command: VoiceCommand) => {
+      managerRef.current?.registerVoiceCommand(command);
+    },
+    startVoiceListening: () => {
+      managerRef.current?.startVoiceListening();
+    },
+    stopVoiceListening: () => {
+      managerRef.current?.stopVoiceListening();
+    },
+    toggleVoiceListening: () => {
+      managerRef.current?.toggleVoiceListening();
+    },
+    updateConfig: (newConfig: Partial<AccessibilityConfig>) => {
+      managerRef.current?.updateConfig(newConfig);
+    },
+    getConfig: () => {
+      return managerRef.current?.getConfig() || {};
+    }
+  }), []);
 };
 
 /**
