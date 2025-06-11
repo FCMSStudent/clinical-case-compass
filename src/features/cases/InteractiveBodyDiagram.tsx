@@ -349,8 +349,8 @@ export const InteractiveBodyDiagram: React.FC<InteractiveBodyDiagramProps> = ({
     setIsDragging(true);
     const startX = 'touches' in e ? e.touches[0].clientX : e.clientX;
     const startY = 'touches' in e ? e.touches[0].clientY : e.clientY;
-    const startTranslateX = x.get();
-    const startTranslateY = y.get();
+    const startTranslateX = x?.get?.() ?? 0;
+    const startTranslateY = y?.get?.() ?? 0;
 
     const handlePanMove = (moveEvent: MouseEvent | TouchEvent) => {
       if (!isDragging) return;
@@ -694,8 +694,8 @@ export const InteractiveBodyDiagram: React.FC<InteractiveBodyDiagramProps> = ({
             }}
             animate={{
               scale: zoom / 100,
-              x: x.get(),
-              y: y.get(),
+              x: x?.get?.() ?? 0,
+              y: y?.get?.() ?? 0,
             }}
             transition={{
               type: "spring",

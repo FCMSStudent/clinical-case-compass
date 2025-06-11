@@ -153,7 +153,7 @@ const Dashboard = () => {
     >
       {/* Glassy Medical Header with Parallax */}
       <motion.div
-        style={{ y: scrollYProgress.get() * -50 }}
+        style={{ y: scrollYProgress?.get?.() ? scrollYProgress.get() * -50 : 0 }}
         className="text-center space-y-3"
       >
         <div className="flex items-center justify-center gap-3 mb-4">

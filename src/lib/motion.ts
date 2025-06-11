@@ -9,6 +9,13 @@ import { motion, Variants, Transition, useMotionValue, useTransform, useSpring }
  * Adaptive tinting based on scroll position and user interaction
  */
 export const useAdaptiveTinting = (scrollY: number) => {
+  if (!scrollY || typeof scrollY !== "object" || typeof scrollY.get !== "function") {
+    // Return dummy motion values with .get() fallback
+    return {
+      tintIntensity: { get: () => 0 },
+      tintHue: { get: () => 220 }
+    };
+  }
   const tintIntensity = useTransform(scrollY, [0, 1000], [0, 0.3]);
   const tintHue = useTransform(scrollY, [0, 1000], [200, 250]);
   

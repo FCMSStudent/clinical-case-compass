@@ -159,9 +159,9 @@ const AppContent = () => {
       ref={containerRef}
       style={{
         background: `linear-gradient(135deg, 
-          hsl(${tintHue.get()}, 70%, 95%) 0%, 
-          hsl(${tintHue.get()}, 60%, 90%) 100%)`,
-        filter: `brightness(${1 + tintIntensity.get() * 0.1})`,
+          hsl(${tintHue?.get?.() ?? 220}, 70%, 95%) 0%, 
+          hsl(${tintHue?.get?.() ?? 220}, 60%, 90%) 100%)`,
+        filter: `brightness(${1 + (tintIntensity?.get?.() ?? 0) * 0.1})`,
       }}
     >
       <Router>
