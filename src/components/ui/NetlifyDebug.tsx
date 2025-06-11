@@ -13,6 +13,7 @@ interface DebugInfo {
   isOfflineMode: boolean;
   loading: boolean;
   hasSession: boolean;
+  hasUser: boolean;
 }
 
 export const NetlifyDebug = ({ debugInfo }: { debugInfo: DebugInfo }) => {
@@ -65,7 +66,10 @@ export const NetlifyDebug = ({ debugInfo }: { debugInfo: DebugInfo }) => {
                 {debugInfo.loading ? 'LOADING' : 'READY'}
               </Badge>
               <Badge variant={debugInfo.hasSession ? "default" : "outline"}>
-                {debugInfo.hasSession ? 'AUTHENTICATED' : 'NOT AUTH'}
+                {debugInfo.hasSession ? 'HAS SESSION' : 'NO SESSION'}
+              </Badge>
+              <Badge variant={debugInfo.hasUser ? "default" : "outline"}>
+                {debugInfo.hasUser ? 'HAS USER' : 'NO USER'}
               </Badge>
             </div>
           </div>

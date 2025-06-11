@@ -21,6 +21,7 @@ import Profile from "@/pages/Profile";
 import Settings from "@/pages/Settings";
 import Auth from "@/pages/Auth";
 import NotFound from "@/pages/NotFound";
+import DebugPage from "@/pages/DebugPage";
 
 // Enhanced utilities
 import { useAccessibility } from "@/lib/accessibility";
@@ -44,7 +45,7 @@ const queryClient = new QueryClient({
 
 // Enhanced App component with utilities
 const AppContent = () => {
-  const { session, loading, isOfflineMode } = useAuth();
+  const { session, loading, isOfflineMode, user } = useAuth();
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll();
 
@@ -59,8 +60,10 @@ const AppContent = () => {
     console.log('Is Offline Mode:', isOfflineMode);
     console.log('Loading:', loading);
     console.log('Session:', session ? 'EXISTS' : 'NONE');
+    console.log('User:', user ? `EXISTS (${user.email})` : 'NONE');
+    console.log('Session User:', session?.user ? `EXISTS (${session.user.email})` : 'NONE');
     console.log('==============================');
-  }, [isOfflineMode, loading, session]);
+  }, [isOfflineMode, loading, session, user]);
 
   // Initialize accessibility features
   const accessibility = useAccessibility({
@@ -194,6 +197,7 @@ const AppContent = () => {
                 isOfflineMode,
                 loading,
                 hasSession: !!session,
+                hasUser: !!user,
               }}
             />
             {isOfflineMode && (
@@ -203,6 +207,7 @@ const AppContent = () => {
             )}
             <Routes>
               <Route path="/auth" element={<Auth />} />
+              <Route path="/debug" element={<DebugPage />} />
               <Route
                 path="/dashboard"
                 element={
