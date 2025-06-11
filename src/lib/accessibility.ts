@@ -50,6 +50,8 @@ export class AccessibilityManager {
   private currentFocusIndex = 0;
   private isListening = false;
   private recognition: SpeechRecognition | null = null;
+  private audioContext: AudioContext | null = null;
+  private hasUserInteracted = false;
   
   constructor(config: AccessibilityConfig = {}) {
     this.config = {
@@ -70,10 +72,43 @@ export class AccessibilityManager {
   }
   
   private initialize() {
+    this.setupUserInteractionListener();
     this.setupVoiceRecognition();
     this.setupKeyboardNavigation();
     this.setupFocusManagement();
     this.applyAccessibilityStyles();
+  }
+  
+  /**
+   * Setup user interaction listener for AudioContext
+   */
+  private setupUserInteractionListener() {
+    const handleFirstInteraction = () => {
+      this.hasUserInteracted = true;
+      this.initializeAudioContext();
+      
+      // Remove listeners after first interaction
+      document.removeEventListener('click', handleFirstInteraction);
+      document.removeEventListener('keydown', handleFirstInteraction);
+      document.removeEventListener('touchstart', handleFirstInteraction);
+    };
+
+    document.addEventListener('click', handleFirstInteraction);
+    document.addEventListener('keydown', handleFirstInteraction);
+    document.addEventListener('touchstart', handleFirstInteraction);
+  }
+
+  /**
+   * Initialize AudioContext after user interaction
+   */
+  private initializeAudioContext() {
+    if (!this.config.enableAudioCues || this.audioContext) return;
+    
+    try {
+      this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    } catch (error) {
+      console.warn("AudioContext not supported:", error);
+    }
   }
   
   /**
@@ -83,22 +118,43 @@ export class AccessibilityManager {
     if (!this.config.enableVoiceControl || typeof window === "undefined") return;
     
     if ("webkitSpeechRecognition" in window) {
-      this.recognition = new (window as any).webkitSpeechRecognition();
-      this.recognition.continuous = true;
-      this.recognition.interimResults = true;
-      this.recognition.lang = "en-US";
-      
-      this.recognition.onresult = (event: SpeechRecognitionEvent) => {
-        const transcript = Array.from(event.results)
-          .map(result => result[0].transcript.toLowerCase())
-          .join("");
+      try {
+        this.recognition = new (window as any).webkitSpeechRecognition();
+        this.recognition.continuous = true;
+        this.recognition.interimResults = true;
+        this.recognition.lang = "en-US";
         
-        this.processVoiceCommand(transcript);
-      };
-      
-      this.recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
-        console.warn("Voice recognition error:", event.error);
-      };
+        this.recognition.onresult = (event: SpeechRecognitionEvent) => {
+          const transcript = Array.from(event.results)
+            .map(result => result[0].transcript.toLowerCase())
+            .join("");
+          
+          this.processVoiceCommand(transcript);
+        };
+        
+        this.recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+          if (event.error === 'not-allowed') {
+            console.warn("Microphone access denied. Voice control disabled.");
+            this.config.enableVoiceControl = false;
+          } else if (event.error === 'no-speech') {
+            // Ignore no-speech errors as they're common
+            return;
+          } else {
+            console.warn("Voice recognition error:", event.error);
+          }
+          this.isListening = false;
+        };
+
+        this.recognition.onend = () => {
+          this.isListening = false;
+        };
+      } catch (error) {
+        console.warn("Speech recognition not supported:", error);
+        this.config.enableVoiceControl = false;
+      }
+    } else {
+      console.warn("Speech recognition not supported in this browser");
+      this.config.enableVoiceControl = false;
     }
   }
   
@@ -139,10 +195,15 @@ export class AccessibilityManager {
    * Start voice listening
    */
   public startVoiceListening() {
-    if (this.recognition && !this.isListening) {
+    if (!this.config.enableVoiceControl || !this.recognition || this.isListening) return;
+    
+    try {
       this.recognition.start();
       this.isListening = true;
       this.provideAudioFeedback("listening");
+    } catch (error) {
+      console.warn("Failed to start voice recognition:", error);
+      this.isListening = false;
     }
   }
   
@@ -461,32 +522,35 @@ export class AccessibilityManager {
    * Provide audio feedback
    */
   private provideAudioFeedback(type: "success" | "error" | "focus" | "activation" | "listening") {
-    if (!this.config.enableAudioCues) return;
+    if (!this.config.enableAudioCues || !this.hasUserInteracted || !this.audioContext) return;
     
-    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-    const oscillator = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
-    
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
-    
-    const frequencies = {
-      success: 800,
-      error: 400,
-      focus: 600,
-      activation: 1000,
-      listening: 1200,
-    };
-    
-    oscillator.frequency.setValueAtTime(frequencies[type], audioContext.currentTime);
-    oscillator.type = "sine";
-    
-    gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-    gainNode.gain.linearRampToValueAtTime(0.1, audioContext.currentTime + 0.01);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.2);
-    
-    oscillator.start(audioContext.currentTime);
-    oscillator.stop(audioContext.currentTime + 0.2);
+    try {
+      const oscillator = this.audioContext.createOscillator();
+      const gainNode = this.audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(this.audioContext.destination);
+      
+      const frequencies = {
+        success: 800,
+        error: 400,
+        focus: 600,
+        activation: 1000,
+        listening: 1200,
+      };
+      
+      oscillator.frequency.setValueAtTime(frequencies[type], this.audioContext.currentTime);
+      oscillator.type = "sine";
+      
+      gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+      gainNode.gain.linearRampToValueAtTime(0.1, this.audioContext.currentTime + 0.01);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.2);
+      
+      oscillator.start(this.audioContext.currentTime);
+      oscillator.stop(this.audioContext.currentTime + 0.2);
+    } catch (error) {
+      console.warn("Audio feedback failed:", error);
+    }
   }
   
   /**
@@ -539,6 +603,9 @@ export class AccessibilityManager {
     this.stopVoiceListening();
     if (this.recognition) {
       this.recognition.abort();
+    }
+    if (this.audioContext) {
+      this.audioContext.close();
     }
   }
 }

@@ -24,7 +24,7 @@ import { useDeepMemo } from "@/lib/performance";
 import { useAccessibility } from "@/lib/accessibility";
 import { usePerformanceMonitor } from "@/lib/performance";
 import { AccessibleMotion } from "@/lib/motion";
-import { useTheme } from "@/lib/themes";
+import { useTheme } from "@/app/ThemeContext";
 import { useLazyLoad } from "@/lib/performance";
 import { useMotionResponsiveHover } from "@/lib/motion";
 import { useSpatialAudioCues } from "@/lib/interactions";

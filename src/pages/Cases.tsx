@@ -1,9 +1,14 @@
-import React, { useState, useMemo, useRef, useCallback } from "react";
+import React, { useState, useMemo, useRef, useCallback, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Plus, Search, Filter, Grid, List, Eye, Edit, Trash2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence, useScroll } from "framer-motion";
+import { Plus, Search, Filter, Grid, List, Target, ChevronDown, Eye, Edit, Trash2, BookOpen, Users, Calendar, Activity, TrendingUp, Brain, Heart, Microscope } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Link } from "react-router-dom";
 import { getCases, deleteCase } from "@/lib/api/cases";
 import type { MedicalCase } from "@/types/case";
@@ -12,20 +17,21 @@ import { CaseListItem } from "@/features/cases/CaseListItem";
 import { PageHeader } from "@/components/ui/page-header";
 import { useErrorHandler } from "@/hooks/use-error-handler";
 import { CaseGridSkeleton, CaseListSkeleton } from "@/features/cases/CaseCardSkeleton";
-import { motion, AnimatePresence } from "framer-motion";
 import { useVirtualScroll } from "@/lib/performance";
 import { useGestureDetection } from "@/lib/interactions";
 import { useDeepMemo } from "@/lib/performance";
 import { useAccessibility } from "@/lib/accessibility";
 import { usePerformanceMonitor } from "@/lib/performance";
 import { AccessibleMotion } from "@/lib/motion";
-import { useTheme } from "@/lib/themes";
+import { useTheme } from "@/app/ThemeContext";
 import { useDebounce } from "@/lib/performance";
 import { useLazyLoad } from "@/lib/performance";
 import { useSpatialAudioCues } from "@/lib/interactions";
 import { useMotionResponsiveHover } from "@/lib/motion";
 import { useEyeTracking } from "@/lib/accessibility";
 import { useBatchUpdate } from "@/lib/performance";
+import { useVirtualization } from "@/lib/performance";
+import { useAdaptiveTinting } from "@/lib/motion";
 
 const Cases = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -173,7 +179,7 @@ const Cases = () => {
   }, [selectedCases, deleteMutation, batchUpdate]);
 
   // Register voice commands
-  React.useEffect(() => {
+  useEffect(() => {
     accessibility.registerVoiceCommand({
       command: "switch to grid view",
       action: () => {
