@@ -25,10 +25,10 @@ import { useLocalStorage } from "@/hooks/use-local-storage";
 import { InteractiveVitalsCard } from "@/features/cases/InteractiveVitalsCard";
 import { UrinaryReviewCard } from "@/features/cases/UrinaryReviewCard";
 import { SymptomChecklist } from "@/features/cases/SymptomChecklist";
-import { LabResultsCard, LabTest } from "@/features/cases/LabResultsCard";
-import { RadiologyCard, RadiologyExam } from "@/features/cases/RadiologyCard";
+import { LabResultsCard } from "@/features/cases/LabResultsCard";
+import { RadiologyCard } from "@/features/cases/RadiologyCard";
 import { getCaseById } from "@/data/mock-data";
-import { MedicalCase, Patient, Diagnosis, CaseTag, Resource, RadiologyExam as UnifiedRadiologyExam } from "@/types/case";
+import { MedicalCase, Patient, Diagnosis, CaseTag, Resource, RadiologyExam, LabTest } from "@/types/case";
 import { ErrorSummary } from "@/components/ui/ErrorSummary";
 
 // Define the form schema
@@ -59,7 +59,7 @@ const CaseEdit = () => {
   const [symptoms, setSymptoms] = useState<Record<string, boolean>>({});
   const [systemSymptoms, setSystemSymptoms] = useState<Record<string, string[]>>({});
   const [labResults, setLabResults] = useState<LabTest[]>([]);
-  const [radiologyExams, setRadiologyExams] = useState<UnifiedRadiologyExam[]>([]);
+  const [radiologyExams, setRadiologyExams] = useState<RadiologyExam[]>([]);
   
   // Set up form with existing case data
   const form = useForm<FormValues>({
