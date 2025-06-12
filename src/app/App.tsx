@@ -9,7 +9,6 @@ import { AppLayout } from "@/features/navigation/components/AppLayout";
 import { SidebarProvider } from "@/features/navigation/components/Sidebar";
 import { PrivateRoute } from "@/features/auth/PrivateRoute";
 import { OfflineBanner } from "@/components/ui/OfflineBanner";
-import { NetlifyDebug } from "@/components/ui/NetlifyDebug";
 
 // Pages
 import Dashboard from "@/pages/Dashboard";
@@ -21,7 +20,6 @@ import Profile from "@/pages/Profile";
 import Settings from "@/pages/Settings";
 import Auth from "@/pages/Auth";
 import NotFound from "@/pages/NotFound";
-import DebugPage from "@/pages/DebugPage";
 
 // Enhanced utilities
 import { useAccessibility } from "@/lib/accessibility";
@@ -45,25 +43,9 @@ const queryClient = new QueryClient({
 
 // Enhanced App component with utilities
 const AppContent = () => {
-  const { session, loading, isOfflineMode, user } = useAuth();
+  const { session, loading, isOfflineMode } = useAuth();
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll();
-
-  // Debug information for deployment troubleshooting
-  useEffect(() => {
-    console.log('=== DEPLOYMENT DEBUG INFO ===');
-    console.log('Environment variables:');
-    console.log('VITE_SUPABASE_URL:', import.meta.env.VITE_SUPABASE_URL ? 'SET' : 'NOT SET');
-    console.log('VITE_SUPABASE_ANON_KEY:', import.meta.env.VITE_SUPABASE_ANON_KEY ? 'SET' : 'NOT SET');
-    console.log('NODE_ENV:', import.meta.env.MODE);
-    console.log('Base URL:', import.meta.env.BASE_URL);
-    console.log('Is Offline Mode:', isOfflineMode);
-    console.log('Loading:', loading);
-    console.log('Session:', session ? 'EXISTS' : 'NONE');
-    console.log('User:', user ? `EXISTS (${user.email})` : 'NONE');
-    console.log('Session User:', session?.user ? `EXISTS (${session.user.email})` : 'NONE');
-    console.log('==============================');
-  }, [isOfflineMode, loading, session, user]);
 
   // Initialize accessibility features
   const accessibility = useAccessibility({
@@ -184,40 +166,20 @@ const AppContent = () => {
       }}
     >
       <Router>
-        {/* Temporarily bypass SidebarProvider for debugging */}
-        <div style={{ minHeight: '100vh', backgroundColor: '#f8f9fa', padding: '20px' }}>
-          <div style={{ backgroundColor: '#fff3cd', padding: '15px', marginBottom: '20px', border: '1px solid orange' }}>
-            <h3 style={{ fontSize: '16px', marginBottom: '10px' }}>🔍 Environment Check:</h3>
-            <ul style={{ margin: 0, paddingLeft: '20px' }}>
-              <li>Supabase URL: {import.meta.env.VITE_SUPABASE_URL ? '✅ Set' : '❌ Not Set'}</li>
-              <li>Supabase Key: {import.meta.env.VITE_SUPABASE_ANON_KEY ? '✅ Set' : '❌ Not Set'}</li>
-              <li>Mode: {import.meta.env.MODE}</li>
-              <li>Offline Mode: {isOfflineMode ? '❌ TRUE' : '✅ FALSE'}</li>
-              <li>Loading: {loading ? '⏳ TRUE' : '✅ FALSE'}</li>
-              <li>Has Session: {!!session ? '✅ TRUE' : '❌ FALSE'}</li>
-              <li>Has User: {!!user ? '✅ TRUE' : '❌ FALSE'}</li>
-            </ul>
-          </div>
-          {isOfflineMode && (
-            <div style={{ backgroundColor: '#f8d7da', padding: '15px', marginBottom: '20px', border: '1px solid red' }}>
-              <strong>Offline Mode:</strong> The application is running with limited functionality. 
-              Database features are unavailable. Please configure Supabase credentials for full functionality.
-            </div>
-          )}
-          <div style={{ backgroundColor: 'white', padding: '20px', marginTop: '20px', border: '1px solid #ddd' }}>
-            <h1 style={{ fontSize: '24px', marginBottom: '20px', color: '#333' }}>🚀 Layout Bypass Test</h1>
+        <SidebarProvider>
+          <AppLayout>
+            {isOfflineMode && (
+              <div className="mb-4">
+                <OfflineBanner />
+              </div>
+            )}
             <Routes>
               <Route path="/auth" element={<Auth />} />
-              <Route path="/debug" element={<DebugPage />} />
               <Route
                 path="/dashboard"
                 element={
                   <PrivateRoute>
-                    <div style={{ padding: '20px', backgroundColor: '#e8f5e8', border: '1px solid green' }}>
-                      <h2>✅ Dashboard Component Loaded!</h2>
-                      <p>If you see this, the Dashboard route is working without AppLayout.</p>
-                      <Dashboard />
-                    </div>
+                    <Dashboard />
                   </PrivateRoute>
                 }
               />
@@ -225,11 +187,7 @@ const AppContent = () => {
                 path="/cases"
                 element={
                   <PrivateRoute>
-                    <div style={{ padding: '20px', backgroundColor: '#fff3cd', border: '1px solid orange' }}>
-                      <h2>📋 Cases Component Loaded!</h2>
-                      <p>If you see this, the Cases route is working without AppLayout.</p>
-                      <Cases />
-                    </div>
+                    <Cases />
                   </PrivateRoute>
                 }
               />
@@ -276,8 +234,8 @@ const AppContent = () => {
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
-          </div>
-        </div>
+          </AppLayout>
+        </SidebarProvider>
       </Router>
     </AccessibleMotion>
   );
