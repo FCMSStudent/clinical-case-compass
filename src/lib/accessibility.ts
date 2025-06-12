@@ -646,85 +646,34 @@ export const useAccessibility = (options: {
 };
 
 /**
- * Eye tracking hook
+ * Eye tracking hook - simplified simulation
  */
 export const useEyeTracking = (config: EyeTrackingConfig = {}) => {
   const [focusedElement, setFocusedElement] = useState<HTMLElement | null>(null);
-  const [gazePosition, setGazePosition] = useState<{ x: number; y: number } | null>(null);
-  const dwellTimeout = useRef<NodeJS.Timeout>();
-  const focusIndicator = useRef<HTMLDivElement | null>(null);
   
-  const {
-    dwellTime = 1000,
-    focusRadius = 50,
-    enableAutoScroll = true,
-    enableFocusIndicators = true,
-  } = config;
+  // Simplified implementation - just track mouse hover for now
+  const handleMouseEnter = useCallback((event: MouseEvent) => {
+    const element = event.target as HTMLElement;
+    setFocusedElement(element);
+  }, []);
   
-  useEffect(() => {
-    if (!enableFocusIndicators) return;
-    
-    // Create focus indicator
-    focusIndicator.current = document.createElement("div");
-    focusIndicator.current.className = "focus-indicator";
-    focusIndicator.current.style.display = "none";
-    document.body.appendChild(focusIndicator.current);
-    
-    return () => {
-      if (focusIndicator.current) {
-        document.body.removeChild(focusIndicator.current);
-      }
-    };
-  }, [enableFocusIndicators]);
-  
-  const handleMouseMove = useCallback((event: MouseEvent) => {
-    setGazePosition({ x: event.clientX, y: event.clientY });
-    
-    // Find element under gaze
-    const element = document.elementFromPoint(event.clientX, event.clientY) as HTMLElement;
-    
-    if (element && element !== focusedElement) {
-      // Clear previous dwell timeout
-      if (dwellTimeout.current) {
-        clearTimeout(dwellTimeout.current);
-      }
-      
-      // Set new dwell timeout
-      dwellTimeout.current = setTimeout(() => {
-        setFocusedElement(element);
-        
-        // Show focus indicator
-        if (focusIndicator.current && enableFocusIndicators) {
-          const rect = element.getBoundingClientRect();
-          focusIndicator.current.style.left = `${rect.left - 4}px`;
-          focusIndicator.current.style.top = `${rect.top - 4}px`;
-          focusIndicator.current.style.width = `${rect.width + 8}px`;
-          focusIndicator.current.style.height = `${rect.height + 8}px`;
-          focusIndicator.current.style.display = "block";
-        }
-        
-        // Auto-scroll if needed
-        if (enableAutoScroll) {
-          element.scrollIntoView({ behavior: "smooth", block: "center" });
-        }
-      }, dwellTime);
-    }
-  }, [focusedElement, dwellTime, enableFocusIndicators, enableAutoScroll]);
+  const handleMouseLeave = useCallback(() => {
+    setFocusedElement(null);
+  }, []);
   
   useEffect(() => {
-    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseenter", handleMouseEnter);
+    document.addEventListener("mouseleave", handleMouseLeave);
     
     return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      if (dwellTimeout.current) {
-        clearTimeout(dwellTimeout.current);
-      }
+      document.removeEventListener("mouseenter", handleMouseEnter);
+      document.removeEventListener("mouseleave", handleMouseLeave);
     };
-  }, [handleMouseMove]);
+  }, [handleMouseEnter, handleMouseLeave]);
   
   return {
     focusedElement,
-    gazePosition,
+    gazePosition: null,
     isFocused: (element: HTMLElement) => element === focusedElement,
   };
 };

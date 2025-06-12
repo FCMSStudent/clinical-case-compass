@@ -108,7 +108,10 @@ interface RadiologyCardProps {
   initialStudies?: RadiologyStudy[];
 }
 
-export function RadiologyCard({ onRadiologyChange, initialStudies = [] }: RadiologyCardProps) {
+export const RadiologyCard: React.FC<RadiologyCardProps> = ({
+  onRadiologyChange,
+  initialStudies = [],
+}) => {
   const [studies, setStudies] = useState<RadiologyStudy[]>(initialStudies);
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedStudy, setSelectedStudy] = useState<string>("");

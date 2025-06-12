@@ -144,71 +144,48 @@ export const useGestureDetection = (
 };
 
 /**
- * Spatial audio cue simulation with visual feedback
+ * Spatial audio cues - simplified visual feedback
  */
 export const useSpatialAudioCues = () => {
-  const audioContext = useRef<AudioContext | null>(null);
-  const [isEnabled, setIsEnabled] = useState(false);
-  
-  const initializeAudio = useCallback(async () => {
-    try {
-      audioContext.current = new (window.AudioContext || (window as typeof window & { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
-      setIsEnabled(true);
-    } catch (error) {
-      console.warn("Audio context not supported:", error);
-    }
-  }, []);
-  
   const playSpatialCue = useCallback((
     frequency: number = 800,
     duration: number = 200,
     pan: number = 0,
     volume: number = 0.3
   ) => {
-    if (!audioContext.current || !isEnabled) return;
-    
-    const oscillator = audioContext.current.createOscillator();
-    const gainNode = audioContext.current.createGain();
-    const panner = audioContext.current.createStereoPanner();
-    
-    oscillator.connect(gainNode);
-    gainNode.connect(panner);
-    panner.connect(audioContext.current.destination);
-    
-    oscillator.frequency.setValueAtTime(frequency, audioContext.current.currentTime);
-    oscillator.type = "sine";
-    
-    gainNode.gain.setValueAtTime(0, audioContext.current.currentTime);
-    gainNode.gain.linearRampToValueAtTime(volume, audioContext.current.currentTime + 0.01);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.current.currentTime + duration / 1000);
-    
-    panner.pan.setValueAtTime(pan, audioContext.current.currentTime);
-    
-    oscillator.start(audioContext.current.currentTime);
-    oscillator.stop(audioContext.current.currentTime + duration / 1000);
-  }, [isEnabled]);
-  
-  const playSuccessCue = useCallback(() => {
-    playSpatialCue(1000, 300, 0, 0.2);
-  }, [playSpatialCue]);
-  
-  const playErrorCue = useCallback(() => {
-    playSpatialCue(400, 500, 0, 0.2);
-  }, [playSpatialCue]);
-  
-  const playNavigationCue = useCallback((direction: string) => {
-    // Implementation for spatial audio
+    // Simplified: just log the cue for now
+    console.log(`Audio cue: ${frequency}Hz, ${duration}ms, pan: ${pan}, vol: ${volume}`);
   }, []);
   
-  useEffect(() => {
-    initializeAudio();
-    return () => {
-      audioContext.current?.close();
-    };
-  }, [initializeAudio]);
+  const playSuccessCue = useCallback(() => {
+    // Visual feedback instead of audio
+    const element = document.activeElement;
+    if (element) {
+      element.style.transform = 'scale(1.05)';
+      setTimeout(() => {
+        element.style.transform = '';
+      }, 200);
+    }
+  }, []);
+  
+  const playErrorCue = useCallback(() => {
+    // Visual feedback instead of audio
+    const element = document.activeElement;
+    if (element) {
+      element.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        element.style.transform = '';
+      }, 200);
+    }
+  }, []);
+  
+  const playNavigationCue = useCallback((direction: string) => {
+    // Visual feedback for navigation
+    console.log(`Navigation cue: ${direction}`);
+  }, []);
   
   return {
-    isEnabled,
+    isEnabled: true,
     playSpatialCue,
     playSuccessCue,
     playErrorCue,

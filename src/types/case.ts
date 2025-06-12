@@ -77,6 +77,8 @@ export interface MedicalCase {
   systemSymptoms?: Record<string, string[]>;
   labTests?: LabTest[];
   radiologyStudies?: RadiologyStudy[];
+  // Keep radiologyExams for backward compatibility but mark as deprecated
+  /** @deprecated Use radiologyStudies instead */
   radiologyExams?: RadiologyExam[];
   pastMedicalHistory?: string[];
   medications?: string[];
@@ -86,6 +88,9 @@ export interface MedicalCase {
   differentialDiagnosis?: string[];
   managementPlan?: string;
   notes?: string;
+  // Add missing properties that are being used in the codebase
+  rating?: number;
+  specialty?: string;
 }
 
 // Medical specialties list for use throughout the app

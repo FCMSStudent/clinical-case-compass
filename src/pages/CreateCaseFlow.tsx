@@ -262,6 +262,12 @@ const CreateCaseFlow = () => {
               completionPercentage={Math.round(((currentStep + 1) / STEPS.length) * 100)}
               currentStepLabel={STEPS[currentStep].label}
               formTitle="Create New Clinical Case"
+              isDraftSaving={autoSaveStatus === "saving"}
+              onSaveDraft={() => {
+                // Trigger auto-save manually
+                localStorage.setItem("case-form-draft", JSON.stringify(formData));
+                setAutoSaveStatus("saved");
+              }}
             />
             
             <FormContainer
