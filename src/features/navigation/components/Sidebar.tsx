@@ -127,7 +127,7 @@ const navItems = [
   },
   {
     href: "/settings",
-    label: "Settings",
+    label: "Profile & Settings",
     icon: Settings,
     description: "Configure your account and preferences"
   },
