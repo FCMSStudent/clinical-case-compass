@@ -30,7 +30,7 @@ export const ValidationFeedback = React.memo(function ValidationFeedback({
         exit={{ opacity: 0, y: 10 }}
         className={cn(
           "flex items-center gap-2 mt-2 text-sm",
-          isValid ? "text-emerald-600" : "text-red-600",
+          isValid ? "text-emerald-300" : "text-red-300",
           className
         )}
         role={role}
@@ -41,13 +41,13 @@ export const ValidationFeedback = React.memo(function ValidationFeedback({
         {showIcon && (
           isValid ? (
             <CheckCircle2 
-              className="h-4 w-4 flex-shrink-0" 
+              className="h-4 w-4 flex-shrink-0 text-emerald-300" 
               aria-hidden="true"
               aria-label="Validation passed"
             />
           ) : (
             <AlertCircle 
-              className="h-4 w-4 flex-shrink-0" 
+              className="h-4 w-4 flex-shrink-0 text-red-300" 
               aria-hidden="true"
               aria-label="Validation error"
             />

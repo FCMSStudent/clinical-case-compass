@@ -85,132 +85,139 @@ export const FormFieldCard = React.memo(function FormFieldCard({
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
     >
-      <Card
-        className={cn(
-          "transition-all duration-200",
-          isHighlighted && "ring-2 ring-primary/30 ring-offset-2",
-          isDisabled && "opacity-50 cursor-not-allowed",
-          isHovered && "shadow-lg -translate-y-0.5",
-          !isDisabled && "hover:shadow-md"
-        )}
-        role="group"
-        aria-labelledby={`${cardId}-title`}
-        aria-describedby={tooltip ? `${cardId}-tooltip` : undefined}
-        aria-disabled={isDisabled}
-      >
-        <Collapsible open={!isCollapsible || !isCollapsed} onOpenChange={setIsCollapsed}>
-          <CardHeader className="pb-2">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div
-                  className="p-2 rounded-xl bg-primary/10 text-primary"
-                  aria-hidden="true"
-                >
-                  <Icon className="h-5 w-5" />
+      <div className="relative">
+        <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
+        <div
+          className={cn(
+            "relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 group overflow-hidden transition-all duration-300",
+            "hover:bg-white/15 hover:border-white/30",
+            "before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/5 before:to-transparent before:translate-x-[-100%] before:group-hover:translate-x-[100%] before:transition-transform before:duration-700",
+            isHighlighted && "ring-2 ring-white/30 ring-offset-2 ring-offset-transparent",
+            isDisabled && "opacity-50 cursor-not-allowed",
+            isHovered && "shadow-2xl -translate-y-0.5"
+          )}
+          role="group"
+          aria-labelledby={`${cardId}-title`}
+          aria-describedby={tooltip ? `${cardId}-tooltip` : undefined}
+          aria-disabled={isDisabled}
+        >
+          <Collapsible open={!isCollapsible || !isCollapsed} onOpenChange={setIsCollapsed}>
+            <div className="pb-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div
+                    className="p-3 rounded-xl bg-white/20 text-white border border-white/20 transition-all duration-300 group-hover:scale-110"
+                    aria-hidden="true"
+                  >
+                    <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/10 to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <Icon className="h-5 w-5 relative z-10" />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="text-lg font-semibold flex items-center gap-2 text-white">
+                      <span id={`${cardId}-title`}>
+                        {title}
+                        {isRequired && (
+                          <span className="text-red-300 text-sm" aria-label="required">*</span>
+                        )}
+                      </span>
+                    </div>
+                    {badge && (
+                      <Badge 
+                        variant="outline" 
+                        aria-label={`Status: ${badge}`}
+                        className="ml-2 bg-white/10 border-white/20 text-white"
+                      >
+                        {badge}
+                      </Badge>
+                    )}
+                  </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="text-lg font-semibold flex items-center gap-2 text-foreground">
-                    <span id={`${cardId}-title`}>
-                      {title}
-                      {isRequired && (
-                        <span className="text-destructive text-sm" aria-label="required">*</span>
-                      )}
-                    </span>
-                  </div>
-                  {badge && (
-                    <Badge 
-                      variant="outline" 
-                      aria-label={`Status: ${badge}`}
-                      className="ml-2"
-                    >
-                      {badge}
-                    </Badge>
+                  {status !== "default" && (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div 
+                            className="p-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20"
+                            role="img"
+                            aria-label={statusMessages[status]}
+                          >
+                            {statusIcons[status]}
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent 
+                          id={`${cardId}-status-tooltip`}
+                          className="bg-white/10 backdrop-blur-md border-white/20 text-white"
+                        >
+                          <p className="text-sm">
+                            {statusMessages[status]}
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )}
+                  {tooltip && (
+                    <TooltipProvider delayDuration={0}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div 
+                            className="flex items-center justify-center h-8 w-8 rounded-full hover:bg-white/10 cursor-help transition-colors backdrop-blur-sm border border-white/20"
+                            role="button"
+                            tabIndex={0}
+                            aria-label="More information"
+                            aria-describedby={`${cardId}-tooltip`}
+                          >
+                            <Info className="h-4 w-4 text-white/70 hover:text-white" aria-hidden="true" />
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent 
+                          side="right" 
+                          align="start"
+                          sideOffset={5}
+                          id={`${cardId}-tooltip`}
+                          className="bg-white/10 backdrop-blur-md border-white/20 text-white"
+                        >
+                          <p className="text-sm leading-relaxed">{tooltip}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )}
+                  {actions}
+                  {isCollapsible && (
+                    <CollapsibleTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-white/70 hover:text-white hover:bg-white/10"
+                        disabled={isDisabled}
+                        aria-label={isCollapsed ? "Expand section" : "Collapse section"}
+                        aria-expanded={!isCollapsed}
+                      >
+                        {isCollapsed ? (
+                          <ChevronDown className="h-4 w-4" aria-hidden="true" />
+                        ) : (
+                          <ChevronUp className="h-4 w-4" aria-hidden="true" />
+                        )}
+                      </Button>
+                    </CollapsibleTrigger>
                   )}
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                {status !== "default" && (
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div 
-                          className="p-1 rounded-full bg-muted"
-                          role="img"
-                          aria-label={statusMessages[status]}
-                        >
-                          {statusIcons[status]}
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent 
-                        id={`${cardId}-status-tooltip`}
-                      >
-                        <p className="text-sm">
-                          {statusMessages[status]}
-                        </p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                )}
-                {tooltip && (
-                  <TooltipProvider delayDuration={0}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div 
-                          className="flex items-center justify-center h-8 w-8 rounded-full hover:bg-muted cursor-help transition-colors"
-                          role="button"
-                          tabIndex={0}
-                          aria-label="More information"
-                          aria-describedby={`${cardId}-tooltip`}
-                        >
-                          <Info className="h-4 w-4 text-muted-foreground hover:text-foreground" aria-hidden="true" />
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent 
-                        side="right" 
-                        align="start"
-                        sideOffset={5}
-                        id={`${cardId}-tooltip`}
-                      >
-                        <p className="text-sm leading-relaxed">{tooltip}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                )}
-                {actions}
-                {isCollapsible && (
-                  <CollapsibleTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8"
-                      disabled={isDisabled}
-                      aria-label={isCollapsed ? "Expand section" : "Collapse section"}
-                      aria-expanded={!isCollapsed}
-                    >
-                      {isCollapsed ? (
-                        <ChevronDown className="h-4 w-4" aria-hidden="true" />
-                      ) : (
-                        <ChevronUp className="h-4 w-4" aria-hidden="true" />
-                      )}
-                    </Button>
-                  </CollapsibleTrigger>
+            </div>
+            
+            <CollapsibleContent>
+              <div className="pt-0">
+                {children}
+                {footer && (
+                  <div className="mt-4 pt-4 border-t border-white/20">
+                    {footer}
+                  </div>
                 )}
               </div>
-            </div>
-          </CardHeader>
-          
-          <CollapsibleContent>
-            <CardContent className="pt-0">
-              {children}
-              {footer && (
-                <div className="mt-4 pt-4 border-t border-border">
-                  {footer}
-                </div>
-              )}
-            </CardContent>
-          </CollapsibleContent>
-        </Collapsible>
-      </Card>
+            </CollapsibleContent>
+          </Collapsible>
+        </div>
+      </div>
     </motion.div>
   );
 });

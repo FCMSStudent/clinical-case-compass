@@ -100,12 +100,14 @@ export const StepProgress = React.memo(function StepProgress({
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className={cn(
-        "rounded-lg border p-4 transition-all duration-200",
-        variantStyles[variant],
-        className
-      )}
+      className={className}
     >
+      <div className="relative">
+        <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
+        <div className={cn(
+          "relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-4 group overflow-hidden transition-all duration-300 hover:bg-white/15 hover:border-white/30 before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/5 before:to-transparent before:translate-x-[-100%] before:group-hover:translate-x-[100%] before:transition-transform before:duration-700"
+        )}
+        >
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -122,17 +124,17 @@ export const StepProgress = React.memo(function StepProgress({
               </motion.div>
             )}
             <div className="flex items-center gap-2">
-              <span className={cn("font-medium", sizeStyles[size])}>
+              <span className={cn("font-medium text-white", sizeStyles[size])}>
                 {label}
               </span>
               {showBadge && (
                 <Badge
                   variant="outline"
                   className={cn(
-                    "ml-2",
-                    status === "success" && "border-emerald-200 text-emerald-700",
-                    status === "warning" && "border-amber-200 text-amber-700",
-                    status === "error" && "border-red-200 text-red-700"
+                    "ml-2 bg-white/10 border-white/20 text-white",
+                    status === "success" && "border-emerald-200/50 text-emerald-300",
+                    status === "warning" && "border-amber-200/50 text-amber-300",
+                    status === "error" && "border-red-200/50 text-red-300"
                   )}
                 >
                   {percentage}%
@@ -145,7 +147,7 @@ export const StepProgress = React.memo(function StepProgress({
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <span className={cn("text-muted-foreground", sizeStyles[size])}>
+                    <span className={cn("text-white/70", sizeStyles[size])}>
                       Est. time: {estimatedTime}
                     </span>
                   </TooltipTrigger>
@@ -159,7 +161,7 @@ export const StepProgress = React.memo(function StepProgress({
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <span className={cn("text-muted-foreground", sizeStyles[size])}>
+                    <span className={cn("text-white/70", sizeStyles[size])}>
                       Updated: {lastUpdated}
                     </span>
                   </TooltipTrigger>
@@ -175,11 +177,11 @@ export const StepProgress = React.memo(function StepProgress({
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             {showPercentage ? (
-              <span className={cn("text-muted-foreground", sizeStyles[size])}>
+              <span className={cn("text-white/70", sizeStyles[size])}>
                 {percentage}% Complete
               </span>
             ) : (
-              <span className={cn("text-muted-foreground", sizeStyles[size])}>
+              <span className={cn("text-white/70", sizeStyles[size])}>
                 {completedFields} of {totalFields} fields completed
               </span>
             )}
@@ -187,7 +189,7 @@ export const StepProgress = React.memo(function StepProgress({
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <span className={cn("text-muted-foreground cursor-help", sizeStyles[size])}>
+                    <span className={cn("text-white/70 cursor-help", sizeStyles[size])}>
                       {getStatusMessage()}
                     </span>
                   </TooltipTrigger>
@@ -265,6 +267,8 @@ export const StepProgress = React.memo(function StepProgress({
             ))}
           </div>
         )}
+      </div>
+        </div>
       </div>
     </motion.div>
   );

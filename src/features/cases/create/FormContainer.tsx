@@ -1,5 +1,4 @@
 import React, { memo, ReactNode } from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import { FormProgressIndicator } from "@/features/cases/FormProgressIndicator";
 import { cn } from "@/lib/utils";
 
@@ -59,9 +58,12 @@ export const FormContainer = memo(
           onStepClick={onStepChange} // Renamed for clarity.
         />
         
-        <Card>
-          <CardContent className="p-6">{children}</CardContent>
-        </Card>
+        <div className="relative">
+          <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
+          <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 group overflow-hidden transition-all duration-300 hover:bg-white/15 hover:border-white/30 before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/5 before:to-transparent before:translate-x-[-100%] before:group-hover:translate-x-[100%] before:transition-transform before:duration-700">
+            {children}
+          </div>
+        </div>
       </section>
     );
   },
