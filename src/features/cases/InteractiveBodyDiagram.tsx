@@ -43,6 +43,7 @@ import {
   AlertDescription,
   AlertTitle,
 } from "@/components/ui/alert";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 /**
  * ────────────────────────────────────────────────────────────────────────────────
@@ -656,18 +657,18 @@ export const InteractiveBodyDiagram: React.FC<InteractiveBodyDiagramProps> = ({
 
           <div className="flex items-center gap-1">
             <Filter className="h-4 w-4 text-muted-foreground" />
-            <select
-              value={severityFilter}
-              onChange={(e) => setSeverityFilter(e.target.value as SeverityLevel | "all")}
-              className="border rounded-md text-sm px-2 py-1"
-              aria-label="Filter by severity level"
-            >
-              <option value="all">All severities</option>
-              <option value="low">Low</option>
-              <option value="medium">Medium</option>
-              <option value="high">High</option>
-              <option value="critical">Critical</option>
-            </select>
+            <Select value={severityFilter} onValueChange={(value) => setSeverityFilter(value as SeverityLevel | "all")}>
+              <SelectTrigger className="border rounded-md text-sm px-2 py-1 w-32">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All severities</SelectItem>
+                <SelectItem value="low">Low</SelectItem>
+                <SelectItem value="medium">Medium</SelectItem>
+                <SelectItem value="high">High</SelectItem>
+                <SelectItem value="critical">Critical</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <Tooltip>

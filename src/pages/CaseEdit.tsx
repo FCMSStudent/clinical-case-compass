@@ -30,6 +30,7 @@ import { RadiologyCard } from "@/features/cases/RadiologyCard";
 import { getCaseById } from "@/data/mock-data";
 import { MedicalCase, Patient, Diagnosis, CaseTag, Resource, RadiologyStudy, LabTest } from "@/types/case";
 import { ErrorSummary } from "@/components/ui/ErrorSummary";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 // Define the form schema
 const formSchema = z.object({
@@ -340,17 +341,16 @@ const CaseEdit = () => {
                         <FormItem className="col-span-2">
                           <FormLabel className="text-white">Gender</FormLabel>
                           <FormControl>
-                            <div className="relative">
-                              <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
-                              <select
-                                className="relative w-full h-10 px-3 py-2 bg-transparent border-0 text-white rounded-xl focus:outline-none focus:ring-0"
-                                {...field}
-                              >
-                                <option value="male" className="bg-blue-600 text-white">Male</option>
-                                <option value="female" className="bg-blue-600 text-white">Female</option>
-                                <option value="other" className="bg-blue-600 text-white">Other</option>
-                              </select>
-                            </div>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <SelectTrigger className="bg-white/10 backdrop-blur-sm border border-white/20 text-white">
+                                <SelectValue placeholder="Select gender" />
+                              </SelectTrigger>
+                              <SelectContent className="bg-white/10 backdrop-blur-md border border-white/20">
+                                <SelectItem value="male" className="text-white hover:bg-white/20">Male</SelectItem>
+                                <SelectItem value="female" className="text-white hover:bg-white/20">Female</SelectItem>
+                                <SelectItem value="other" className="text-white hover:bg-white/20">Other</SelectItem>
+                              </SelectContent>
+                            </Select>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
