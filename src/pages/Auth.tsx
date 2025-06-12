@@ -111,6 +111,21 @@ const Auth = () => {
     }
   }, [location.search, toast]);
 
+  // Focus management for keyboard navigation
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        // Clear focus or handle escape key
+        if (document.activeElement instanceof HTMLElement) {
+          document.activeElement.blur();
+        }
+      }
+    };
+    
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, []);
+
   const onLoginSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
     try {
@@ -157,6 +172,14 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-blue-600 via-blue-500 to-blue-700 dark:from-blue-900 dark:via-blue-800 dark:to-blue-900">
+      {/* Skip Navigation Link */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded-lg z-50 focus:outline-none focus:ring-2 focus:ring-white/30"
+      >
+        Skip to main content
+      </a>
+
       {/* Glassy background elements */}
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
@@ -164,35 +187,30 @@ const Auth = () => {
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/3 rounded-full blur-3xl"></div>
       </div>
 
-      <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
+      {/* Main Content */}
+      <div id="main-content" className="relative z-10 min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8">
         <motion.div
-          initial={{ opacity: 0, scale: 0.8, y: 50 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="w-full max-w-md"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="w-full max-w-md sm:max-w-lg lg:max-w-xl"
         >
-          {/* Main glassmorphic card */}
-          <div className="relative">
-            {/* Backdrop blur layer */}
-            <div className="absolute inset-0 bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl"></div>
-            
-            {/* Main content */}
-            <div className="relative bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 p-8 shadow-2xl">
-              {/* Header */}
+          <Card className="bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl">
+            <CardHeader className="text-center pb-6">
               <div className="text-center mb-8">
                 <div className="flex items-center justify-center gap-3 mb-4">
-                  <div className="p-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20">
+                  <div className="p-3 rounded-2xl bg-white/20 backdrop-blur-sm">
                     <Sparkles className="h-8 w-8 text-white" />
                   </div>
-                  <h1 className="text-3xl font-bold text-white">
-                    Clinical Case Compass
-                  </h1>
+                  <h1 className="text-3xl font-bold text-white">Clinical Case Compass</h1>
                 </div>
                 <p className="text-white/80 text-lg">
-                  Medical Learning Platform
+                  Sign in to your account or create a new one
                 </p>
               </div>
+            </CardHeader>
 
+            <CardContent className="px-6 pb-6">
               {/* Tabs */}
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                 <TabsList className="grid w-full grid-cols-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-1 mb-6">
@@ -204,6 +222,7 @@ const Auth = () => {
                         ? "bg-white/20 text-white shadow-sm" 
                         : "text-white/70 hover:text-white/90"
                     )}
+                    aria-label="Sign in to your account"
                   >
                     Sign In
                   </TabsTrigger>
@@ -215,6 +234,7 @@ const Auth = () => {
                         ? "bg-white/20 text-white shadow-sm" 
                         : "text-white/70 hover:text-white/90"
                     )}
+                    aria-label="Create a new account"
                   >
                     Sign Up
                   </TabsTrigger>
@@ -227,24 +247,37 @@ const Auth = () => {
                       <FormField
                         control={loginForm.control}
                         name="email"
-                        render={({ field }) => (
+                        render={({ field, fieldState }) => (
                           <FormItem>
-                            <FormLabel className="text-white/90 text-sm font-medium">Email</FormLabel>
+                            <FormLabel 
+                              id="login-email-label"
+                              className="text-white/90 text-sm font-medium"
+                            >
+                              Email
+                            </FormLabel>
                             <FormControl>
                               <div className="relative">
                                 <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
                                 <div className="relative flex items-center">
-                                  <Mail className="h-4 w-4 text-white/70 ml-3" />
+                                  <Mail className="h-4 w-4 text-white/70 ml-3" aria-hidden="true" />
                                   <Input
                                     {...field}
                                     type="email"
+                                    id="login-email"
+                                    aria-labelledby="login-email-label"
+                                    aria-describedby={fieldState.error ? "login-email-error" : "login-email-description"}
+                                    aria-invalid={fieldState.error ? "true" : "false"}
+                                    aria-required="true"
                                     placeholder="Enter your email"
                                     className="bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 pl-10"
                                   />
                                 </div>
                               </div>
                             </FormControl>
-                            <FormMessage className="text-red-300" />
+                            <FormDescription id="login-email-description" className="text-white/60 text-xs">
+                              Enter your registered email address
+                            </FormDescription>
+                            <FormMessage id="login-email-error" className="text-red-300" />
                           </FormItem>
                         )}
                       />
@@ -252,31 +285,49 @@ const Auth = () => {
                       <FormField
                         control={loginForm.control}
                         name="password"
-                        render={({ field }) => (
+                        render={({ field, fieldState }) => (
                           <FormItem>
-                            <FormLabel className="text-white/90 text-sm font-medium">Password</FormLabel>
+                            <FormLabel 
+                              id="login-password-label"
+                              className="text-white/90 text-sm font-medium"
+                            >
+                              Password
+                            </FormLabel>
                             <FormControl>
                               <div className="relative">
                                 <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
                                 <div className="relative flex items-center">
-                                  <Lock className="h-4 w-4 text-white/70 ml-3" />
+                                  <Lock className="h-4 w-4 text-white/70 ml-3" aria-hidden="true" />
                                   <Input
                                     {...field}
                                     type={showPassword ? "text" : "password"}
+                                    id="login-password"
+                                    aria-labelledby="login-password-label"
+                                    aria-describedby={fieldState.error ? "login-password-error" : "login-password-description"}
+                                    aria-invalid={fieldState.error ? "true" : "false"}
+                                    aria-required="true"
                                     placeholder="Enter your password"
                                     className="bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 pl-10 pr-10"
                                   />
                                   <button
                                     type="button"
+                                    aria-label={showPassword ? "Hide password" : "Show password"}
+                                    aria-pressed={showPassword}
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-3 text-white/70 hover:text-white transition-colors"
+                                    className="absolute right-3 text-white/70 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 rounded p-1"
                                   >
-                                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                    <span className="sr-only">
+                                      {showPassword ? "Hide password" : "Show password"}
+                                    </span>
+                                    {showPassword ? <EyeOff className="h-4 w-4" aria-hidden="true" /> : <Eye className="h-4 w-4" aria-hidden="true" />}
                                   </button>
                                 </div>
                               </div>
                             </FormControl>
-                            <FormMessage className="text-red-300" />
+                            <FormDescription id="login-password-description" className="text-white/60 text-xs">
+                              Enter your password
+                            </FormDescription>
+                            <FormMessage id="login-password-error" className="text-red-300" />
                           </FormItem>
                         )}
                       />
@@ -284,10 +335,14 @@ const Auth = () => {
                       <Button
                         type="submit"
                         disabled={isLoading}
+                        aria-describedby={isLoading ? "login-loading" : undefined}
                         className="w-full bg-white/20 backdrop-blur-sm border border-white/20 text-white hover:bg-white/30 transition-all duration-300 rounded-xl h-12"
                       >
                         {isLoading ? (
-                          <Loader2 className="h-4 w-4 animate-spin" />
+                          <>
+                            <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                            <span id="login-loading" className="sr-only">Signing in...</span>
+                          </>
                         ) : (
                           "Sign In"
                         )}
@@ -303,24 +358,37 @@ const Auth = () => {
                       <FormField
                         control={signupForm.control}
                         name="fullName"
-                        render={({ field }) => (
+                        render={({ field, fieldState }) => (
                           <FormItem>
-                            <FormLabel className="text-white/90 text-sm font-medium">Full Name</FormLabel>
+                            <FormLabel 
+                              id="signup-fullname-label"
+                              className="text-white/90 text-sm font-medium"
+                            >
+                              Full Name
+                            </FormLabel>
                             <FormControl>
                               <div className="relative">
                                 <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
                                 <div className="relative flex items-center">
-                                  <User className="h-4 w-4 text-white/70 ml-3" />
+                                  <User className="h-4 w-4 text-white/70 ml-3" aria-hidden="true" />
                                   <Input
                                     {...field}
                                     type="text"
+                                    id="signup-fullname"
+                                    aria-labelledby="signup-fullname-label"
+                                    aria-describedby={fieldState.error ? "signup-fullname-error" : "signup-fullname-description"}
+                                    aria-invalid={fieldState.error ? "true" : "false"}
+                                    aria-required="true"
                                     placeholder="Enter your full name"
                                     className="bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 pl-10"
                                   />
                                 </div>
                               </div>
                             </FormControl>
-                            <FormMessage className="text-red-300" />
+                            <FormDescription id="signup-fullname-description" className="text-white/60 text-xs">
+                              Enter your full name as it should appear on your account
+                            </FormDescription>
+                            <FormMessage id="signup-fullname-error" className="text-red-300" />
                           </FormItem>
                         )}
                       />
@@ -328,24 +396,37 @@ const Auth = () => {
                       <FormField
                         control={signupForm.control}
                         name="email"
-                        render={({ field }) => (
+                        render={({ field, fieldState }) => (
                           <FormItem>
-                            <FormLabel className="text-white/90 text-sm font-medium">Email</FormLabel>
+                            <FormLabel 
+                              id="signup-email-label"
+                              className="text-white/90 text-sm font-medium"
+                            >
+                              Email
+                            </FormLabel>
                             <FormControl>
                               <div className="relative">
                                 <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
                                 <div className="relative flex items-center">
-                                  <Mail className="h-4 w-4 text-white/70 ml-3" />
+                                  <Mail className="h-4 w-4 text-white/70 ml-3" aria-hidden="true" />
                                   <Input
                                     {...field}
                                     type="email"
+                                    id="signup-email"
+                                    aria-labelledby="signup-email-label"
+                                    aria-describedby={fieldState.error ? "signup-email-error" : "signup-email-description"}
+                                    aria-invalid={fieldState.error ? "true" : "false"}
+                                    aria-required="true"
                                     placeholder="Enter your email"
                                     className="bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 pl-10"
                                   />
                                 </div>
                               </div>
                             </FormControl>
-                            <FormMessage className="text-red-300" />
+                            <FormDescription id="signup-email-description" className="text-white/60 text-xs">
+                              Enter a valid email address for your account
+                            </FormDescription>
+                            <FormMessage id="signup-email-error" className="text-red-300" />
                           </FormItem>
                         )}
                       />
@@ -353,34 +434,49 @@ const Auth = () => {
                       <FormField
                         control={signupForm.control}
                         name="password"
-                        render={({ field }) => (
+                        render={({ field, fieldState }) => (
                           <FormItem>
-                            <FormLabel className="text-white/90 text-sm font-medium">Password</FormLabel>
+                            <FormLabel 
+                              id="signup-password-label"
+                              className="text-white/90 text-sm font-medium"
+                            >
+                              Password
+                            </FormLabel>
                             <FormControl>
                               <div className="relative">
                                 <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
                                 <div className="relative flex items-center">
-                                  <Lock className="h-4 w-4 text-white/70 ml-3" />
+                                  <Lock className="h-4 w-4 text-white/70 ml-3" aria-hidden="true" />
                                   <Input
                                     {...field}
                                     type={showPassword ? "text" : "password"}
+                                    id="signup-password"
+                                    aria-labelledby="signup-password-label"
+                                    aria-describedby={fieldState.error ? "signup-password-error" : "signup-password-description"}
+                                    aria-invalid={fieldState.error ? "true" : "false"}
+                                    aria-required="true"
                                     placeholder="Create a password"
                                     className="bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 pl-10 pr-10"
                                   />
                                   <button
                                     type="button"
+                                    aria-label={showPassword ? "Hide password" : "Show password"}
+                                    aria-pressed={showPassword}
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-3 text-white/70 hover:text-white transition-colors"
+                                    className="absolute right-3 text-white/70 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 rounded p-1"
                                   >
-                                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                    <span className="sr-only">
+                                      {showPassword ? "Hide password" : "Show password"}
+                                    </span>
+                                    {showPassword ? <EyeOff className="h-4 w-4" aria-hidden="true" /> : <Eye className="h-4 w-4" aria-hidden="true" />}
                                   </button>
                                 </div>
                               </div>
                             </FormControl>
-                            <FormDescription className="text-white/60 text-xs">
+                            <FormDescription id="signup-password-description" className="text-white/60 text-xs">
                               Must be at least 8 characters
                             </FormDescription>
-                            <FormMessage className="text-red-300" />
+                            <FormMessage id="signup-password-error" className="text-red-300" />
                           </FormItem>
                         )}
                       />
@@ -388,31 +484,49 @@ const Auth = () => {
                       <FormField
                         control={signupForm.control}
                         name="confirmPassword"
-                        render={({ field }) => (
+                        render={({ field, fieldState }) => (
                           <FormItem>
-                            <FormLabel className="text-white/90 text-sm font-medium">Confirm Password</FormLabel>
+                            <FormLabel 
+                              id="signup-confirm-password-label"
+                              className="text-white/90 text-sm font-medium"
+                            >
+                              Confirm Password
+                            </FormLabel>
                             <FormControl>
                               <div className="relative">
                                 <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
                                 <div className="relative flex items-center">
-                                  <Lock className="h-4 w-4 text-white/70 ml-3" />
+                                  <Lock className="h-4 w-4 text-white/70 ml-3" aria-hidden="true" />
                                   <Input
                                     {...field}
                                     type={showConfirmPassword ? "text" : "password"}
+                                    id="signup-confirm-password"
+                                    aria-labelledby="signup-confirm-password-label"
+                                    aria-describedby={fieldState.error ? "signup-confirm-password-error" : "signup-confirm-password-description"}
+                                    aria-invalid={fieldState.error ? "true" : "false"}
+                                    aria-required="true"
                                     placeholder="Confirm your password"
                                     className="bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 pl-10 pr-10"
                                   />
                                   <button
                                     type="button"
+                                    aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+                                    aria-pressed={showConfirmPassword}
                                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                    className="absolute right-3 text-white/70 hover:text-white transition-colors"
+                                    className="absolute right-3 text-white/70 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 rounded p-1"
                                   >
-                                    {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                    <span className="sr-only">
+                                      {showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+                                    </span>
+                                    {showConfirmPassword ? <EyeOff className="h-4 w-4" aria-hidden="true" /> : <Eye className="h-4 w-4" aria-hidden="true" />}
                                   </button>
                                 </div>
                               </div>
                             </FormControl>
-                            <FormMessage className="text-red-300" />
+                            <FormDescription id="signup-confirm-password-description" className="text-white/60 text-xs">
+                              Re-enter your password to confirm
+                            </FormDescription>
+                            <FormMessage id="signup-confirm-password-error" className="text-red-300" />
                           </FormItem>
                         )}
                       />
@@ -420,13 +534,17 @@ const Auth = () => {
                       <Button
                         type="submit"
                         disabled={isLoading}
+                        aria-describedby={isLoading ? "signup-loading" : undefined}
                         className="w-full bg-white/20 backdrop-blur-sm border border-white/20 text-white hover:bg-white/30 transition-all duration-300 rounded-xl h-12"
                       >
                         {isLoading ? (
-                          <Loader2 className="h-4 w-4 animate-spin" />
+                          <>
+                            <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                            <span id="signup-loading" className="sr-only">Creating account...</span>
+                          </>
                         ) : (
                           <>
-                            <UserPlus className="h-4 w-4 mr-2" />
+                            <UserPlus className="h-4 w-4 mr-2" aria-hidden="true" />
                             Create Account
                           </>
                         )}
@@ -445,9 +563,11 @@ const Auth = () => {
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.3 }}
                     className="mt-6"
+                    role="alert"
+                    aria-live="polite"
                   >
                     <Alert className="bg-green-500/10 backdrop-blur-sm border border-green-400/20">
-                      <CheckCircle2 className="h-4 w-4 text-green-400" />
+                      <CheckCircle2 className="h-4 w-4 text-green-400" aria-hidden="true" />
                       <AlertTitle className="text-green-400">Verification Email Sent</AlertTitle>
                       <AlertDescription className="text-green-300">
                         Please check your email to verify your account before signing in.
@@ -456,8 +576,8 @@ const Auth = () => {
                   </motion.div>
                 )}
               </AnimatePresence>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </motion.div>
       </div>
     </div>
