@@ -86,13 +86,13 @@ export const FormFieldCard = React.memo(function FormFieldCard({
       onHoverEnd={() => setIsHovered(false)}
     >
       <div className="relative">
-        <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
+        <div className="absolute inset-0 bg-black/20 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
         <div
           className={cn(
-            "relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 group overflow-hidden transition-all duration-300",
-            "hover:bg-white/15 hover:border-white/30",
-            "before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/5 before:to-transparent before:translate-x-[-100%] before:group-hover:translate-x-[100%] before:transition-transform before:duration-700",
-            isHighlighted && "ring-2 ring-white/30 ring-offset-2 ring-offset-transparent",
+            "relative bg-black/20 backdrop-blur-md rounded-2xl border border-white/20 p-6 group overflow-hidden transition-all duration-300",
+            "hover:bg-black/30 hover:border-white/30",
+            "before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-blue-500/5 before:to-transparent before:translate-x-[-100%] before:group-hover:translate-x-[100%] before:transition-transform before:duration-700",
+            isHighlighted && "ring-2 ring-blue-400/30 ring-offset-2 ring-offset-transparent",
             isDisabled && "opacity-50 cursor-not-allowed",
             isHovered && "shadow-2xl -translate-y-0.5"
           )}
@@ -106,10 +106,10 @@ export const FormFieldCard = React.memo(function FormFieldCard({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div
-                    className="p-3 rounded-xl bg-white/20 text-white border border-white/20 transition-all duration-300 group-hover:scale-110"
+                    className="p-3 rounded-xl bg-blue-500/20 text-white border border-blue-400/30 transition-all duration-300 group-hover:scale-110"
                     aria-hidden="true"
                   >
-                    <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/10 to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-blue-500/10 to-blue-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     <Icon className="h-5 w-5 relative z-10" />
                   </div>
                   <div className="flex items-center gap-2">
@@ -125,7 +125,7 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                       <Badge 
                         variant="outline" 
                         aria-label={`Status: ${badge}`}
-                        className="ml-2 bg-white/10 border-white/20 text-white"
+                        className="ml-2 bg-blue-500/20 border-blue-400/30 text-white"
                       >
                         {badge}
                       </Badge>
@@ -138,7 +138,7 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <div 
-                            className="p-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20"
+                            className="p-1 rounded-full bg-black/20 backdrop-blur-sm border border-white/20"
                             role="img"
                             aria-label={statusMessages[status]}
                           >
@@ -147,7 +147,7 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                         </TooltipTrigger>
                         <TooltipContent 
                           id={`${cardId}-status-tooltip`}
-                          className="bg-white/10 backdrop-blur-md border-white/20 text-white"
+                          className="bg-black/30 backdrop-blur-md border-white/20 text-white"
                         >
                           <p className="text-sm">
                             {statusMessages[status]}
@@ -161,7 +161,7 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <div 
-                            className="flex items-center justify-center h-8 w-8 rounded-full hover:bg-white/10 cursor-help transition-colors backdrop-blur-sm border border-white/20"
+                            className="flex items-center justify-center h-8 w-8 rounded-full hover:bg-blue-500/20 cursor-help transition-colors backdrop-blur-sm border border-blue-400/30"
                             role="button"
                             tabIndex={0}
                             aria-label="More information"
@@ -175,7 +175,7 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                           align="start"
                           sideOffset={5}
                           id={`${cardId}-tooltip`}
-                          className="bg-white/10 backdrop-blur-md border-white/20 text-white"
+                          className="bg-black/30 backdrop-blur-md border-white/20 text-white"
                         >
                           <p className="text-sm leading-relaxed">{tooltip}</p>
                         </TooltipContent>
@@ -188,7 +188,7 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="h-8 w-8 text-white/70 hover:text-white hover:bg-white/10"
+                        className="h-8 w-8 text-white/70 hover:text-white hover:bg-blue-500/20"
                         disabled={isDisabled}
                         aria-label={isCollapsed ? "Expand section" : "Collapse section"}
                         aria-expanded={!isCollapsed}

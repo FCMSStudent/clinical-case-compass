@@ -368,7 +368,7 @@ const CreateCaseFlow = () => {
             {/* Error Summary for Accessibility */}
             {Object.keys(errors).length > 0 && (
               <div role="alert" aria-live="polite">
-                <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4">
+                <div className="bg-red-500/20 border border-red-400/30 rounded-lg p-4">
                   <ErrorSummary
                     errors={errors}
                     setFocus={setFocus as (name: string) => void}

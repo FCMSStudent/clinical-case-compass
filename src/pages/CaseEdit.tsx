@@ -230,8 +230,8 @@ const CaseEdit = () => {
         {/* Error Summary */}
         {form.formState.isSubmitted && !form.formState.isValid && Object.keys(form.formState.errors).length > 0 && (
           <div className="relative">
-            <div className="absolute inset-0 bg-red-400/10 backdrop-blur-xl rounded-xl border border-red-400/20 shadow-xl"></div>
-            <div className="relative bg-red-400/10 backdrop-blur-md rounded-xl border border-red-400/20 p-4">
+            <div className="absolute inset-0 bg-red-500/20 backdrop-blur-xl rounded-xl border border-red-400/30 shadow-xl"></div>
+            <div className="relative bg-red-500/20 backdrop-blur-md rounded-xl border border-red-400/30 p-4">
               <ErrorSummary
                 errors={form.formState.errors}
                 setFocus={form.setFocus as (name: string) => void}
@@ -246,8 +246,8 @@ const CaseEdit = () => {
           <form onSubmit={form.handleSubmit(onSubmit)} id="case-edit-form" className="space-y-8">
             {/* Basic Information Section */}
             <div className="relative">
-              <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-              <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
+              <div className="absolute inset-0 bg-black/20 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
+              <div className="relative bg-black/20 backdrop-blur-md rounded-2xl border border-white/20 p-6">
                 <h3 className="text-lg font-semibold text-white mb-6">Basic Information</h3>
                 <div className="grid gap-6 md:grid-cols-2">
                   <FormField
@@ -258,10 +258,10 @@ const CaseEdit = () => {
                         <FormLabel className="text-white">Case Title</FormLabel>
                         <FormControl>
                           <div className="relative">
-                            <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
+                            <div className="absolute inset-0 bg-black/20 backdrop-blur-sm rounded-xl border border-white/20"></div>
                             <Input 
                               {...field} 
-                              className="relative bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0"
+                              className="relative bg-transparent border-0 text-white placeholder:text-white/60 focus-visible:ring-0 focus-visible:ring-offset-0"
                             />
                           </div>
                         </FormControl>
@@ -278,10 +278,10 @@ const CaseEdit = () => {
                         <FormLabel className="text-white">Chief Complaint</FormLabel>
                         <FormControl>
                           <div className="relative">
-                            <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
+                            <div className="absolute inset-0 bg-black/20 backdrop-blur-sm rounded-xl border border-white/20"></div>
                             <Input 
                               {...field} 
-                              className="relative bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0"
+                              className="relative bg-transparent border-0 text-white placeholder:text-white/60 focus-visible:ring-0 focus-visible:ring-offset-0"
                             />
                           </div>
                         </FormControl>
@@ -298,10 +298,10 @@ const CaseEdit = () => {
                         <FormLabel className="text-white">Patient Name</FormLabel>
                         <FormControl>
                           <div className="relative">
-                            <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
+                            <div className="absolute inset-0 bg-black/20 backdrop-blur-sm rounded-xl border border-white/20"></div>
                             <Input 
                               {...field} 
-                              className="relative bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0"
+                              className="relative bg-transparent border-0 text-white placeholder:text-white/60 focus-visible:ring-0 focus-visible:ring-offset-0"
                             />
                           </div>
                         </FormControl>
@@ -319,13 +319,13 @@ const CaseEdit = () => {
                           <FormLabel className="text-white">Age</FormLabel>
                           <FormControl>
                             <div className="relative">
-                              <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
+                              <div className="absolute inset-0 bg-black/20 backdrop-blur-sm rounded-xl border border-white/20"></div>
                               <Input 
                                 {...field} 
                                 type="number" 
                                 min={0} 
                                 max={120}
-                                className="relative bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0"
+                                className="relative bg-transparent border-0 text-white placeholder:text-white/60 focus-visible:ring-0 focus-visible:ring-offset-0"
                               />
                             </div>
                           </FormControl>
@@ -366,10 +366,10 @@ const CaseEdit = () => {
                         <FormLabel className="text-white">Medical Record Number (Optional)</FormLabel>
                         <FormControl>
                           <div className="relative">
-                            <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
+                            <div className="absolute inset-0 bg-black/20 backdrop-blur-sm rounded-xl border border-white/20"></div>
                             <Input 
                               {...field} 
-                              className="relative bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0"
+                              className="relative bg-transparent border-0 text-white placeholder:text-white/60 focus-visible:ring-0 focus-visible:ring-offset-0"
                             />
                           </div>
                         </FormControl>
@@ -384,8 +384,8 @@ const CaseEdit = () => {
             
             {/* Vital Signs Section */}
             <div className="relative">
-              <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-              <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
+              <div className="absolute inset-0 bg-black/20 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
+              <div className="relative bg-black/20 backdrop-blur-md rounded-2xl border border-white/20 p-6">
                 <h3 className="text-lg font-semibold text-white mb-6 flex items-center">
                   <HeartPulse className="mr-2 h-6 w-6" />
                   Vital Signs & Symptoms
@@ -401,8 +401,8 @@ const CaseEdit = () => {
                     initialSelections={urinarySymptoms}
                   />
                   <div className="relative">
-                    <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
-                    <div className="relative bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 p-4">
+                    <div className="absolute inset-0 bg-black/20 backdrop-blur-sm rounded-xl border border-white/20"></div>
+                    <div className="relative bg-black/20 backdrop-blur-sm rounded-xl border border-white/20 p-4">
                       <h3 className="font-medium text-sm mb-2 text-white">Other Symptoms</h3>
                       <SymptomChecklist 
                         onSelectionChange={handleSymptomSelectionChange}
@@ -417,8 +417,8 @@ const CaseEdit = () => {
             {/* History & Physical Exam Section */}
             <div className="grid gap-6 md:grid-cols-2">
               <div className="relative">
-                <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-                <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
+                <div className="absolute inset-0 bg-black/20 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
+                <div className="relative bg-black/20 backdrop-blur-md rounded-2xl border border-white/20 p-6">
                   <FormField
                     control={form.control}
                     name="history"
@@ -427,10 +427,10 @@ const CaseEdit = () => {
                         <FormLabel className="text-white">History</FormLabel>
                         <FormControl>
                           <div className="relative">
-                            <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
+                            <div className="absolute inset-0 bg-black/20 backdrop-blur-sm rounded-xl border border-white/20"></div>
                             <Textarea 
                               placeholder="Relevant medical history" 
-                              className="relative bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 min-h-32" 
+                              className="relative bg-transparent border-0 text-white placeholder:text-white/60 focus-visible:ring-0 focus-visible:ring-offset-0 min-h-32" 
                               {...field} 
                               value={field.value || ""}
                             />
@@ -444,8 +444,8 @@ const CaseEdit = () => {
               </div>
               
               <div className="relative">
-                <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-                <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
+                <div className="absolute inset-0 bg-black/20 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
+                <div className="relative bg-black/20 backdrop-blur-md rounded-2xl border border-white/20 p-6">
                   <FormField
                     control={form.control}
                     name="physicalExam"
@@ -454,10 +454,10 @@ const CaseEdit = () => {
                         <FormLabel className="text-white">Physical Examination</FormLabel>
                         <FormControl>
                           <div className="relative">
-                            <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
+                            <div className="absolute inset-0 bg-black/20 backdrop-blur-sm rounded-xl border border-white/20"></div>
                             <Textarea 
                               placeholder="Physical examination findings" 
-                              className="relative bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 min-h-32" 
+                              className="relative bg-transparent border-0 text-white placeholder:text-white/60 focus-visible:ring-0 focus-visible:ring-offset-0 min-h-32" 
                               {...field} 
                               value={field.value || ""}
                             />
@@ -474,8 +474,8 @@ const CaseEdit = () => {
             {/* Lab Results & Radiology Section */}
             <div className="grid gap-6 md:grid-cols-2">
               <div className="relative">
-                <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-                <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
+                <div className="absolute inset-0 bg-black/20 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
+                <div className="relative bg-black/20 backdrop-blur-md rounded-2xl border border-white/20 p-6">
                   <h3 className="text-lg font-semibold text-white mb-6 flex items-center">
                     <TestTube className="mr-2 h-6 w-6" />
                     Laboratory Results
@@ -488,8 +488,8 @@ const CaseEdit = () => {
               </div>
               
               <div className="relative">
-                <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-                <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
+                <div className="absolute inset-0 bg-black/20 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
+                <div className="relative bg-black/20 backdrop-blur-md rounded-2xl border border-white/20 p-6">
                   <h3 className="text-lg font-semibold text-white mb-6 flex items-center">
                     <Scan className="mr-2 h-6 w-6" />
                     Radiology Exams
@@ -504,8 +504,8 @@ const CaseEdit = () => {
             
             {/* Learning Points Section */}
             <div className="relative">
-              <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-              <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
+              <div className="absolute inset-0 bg-black/20 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
+              <div className="relative bg-black/20 backdrop-blur-md rounded-2xl border border-white/20 p-6">
                 <FormField
                   control={form.control}
                   name="learningPoints"
@@ -514,10 +514,10 @@ const CaseEdit = () => {
                       <FormLabel className="text-white">Learning Points</FormLabel>
                       <FormControl>
                         <div className="relative">
-                          <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
+                          <div className="absolute inset-0 bg-black/20 backdrop-blur-sm rounded-xl border border-white/20"></div>
                           <Textarea 
                             placeholder="Key learning points for this case" 
-                            className="relative bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 min-h-32" 
+                            className="relative bg-transparent border-0 text-white placeholder:text-white/60 focus-visible:ring-0 focus-visible:ring-offset-0 min-h-32" 
                             {...field} 
                             value={field.value || ""}
                           />
@@ -535,7 +535,7 @@ const CaseEdit = () => {
               <Button 
                 type="submit" 
                 disabled={isSaving} 
-                className="bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 text-white"
+                className="bg-blue-500/20 backdrop-blur-sm border border-blue-400/30 hover:bg-blue-500/30 text-white"
               >
                 <Save className="mr-2 h-4 w-4" />
                 {isSaving ? "Saving..." : "Save Changes"}
