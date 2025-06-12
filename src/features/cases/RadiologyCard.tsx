@@ -19,7 +19,15 @@ import {
   Clock
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { RadiologyStudy } from "@/types/case";
+
+// Define RadiologyStudy type locally since it's not exported from types
+interface RadiologyStudy {
+  id: string;
+  name: string;
+  type: string;
+  findings: string;
+  date: string;
+}
 
 // Common radiology studies with typical findings
 const COMMON_RADIOLOGY_STUDIES = [

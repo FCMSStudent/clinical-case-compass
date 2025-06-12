@@ -17,6 +17,7 @@ beforeAll(() => {
   global.ResizeObserver = ResizeObserver;
 });
 
+const mockOnVitalsChange = jest.fn();
 
 describe('InteractiveVitalsCard', () => {
   afterEach(() => {
@@ -26,8 +27,7 @@ describe('InteractiveVitalsCard', () => {
 
   it('calls onVitalsChange with updated values when a slider changes', () => {
     vi.useFakeTimers();
-    const handleChange = vi.fn();
-    render(<InteractiveVitalsCard onVitalsChange={handleChange} />);
+    render(<InteractiveVitalsCard onVitalsChange={mockOnVitalsChange} />);
 
     const sliders = screen.getAllByRole('slider');
     const heartSlider = sliders[1];
@@ -36,8 +36,8 @@ describe('InteractiveVitalsCard', () => {
 
     vi.advanceTimersByTime(150);
 
-    expect(handleChange).toHaveBeenCalled();
-    const lastCall = handleChange.mock.calls[handleChange.mock.calls.length - 1][0];
+    expect(mockOnVitalsChange).toHaveBeenCalled();
+    const lastCall = mockOnVitalsChange.mock.calls[mockOnVitalsChange.mock.calls.length - 1][0];
     expect(lastCall.heartRate).toBe('81');
     expect(heartSlider).toHaveAttribute('aria-valuenow', '81');
   });

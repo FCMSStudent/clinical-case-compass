@@ -80,18 +80,18 @@ export interface CaseInfoStepProps<T extends FieldValues = CaseInfoFormData> {
 export const CaseInfoStep = memo(function CaseInfoStep<
   T extends FieldValues = CaseInfoFormData,
 >({ className }: CaseInfoStepProps<T>) {
-  const { control, formState } = useFormContext<T>();
+  const { control, formState, watch } = useFormContext<T>();
   const [completedFields, setCompletedFields] = React.useState(0);
   const totalFields = 3; // caseTitle, chiefComplaint, specialty
 
-  // Watch only the specific fields we want to track
-  const watchedFields = useWatch({
-    control,
-    name: ["caseTitle", "chiefComplaint", "specialty"] as const,
-  });
+  // Watch specific fields individually to avoid type issues
+  const caseTitle = watch("caseTitle" as Path<T>);
+  const chiefComplaint = watch("chiefComplaint" as Path<T>);
+  const specialty = watch("specialty" as Path<T>);
   
   React.useEffect(() => {
-    const completed = watchedFields.filter(value => {
+    const fields = [caseTitle, chiefComplaint, specialty];
+    const completed = fields.filter(value => {
       if (typeof value === 'string') {
         return value.trim().length > 0;
       }
@@ -99,7 +99,7 @@ export const CaseInfoStep = memo(function CaseInfoStep<
     }).length;
     
     setCompletedFields(completed);
-  }, [watchedFields]);
+  }, [caseTitle, chiefComplaint, specialty]);
 
   return (
     <section className={cn("space-y-8", className)}>

@@ -1,276 +1,238 @@
-import { useState, useEffect } from "react";
-import { useForm, SubmitHandler, FieldValues, Path, UseFormSetValue, FormProvider } from "react-hook-form";
+import React, { useState, useCallback, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useNavigate } from "react-router-dom";
-
-import { FileText, User, Stethoscope, Lightbulb, AlertTriangle } from "lucide-react";
-import { Form } from "@/components/ui/form";
 import { toast } from "sonner";
-
-// Step Components and Schemas - updated imports
+import { v4 as uuidv4 } from "uuid";
+import { motion } from "framer-motion";
+import { ChevronLeft, ChevronRight, Save, FileText, User, Stethoscope, BookOpen } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { FormContainer, StepMeta } from "@/features/cases/create/FormContainer";
+import { FormHeader } from "@/features/cases/create/FormHeader";
+import { FormNavigation } from "@/features/cases/create/FormNavigation";
 import { 
   CaseInfoStep, 
-  PatientStep, 
-  ClinicalDetailStep, 
-  LearningPointsStep,
-  FormHeader,
-  FormNavigation,
-  FormContainer,
   caseInfoSchema,
+  PatientStep,
   patientStepSchema,
+  ClinicalDetailStep,
   clinicalDetailStepSchema,
+  LearningPointsStep,
   learningPointsStepSchema
 } from "@/features/cases";
+import { useLocalStorage } from "@/hooks/use-local-storage";
+import { MedicalCase } from "@/types/case";
+import { cn } from "@/lib/utils";
+import { useAutoSave } from "@/hooks/use-autosave";
+import { AutosaveIndicator } from "@/features/cases/AutosaveIndicator";
 
-import { Card, CardContent } from "@/components/ui/card";
+// Combine all schemas into one
+const createCaseSchema = z.object({
+  ...caseInfoSchema.shape,
+  ...patientStepSchema.shape,
+  ...clinicalDetailStepSchema.shape,
+  ...learningPointsStepSchema.shape,
+});
 
-// Combine Schemas
-const combinedCaseSchema = caseInfoSchema
-  .merge(patientStepSchema)
-  .merge(clinicalDetailStepSchema)
-  .merge(learningPointsStepSchema);
+type CreateCaseFormData = z.infer<typeof createCaseSchema>;
 
-export type CombinedCaseFormData = z.infer<typeof combinedCaseSchema>;
-
-type StepId = "caseInfo" | "patient" | "clinical" | "learning";
-
-const STEPS: { id: StepId; label: string; icon: JSX.Element; fields: Path<CombinedCaseFormData>[]; }[] = [
-  { id: "caseInfo", label: "Case Info", icon: <FileText className="h-5 w-5" />, fields: Object.keys(caseInfoSchema.shape) as Path<CombinedCaseFormData>[] },
-  { id: "patient", label: "Patient", icon: <User className="h-5 w-5" />, fields: Object.keys(patientStepSchema.shape) as Path<CombinedCaseFormData>[] },
-  { id: "clinical", label: "Clinical", icon: <Stethoscope className="h-5 w-5" />, fields: Object.keys(clinicalDetailStepSchema.shape) as Path<CombinedCaseFormData>[] },
-  { id: "learning", label: "Learning", icon: <Lightbulb className="h-5 w-5" />, fields: Object.keys(learningPointsStepSchema.shape) as Path<CombinedCaseFormData>[] },
+// Step definitions
+const STEPS = [
+  {
+    id: "case-info",
+    label: "Case Information",
+    icon: <FileText className="h-4 w-4" />,
+    component: CaseInfoStep,
+    schema: caseInfoSchema,
+  },
+  {
+    id: "patient",
+    label: "Patient Details",
+    icon: <User className="h-4 w-4" />,
+    component: PatientStep,
+    schema: patientStepSchema,
+  },
+  {
+    id: "clinical-details",
+    label: "Clinical Details",
+    icon: <Stethoscope className="h-4 w-4" />,
+    component: ClinicalDetailStep,
+    schema: clinicalDetailStepSchema,
+  },
+  {
+    id: "learning-points",
+    label: "Learning Points",
+    icon: <BookOpen className="h-4 w-4" />,
+    component: LearningPointsStep,
+    schema: learningPointsStepSchema,
+  },
 ];
 
-const DRAFT_STORAGE_KEY = "medical-case-draft";
-
 const CreateCaseFlow = () => {
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
-  const [highestValidatedStep, setHighestValidatedStep] = useState(-1);
-  const [isDraftSaving, setIsDraftSaving] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
-
-  const form = useForm<CombinedCaseFormData>({
-    resolver: zodResolver(combinedCaseSchema),
+  const [currentStep, setCurrentStep] = useState(0);
+  const [storedCases, setStoredCases] = useLocalStorage<MedicalCase[]>("medical-cases", []);
+  const [isSaving, setIsSaving] = useState(false);
+  const [autoSaveStatus, setAutoSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  
+  // Create form with all schemas combined
+  const methods = useForm<CreateCaseFormData>({
+    resolver: zodResolver(createCaseSchema),
     mode: "onChange",
     defaultValues: {
-      // CaseInfoStep
       caseTitle: "",
       chiefComplaint: "",
       specialty: "",
-      // PatientStep
       patientName: "",
-      medicalRecordNumber: "",
       patientAge: undefined,
       patientSex: undefined,
+      medicalRecordNumber: "",
       medicalHistory: "",
-      // ClinicalDetailStep
-      patientHistory: "",
-      selectedBodyParts: [],
-      systemSymptoms: {},
-      vitals: {},
+      vitalSigns: {},
+      symptoms: {},
       physicalExam: "",
       labResults: [],
-      radiologyExams: [],
-      // LearningPointsStep
+      radiologyFindings: "",
+      diagnosis: "",
+      treatmentPlan: "",
       learningPoints: "",
-      generalNotes: "",
-      resourceLinks: [],
+      references: [],
     },
   });
 
-  const { control, trigger, handleSubmit, setValue, watch, getValues } = form;
-
-  // Load draft on component mount
-  useEffect(() => {
-    const savedDraft = localStorage.getItem(DRAFT_STORAGE_KEY);
-    if (savedDraft) {
+  const { handleSubmit, watch, formState, trigger } = methods;
+  const { errors, isValid, isDirty } = formState;
+  
+  // Get current step component
+  const CurrentStepComponent = STEPS[currentStep].component;
+  
+  // Check if current step is valid
+  const validateCurrentStep = useCallback(async () => {
+    const currentStepSchema = STEPS[currentStep].schema;
+    const result = await trigger(Object.keys(currentStepSchema.shape) as any);
+    return result;
+  }, [currentStep, trigger]);
+  
+  // Handle next step
+  const handleNext = useCallback(async () => {
+    const isStepValid = await validateCurrentStep();
+    
+    if (isStepValid) {
+      if (currentStep < STEPS.length - 1) {
+        setCurrentStep(prev => prev + 1);
+      }
+    } else {
+      // Show error toast if validation fails
+      toast.error("Please fix the errors before proceeding", {
+        description: "There are validation errors in the current step.",
+      });
+    }
+  }, [currentStep, validateCurrentStep]);
+  
+  // Handle previous step
+  const handlePrevious = useCallback(() => {
+    if (currentStep > 0) {
+      setCurrentStep(prev => prev - 1);
+    }
+  }, [currentStep]);
+  
+  // Handle form submission
+  const onSubmit = useCallback((data: CreateCaseFormData) => {
+    setIsSaving(true);
+    
+    try {
+      // Create new case object
+      const newCase: MedicalCase = {
+        id: uuidv4(),
+        title: data.caseTitle,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        priority: "medium",
+        chiefComplaint: data.chiefComplaint,
+        patient: {
+          name: data.patientName,
+          age: data.patientAge || 0,
+          gender: data.patientSex || "unknown",
+          medicalRecordNumber: data.medicalRecordNumber,
+        },
+        vitals: data.vitalSigns,
+        symptoms: data.symptoms,
+        history: data.medicalHistory,
+        physicalExam: data.physicalExam,
+        diagnosis: data.diagnosis,
+        treatmentPlan: data.treatmentPlan,
+        learningPoints: data.learningPoints,
+        references: data.references,
+      };
+      
+      // Add to stored cases
+      const updatedCases = storedCases ? [...storedCases, newCase] : [newCase];
+      setStoredCases(updatedCases);
+      
+      toast.success("Case created successfully", {
+        description: "Your new clinical case has been saved.",
+      });
+      
+      // Navigate to case detail page
+      navigate(`/cases/${newCase.id}`);
+    } catch (error) {
+      console.error("Error creating case:", error);
+      toast.error("Failed to create case", {
+        description: "An error occurred while saving your case.",
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  }, [navigate, storedCases, setStoredCases]);
+  
+  // Auto-save form data
+  const formData = watch();
+  useAutoSave({
+    data: formData,
+    onSave: async () => {
+      setAutoSaveStatus("saving");
       try {
-        const draftData = JSON.parse(savedDraft);
-        Object.keys(draftData).forEach((key) => {
-          setValue(key as Path<CombinedCaseFormData>, draftData[key]);
-        });
-        toast.success("Draft loaded successfully", {
-          description: "Your previous work has been restored"
-        });
+        localStorage.setItem("case-form-draft", JSON.stringify(formData));
+        setAutoSaveStatus("saved");
       } catch (error) {
-        console.error("Error loading draft:", error);
-        localStorage.removeItem(DRAFT_STORAGE_KEY);
+        console.error("Auto-save error:", error);
+        setAutoSaveStatus("error");
       }
-    }
-  }, [setValue]);
-
-  // Auto-save draft functionality
-  useEffect(() => {
-    const subscription = watch((data) => {
-      // Debounce the save operation
-      const timeoutId = setTimeout(() => {
-        saveDraft(data);
-      }, 3000); // Increased to 3 seconds for better UX
-
-      return () => clearTimeout(timeoutId);
+    },
+    debounceMs: 2000,
+    enabled: isDirty,
+  });
+  
+  // Create step metadata for progress indicator
+  const stepMeta = useMemo<StepMeta[]>(() => {
+    return STEPS.map((step, index) => {
+      // Check if previous steps are completed to determine if this step is navigable
+      const previousStepsCompleted = index === 0 ? true : 
+        Array.from({ length: index }, (_, i) => i)
+          .every(i => {
+            const stepSchema = STEPS[i].schema;
+            const stepFields = Object.keys(stepSchema.shape);
+            return stepFields.every(field => !errors[field as keyof typeof errors]);
+          });
+      
+      return {
+        id: step.id,
+        label: step.label,
+        icon: step.icon,
+        isCompleted: index < currentStep,
+        isNavigable: previousStepsCompleted,
+      };
     });
+  }, [currentStep, errors]);
 
-    return () => subscription.unsubscribe();
-  }, [watch]);
-
-  const saveDraft = async (data: CombinedCaseFormData) => {
-    try {
-      setIsDraftSaving(true);
-      localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(data));
-      // Don't show toast for auto-save to avoid spam
-    } catch (error) {
-      console.error("Error saving draft:", error);
-    } finally {
-      setIsDraftSaving(false);
+  const handleStepChange = useCallback((stepId: string) => {
+    const stepIndex = STEPS.findIndex(step => step.id === stepId);
+    if (stepIndex !== -1) {
+      setCurrentStep(stepIndex);
     }
-  };
-
-  const saveDraftManually = async () => {
-    try {
-      setIsDraftSaving(true);
-      const currentData = getValues();
-      localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(currentData));
-      toast.success("Draft saved", {
-        description: "Your progress has been saved"
-      });
-    } catch (error) {
-      console.error("Error saving draft:", error);
-      toast.error("Failed to save draft");
-    } finally {
-      setIsDraftSaving(false);
-    }
-  };
-
-  const clearDraft = () => {
-    localStorage.removeItem(DRAFT_STORAGE_KEY);
-  };
-
-  const handleNext = async () => {
-    try {
-      const fieldsToValidate = STEPS[currentStepIndex].fields;
-      const currentValues = getValues();
-      
-      // Get the current step's schema
-      const currentStepSchema = STEPS[currentStepIndex].id === "caseInfo" ? caseInfoSchema :
-                              STEPS[currentStepIndex].id === "patient" ? patientStepSchema :
-                              STEPS[currentStepIndex].id === "clinical" ? clinicalDetailStepSchema :
-                              learningPointsStepSchema;
-
-      // Validate all fields in the current step
-      const result = await trigger(fieldsToValidate);
-      
-      if (!result) {
-        // Get all error messages
-        const errors = form.formState.errors;
-        const errorMessages = Object.values(errors).map(error => error.message).filter(Boolean);
-        
-        // Show the first error message
-        if (errorMessages.length > 0) {
-          toast.error("Please complete required fields", {
-            description: errorMessages[0]
-          });
-        } else {
-          toast.error("Please review the form", {
-            description: "Some fields require your attention"
-          });
-        }
-        return;
-      }
-      
-      setHighestValidatedStep(Math.max(highestValidatedStep, currentStepIndex));
-
-      if (currentStepIndex < STEPS.length - 1) {
-        setCurrentStepIndex((prev) => prev + 1);
-      }
-    } catch (error) {
-      console.error("Error during step navigation:", error);
-      toast.error("Something went wrong", {
-        description: "Please try again or refresh the page"
-      });
-    }
-  };
-
-  const handlePrevious = () => {
-    setCurrentStepIndex((prev) => Math.max(prev - 1, 0));
-  };
-
-  const handleStepChange = (stepIndex: number) => {
-    setCurrentStepIndex(stepIndex);
-  };
-
-  const onSubmit: SubmitHandler<CombinedCaseFormData> = async (data) => {
-    try {
-      setIsSubmitting(true);
-      console.log("Form Submitted Successfully!");
-      console.log("Data:", data);
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      clearDraft();
-      toast.success("Case submitted successfully!", {
-        description: "Your clinical case has been saved",
-        action: {
-          label: "View Cases",
-          onClick: () => console.log("Navigate to cases")
-        }
-      });
-    } catch (error) {
-      toast.error("Failed to submit case", {
-        description: "Please try again"
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleSaveAndExit = async () => {
-    try {
-      setIsDraftSaving(true);
-      const currentData = getValues();
-      localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(currentData));
-      toast.success("Progress saved", {
-        description: "You can continue editing this case later"
-      });
-      // Navigate back to cases list
-      navigate("/cases");
-    } catch (error) {
-      console.error("Error saving draft:", error);
-      toast.error("Failed to save progress");
-    } finally {
-      setIsDraftSaving(false);
-    }
-  };
-
-  const currentStepData = STEPS[currentStepIndex];
-  const completionPercentage = Math.round(((currentStepIndex + 1) / STEPS.length) * 100);
-
-  const renderStepContent = () => {
-    switch (STEPS[currentStepIndex].id) {
-      case "caseInfo":
-        return <CaseInfoStep />;
-      case "patient":
-        return <PatientStep />;
-      case "clinical":
-        return <ClinicalDetailStep />;
-      case "learning":
-        return <LearningPointsStep />;
-      default:
-        return (
-          <div className="relative">
-            <div className="absolute inset-0 bg-red-400/10 backdrop-blur-xl rounded-xl border border-red-400/20 shadow-xl"></div>
-            <div className="relative bg-red-400/10 backdrop-blur-md rounded-xl border border-red-400/20 p-6 flex flex-col items-center text-center">
-              <AlertTriangle className="h-12 w-12 text-red-400 mb-4" />
-              <h2 className="text-xl font-semibold text-red-400 mb-2">Error</h2>
-              <p className="text-red-300">Invalid step. Please refresh or contact support.</p>
-            </div>
-          </div>
-        );
-    }
-  };
-
+  }, []);
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-blue-700 dark:from-blue-900 dark:via-blue-800 dark:to-blue-900">
       {/* Glassy background elements */}
@@ -279,42 +241,45 @@ const CreateCaseFlow = () => {
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/3 rounded-full blur-3xl"></div>
       </div>
-
-      <div className="relative z-10 w-full max-w-5xl mx-auto space-y-6 p-6">
-        <FormHeader
-          currentStep={currentStepIndex + 1}
-          totalSteps={STEPS.length}
-          completionPercentage={completionPercentage}
-          isDraftSaving={isDraftSaving}
-          onSaveDraft={saveDraftManually}
-          currentStepLabel={currentStepData.label}
-        />
+      
+      <div className="relative z-10 w-full max-w-6xl mx-auto space-y-6 p-4 md:p-6">
+        <div className="flex items-center justify-between">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-white/70 hover:text-white hover:bg-white/10"
+            onClick={() => navigate("/cases")}
+          >
+            <ChevronLeft className="mr-1 h-4 w-4" />
+            Back to Cases
+          </Button>
           
-        <FormProvider {...form}>
+          <AutosaveIndicator status={autoSaveStatus} />
+        </div>
+        
+        <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <FormHeader 
+              title="Create New Clinical Case"
+              description="Build a comprehensive clinical case for teaching and learning purposes."
+            />
+            
             <FormContainer
-              currentStepIndex={currentStepIndex}
-              steps={STEPS.map((step, index) => ({
-                id: step.id,
-                label: step.label,
-                icon: step.icon,
-                isCompleted: index <= highestValidatedStep,
-                isNavigable: true,
-              }))}
+              currentStepIndex={currentStep}
+              steps={stepMeta}
               onStepChange={handleStepChange}
             >
-              {renderStepContent()}
+              <CurrentStepComponent />
+              
+              <FormNavigation
+                currentStep={currentStep}
+                totalSteps={STEPS.length}
+                onNext={handleNext}
+                onPrevious={handlePrevious}
+                isSubmitting={isSaving}
+                isLastStep={currentStep === STEPS.length - 1}
+              />
             </FormContainer>
-
-            <FormNavigation
-              currentStep={currentStepIndex + 1}
-              totalSteps={STEPS.length}
-              currentStepLabel={currentStepData.label}
-              isSubmitting={isSubmitting}
-              onPrevious={handlePrevious}
-              onNext={handleNext}
-              onSaveAndExit={handleSaveAndExit}
-            />
           </form>
         </FormProvider>
       </div>
