@@ -22,26 +22,12 @@ export type PatientFormData = z.infer<typeof patientSchema>;
 
 // Medical case validation schema
 export const medicalCaseSchema = z.object({
-  title: z.string()
-    .min(1, 'Case title is required')
-    .min(5, 'Case title must be at least 5 characters')
-    .max(200, 'Case title must be less than 200 characters'),
-  chiefComplaint: z.string()
-    .min(1, 'Chief complaint is required')
-    .min(10, 'Chief complaint must be at least 10 characters')
-    .max(500, 'Chief complaint must be less than 500 characters'),
-  chiefComplaintAnalysis: z.string()
-    .max(1000, 'Chief complaint analysis must be less than 1000 characters')
-    .optional(),
-  history: z.string()
-    .max(2000, 'History must be less than 2000 characters')
-    .optional(),
-  physicalExam: z.string()
-    .max(2000, 'Physical exam must be less than 2000 characters')
-    .optional(),
-  learningPoints: z.string()
-    .max(1000, 'Learning points must be less than 1000 characters')
-    .optional()
+  title: z.string().optional(),
+  chiefComplaint: z.string().optional(),
+  chiefComplaintAnalysis: z.string().optional(),
+  history: z.string().optional(),
+  physicalExam: z.string().optional(),
+  learningPoints: z.string().optional(),
 });
 
 export type MedicalCaseFormData = z.infer<typeof medicalCaseSchema>;
@@ -131,13 +117,13 @@ export type RadiologyExamFormData = z.infer<typeof radiologyExamSchema>;
 
 // Combined case form schema
 export const caseFormSchema = z.object({
-  patient: patientSchema,
-  case: medicalCaseSchema,
+  patient: patientSchema.optional(),
+  case: medicalCaseSchema.optional(),
   diagnoses: z.array(diagnosisSchema).optional(),
   resources: z.array(resourceSchema).optional(),
   labTests: z.array(labTestSchema).optional(),
   radiologyStudies: z.array(radiologyStudySchema).optional(),
-  radiologyExams: z.array(radiologyExamSchema).optional()
+  radiologyExams: z.array(radiologyExamSchema).optional(),
 });
 
 export type CaseFormData = z.infer<typeof caseFormSchema>;

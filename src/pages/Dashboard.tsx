@@ -18,7 +18,6 @@ import { useNavigate } from "react-router-dom";
 import { useTheme } from "@/app/ThemeContext";
 
 const Dashboard = () => {
-  const [showWelcome, setShowWelcome] = useState(true);
   const { isLoading, getStatistics, getSpecialtyProgress } = useDashboardData();
   const stats = getStatistics();
   const specialtyProgress = getSpecialtyProgress();
@@ -26,11 +25,6 @@ const Dashboard = () => {
 
   // Theme management
   const { currentTheme } = useTheme();
-
-  useEffect(() => {
-    const timer = setTimeout(() => setShowWelcome(false), 6000);
-    return () => clearTimeout(timer);
-  }, []);
 
   return (
     <main role="main" aria-labelledby="dashboard-title" className="w-full space-y-6">
@@ -71,20 +65,6 @@ const Dashboard = () => {
           Medical Learning & Case Management
         </p>
       </header>
-
-      {/* Welcome Alert */}
-      {showWelcome && (
-        <Alert 
-          className="border-blue-200 bg-blue-50/50 backdrop-blur-sm"
-          role="alert"
-          aria-live="polite"
-        >
-          <Sparkles className="h-4 w-4" aria-hidden="true" />
-          <AlertDescription>
-            Welcome back! Your clinical cases are ready for review.
-          </AlertDescription>
-        </Alert>
-      )}
 
       {/* Medical Metrics */}
       <section id="metrics" aria-labelledby="metrics-heading">
@@ -226,46 +206,6 @@ const Dashboard = () => {
             </CardContent>
           </Card>
         </div>
-      </section>
-
-      {/* Specialty Progress */}
-      <section aria-labelledby="specialty-progress-heading">
-        <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-          <CardContent className="p-6">
-            <h3 id="specialty-progress-heading" className="text-lg font-semibold text-white mb-4">
-              Specialty Progress
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4" role="list" aria-label="Specialty progress">
-              {specialtyProgress.map((specialty) => (
-                <div key={specialty.name} className="space-y-2" role="listitem">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-white/70">{specialty.name}</span>
-                    <span className="text-sm font-bold text-white" aria-label={`${specialty.progress}% complete`}>
-                      {specialty.progress}%
-                    </span>
-                  </div>
-                  <div 
-                    role="progressbar"
-                    aria-label={`${specialty.name} progress`}
-                    aria-valuenow={specialty.progress}
-                    aria-valuemin={0}
-                    aria-valuemax={100}
-                    aria-describedby={`${specialty.name}-progress-description`}
-                    className="w-full bg-white/20 rounded-full h-2"
-                  >
-                    <div 
-                      className="bg-blue-500 h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${specialty.progress}%` }}
-                    />
-                  </div>
-                  <div id={`${specialty.name}-progress-description`} className="sr-only">
-                    {specialty.progress}% complete in {specialty.name}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
       </section>
     </main>
   );

@@ -265,18 +265,15 @@ const Auth = () => {
                                     type="email"
                                     id="login-email"
                                     aria-labelledby="login-email-label"
-                                    aria-describedby={fieldState.error ? "login-email-error" : "login-email-description"}
+                                    aria-describedby={fieldState.error ? "login-email-error" : undefined}
                                     aria-invalid={fieldState.error ? "true" : "false"}
                                     aria-required="true"
-                                    placeholder="Enter your email"
+                                    placeholder=""
                                     className="bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 pl-10"
                                   />
                                 </div>
                               </div>
                             </FormControl>
-                            <FormDescription id="login-email-description" className="text-white/60 text-xs">
-                              Enter your registered email address
-                            </FormDescription>
                             <FormMessage id="login-email-error" className="text-red-300" />
                           </FormItem>
                         )}
@@ -303,10 +300,10 @@ const Auth = () => {
                                     type={showPassword ? "text" : "password"}
                                     id="login-password"
                                     aria-labelledby="login-password-label"
-                                    aria-describedby={fieldState.error ? "login-password-error" : "login-password-description"}
+                                    aria-describedby={fieldState.error ? "login-password-error" : undefined}
                                     aria-invalid={fieldState.error ? "true" : "false"}
                                     aria-required="true"
-                                    placeholder="Enter your password"
+                                    placeholder=""
                                     className="bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 pl-10 pr-10"
                                   />
                                   <button
@@ -324,9 +321,6 @@ const Auth = () => {
                                 </div>
                               </div>
                             </FormControl>
-                            <FormDescription id="login-password-description" className="text-white/60 text-xs">
-                              Enter your password
-                            </FormDescription>
                             <FormMessage id="login-password-error" className="text-red-300" />
                           </FormItem>
                         )}

@@ -55,27 +55,10 @@ export class CaseService {
    * Validates case data
    */
   static validateCase(caseData: Partial<MedicalCase>): { isValid: boolean; errors: string[] } {
-    const errors: string[] = [];
-
-    if (!caseData.title?.trim()) {
-      errors.push("Case title is required");
-    }
-
-    if (!caseData.chiefComplaint?.trim()) {
-      errors.push("Chief complaint is required");
-    }
-
-    if (!caseData.patient?.name?.trim()) {
-      errors.push("Patient name is required");
-    }
-
-    if (!caseData.patient?.age || caseData.patient.age <= 0) {
-      errors.push("Valid patient age is required");
-    }
-
+    // No required field validation, always return valid
     return {
-      isValid: errors.length === 0,
-      errors,
+      isValid: true,
+      errors: [],
     };
   }
 
