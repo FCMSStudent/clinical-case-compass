@@ -154,14 +154,17 @@ const ResourceLinkCard = memo(({
                       </TooltipProvider>
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="https://example.com/resource"
-                        className={cn(
-                          "font-mono text-sm transition-all duration-200",
-                          urlError ? "border-red-300 focus:border-red-400 bg-red-50/50" : "border-gray-200 focus:border-blue-400"
-                        )}
-                        {...field}
-                      />
+                      <div className="relative">
+                        <Input
+                          placeholder="https://example.com/resource"
+                          className={cn(
+                            "relative z-10 font-mono text-sm transition-all duration-200",
+                            urlError ? "border-red-300 focus:border-red-400 bg-red-50/50" : "border-gray-200 focus:border-blue-400"
+                          )}
+                          {...field}
+                        />
+                        <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 z-0"></div>
+                      </div>
                     </FormControl>
                     <ResourceLinkValidation
                       isValid={!urlError}
@@ -192,14 +195,17 @@ const ResourceLinkCard = memo(({
                       </TooltipProvider>
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Brief description of the resource's key points or relevance"
-                        className={cn(
-                          "text-sm transition-all duration-200",
-                          descriptionError ? "border-red-300 focus:border-red-400 bg-red-50/50" : "border-gray-200 focus:border-blue-400"
-                        )}
-                        {...field}
-                      />
+                      <div className="relative">
+                        <Input
+                          placeholder="Brief description of the resource's key points or relevance"
+                          className={cn(
+                            "relative z-10 text-sm transition-all duration-200",
+                            descriptionError ? "border-red-300 focus:border-red-400 bg-red-50/50" : "border-gray-200 focus:border-blue-400"
+                          )}
+                          {...field}
+                        />
+                        <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 z-0"></div>
+                      </div>
                     </FormControl>
                     <ResourceLinkValidation
                       isValid={!descriptionError}
@@ -368,16 +374,19 @@ export const LearningPointsStep = memo(function LearningPointsStep<
               render={({ field, fieldState }) => (
                 <FormItem>
                   <FormControl>
-                    <Textarea
-                      placeholder="• Importance of early ECG in suspected MI&#10;• Differential diagnosis for acute chest pain&#10;• Management protocol for STEMI"
-                      className={cn(
-                        "min-h-[200px] text-base border-2 focus:ring-amber-100 rounded-xl p-4 leading-6 transition-all duration-200 resize-none",
-                        fieldState.error 
-                          ? "border-red-300 focus:border-red-400 bg-red-50/50" 
-                          : "border-gray-200 focus:border-amber-400"
-                      )}
-                      {...field}
-                    />
+                    <div className="relative">
+                      <Textarea
+                        placeholder="• Importance of early ECG in suspected MI\n• Differential diagnosis for acute chest pain\n• Management protocol for STEMI"
+                        className={cn(
+                          "relative z-10 min-h-[200px] text-base border-2 focus:ring-amber-100 rounded-xl p-4 leading-6 transition-all duration-200 resize-none",
+                          fieldState.error 
+                            ? "border-red-300 focus:border-red-400 bg-red-50/50" 
+                            : "border-gray-200 focus:border-amber-400"
+                        )}
+                        {...field}
+                      />
+                      <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 z-0"></div>
+                    </div>
                   </FormControl>
                   <FormDescription className="text-gray-600 mt-3 flex items-start gap-2">
                     <div className={cn(

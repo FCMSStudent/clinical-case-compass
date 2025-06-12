@@ -141,12 +141,11 @@ export const CaseInfoStep = memo(function CaseInfoStep<
               </FormLabel>
               <FormControl>
                 <div className="relative">
-                  <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
                   <Input
                     id="case-title-input"
                     placeholder="e.g., Complex Hypertension Management in Elderly Patient with Comorbidities"
                     className={cn(
-                      "relative bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 text-base rounded-xl py-3 px-4 transition-all duration-200",
+                      "relative z-10 bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 text-base rounded-xl py-3 px-4 transition-all duration-200",
                       fieldState.error && "text-red-300 placeholder:text-red-300/50"
                     )}
                     aria-describedby={fieldState.error ? "case-title-error" : "case-title-help"}
@@ -154,6 +153,7 @@ export const CaseInfoStep = memo(function CaseInfoStep<
                     aria-required="true"
                     {...field}
                   />
+                  <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 z-0"></div>
                 </div>
               </FormControl>
               <ValidationFeedback
@@ -197,12 +197,11 @@ export const CaseInfoStep = memo(function CaseInfoStep<
               </FormLabel>
               <FormControl>
                 <div className="relative">
-                  <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
                   <Textarea
                     id="chief-complaint-textarea"
                     placeholder="e.g., 65-year-old patient presents with acute onset chest pain radiating to left arm, accompanied by shortness of breath and diaphoresis. Symptoms began 2 hours ago during mild physical activity..."
                     className={cn(
-                      "relative bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 min-h-[140px] text-base rounded-xl p-4 leading-6 transition-all duration-200 resize-none",
+                      "relative z-10 bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 min-h-[140px] text-base rounded-xl p-4 leading-6 transition-all duration-200 resize-none",
                       fieldState.error && "text-red-300 placeholder:text-red-300/50"
                     )}
                     aria-describedby={fieldState.error ? "chief-complaint-error" : "chief-complaint-help"}
@@ -210,6 +209,7 @@ export const CaseInfoStep = memo(function CaseInfoStep<
                     aria-required="true"
                     {...field}
                   />
+                  <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 z-0"></div>
                 </div>
               </FormControl>
               <ValidationFeedback
@@ -252,7 +252,6 @@ export const CaseInfoStep = memo(function CaseInfoStep<
               </FormLabel>
               <FormControl>
                 <div className="relative">
-                  <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
                   <Select 
                     onValueChange={field.onChange} 
                     defaultValue={field.value}
@@ -260,7 +259,7 @@ export const CaseInfoStep = memo(function CaseInfoStep<
                   >
                     <SelectTrigger 
                       id="specialty-select"
-                      className="relative bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 text-base rounded-xl py-3 px-4 h-auto transition-all duration-200"
+                      className="relative z-10 bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 text-base rounded-xl py-3 px-4 h-auto transition-all duration-200"
                       aria-invalid={fieldState.error ? "true" : "false"}
                     >
                       <SelectValue placeholder="Select the most relevant medical specialty" />
@@ -280,6 +279,7 @@ export const CaseInfoStep = memo(function CaseInfoStep<
                       ))}
                     </SelectContent>
                   </Select>
+                  <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 z-0"></div>
                 </div>
               </FormControl>
               <ValidationFeedback
