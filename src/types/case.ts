@@ -34,6 +34,8 @@ export interface LabTest {
   name: string;
   value: string;
   unit: string;
+  normalRange?: string;
+  interpretation?: string;
 }
 
 export interface RadiologyStudy {
