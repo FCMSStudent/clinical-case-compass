@@ -490,51 +490,38 @@ export const hapticFeedback = {
   pattern: (pattern: number[]) => navigator.vibrate?.(pattern),
 };
 
-// Create missing interaction hooks
-export const useSpatialAudioCues = () => {
-  const playNavigationCue = (direction: string) => {
-    // Implementation for spatial audio
-  };
+// Add Speech Recognition type declarations
+declare global {
+  interface Window {
+    SpeechRecognition: typeof SpeechRecognition;
+    webkitSpeechRecognition: typeof SpeechRecognition;
+  }
+}
 
-  const playSuccessCue = () => {
-    // Implementation for success audio
-  };
+interface SpeechRecognitionEvent extends Event {
+  results: SpeechRecognitionResultList;
+  resultIndex: number;
+}
 
-  return {
-    playNavigationCue,
-    playSuccessCue,
-  };
+interface SpeechRecognitionErrorEvent extends Event {
+  error: string;
+  message: string;
+}
+
+interface SpeechRecognition extends EventTarget {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  start(): void;
+  stop(): void;
+  abort(): void;
+  onstart: ((event: Event) => void) | null;
+  onend: ((event: Event) => void) | null;
+  onresult: ((event: SpeechRecognitionEvent) => void) | null;
+  onerror: ((event: SpeechRecognitionErrorEvent) => void) | null;
+}
+
+declare var SpeechRecognition: {
+  prototype: SpeechRecognition;
+  new (): SpeechRecognition;
 };
-
-export const useEyeTracking = (options: {
-  dwellTime: number;
-  enableFocusIndicators: boolean;
-}) => {
-  return {
-    focusedElement: null,
-    isFocused: false,
-  };
-};
-
-export const useGestureDetection = (
-  handler: (event: any) => void,
-  options: { threshold: number; direction: string }
-) => {
-  // Implementation for gesture detection
-};
-
-export const useMotionResponsiveHover = () => {
-  return {
-    scale: 1,
-    rotateX: 0,
-    rotateY: 0,
-    handleMouseMove: () => {},
-    handleMouseLeave: () => {},
-  };
-};
-
-export const useParallaxScroll = (speed: number) => {
-  return {
-    scrollYProgress: { get: () => 0 },
-  };
-}; 

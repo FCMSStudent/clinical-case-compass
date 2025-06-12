@@ -1,11 +1,9 @@
-import React, { memo, useMemo } from "react";
-import { useFormContext, FieldValues, Path, useWatch } from "react-hook-form";
+import React, { memo } from "react";
+import { useFormContext, FieldValues, Path } from "react-hook-form";
 import { z } from "zod";
-import { motion, AnimatePresence } from "framer-motion";
 import {
   FormField,
   FormItem,
-  FormLabel,
   FormControl,
   FormDescription,
   FormMessage,
@@ -13,37 +11,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  RadioGroup,
-  RadioGroupItem,
-} from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { 
-  Calendar, 
-  Hash, 
-  User as UserIcon, 
-  Users, 
-  Heart,
-  FileUser,
-  UserCheck,
-  Clock,
-  AlertCircle,
-  CheckCircle2,
-  Info,
-} from "lucide-react";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { User, Calendar, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Progress } from "@/components/ui/progress";
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "@/components/ui/alert";
+import { StepHeader, FormFieldCard, ValidationFeedback } from "./components";
 
 /**
  * ────────────────────────────────────────────────────────────────────────────────
@@ -53,84 +29,24 @@ import {
 export const patientStepSchema = z.object({
   patientName: z.string()
     .min(1, "Patient name is required")
-    .min(2, "Patient name must be at least 2 characters")
-    .max(100, "Patient name must be less than 100 characters"),
-  medicalRecordNumber: z.string()
-    .optional()
-    .refine((val) => !val || val.length >= 3, {
-      message: "Medical record number must be at least 3 characters if provided"
-    }),
-  patientAge: z
-    .union([z.string().length(0), z.number().int().min(0).max(150)])
-    .transform((val) => (val === "" ? undefined : Number(val)))
-    .optional(),
-  patientSex: z.enum(["Male", "Female", "Other"], {
-    required_error: "Gender is required"
-  }),
-  medicalHistory: z.string()
-    .max(2000, "Medical history must be less than 2000 characters")
-    .optional(),
+    .min(3, "Patient name must be at least 3 characters")
+    .max(200, "Patient name must be less than 200 characters"),
+  medicalRecordNumber: z.string().optional(),
+  patientAge: z.coerce.number()
+    .min(0, "Age must be a positive number")
+    .max(120, "Age must be less than 120"),
+  patientSex: z.enum(["male", "female", "other"]),
+  medicalHistory: z.string().optional(),
 });
-export type PatientStepFormData = z.infer<typeof patientStepSchema>;
 
-/**
- * Constants
- */
-const SEX_OPTIONS = ["Male", "Female", "Other"] as const;
-
-/**
- * Enhanced utility wrapper with beautiful gradients and animations
- */
-function FieldCard({
-  icon: Icon,
-  title,
-  children,
-  className,
-  gradient,
-  iconColor,
-  tooltip,
-}: {
-  icon: React.ElementType;
-  title: string;
-  children: React.ReactNode;
-  className?: string;
-  gradient?: string;
-  iconColor?: string;
-  tooltip?: string;
-}) {
-  return (
-    <Card className={cn(
-      "group shadow-lg border-0 bg-gradient-to-br from-white to-gray-50/30 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden",
-      className
-    )}>
-      <CardHeader className={cn(
-        "pb-4 bg-gradient-to-r relative overflow-hidden",
-        gradient || "from-blue-50 to-indigo-50"
-      )}>
-        <div className="absolute inset-0 bg-gradient-to-r from-white/40 to-transparent"></div>
-        <CardTitle className="flex items-center gap-3 text-lg font-semibold relative z-10">
-          <div className={cn(
-            "p-2.5 rounded-xl bg-white/90 shadow-md group-hover:shadow-lg transition-all duration-300 group-hover:scale-110",
-            iconColor || "text-blue-600"
-          )}>
-            <Icon className="h-5 w-5" />
-          </div>
-          <span className="bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
-            {title}
-          </span>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="pt-6 space-y-4">{children}</CardContent>
-    </Card>
-  );
-}
+export type PatientFormData = z.infer<typeof patientStepSchema>;
 
 /**
  * ────────────────────────────────────────────────────────────────────────────────
  * PROPS
  * ────────────────────────────────────────────────────────────────────────────────
  */
-export interface PatientStepProps<T extends FieldValues = PatientStepFormData> {
+export interface PatientStepProps<T extends FieldValues = PatientFormData> {
   className?: string;
 }
 
@@ -140,146 +56,131 @@ export interface PatientStepProps<T extends FieldValues = PatientStepFormData> {
  * ────────────────────────────────────────────────────────────────────────────────
  */
 export const PatientStep = memo(function PatientStep<
-  T extends FieldValues = PatientStepFormData,
+  T extends FieldValues = PatientFormData,
 >({ className }: PatientStepProps<T>) {
-  const { control, formState } = useFormContext<T>();
+  const { control, formState, watch } = useFormContext<T>();
   const [completedFields, setCompletedFields] = React.useState(0);
-  const totalFields = 5; // patientName, medicalRecordNumber, patientAge, patientSex, medicalHistory
+  const totalFields = 5;
 
-  // Watch only the specific fields we want to track
-  const watchedFields = useWatch({
-    control,
-    name: ["patientName", "medicalRecordNumber", "patientAge", "patientSex", "medicalHistory"] as const,
-  });
+  // Watch fields individually to avoid type issues
+  const patientName = watch("patientName" as Path<T>);
+  const medicalRecordNumber = watch("medicalRecordNumber" as Path<T>);
+  const patientAge = watch("patientAge" as Path<T>);
+  const patientSex = watch("patientSex" as Path<T>);
+  const medicalHistory = watch("medicalHistory" as Path<T>);
   
   React.useEffect(() => {
-    const completed = watchedFields.filter(value => {
+    const fields = [patientName, medicalRecordNumber, patientAge, patientSex, medicalHistory];
+    const completed = fields.filter(value => {
       if (typeof value === 'string') {
         return value.trim().length > 0;
-      }
-      if (typeof value === 'number') {
-        return value >= 0;
       }
       return !!value;
     }).length;
     
     setCompletedFields(completed);
-  }, [watchedFields]);
+  }, [patientName, medicalRecordNumber, patientAge, patientSex, medicalHistory]);
 
   return (
     <section className={cn("space-y-8", className)}>
       <StepHeader
         title="Patient Information"
-        description="Enter the patient's demographic information and relevant medical history."
-        icon={UserIcon}
-        gradient="teal"
+        description="Provide essential patient demographics and medical background information."
+        icon={User}
+        gradient="blue"
       />
 
-      {/* Validation summary alert */}
-      {Object.keys(formState.errors).length > 0 && (
-        <Alert variant="destructive" className="mb-6">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Validation Errors</AlertTitle>
-          <AlertDescription>
-            Please review and correct the highlighted fields below.
-          </AlertDescription>
-        </Alert>
-      )}
-
-      {/* Name & MRN Row */}
-      <div className="grid gap-6 md:grid-cols-2">
-        {/* Patient Name */}
-        <FieldCard 
-          icon={UserIcon} 
-          title="Patient Name" 
-          gradient="from-emerald-50 to-green-50"
-          iconColor="text-emerald-600"
-          tooltip="Enter the patient's full name. For privacy, you can use initials or a pseudonym."
-        >
-          <FormField
-            control={control}
-            name={"patientName" as Path<T>}
-            render={({ field, fieldState }) => (
-              <FormItem>
-                <FormControl>
+      {/* Patient Name */}
+      <FormFieldCard
+        icon={User}
+        title="Patient Name"
+        gradient="emerald"
+        tooltip="Enter the patient's full name as it appears in their medical records."
+        isRequired
+      >
+        <FormField
+          control={control}
+          name={"patientName" as Path<T>}
+          render={({ field, fieldState }) => (
+            <FormItem>
+              <FormControl>
+                <div className="relative">
+                  <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
                   <Input
-                    placeholder="e.g., John A. Doe"
+                    placeholder="e.g., John Doe"
                     className={cn(
-                      "text-base border-2 focus:ring-emerald-100 rounded-xl py-3 px-4 transition-all duration-200",
-                      fieldState.error 
-                        ? "border-red-300 focus:border-red-400 bg-red-50/50" 
-                        : "border-gray-200 focus:border-emerald-400"
+                      "relative bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 text-base rounded-xl py-3 px-4 transition-all duration-200",
+                      fieldState.error && "text-red-300 placeholder:text-red-300/50"
                     )}
                     {...field}
                   />
-                </FormControl>
-                <ValidationFeedback
-                  isValid={!fieldState.error}
-                  message={fieldState.error?.message || "Name looks good!"}
-                />
-                <FormDescription className="text-gray-600 mt-3 flex items-start gap-2">
-                  <div className={cn(
-                    "w-2 h-2 rounded-full mt-2 flex-shrink-0",
-                    fieldState.error ? "bg-red-400" : "bg-emerald-400"
-                  )}></div>
-                  Patient's full name (can be anonymized for privacy)
-                </FormDescription>
-              </FormItem>
-            )}
-          />
-        </FieldCard>
+                </div>
+              </FormControl>
+              <ValidationFeedback
+                isValid={!fieldState.error}
+                message={fieldState.error?.message || "Patient name looks good!"}
+              />
+              <FormDescription className="text-white/70 mt-3 flex items-start gap-2">
+                <div className={cn(
+                  "w-2 h-2 rounded-full mt-2 flex-shrink-0",
+                  fieldState.error ? "bg-red-400" : "bg-emerald-400"
+                )}></div>
+                Enter the patient's full name as it appears in their medical records
+              </FormDescription>
+            </FormItem>
+          )}
+        />
+      </FormFieldCard>
 
-        {/* Medical Record Number */}
-        <FieldCard 
-          icon={Hash} 
-          title="Medical Record Number" 
-          gradient="from-blue-50 to-indigo-50"
-          iconColor="text-blue-600"
-          tooltip="Enter the patient's unique hospital identifier. This field is optional but helps with record keeping."
-        >
-          <FormField
-            control={control}
-            name={"medicalRecordNumber" as Path<T>}
-            render={({ field, fieldState }) => (
-              <FormItem>
-                <FormControl>
-                  <Input 
-                    placeholder="e.g., MRN-2024-001234" 
+      {/* Medical Record Number */}
+      <FormFieldCard
+        icon={FileText}
+        title="Medical Record Number (MRN)"
+        gradient="rose"
+        tooltip="If available, enter the patient's unique medical record number for easy identification."
+      >
+        <FormField
+          control={control}
+          name={"medicalRecordNumber" as Path<T>}
+          render={({ field, fieldState }) => (
+            <FormItem>
+              <FormControl>
+                <div className="relative">
+                  <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
+                  <Input
+                    placeholder="e.g., 1234567"
                     className={cn(
-                      "text-base border-2 focus:ring-blue-100 rounded-xl py-3 px-4 transition-all duration-200 font-mono",
-                      fieldState.error 
-                        ? "border-red-300 focus:border-red-400 bg-red-50/50" 
-                        : "border-gray-200 focus:border-blue-400"
+                      "relative bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 text-base rounded-xl py-3 px-4 transition-all duration-200",
+                      fieldState.error && "text-red-300 placeholder:text-red-300/50"
                     )}
-                    {...field} 
+                    {...field}
                   />
-                </FormControl>
-                <ValidationFeedback
-                  isValid={!fieldState.error}
-                  message={fieldState.error?.message}
-                />
-                <FormDescription className="text-gray-600 mt-3 flex items-start gap-2">
-                  <div className={cn(
-                    "w-2 h-2 rounded-full mt-2 flex-shrink-0",
-                    fieldState.error ? "bg-red-400" : "bg-blue-400"
-                  )}></div>
-                  Unique hospital identifier (optional)
-                </FormDescription>
-              </FormItem>
-            )}
-          />
-        </FieldCard>
-      </div>
+                </div>
+              </FormControl>
+              <ValidationFeedback
+                isValid={!fieldState.error}
+                message={fieldState.error?.message}
+              />
+              <FormDescription className="text-white/70 mt-3 flex items-start gap-2">
+                <div className={cn(
+                  "w-2 h-2 rounded-full mt-2 flex-shrink-0",
+                  fieldState.error ? "bg-red-400" : "bg-rose-400"
+                )}></div>
+                Enter the patient's unique medical record number for easy identification (if available)
+              </FormDescription>
+            </FormItem>
+          )}
+        />
+      </FormFieldCard>
 
-      {/* Age & Gender Row */}
-      <div className="grid gap-6 md:grid-cols-2">
-        {/* Age */}
-        <FieldCard 
-          icon={Clock} 
-          title="Patient Age" 
-          gradient="from-orange-50 to-amber-50"
-          iconColor="text-orange-600"
-          tooltip="Enter the patient's age in years. Must be between 0 and 150 years."
+      {/* Age and Sex */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <FormFieldCard
+          icon={Calendar}
+          title="Patient Age"
+          gradient="violet"
+          tooltip="Enter the patient's age in years."
+          isRequired
         >
           <FormField
             control={control}
@@ -288,50 +189,40 @@ export const PatientStep = memo(function PatientStep<
               <FormItem>
                 <FormControl>
                   <div className="relative">
+                    <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
                     <Input
                       type="number"
-                      placeholder="e.g., 45"
-                      min={0}
-                      max={150}
+                      placeholder="e.g., 42"
                       className={cn(
-                        "text-base border-2 focus:ring-orange-100 rounded-xl py-3 px-4 pr-16 transition-all duration-200",
-                        fieldState.error 
-                          ? "border-red-300 focus:border-red-400 bg-red-50/50" 
-                          : "border-gray-200 focus:border-orange-400"
+                        "relative bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 text-base rounded-xl py-3 px-4 transition-all duration-200",
+                        fieldState.error && "text-red-300 placeholder:text-red-300/50"
                       )}
-                      value={field.value ?? ""}
-                      onChange={(e) =>
-                        field.onChange(e.target.value === "" ? "" : Number(e.target.value))
-                      }
+                      {...field}
                     />
-                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm font-medium">
-                      years
-                    </span>
                   </div>
                 </FormControl>
                 <ValidationFeedback
                   isValid={!fieldState.error}
-                  message={fieldState.error?.message || "Age looks good!"}
+                  message={fieldState.error?.message}
                 />
-                <FormDescription className="text-gray-600 mt-3 flex items-start gap-2">
+                <FormDescription className="text-white/70 mt-3 flex items-start gap-2">
                   <div className={cn(
                     "w-2 h-2 rounded-full mt-2 flex-shrink-0",
-                    fieldState.error ? "bg-red-400" : "bg-orange-400"
+                    fieldState.error ? "bg-red-400" : "bg-violet-400"
                   )}></div>
-                  Patient's age in years (0–150)
+                  Enter the patient's age in years
                 </FormDescription>
               </FormItem>
             )}
           />
-        </FieldCard>
+        </FormFieldCard>
 
-        {/* Gender */}
-        <FieldCard 
-          icon={Users} 
-          title="Gender Identity" 
-          gradient="from-purple-50 to-pink-50"
-          iconColor="text-purple-600"
-          tooltip="Select the patient's gender identity. This information helps provide appropriate care and documentation."
+        <FormFieldCard
+          icon={User}
+          title="Patient Sex"
+          gradient="blue"
+          tooltip="Select the patient's sex."
+          isRequired
         >
           <FormField
             control={control}
@@ -339,128 +230,88 @@ export const PatientStep = memo(function PatientStep<
             render={({ field, fieldState }) => (
               <FormItem>
                 <FormControl>
-                  <RadioGroup
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    className="mt-2 flex flex-col space-y-3"
-                  >
-                    {SEX_OPTIONS.map((option) => (
-                      <motion.div
-                        key={option}
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: option === "Male" ? 0.1 : option === "Female" ? 0.2 : 0.3 }}
-                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-purple-50/50 transition-colors"
-                      >
-                        <RadioGroupItem
-                          value={option}
-                          id={`sex-${option}`}
-                          className={cn(
-                            "border-2",
-                            fieldState.error 
-                              ? "border-red-300 text-red-600" 
-                              : "border-purple-300 text-purple-600"
-                          )}
-                        />
-                        <Label
-                          htmlFor={`sex-${option}`}
-                          className="cursor-pointer text-base font-medium text-gray-700 flex-1"
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <SelectTrigger className="relative bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 text-base rounded-xl py-3 px-4 h-auto transition-all duration-200">
+                        <SelectValue placeholder="Select patient sex" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 shadow-xl">
+                        <SelectItem
+                          value="male"
+                          className="py-3 px-4 text-base text-white hover:bg-white/20 focus:bg-white/20 rounded-lg mx-1"
                         >
-                          {option}
-                        </Label>
-                      </motion.div>
-                    ))}
-                  </RadioGroup>
+                          Male
+                        </SelectItem>
+                        <SelectItem
+                          value="female"
+                          className="py-3 px-4 text-base text-white hover:bg-white/20 focus:bg-white/20 rounded-lg mx-1"
+                        >
+                          Female
+                        </SelectItem>
+                        <SelectItem
+                          value="other"
+                          className="py-3 px-4 text-base text-white hover:bg-white/20 focus:bg-white/20 rounded-lg mx-1"
+                        >
+                          Other
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </FormControl>
                 <ValidationFeedback
                   isValid={!fieldState.error}
                   message={fieldState.error?.message}
                 />
-                <FormDescription className="text-gray-600 mt-3 flex items-start gap-2">
-                  <div className={cn(
-                    "w-2 h-2 rounded-full mt-2 flex-shrink-0",
-                    fieldState.error ? "bg-red-400" : "bg-purple-400"
-                  )}></div>
-                  Patient's gender identity (optional)
+                <FormDescription className="text-white/70 mt-3 flex items-start gap-2">
+                  <div className="w-2 h-2 rounded-full bg-blue-400 mt-2 flex-shrink-0"></div>
+                  Select the patient's sex
                 </FormDescription>
               </FormItem>
             )}
           />
-        </FieldCard>
+        </FormFieldCard>
       </div>
 
-      {/* Medical History - Full Width */}
-      <FieldCard 
-        icon={FileUser} 
-        title="Past Medical History" 
-        gradient="from-rose-50 to-red-50"
-        iconColor="text-rose-600"
-        tooltip="Document the patient's relevant medical history, including chronic conditions, previous surgeries, medications, and allergies."
+      {/* Medical History */}
+      <FormFieldCard
+        icon={FileText}
+        title="Relevant Medical History"
+        gradient="amber"
+        tooltip="Include any pre-existing conditions, past surgeries, allergies, and current medications."
       >
         <FormField
           control={control}
           name={"medicalHistory" as Path<T>}
           render={({ field, fieldState }) => (
             <FormItem>
-              <FormLabel className="text-base font-semibold text-gray-700">
-                Relevant Medical History
-              </FormLabel>
               <FormControl>
-                <Textarea
-                  placeholder="e.g., Hypertension (diagnosed 2018, well-controlled on ACE inhibitors)&#10;Type 2 Diabetes Mellitus (2020, managed with metformin)&#10;Previous myocardial infarction (2019, treated with PCI)&#10;No known drug allergies&#10;Current medications: Lisinopril 10mg daily, Metformin 500mg BID..."
-                  className={cn(
-                    "min-h-[160px] text-base border-2 focus:ring-rose-100 rounded-xl p-4 leading-6 transition-all duration-200 resize-none",
-                    fieldState.error 
-                      ? "border-red-300 focus:border-red-400 bg-red-50/50" 
-                      : "border-gray-200 focus:border-rose-400"
-                  )}
-                  {...field}
-                />
+                <div className="relative">
+                  <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
+                  <Textarea
+                    placeholder="e.g., Hypertension, Type 2 Diabetes, Allergic to Penicillin"
+                    className={cn(
+                      "relative bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 min-h-[140px] text-base rounded-xl p-4 leading-6 transition-all duration-200 resize-none",
+                      fieldState.error && "text-red-300 placeholder:text-red-300/50"
+                    )}
+                    {...field}
+                  />
+                </div>
               </FormControl>
               <ValidationFeedback
                 isValid={!fieldState.error}
                 message={fieldState.error?.message}
               />
-              <FormDescription className="text-gray-600 mt-3 flex items-start gap-2">
-                <div className={cn(
-                  "w-2 h-2 rounded-full mt-2 flex-shrink-0",
-                  fieldState.error ? "bg-red-400" : "bg-rose-400"
-                )}></div>
-                Include chronic conditions, previous surgeries, medications, allergies, and family history
+              <FormDescription className="text-white/70 mt-3 flex items-start gap-2">
+                <div className="w-2 h-2 rounded-full bg-amber-400 mt-2 flex-shrink-0"></div>
+                Include any pre-existing conditions, past surgeries, allergies, and current medications
               </FormDescription>
             </FormItem>
           )}
         />
-      </FieldCard>
+      </FormFieldCard>
     </section>
   );
 });
 
 PatientStep.displayName = "PatientStep";
-
-/**
- * Validation feedback component
- */
-const ValidationFeedback = memo(({ isValid, message }: { isValid: boolean; message?: string }) => (
-  <AnimatePresence mode="wait">
-    {message && (
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 10 }}
-        className={cn(
-          "flex items-center gap-2 mt-2 text-sm",
-          isValid ? "text-emerald-600" : "text-red-600"
-        )}
-      >
-        {isValid ? (
-          <CheckCircle2 className="h-4 w-4" />
-        ) : (
-          <AlertCircle className="h-4 w-4" />
-        )}
-        <span>{message}</span>
-      </motion.div>
-    )}
-  </AnimatePresence>
-));
-ValidationFeedback.displayName = "ValidationFeedback";

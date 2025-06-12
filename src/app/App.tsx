@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -63,8 +64,8 @@ const AppContent = () => {
   // Performance monitoring
   usePerformanceMonitor("App");
 
-  // Adaptive tinting based on scroll
-  const { tintIntensity, tintHue } = useAdaptiveTinting(scrollYProgress);
+  // Adaptive tinting based on scroll - fix the MotionValue issue
+  const { tintIntensity, tintHue } = useAdaptiveTinting(scrollYProgress.get?.() ?? 0);
 
   // Spatial audio cues
   const { playNavigationCue, playSuccessCue } = useSpatialAudioCues();

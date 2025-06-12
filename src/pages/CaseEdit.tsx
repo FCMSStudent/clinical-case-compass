@@ -25,11 +25,29 @@ import { useLocalStorage } from "@/hooks/use-local-storage";
 import { InteractiveVitalsCard } from "@/features/cases/InteractiveVitalsCard";
 import { UrinaryReviewCard } from "@/features/cases/UrinaryReviewCard";
 import { SymptomChecklist } from "@/features/cases/SymptomChecklist";
-import { LabResultsCard, LabTest } from "@/features/cases/LabResultsCard";
-import { RadiologyCard, RadiologyExam } from "@/features/cases/RadiologyCard";
+import { LabResultsCard } from "@/features/cases/LabResultsCard";
+import { RadiologyCard } from "@/features/cases/RadiologyCard";
 import { getCaseById } from "@/data/mock-data";
 import { MedicalCase, Patient, Diagnosis, CaseTag, Resource } from "@/types/case";
 import { ErrorSummary } from "@/components/ui/ErrorSummary";
+
+// Define local types for lab tests and radiology
+interface LabTest {
+  id: string;
+  name: string;
+  value: string;
+  unit: string;
+  referenceRange: string;
+  status: 'normal' | 'high' | 'low' | 'critical';
+}
+
+interface RadiologyExam {
+  id: string;
+  name: string;
+  type: string;
+  findings: string;
+  date: string;
+}
 
 // Define the form schema
 const formSchema = z.object({
@@ -223,8 +241,7 @@ const CaseEdit = () => {
         
         <PageHeader 
           title="Edit Case" 
-          description="Update an existing medical case" 
-          icon={<Save className="h-6 w-6" />}
+          description="Update an existing medical case"
         />
 
         {/* Error Summary */}
@@ -497,7 +514,7 @@ const CaseEdit = () => {
                   </h3>
                   <RadiologyCard 
                     onRadiologyChange={setRadiologyExams}
-                    initialResults={radiologyExams}
+                    initialStudies={radiologyExams}
                   />
                 </div>
               </div>
