@@ -8,16 +8,19 @@ import { motion, Variants, Transition, useMotionValue, useTransform, useSpring }
 /**
  * Adaptive tinting based on scroll position and user interaction
  */
-export const useAdaptiveTinting = (scrollY: number) => {
-  if (!scrollY || typeof scrollY !== "object" || typeof scrollY.get !== "function") {
+export const useAdaptiveTinting = (scrollY: number | undefined) => {
+  // Handle undefined or null scrollY values
+  if (scrollY === undefined || scrollY === null) {
     // Return dummy motion values with .get() fallback
     return {
       tintIntensity: { get: () => 0 },
       tintHue: { get: () => 220 }
     };
   }
-  const tintIntensity = useTransform(scrollY, [0, 1000], [0, 0.3]);
-  const tintHue = useTransform(scrollY, [0, 1000], [200, 250]);
+  
+  const scrollMotionValue = useMotionValue(scrollY);
+  const tintIntensity = useTransform(scrollMotionValue, [0, 1000], [0, 0.3]);
+  const tintHue = useTransform(scrollMotionValue, [0, 1000], [200, 250]);
   
   return {
     tintIntensity: useSpring(tintIntensity, { stiffness: 100, damping: 30 }),
@@ -449,4 +452,4 @@ export const useThemeAwareMotion = (isDark: boolean = true) => {
       border: `1px solid ${baseColor.replace('0.1', '0.2')}`,
     },
   };
-}; 
+};

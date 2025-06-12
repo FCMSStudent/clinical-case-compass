@@ -24,7 +24,6 @@ import {
   BookOpen,
   CheckCircle2,
   X,
-  Pinch,
   Move,
   Info,
   AlertCircle,
@@ -274,6 +273,14 @@ export const InteractiveBodyDiagram: React.FC<InteractiveBodyDiagramProps> = ({
     },
     [allowMultiSelect, onBodyPartSelected, onMultiplePartsSelected]
   );
+
+  const toggleView = useCallback(() => {
+    setViewType((prev) => (prev === "anterior" ? "posterior" : "anterior"));
+  }, []);
+
+  const clearSelection = useCallback(() => {
+    setSelectedParts(new Set());
+  }, []);
 
   const handleMouseEnter = useCallback(
     (part: BodyPartId, event: React.MouseEvent) => {

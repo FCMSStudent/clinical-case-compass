@@ -1,3 +1,4 @@
+
 import React, { memo, ReactNode } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { FormProgressIndicator } from "@/features/cases/FormProgressIndicator";
@@ -21,9 +22,9 @@ export interface FormContainerProps {
   /** Ordered list of step definitions. The total number of steps is derived from this array's length. */
   steps: StepMeta[];
   /** * Callback when the user clicks a step in the progress indicator.
-   * Receives the index of the clicked step.
+   * Receives the id of the clicked step.
    */
-  onStepChange?: (stepIndex: number) => void;
+  onStepChange?: (stepId: string) => void;
   /** Main content of the current step. */
   children: ReactNode;
   /** Extra classes for the outer wrapper. */

@@ -12,8 +12,7 @@ import {
 
 export function UserProfileDisplay() {
   const { user, signOut } = useAuth();
-  const { state, isMobile } = useSidebar();
-  const open = state === "expanded";
+  const { open, isMobile } = useSidebar();
   
   if (!user) {
     return null;

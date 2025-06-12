@@ -64,8 +64,8 @@ const AppContent = () => {
   // Performance monitoring
   usePerformanceMonitor("App");
 
-  // Adaptive tinting based on scroll
-  const { tintIntensity, tintHue } = useAdaptiveTinting(scrollYProgress);
+  // Adaptive tinting based on scroll - fix the MotionValue issue
+  const { tintIntensity, tintHue } = useAdaptiveTinting(scrollYProgress.get?.() ?? 0);
 
   // Spatial audio cues
   const { playNavigationCue, playSuccessCue } = useSpatialAudioCues();
