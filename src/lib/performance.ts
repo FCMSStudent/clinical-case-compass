@@ -9,8 +9,8 @@ import { flushSync } from "react-dom";
 /**
  * Advanced memoization with custom comparison
  */
-export const useDeepMemo = <T>(factory: () => T, deps: any[]): T => {
-  const ref = useRef<{ deps: any[]; value: T }>();
+export const useDeepMemo = <T>(factory: () => T, deps: unknown[]): T => {
+  const ref = useRef<{ deps: unknown[]; value: T }>();
   
   if (!ref.current || !areEqual(ref.current.deps, deps)) {
     ref.current = { deps, value: factory() };
@@ -22,7 +22,7 @@ export const useDeepMemo = <T>(factory: () => T, deps: any[]): T => {
 /**
  * Deep equality check for memoization
  */
-const areEqual = (a: any[], b: any[]): boolean => {
+const areEqual = (a: unknown[], b: unknown[]): boolean => {
   if (a.length !== b.length) return false;
   return a.every((val, index) => {
     if (val === b[index]) return true;
@@ -108,7 +108,7 @@ export const useVirtualScroll = <T>(
 /**
  * Debounced callback hook
  */
-export const useDebounce = <T extends (...args: any[]) => any>(
+export const useDebounce = <T extends (...args: unknown[]) => unknown>(
   callback: T,
   delay: number
 ): T => {
@@ -128,7 +128,7 @@ export const useDebounce = <T extends (...args: any[]) => any>(
 /**
  * Throttled callback hook
  */
-export const useThrottle = <T extends (...args: any[]) => any>(
+export const useThrottle = <T extends (...args: unknown[]) => unknown>(
   callback: T,
   delay: number
 ): T => {
@@ -216,9 +216,9 @@ export const useListOptimization = <T>(
 };
 
 /**
- * Create a lazy-loaded component wrapper
+ * Lazy component wrapper with performance optimizations
  */
-export const createLazyComponent = <T extends React.ComponentType<any>>(
+export const createLazyComponent = <T extends React.ComponentType<unknown>>(
   importFunc: () => Promise<{ default: T }>,
   fallback?: React.ReactNode
 ) => {
@@ -400,7 +400,7 @@ export class ComputationCache<K, V> {
 export const useComputationCache = <K, V>(
   key: K,
   compute: () => V,
-  dependencies: any[] = []
+  dependencies: unknown[] = []
 ): V => {
   const cacheRef = useRef<ComputationCache<K, V>>();
   
@@ -408,14 +408,17 @@ export const useComputationCache = <K, V>(
     cacheRef.current = new ComputationCache();
   }
   
-  const cachedValue = cacheRef.current.get(key);
-  
-  if (cachedValue !== undefined) {
-    return cachedValue;
-  }
-  
-  const computedValue = useMemo(compute, dependencies);
-  cacheRef.current.set(key, computedValue);
+  // Always compute the value with useMemo
+  const computedValue = useMemo(() => {
+    const cachedValue = cacheRef.current!.get(key);
+    if (cachedValue !== undefined) {
+      return cachedValue;
+    }
+    
+    const newValue = compute();
+    cacheRef.current!.set(key, newValue);
+    return newValue;
+  }, [key, compute, dependencies.length, ...dependencies]);
   
   return computedValue;
 };

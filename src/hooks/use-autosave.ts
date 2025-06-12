@@ -1,19 +1,18 @@
-
 import { useEffect, useRef } from 'react';
 
-interface UseAutoSaveOptions {
-  data: any;
+interface UseAutoSaveOptions<T> {
+  data: T;
   onSave: () => Promise<void> | void;
   debounceMs?: number;
   enabled?: boolean;
 }
 
-export const useAutoSave = ({
+export const useAutoSave = <T>({
   data,
   onSave,
   debounceMs = 2000,
   enabled = true,
-}: UseAutoSaveOptions) => {
+}: UseAutoSaveOptions<T>) => {
   const timeoutRef = useRef<NodeJS.Timeout>();
   const previousDataRef = useRef(data);
 

@@ -152,7 +152,7 @@ export const useSpatialAudioCues = () => {
   
   const initializeAudio = useCallback(async () => {
     try {
-      audioContext.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+      audioContext.current = new (window.AudioContext || (window as typeof window & { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
       setIsEnabled(true);
     } catch (error) {
       console.warn("Audio context not supported:", error);
@@ -289,7 +289,7 @@ export const useVoiceControl = () => {
   
   useEffect(() => {
     if (typeof window !== "undefined" && "webkitSpeechRecognition" in window) {
-      recognition.current = new (window as any).webkitSpeechRecognition();
+      recognition.current = new (window as typeof window & { webkitSpeechRecognition: typeof SpeechRecognition }).webkitSpeechRecognition();
       recognition.current.continuous = true;
       recognition.current.interimResults = true;
       recognition.current.lang = "en-US";
@@ -521,7 +521,7 @@ interface SpeechRecognition extends EventTarget {
   onerror: ((event: SpeechRecognitionErrorEvent) => void) | null;
 }
 
-declare var SpeechRecognition: {
+declare const SpeechRecognition: {
   prototype: SpeechRecognition;
   new (): SpeechRecognition;
 };

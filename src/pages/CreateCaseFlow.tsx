@@ -109,7 +109,7 @@ const CreateCaseFlow = () => {
   // Check if current step is valid
   const validateCurrentStep = useCallback(async () => {
     const currentStepSchema = STEPS[currentStep].schema;
-    const result = await trigger(Object.keys(currentStepSchema.shape) as any);
+    const result = await trigger(Object.keys(currentStepSchema.shape) as (keyof CreateCaseFormData)[]);
     return result;
   }, [currentStep, trigger]);
   

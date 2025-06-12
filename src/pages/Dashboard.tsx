@@ -29,6 +29,7 @@ import { useLazyLoad } from "@/lib/performance";
 import { useMotionResponsiveHover } from "@/lib/motion";
 import { useSpatialAudioCues } from "@/lib/interactions";
 import { useEyeTracking } from "@/lib/accessibility";
+import type { GestureEvent } from "@/lib/interactions";
 
 const Dashboard = () => {
   const [showWelcome, setShowWelcome] = useState(true);
@@ -71,7 +72,7 @@ const Dashboard = () => {
   });
 
   // Gesture detection for interactive elements
-  const handleGesture = useCallback((event: any) => {
+  const handleGesture = useCallback((event: GestureEvent) => {
     if (event.type === "swipe") {
       if (event.direction === "left") {
         playNavigationCue("right");

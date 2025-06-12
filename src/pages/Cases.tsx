@@ -32,6 +32,7 @@ import { useEyeTracking } from "@/lib/accessibility";
 import { useBatchUpdate } from "@/lib/performance";
 import { useVirtualization } from "@/lib/performance";
 import { useAdaptiveTinting } from "@/lib/motion";
+import type { GestureEvent } from "@/lib/interactions";
 
 const Cases = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -122,7 +123,7 @@ const Cases = () => {
   );
 
   // Gesture detection for swipe navigation
-  const handleGesture = useCallback((event: any) => {
+  const handleGesture = useCallback((event: GestureEvent) => {
     if (event.type === "swipe") {
       if (event.direction === "left" && viewMode === "grid") {
         playNavigationCue("right");

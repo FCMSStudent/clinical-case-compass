@@ -6,25 +6,26 @@ import { motion, Variants, Transition, useMotionValue, useTransform, useSpring }
 // ────────────────────────────────────────────────────────────────────────────────
 
 /**
- * Adaptive tinting based on scroll position and user interaction
+ * Adaptive tinting based on scroll position
  */
 export const useAdaptiveTinting = (scrollY: number | undefined) => {
-  // Handle undefined or null scrollY values
-  if (scrollY === undefined || scrollY === null) {
-    // Return dummy motion values with .get() fallback
+  // Always call hooks in the same order
+  const scrollMotionValue = useMotionValue(scrollY ?? 0);
+  const tintIntensity = useTransform(scrollMotionValue, [0, 1000], [0, 0.3]);
+  const tintHue = useTransform(scrollMotionValue, [0, 1000], [200, 250]);
+  const springTintIntensity = useSpring(tintIntensity, { stiffness: 100, damping: 30 });
+  const springTintHue = useSpring(tintHue, { stiffness: 50, damping: 20 });
+
+  if (scrollY === undefined) {
     return {
       tintIntensity: { get: () => 0 },
       tintHue: { get: () => 220 }
     };
   }
   
-  const scrollMotionValue = useMotionValue(scrollY);
-  const tintIntensity = useTransform(scrollMotionValue, [0, 1000], [0, 0.3]);
-  const tintHue = useTransform(scrollMotionValue, [0, 1000], [200, 250]);
-  
   return {
-    tintIntensity: useSpring(tintIntensity, { stiffness: 100, damping: 30 }),
-    tintHue: useSpring(tintHue, { stiffness: 50, damping: 20 })
+    tintIntensity: springTintIntensity,
+    tintHue: springTintHue
   };
 };
 
@@ -345,8 +346,7 @@ export const AccessibleMotion = ({
   children: React.ReactNode;
   variants: Variants;
   reducedVariants?: Variants;
-  [key: string]: any;
-}) => {
+} & React.ComponentProps<typeof motion.div>) => {
   const motionVariants = getMotionVariants(variants, reducedVariants);
   
   return React.createElement(

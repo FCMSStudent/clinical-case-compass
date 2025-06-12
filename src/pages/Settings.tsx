@@ -28,6 +28,12 @@ import { useAccessibility } from "@/lib/accessibility";
 import { usePerformanceMonitor } from "@/lib/performance";
 import { useTheme } from "@/app/ThemeContext";
 import { useGestureDetection } from "@/lib/interactions";
+import { AccessibleMotion } from "@/lib/motion";
+import { useLazyLoad } from "@/lib/performance";
+import { useMotionResponsiveHover } from "@/lib/motion";
+import { useSpatialAudioCues } from "@/lib/interactions";
+import { useEyeTracking } from "@/lib/accessibility";
+import type { GestureEvent } from "@/lib/interactions";
 
 // Form schemas
 const profileSchema = z.object({
@@ -76,7 +82,7 @@ const Settings = () => {
   const { currentTheme, setTheme, availableThemes, getThemeNames } = useTheme();
 
   // Gesture detection for tab switching
-  const handleGesture = (event: any) => {
+  const handleGesture = (event: GestureEvent) => {
     if (event.type === "swipe") {
       const tabs = ["profile", "account", "appearance", "notifications", "privacy"];
       const currentIndex = tabs.indexOf(activeTab);

@@ -44,6 +44,13 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 
+// Define extended MedicalCase type for profile statistics
+interface MedicalCaseWithStats extends MedicalCase {
+  status?: string;
+  rating?: number;
+  specialty?: string;
+}
+
 const Profile = () => {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState("overview");
@@ -65,10 +72,10 @@ const Profile = () => {
   useEffect(() => {
     if (storedCases.length > 0) {
       // Calculate statistics
-      const completedCases = storedCases.filter((c) => (c as any).status === "completed");
-      const totalRating = storedCases.reduce((acc, c) => acc + ((c as any).rating ?? 0), 0);
+      const completedCases = storedCases.filter((c) => (c as MedicalCaseWithStats).status === "completed");
+      const totalRating = storedCases.reduce((acc, c) => acc + ((c as MedicalCaseWithStats).rating ?? 0), 0);
       const casesBySpecialty = storedCases.reduce((acc, c) => {
-        const specialty = (c as any).specialty || "General";
+        const specialty = (c as MedicalCaseWithStats).specialty || "General";
         acc[specialty] = (acc[specialty] || 0) + 1;
         return acc;
       }, {} as Record<string, number>);

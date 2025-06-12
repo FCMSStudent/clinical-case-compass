@@ -106,7 +106,7 @@ export class AccessibilityManager {
     if (!this.config.enableAudioCues || this.audioContext) return;
     
     try {
-      this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      this.audioContext = new (window.AudioContext || (window as typeof window & { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
     } catch (error) {
       console.warn("AudioContext not supported:", error);
     }
@@ -120,7 +120,7 @@ export class AccessibilityManager {
     
     if ("webkitSpeechRecognition" in window) {
       try {
-        this.recognition = new (window as any).webkitSpeechRecognition();
+        this.recognition = new (window as typeof window & { webkitSpeechRecognition: typeof SpeechRecognition }).webkitSpeechRecognition();
         this.recognition.continuous = true;
         this.recognition.interimResults = true;
         this.recognition.lang = "en-US";
@@ -829,7 +829,7 @@ interface SpeechRecognition extends EventTarget {
   onerror: ((event: SpeechRecognitionErrorEvent) => void) | null;
 }
 
-declare var SpeechRecognition: {
+declare const SpeechRecognition: {
   prototype: SpeechRecognition;
   new (): SpeechRecognition;
 };
