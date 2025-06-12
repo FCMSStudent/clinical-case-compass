@@ -109,11 +109,11 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                   <Icon className="h-5 w-5" />
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="text-lg font-semibold flex items-center gap-2">
+                  <div className="text-lg font-semibold flex items-center gap-2 text-foreground">
                     <span id={`${cardId}-title`}>
                       {title}
                       {isRequired && (
-                        <span className="text-red-400 text-sm" aria-label="required">*</span>
+                        <span className="text-destructive text-sm" aria-label="required">*</span>
                       )}
                     </span>
                   </div>
@@ -121,6 +121,7 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                     <Badge 
                       variant="outline" 
                       aria-label={`Status: ${badge}`}
+                      className="ml-2"
                     >
                       {badge}
                     </Badge>

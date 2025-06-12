@@ -341,7 +341,7 @@ export const LearningPointsStep = memo(function LearningPointsStep<
               <div className="p-2 rounded-lg bg-primary/10">
                 <Lightbulb className="h-5 w-5 text-primary" />
               </div>
-              <CardTitle className="text-lg font-semibold">
+              <CardTitle className="text-lg font-semibold text-foreground">
                 Key Learning Points
               </CardTitle>
             </div>
@@ -362,7 +362,7 @@ export const LearningPointsStep = memo(function LearningPointsStep<
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription className="text-gray-600 mt-3 flex items-start gap-2">
+                  <FormDescription className="mt-3 flex items-start gap-2 text-muted-foreground">
                     <div className={cn(
                       "w-2 h-2 rounded-full mt-2 flex-shrink-0",
                       fieldState.error ? "bg-red-400" : "bg-amber-400"
@@ -383,7 +383,7 @@ export const LearningPointsStep = memo(function LearningPointsStep<
               <div className="p-2 rounded-lg bg-primary/10">
                 <FileText className="h-5 w-5 text-primary" />
               </div>
-              <CardTitle className="text-lg font-semibold">
+              <CardTitle className="text-lg font-semibold text-foreground">
                 General Notes & Reflections
               </CardTitle>
             </div>
@@ -401,7 +401,7 @@ export const LearningPointsStep = memo(function LearningPointsStep<
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription className="text-gray-600 mt-3 flex items-start gap-2">
+                  <FormDescription className="mt-3 flex items-start gap-2 text-muted-foreground">
                     <div className="w-2 h-2 rounded-full bg-blue-400 mt-2 flex-shrink-0"></div>
                     Optional space for additional reflections or miscellaneous notes.
                   </FormDescription>
@@ -421,7 +421,7 @@ export const LearningPointsStep = memo(function LearningPointsStep<
               <div className="p-2 rounded-lg bg-primary/10">
                 <BookOpen className="h-5 w-5 text-primary" />
               </div>
-              <CardTitle className="text-lg font-semibold">
+              <CardTitle className="text-lg font-semibold text-foreground">
                 Educational Resources
               </CardTitle>
               <TooltipProvider>
