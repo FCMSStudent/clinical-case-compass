@@ -1,4 +1,3 @@
-
 export const SIDEBAR_CONFIG = {
   STORAGE_KEY: "sidebar:state",
   COOKIE_NAME: "sidebar:state",
@@ -19,4 +18,12 @@ export const saveSidebarState = (state: boolean): void => {
   if (typeof window === 'undefined') return;
   
   localStorage.setItem(SIDEBAR_CONFIG.STORAGE_KEY, JSON.stringify(state));
+};
+
+/**
+ * Clears the sidebar state from localStorage.
+ */
+export const clearSidebarState = (): void => {
+  if (typeof window === 'undefined') return;
+  localStorage.removeItem(SIDEBAR_CONFIG.STORAGE_KEY);
 };

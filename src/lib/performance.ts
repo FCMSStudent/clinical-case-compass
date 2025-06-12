@@ -421,7 +421,7 @@ export const useComputationCache = <K, V>(
 };
 
 /**
- * Virtualization hook for large lists
+ * Virtualization hook for large lists (preferred)
  */
 export const useVirtualization = <T>(
   items: T[],
