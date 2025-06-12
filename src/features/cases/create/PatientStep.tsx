@@ -220,7 +220,7 @@ export const PatientStep = memo(function PatientStep<
         <FormFieldCard
           icon={User}
           title="Patient Sex"
-          gradient="sky"
+          gradient="blue"
           tooltip="Select the patient's sex."
           isRequired
         >
@@ -264,7 +264,7 @@ export const PatientStep = memo(function PatientStep<
                   message={fieldState.error?.message}
                 />
                 <FormDescription className="text-white/70 mt-3 flex items-start gap-2">
-                  <div className="w-2 h-2 rounded-full bg-sky-400 mt-2 flex-shrink-0"></div>
+                  <div className="w-2 h-2 rounded-full bg-blue-400 mt-2 flex-shrink-0"></div>
                   Select the patient's sex
                 </FormDescription>
               </FormItem>
@@ -277,7 +277,7 @@ export const PatientStep = memo(function PatientStep<
       <FormFieldCard
         icon={FileText}
         title="Relevant Medical History"
-        gradient="orange"
+        gradient="amber"
         tooltip="Include any pre-existing conditions, past surgeries, allergies, and current medications."
       >
         <FormField
@@ -303,7 +303,7 @@ export const PatientStep = memo(function PatientStep<
                 message={fieldState.error?.message}
               />
               <FormDescription className="text-white/70 mt-3 flex items-start gap-2">
-                <div className="w-2 h-2 rounded-full bg-orange-400 mt-2 flex-shrink-0"></div>
+                <div className="w-2 h-2 rounded-full bg-amber-400 mt-2 flex-shrink-0"></div>
                 Include any pre-existing conditions, past surgeries, allergies, and current medications
               </FormDescription>
             </FormItem>

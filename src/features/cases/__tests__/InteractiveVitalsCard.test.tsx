@@ -1,3 +1,4 @@
+
 /** @vitest-environment jsdom */
 import React from 'react';
 import { render, screen, cleanup, fireEvent } from '@testing-library/react';
@@ -13,11 +14,10 @@ beforeAll(() => {
     unobserve() {}
     disconnect() {}
   }
-  // @ts-expect-error ResizeObserver is not available in jsdom
   global.ResizeObserver = ResizeObserver;
 });
 
-const mockOnVitalsChange = jest.fn();
+const mockOnVitalsChange = vi.fn();
 
 describe('InteractiveVitalsCard', () => {
   afterEach(() => {

@@ -89,15 +89,14 @@ const CreateCaseFlow = () => {
       patientSex: undefined,
       medicalRecordNumber: "",
       medicalHistory: "",
-      vitalSigns: {},
-      symptoms: {},
+      vitals: {},
+      selectedBodyParts: [],
+      systemSymptoms: {},
       physicalExam: "",
       labResults: [],
-      radiologyFindings: "",
-      diagnosis: "",
-      treatmentPlan: "",
+      radiologyExams: [],
       learningPoints: "",
-      references: [],
+      resourceLinks: [],
     },
   });
 
@@ -153,17 +152,15 @@ const CreateCaseFlow = () => {
         patient: {
           name: data.patientName,
           age: data.patientAge || 0,
-          gender: data.patientSex || "unknown",
+          gender: data.patientSex === "unknown" ? "male" : data.patientSex || "male",
           medicalRecordNumber: data.medicalRecordNumber,
         },
-        vitals: data.vitalSigns,
-        symptoms: data.symptoms,
+        vitals: data.vitals,
         history: data.medicalHistory,
         physicalExam: data.physicalExam,
-        diagnosis: data.diagnosis,
-        treatmentPlan: data.treatmentPlan,
         learningPoints: data.learningPoints,
-        references: data.references,
+        labTests: data.labResults,
+        radiologyExams: data.radiologyExams,
       };
       
       // Add to stored cases
@@ -260,8 +257,11 @@ const CreateCaseFlow = () => {
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <FormHeader 
-              title="Create New Clinical Case"
-              description="Build a comprehensive clinical case for teaching and learning purposes."
+              currentStep={currentStep + 1}
+              totalSteps={STEPS.length}
+              completionPercentage={Math.round(((currentStep + 1) / STEPS.length) * 100)}
+              currentStepLabel={STEPS[currentStep].label}
+              formTitle="Create New Clinical Case"
             />
             
             <FormContainer
@@ -272,12 +272,12 @@ const CreateCaseFlow = () => {
               <CurrentStepComponent />
               
               <FormNavigation
-                currentStep={currentStep}
+                currentStep={currentStep + 1}
                 totalSteps={STEPS.length}
+                currentStepLabel={STEPS[currentStep].label}
                 onNext={handleNext}
                 onPrevious={handlePrevious}
                 isSubmitting={isSaving}
-                isLastStep={currentStep === STEPS.length - 1}
               />
             </FormContainer>
           </form>

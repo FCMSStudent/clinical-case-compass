@@ -262,8 +262,8 @@ const DiagnosticsTab = memo(() => {
   const setLabResults = useCallback((labs: LabTest[]) =>
     setValue(FORM_FIELDS.LAB_RESULTS, labs, { shouldValidate: true }), [setValue]);
 
-  const setRadiology = useCallback((imgs: RadiologyExam[]) =>
-    setValue(FORM_FIELDS.RADIOLOGY_EXAMS, imgs, { shouldValidate: true }), [setValue]);
+  const setRadiology = useCallback((studies: RadiologyExam[]) =>
+    setValue(FORM_FIELDS.RADIOLOGY_EXAMS, studies, { shouldValidate: true }), [setValue]);
 
   return (
     <TabsContent value="diagnostics" className="space-y-6">
