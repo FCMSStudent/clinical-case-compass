@@ -51,8 +51,12 @@ export const FormHeader = memo(function FormHeader({
     <div className={cn("space-y-4", className)}>
       {/* Main Header Card */}
       <div className="relative">
-        <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-        <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
+        <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl" aria-hidden="true"></div>
+        <div 
+          className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6"
+          role="banner"
+          aria-labelledby="form-title"
+        >
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             {/* Title and Progress */}
             <div className="space-y-4 flex-1">
@@ -61,8 +65,17 @@ export const FormHeader = memo(function FormHeader({
                 animate={{ opacity: 1, y: 0 }}
                 className="space-y-1"
               >
-                <h1 className="text-2xl font-bold tracking-tight text-white">{formTitle}</h1>
-                <p className="text-white/70">
+                <h1 
+                  id="form-title"
+                  className="text-2xl font-bold tracking-tight text-white"
+                >
+                  {formTitle}
+                </h1>
+                <p 
+                  className="text-white/70"
+                  aria-live="polite"
+                  aria-atomic="true"
+                >
                   {currentStepLabel}
                 </p>
               </motion.div>
@@ -71,15 +84,27 @@ export const FormHeader = memo(function FormHeader({
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm">
                   <span className="font-medium text-white">Overall Progress</span>
-                  <span className="text-white/70">{completionPercentage}%</span>
+                  <span 
+                    className="text-white/70"
+                    aria-live="polite"
+                    aria-atomic="true"
+                  >
+                    {completionPercentage}%
+                  </span>
                 </div>
                 <div className="relative">
-                  <div className="absolute inset-0 bg-white/20 rounded-full"></div>
+                  <div className="absolute inset-0 bg-white/20 rounded-full" aria-hidden="true"></div>
                   <div 
                     className="relative h-2 bg-white/30 rounded-full overflow-hidden"
                     style={{ width: `${completionPercentage}%` }}
+                    role="progressbar"
+                    aria-label={`Form completion progress: ${completionPercentage}%`}
+                    aria-valuenow={completionPercentage}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    aria-valuetext={`${completionPercentage}% complete`}
                   >
-                    <div className="absolute inset-0 bg-white/60 rounded-full"></div>
+                    <div className="absolute inset-0 bg-white/60 rounded-full" aria-hidden="true"></div>
                   </div>
                 </div>
               </div>
@@ -95,6 +120,9 @@ export const FormHeader = memo(function FormHeader({
                       onClick={onSaveDraft}
                       disabled={isDraftSaving}
                       className="gap-2 whitespace-nowrap bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 text-white"
+                      aria-label={isDraftSaving ? "Saving draft..." : "Save draft"}
+                      aria-describedby="save-draft-tooltip"
+                      aria-busy={isDraftSaving}
                     >
                       <AnimatePresence mode="wait">
                         {isDraftSaving ? (
@@ -103,6 +131,7 @@ export const FormHeader = memo(function FormHeader({
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
+                            aria-hidden="true"
                           >
                             <Loader2 className="h-4 w-4 animate-spin" />
                           </motion.div>
@@ -112,6 +141,7 @@ export const FormHeader = memo(function FormHeader({
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
+                            aria-hidden="true"
                           >
                             <Save className="h-4 w-4" />
                           </motion.div>
@@ -122,7 +152,10 @@ export const FormHeader = memo(function FormHeader({
                       </span>
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent className="bg-white/10 backdrop-blur-md border border-white/20 text-white">
+                  <TooltipContent 
+                    id="save-draft-tooltip"
+                    className="bg-white/10 backdrop-blur-md border border-white/20 text-white"
+                  >
                     <p>Save your progress and continue later</p>
                   </TooltipContent>
                 </Tooltip>

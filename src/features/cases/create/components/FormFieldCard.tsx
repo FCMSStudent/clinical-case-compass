@@ -65,6 +65,13 @@ const statusIcons = {
   error: <AlertCircle className="h-4 w-4 text-red-400" />,
 } as const;
 
+const statusMessages = {
+  default: "",
+  success: "All validations passed",
+  warning: "Some fields need attention",
+  error: "Please fix the errors",
+} as const;
+
 export const FormFieldCard = React.memo(function FormFieldCard({
   icon: Icon,
   title,
@@ -87,6 +94,7 @@ export const FormFieldCard = React.memo(function FormFieldCard({
   const [isHovered, setIsHovered] = React.useState(false);
 
   const cardRef = React.useRef<HTMLDivElement>(null);
+  const cardId = React.useId();
 
   React.useEffect(() => {
     if (onStatusChange && isHovered) {
@@ -107,7 +115,7 @@ export const FormFieldCard = React.memo(function FormFieldCard({
       onHoverEnd={() => setIsHovered(false)}
     >
       <div className="relative">
-        <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
+        <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl" aria-hidden="true"></div>
         <div
           ref={cardRef}
           className={cn(
@@ -119,6 +127,10 @@ export const FormFieldCard = React.memo(function FormFieldCard({
             !isDisabled && "hover:shadow-md",
             "space-y-4"
           )}
+          role="group"
+          aria-labelledby={`${cardId}-title`}
+          aria-describedby={tooltip ? `${cardId}-tooltip` : undefined}
+          aria-disabled={isDisabled}
         >
           <Collapsible open={!isCollapsible || !isCollapsed} onOpenChange={setIsCollapsed}>
             <div className="p-6 pb-2">
@@ -131,18 +143,25 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                       iconBgColors[gradient],
                       !isDisabled && "hover:shadow-md"
                     )}
+                    aria-hidden="true"
                   >
                     <Icon className={cn("h-5 w-5", iconColors[gradient])} />
                   </motion.div>
                   <div className="flex items-center gap-2">
                     <div className="text-lg font-semibold flex items-center gap-2 text-white">
-                      {title}
-                      {isRequired && (
-                        <span className="text-red-400 text-sm">*</span>
-                      )}
+                      <span id={`${cardId}-title`}>
+                        {title}
+                        {isRequired && (
+                          <span className="text-red-400 text-sm" aria-label="required">*</span>
+                        )}
+                      </span>
                     </div>
                     {badge && (
-                      <Badge variant="outline" className="ml-2 bg-white/10 border-white/20 text-white">
+                      <Badge 
+                        variant="outline" 
+                        className="ml-2 bg-white/10 border-white/20 text-white"
+                        aria-label={`Status: ${badge}`}
+                      >
                         {badge}
                       </Badge>
                     )}
@@ -153,15 +172,20 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <div className="p-1 rounded-full bg-white/20">
+                          <div 
+                            className="p-1 rounded-full bg-white/20"
+                            role="img"
+                            aria-label={statusMessages[status]}
+                          >
                             {statusIcons[status]}
                           </div>
                         </TooltipTrigger>
-                        <TooltipContent className="bg-white/10 backdrop-blur-md border border-white/20 text-white">
+                        <TooltipContent 
+                          className="bg-white/10 backdrop-blur-md border border-white/20 text-white"
+                          id={`${cardId}-status-tooltip`}
+                        >
                           <p className="text-sm">
-                            {status === "success" && "All validations passed"}
-                            {status === "warning" && "Some fields need attention"}
-                            {status === "error" && "Please fix the errors"}
+                            {statusMessages[status]}
                           </p>
                         </TooltipContent>
                       </Tooltip>
@@ -171,8 +195,14 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                     <TooltipProvider delayDuration={0}>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <div className="flex items-center justify-center h-8 w-8 rounded-full hover:bg-white/20 cursor-help transition-colors">
-                            <Info className="h-4 w-4 text-white/70 hover:text-white" />
+                          <div 
+                            className="flex items-center justify-center h-8 w-8 rounded-full hover:bg-white/20 cursor-help transition-colors"
+                            role="button"
+                            tabIndex={0}
+                            aria-label="More information"
+                            aria-describedby={`${cardId}-tooltip`}
+                          >
+                            <Info className="h-4 w-4 text-white/70 hover:text-white" aria-hidden="true" />
                           </div>
                         </TooltipTrigger>
                         <TooltipContent 
@@ -180,6 +210,7 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                           align="start"
                           className="max-w-xs p-4 bg-white/10 backdrop-blur-md border border-white/20 text-white"
                           sideOffset={5}
+                          id={`${cardId}-tooltip`}
                         >
                           <p className="text-sm leading-relaxed">{tooltip}</p>
                         </TooltipContent>
@@ -194,11 +225,13 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                         size="icon"
                         className="h-8 w-8 rounded-full hover:bg-white/20 text-white"
                         disabled={isDisabled}
+                        aria-label={isCollapsed ? "Expand section" : "Collapse section"}
+                        aria-expanded={!isCollapsed}
                       >
                         {isCollapsed ? (
-                          <ChevronDown className="h-4 w-4" />
+                          <ChevronDown className="h-4 w-4" aria-hidden="true" />
                         ) : (
-                          <ChevronUp className="h-4 w-4" />
+                          <ChevronUp className="h-4 w-4" aria-hidden="true" />
                         )}
                       </Button>
                     </CollapsibleTrigger>
@@ -206,16 +239,17 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                 </div>
               </div>
             </div>
-            <div className="px-6 pb-6">
-              <CollapsibleContent>
-                {children}
-              </CollapsibleContent>
-            </div>
-            {footer && (
+            
+            <CollapsibleContent>
               <div className="px-6 pb-6">
-                {footer}
+                {children}
+                {footer && (
+                  <div className="mt-4 pt-4 border-t border-white/10">
+                    {footer}
+                  </div>
+                )}
               </div>
-            )}
+            </CollapsibleContent>
           </Collapsible>
         </div>
       </div>

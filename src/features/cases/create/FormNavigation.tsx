@@ -34,7 +34,10 @@ export interface FormNavigationProps {
 }
 
 const KeyboardShortcut = ({ keys }: { keys: string[] }) => (
-  <kbd className="px-2 py-1 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg shadow-sm">
+  <kbd 
+    className="px-2 py-1 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg shadow-sm"
+    aria-label={`Keyboard shortcut: ${keys.join(" + ")}`}
+  >
     {keys.join(" + ")}
   </kbd>
 );
@@ -94,20 +97,35 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
   }, [onPrevious, onNext, onSaveAndExit, isFirst, isLast]);
 
   return (
-    <Card className={cn("sticky bottom-0 z-50 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60", className)}>
+    <Card 
+      className={cn("sticky bottom-0 z-50 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60", className)}
+      role="navigation"
+      aria-label="Form navigation"
+    >
       <div className="container max-w-5xl mx-auto px-4 py-4">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           {/* Progress and Step Label */}
           <div className="flex-1 space-y-2">
             <div className="flex items-center justify-between text-sm">
-              <span className="font-medium">Step {currentStep} of {totalSteps}</span>
-              <span className="text-muted-foreground">{currentStepLabel}</span>
+              <span className="font-medium" aria-live="polite">
+                Step {currentStep} of {totalSteps}
+              </span>
+              <span className="text-muted-foreground" aria-live="polite">
+                {currentStepLabel}
+              </span>
             </div>
-            <Progress value={progress} className="h-2" />
+            <Progress 
+              value={progress} 
+              className="h-2" 
+              aria-label={`Form progress: ${Math.round(progress)}% complete`}
+              aria-valuenow={progress}
+              aria-valuemin={0}
+              aria-valuemax={100}
+            />
           </div>
 
           {/* Navigation Buttons */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3" role="group" aria-label="Form navigation buttons">
             {/* Previous Button */}
             <TooltipProvider>
               <Tooltip>
@@ -117,13 +135,15 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
                     onClick={onPrevious}
                     disabled={isFirst || isSubmitting}
                     className="gap-2"
+                    aria-label={isFirst ? "Cannot go back - this is the first step" : "Go to previous step"}
+                    aria-describedby={!isFirst ? "previous-button-tooltip" : undefined}
                   >
-                    <ChevronLeft className="h-4 w-4" />
+                    <ChevronLeft className="h-4 w-4" aria-hidden="true" />
                     <span className="hidden sm:inline">Previous</span>
                     <KeyboardShortcut keys={["Alt", "←"]} />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent>
+                <TooltipContent id="previous-button-tooltip">
                   <p>Go to previous step</p>
                 </TooltipContent>
               </Tooltip>
@@ -139,13 +159,15 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
                       onClick={onSaveAndExit}
                       disabled={isSubmitting}
                       className="gap-2"
+                      aria-label="Save your progress and return later"
+                      aria-describedby="save-exit-button-tooltip"
                     >
-                      <Save className="h-4 w-4" />
+                      <Save className="h-4 w-4" aria-hidden="true" />
                       <span className="hidden sm:inline">Save & Exit</span>
                       <KeyboardShortcut keys={["Alt", "S"]} />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent>
+                  <TooltipContent id="save-exit-button-tooltip">
                     <p>Save your progress and return later</p>
                   </TooltipContent>
                 </Tooltip>
@@ -163,6 +185,9 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
                       "gap-2",
                       isLast ? "bg-emerald-600 hover:bg-emerald-700" : ""
                     )}
+                    aria-label={isLast ? "Submit the case" : "Go to next step"}
+                    aria-describedby="next-submit-button-tooltip"
+                    aria-busy={isSubmitting}
                   >
                     <AnimatePresence mode="wait">
                       {isSubmitting ? (
@@ -171,6 +196,7 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           exit={{ opacity: 0 }}
+                          aria-hidden="true"
                         >
                           <Loader2 className="h-4 w-4 animate-spin" />
                         </motion.div>
@@ -180,6 +206,7 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           exit={{ opacity: 0 }}
+                          aria-hidden="true"
                         >
                           {isLast ? (
                             <Save className="h-4 w-4" />
@@ -195,7 +222,7 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
                     {!isLast && <KeyboardShortcut keys={["Alt", "→"]} />}
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent>
+                <TooltipContent id="next-submit-button-tooltip">
                   <p>{isLast ? "Submit the case" : "Go to next step"}</p>
                 </TooltipContent>
               </Tooltip>
@@ -204,9 +231,9 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
         </div>
 
         {/* Keyboard Shortcuts Help */}
-        <div className="mt-4 flex items-center justify-center text-xs text-muted-foreground">
-          <Keyboard className="h-3 w-3 mr-1" />
-          <span>Use keyboard shortcuts: Alt + ← → for navigation, Alt + S to save</span>
+        <div className="mt-2 text-xs text-muted-foreground flex items-center gap-2">
+          <Keyboard className="h-3 w-3" aria-hidden="true" />
+          <span>Keyboard shortcuts: Alt + ←/→ to navigate, Alt + S to save</span>
         </div>
       </div>
     </Card>

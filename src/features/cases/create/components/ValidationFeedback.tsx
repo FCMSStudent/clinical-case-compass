@@ -8,6 +8,8 @@ interface ValidationFeedbackProps {
   message?: string;
   className?: string;
   showIcon?: boolean;
+  id?: string;
+  role?: "alert" | "status";
 }
 
 export const ValidationFeedback = React.memo(function ValidationFeedback({
@@ -15,30 +17,44 @@ export const ValidationFeedback = React.memo(function ValidationFeedback({
   message,
   className,
   showIcon = true,
+  id,
+  role = "status",
 }: ValidationFeedbackProps) {
+  if (!message) return null;
+
   return (
     <AnimatePresence mode="wait">
-      {message && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 10 }}
-          className={cn(
-            "flex items-center gap-2 mt-2 text-sm",
-            isValid ? "text-emerald-600" : "text-red-600",
-            className
-          )}
-        >
-          {showIcon && (
-            isValid ? (
-              <CheckCircle2 className="h-4 w-4 flex-shrink-0" />
-            ) : (
-              <AlertCircle className="h-4 w-4 flex-shrink-0" />
-            )
-          )}
-          <span>{message}</span>
-        </motion.div>
-      )}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 10 }}
+        className={cn(
+          "flex items-center gap-2 mt-2 text-sm",
+          isValid ? "text-emerald-600" : "text-red-600",
+          className
+        )}
+        role={role}
+        aria-live="polite"
+        aria-atomic="true"
+        id={id}
+      >
+        {showIcon && (
+          isValid ? (
+            <CheckCircle2 
+              className="h-4 w-4 flex-shrink-0" 
+              aria-hidden="true"
+              aria-label="Validation passed"
+            />
+          ) : (
+            <AlertCircle 
+              className="h-4 w-4 flex-shrink-0" 
+              aria-hidden="true"
+              aria-label="Validation error"
+            />
+          )
+        )}
+        <span>{message}</span>
+      </motion.div>
     </AnimatePresence>
   );
 });

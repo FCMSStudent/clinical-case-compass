@@ -27,6 +27,8 @@ export const StepHeader = React.memo(function StepHeader({
   className,
   secondaryIcon: SecondaryIcon,
 }: StepHeaderProps) {
+  const headerId = React.useId();
+
   return (
     <motion.header
       initial={{ opacity: 0, y: -20 }}
@@ -36,11 +38,14 @@ export const StepHeader = React.memo(function StepHeader({
         `bg-gradient-to-br ${gradients[gradient]}`,
         className
       )}
+      role="banner"
+      aria-labelledby={`${headerId}-title`}
+      aria-describedby={`${headerId}-description`}
     >
-      <div className="absolute inset-0 bg-black/10" />
+      <div className="absolute inset-0 bg-black/10" aria-hidden="true" />
       
       {/* Primary Icon */}
-      <div className="absolute -top-4 -right-4 opacity-10">
+      <div className="absolute -top-4 -right-4 opacity-10" aria-hidden="true">
         <Icon className="h-24 w-24" />
       </div>
 
@@ -51,18 +56,23 @@ export const StepHeader = React.memo(function StepHeader({
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.3 }}
           className="absolute top-8 right-8 opacity-20"
+          aria-hidden="true"
         >
           <SecondaryIcon className="h-8 w-8" />
         </motion.div>
       )}
 
       <div className="relative space-y-3">
-        <h3 className="flex items-center text-2xl font-bold">
+        <h3 
+          id={`${headerId}-title`}
+          className="flex items-center text-2xl font-bold"
+        >
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.2 }}
             className="mr-4 rounded-xl bg-white/20 p-3 backdrop-blur-sm"
+            aria-hidden="true"
           >
             <Icon className="h-7 w-7" />
           </motion.div>
@@ -70,13 +80,16 @@ export const StepHeader = React.memo(function StepHeader({
             {title}
           </span>
         </h3>
-        <p className={cn(
-          "text-lg max-w-2xl leading-relaxed",
-          gradient === "blue" && "text-blue-100",
-          gradient === "teal" && "text-cyan-100",
-          gradient === "amber" && "text-amber-100",
-          gradient === "purple" && "text-purple-100"
-        )}>
+        <p 
+          id={`${headerId}-description`}
+          className={cn(
+            "text-lg max-w-2xl leading-relaxed",
+            gradient === "blue" && "text-blue-100",
+            gradient === "teal" && "text-cyan-100",
+            gradient === "amber" && "text-amber-100",
+            gradient === "purple" && "text-purple-100"
+          )}
+        >
           {description}
         </p>
       </div>
