@@ -30,7 +30,7 @@ import {
   Info,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { LabTest, RadiologyExam } from "@/types/case";
+import type { LabTest, RadiologyStudy } from "@/types/case";
 import { clinicalDetailStepSchema, type ClinicalDetailFormData, TAB_ITEMS } from "./ClinicalDetailConfig";
 import { InteractiveBodyDiagram, BodyPartSelection } from "@/features/cases/InteractiveBodyDiagram";
 import { SystemReviewChecklist } from "@/features/cases/SystemReviewChecklist";
@@ -47,7 +47,7 @@ const FORM_FIELDS = {
   SYSTEM_SYMPTOMS: "systemSymptoms",
   VITALS: "vitals",
   LAB_RESULTS: "labResults",
-  RADIOLOGY_EXAMS: "radiologyExams",
+  RADIOLOGY_STUDIES: "radiologyStudies",
 } as const;
 
 // 2. REUSABLE & DECOUPLED FIELD COMPONENT
@@ -262,8 +262,8 @@ const DiagnosticsTab = memo(() => {
   const setLabResults = useCallback((labs: LabTest[]) =>
     setValue(FORM_FIELDS.LAB_RESULTS, labs, { shouldValidate: true }), [setValue]);
 
-  const setRadiology = useCallback((studies: RadiologyExam[]) =>
-    setValue(FORM_FIELDS.RADIOLOGY_EXAMS, studies, { shouldValidate: true }), [setValue]);
+  const setRadiology = useCallback((studies: RadiologyStudy[]) =>
+    setValue(FORM_FIELDS.RADIOLOGY_STUDIES, studies, { shouldValidate: true }), [setValue]);
 
   return (
     <TabsContent value="diagnostics" className="space-y-6">
@@ -295,7 +295,7 @@ export const ClinicalDetailStep = memo(({ className }: { className?: string }) =
       FORM_FIELDS.SYSTEM_SYMPTOMS,
       FORM_FIELDS.VITALS,
       FORM_FIELDS.LAB_RESULTS,
-      FORM_FIELDS.RADIOLOGY_EXAMS,
+      FORM_FIELDS.RADIOLOGY_STUDIES,
     ] as const,
   });
 

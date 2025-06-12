@@ -28,7 +28,7 @@ import { SymptomChecklist } from "@/features/cases/SymptomChecklist";
 import { LabResultsCard } from "@/features/cases/LabResultsCard";
 import { RadiologyCard } from "@/features/cases/RadiologyCard";
 import { getCaseById } from "@/data/mock-data";
-import { MedicalCase, Patient, Diagnosis, CaseTag, Resource, RadiologyExam, LabTest } from "@/types/case";
+import { MedicalCase, Patient, Diagnosis, CaseTag, Resource, RadiologyStudy, LabTest } from "@/types/case";
 import { ErrorSummary } from "@/components/ui/ErrorSummary";
 
 // Define the form schema
@@ -59,7 +59,7 @@ const CaseEdit = () => {
   const [symptoms, setSymptoms] = useState<Record<string, boolean>>({});
   const [systemSymptoms, setSystemSymptoms] = useState<Record<string, string[]>>({});
   const [labResults, setLabResults] = useState<LabTest[]>([]);
-  const [radiologyExams, setRadiologyExams] = useState<RadiologyExam[]>([]);
+  const [radiologyStudies, setRadiologyStudies] = useState<RadiologyStudy[]>([]);
   
   // Set up form with existing case data
   const form = useForm<FormValues>({
@@ -136,8 +136,8 @@ const CaseEdit = () => {
       setLabResults(foundCase.labTests);
     }
     
-    if (foundCase.radiologyExams) {
-      setRadiologyExams(foundCase.radiologyExams);
+    if (foundCase.radiologyStudies) {
+      setRadiologyStudies(foundCase.radiologyStudies);
     }
   }, [id, storedCases, navigate, form]);
   
@@ -167,7 +167,7 @@ const CaseEdit = () => {
         urinarySymptoms: urinarySymptoms,
         symptoms: symptoms,
         labTests: labResults,
-        radiologyExams: radiologyExams,
+        radiologyStudies: radiologyStudies,
       };
       
       // Update case in localStorage
@@ -495,8 +495,8 @@ const CaseEdit = () => {
                     Radiology Exams
                   </h3>
                   <RadiologyCard 
-                    onRadiologyChange={setRadiologyExams}
-                    initialStudies={radiologyExams}
+                    onRadiologyChange={setRadiologyStudies}
+                    initialStudies={radiologyStudies}
                   />
                 </div>
               </div>

@@ -37,15 +37,18 @@ export const clinicalDetailStepSchema = z.object({
       }),
     )
     .default([]),
-  radiologyExams: z
+  radiologyStudies: z
     .array(
       z.object({
         id: z.string(),
-        modality: z.string().min(1, "Radiology modality is required"),
+        name: z.string().min(1, "Study name is required"),
+        type: z.string().min(1, "Study type is required"),
         findings: z.string()
           .min(1, "Radiology findings are required")
           .min(10, "Radiology findings must be at least 10 characters")
           .max(1000, "Radiology findings must be less than 1000 characters"),
+        date: z.string().min(1, "Study date is required"),
+        impression: z.string().optional(),
       }),
     )
     .default([]),

@@ -94,7 +94,7 @@ const CreateCaseFlow = () => {
       systemSymptoms: {},
       physicalExam: "",
       labResults: [],
-      radiologyExams: [],
+      radiologyStudies: [],
       learningPoints: "",
       resourceLinks: [],
     },
@@ -160,7 +160,7 @@ const CreateCaseFlow = () => {
         physicalExam: data.physicalExam,
         learningPoints: data.learningPoints,
         labTests: data.labResults,
-        radiologyExams: data.radiologyExams,
+        radiologyStudies: data.radiologyStudies,
       };
       
       // Add to stored cases
