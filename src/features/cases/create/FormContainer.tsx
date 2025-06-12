@@ -1,4 +1,3 @@
-
 import React, { memo, ReactNode } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { FormProgressIndicator } from "@/features/cases/FormProgressIndicator";
@@ -60,7 +59,7 @@ export const FormContainer = memo(
           onStepClick={onStepChange} // Renamed for clarity.
         />
         
-        <Card className="border-border bg-card shadow-sm">
+        <Card>
           <CardContent className="p-6">{children}</CardContent>
         </Card>
       </section>

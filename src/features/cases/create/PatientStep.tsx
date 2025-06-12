@@ -52,14 +52,12 @@ export const PatientStep = memo(function PatientStep<
         title="Patient Information"
         description="Provide essential patient demographics and medical background information."
         icon={User}
-        gradient="blue"
       />
 
       {/* Patient Name */}
       <FormFieldCard
         icon={User}
         title="Patient Name"
-        gradient="emerald"
         tooltip="Enter the patient's full name as it appears in their medical records."
         isRequired
       >
@@ -98,7 +96,6 @@ export const PatientStep = memo(function PatientStep<
       <FormFieldCard
         icon={FileText}
         title="Medical Record Number (MRN)"
-        gradient="rose"
         tooltip="If available, enter the patient's unique medical record number for easy identification."
       >
         <FormField
@@ -137,7 +134,6 @@ export const PatientStep = memo(function PatientStep<
         <FormFieldCard
           icon={Calendar}
           title="Patient Age"
-          gradient="violet"
           tooltip="Enter the patient's age in years."
           isRequired
         >
@@ -176,7 +172,6 @@ export const PatientStep = memo(function PatientStep<
         <FormFieldCard
           icon={User}
           title="Patient Sex"
-          gradient="blue"
           tooltip="Select the patient's sex as recorded in their medical records."
           isRequired
         >
@@ -221,7 +216,6 @@ export const PatientStep = memo(function PatientStep<
       <FormFieldCard
         icon={FileText}
         title="Medical History"
-        gradient="amber"
         tooltip="Summarize the patient's relevant past medical history, chronic conditions, and previous interventions."
       >
         <FormField

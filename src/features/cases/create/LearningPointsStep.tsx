@@ -50,6 +50,7 @@ import {
   LearningPointsFormData, 
   ResourceLink 
 } from "./schemas/learning-points-schema";
+import { StepHeader } from "./components/StepHeader";
 
 // Create a type for the field array
 type ResourceLinksFieldArray = FieldArrayWithId<LearningPointsFormData, "resourceLinks", "id">;
@@ -315,33 +316,11 @@ export const LearningPointsStep = memo(function LearningPointsStep<
 
   return (
     <section className={cn("space-y-8", className)}>
-      {/* Enhanced Header */}
-      <motion.header
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-600 via-orange-600 to-red-700 p-8 text-white shadow-2xl"
-      >
-        <div className="absolute inset-0 bg-black/10"></div>
-        <div className="absolute top-4 right-4 opacity-20">
-          <Sparkles className="h-12 w-12" />
-        </div>
-        <div className="relative space-y-3">
-          <h3 className="flex items-center text-2xl font-bold">
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="mr-4 rounded-xl bg-white/20 p-3 backdrop-blur-sm"
-            >
-              <Lightbulb className="h-7 w-7" />
-            </motion.div>
-            Educational Insights
-          </h3>
-          <p className="text-amber-100 text-lg max-w-2xl leading-relaxed">
-            Capture key learning points, reflections, and educational resources to maximize the educational value of this case.
-          </p>
-        </div>
-      </motion.header>
+      <StepHeader
+        title="Educational Insights"
+        description="Capture key learning points, reflections, and educational resources to maximize the educational value of this case."
+        icon={Lightbulb}
+      />
 
       {/* Validation Summary */}
       {Object.keys(formState.errors).length > 0 && (
@@ -356,13 +335,13 @@ export const LearningPointsStep = memo(function LearningPointsStep<
 
       <div className="grid gap-6 md:grid-cols-2">
         {/* Learning Points Card */}
-        <Card className="border-2">
-          <CardHeader className="bg-gradient-to-r from-amber-50 to-orange-50 border-b">
+        <Card>
+          <CardHeader>
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-amber-100">
-                <Lightbulb className="h-5 w-5 text-amber-600" />
+              <div className="p-2 rounded-lg bg-primary/10">
+                <Lightbulb className="h-5 w-5 text-primary" />
               </div>
-              <CardTitle className="text-lg font-semibold text-amber-900">
+              <CardTitle className="text-lg font-semibold">
                 Key Learning Points
               </CardTitle>
             </div>
@@ -398,13 +377,13 @@ export const LearningPointsStep = memo(function LearningPointsStep<
         </Card>
 
         {/* General Notes Card */}
-        <Card className="border-2">
-          <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b">
+        <Card>
+          <CardHeader>
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-blue-100">
-                <FileText className="h-5 w-5 text-blue-600" />
+              <div className="p-2 rounded-lg bg-primary/10">
+                <FileText className="h-5 w-5 text-primary" />
               </div>
-              <CardTitle className="text-lg font-semibold text-blue-900">
+              <CardTitle className="text-lg font-semibold">
                 General Notes & Reflections
               </CardTitle>
             </div>
@@ -435,20 +414,20 @@ export const LearningPointsStep = memo(function LearningPointsStep<
       </div>
 
       {/* Resource Links Section */}
-      <Card className="border-2 transition-all duration-200 hover:shadow-md">
-        <CardHeader className="bg-gradient-to-r from-purple-50 to-pink-50 border-b">
+      <Card className="transition-all duration-200 hover:shadow-md">
+        <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-purple-100">
-                <BookOpen className="h-5 w-5 text-purple-600" />
+              <div className="p-2 rounded-lg bg-primary/10">
+                <BookOpen className="h-5 w-5 text-primary" />
               </div>
-              <CardTitle className="text-lg font-semibold text-purple-900">
+              <CardTitle className="text-lg font-semibold">
                 Educational Resources
               </CardTitle>
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Info className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                    <Info className="h-4 w-4 text-muted-foreground hover:text-foreground" />
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Add links to educational resources like journal articles, guidelines, or videos</p>

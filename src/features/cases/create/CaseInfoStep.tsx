@@ -93,7 +93,6 @@ export const CaseInfoStep = memo(function CaseInfoStep<
         title="Case Information"
         description="Create a comprehensive clinical case by providing essential information about the patient presentation and medical context."
         icon={FileText}
-        gradient="blue"
       />
 
       {/* Validation summary alert */}
@@ -104,15 +103,14 @@ export const CaseInfoStep = memo(function CaseInfoStep<
           aria-live="polite"
           aria-labelledby="validation-errors-heading"
         >
-          <div className="absolute inset-0 bg-red-400/10 backdrop-blur-xl rounded-xl border border-red-400/20 shadow-xl"></div>
-          <div className="relative bg-red-400/10 backdrop-blur-md rounded-xl border border-red-400/20 p-4">
+          <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4">
             <div className="flex items-start gap-3">
-              <AlertCircle className="h-5 w-5 text-red-400 mt-0.5" aria-hidden="true" />
+              <AlertCircle className="h-5 w-5 text-destructive mt-0.5" aria-hidden="true" />
               <div>
-                <h3 id="validation-errors-heading" className="font-semibold text-red-400">
+                <h3 id="validation-errors-heading" className="font-semibold text-destructive">
                   Validation Errors
                 </h3>
-                <p className="text-red-300 text-sm mt-1">
+                <p className="text-destructive/80 text-sm mt-1">
                   Please review and correct the highlighted fields below.
                 </p>
               </div>
@@ -124,7 +122,6 @@ export const CaseInfoStep = memo(function CaseInfoStep<
       <FormFieldCard 
         icon={FileText} 
         title="Case Title" 
-        gradient="emerald"
         tooltip="A clear, descriptive title helps others quickly understand the case's focus. Include key details like condition, patient type, or unique aspects."
         isRequired
       >
@@ -177,7 +174,6 @@ export const CaseInfoStep = memo(function CaseInfoStep<
       <FormFieldCard 
         icon={Stethoscope} 
         title="Chief Complaint" 
-        gradient="rose"
         tooltip="Describe the patient's primary symptoms and concerns in detail. Include onset, duration, and any relevant context."
         isRequired
       >
@@ -230,7 +226,6 @@ export const CaseInfoStep = memo(function CaseInfoStep<
       <FormFieldCard 
         icon={Tag} 
         title="Medical Specialty" 
-        gradient="violet"
         tooltip="Select the primary medical specialty most relevant to this clinical presentation."
       >
         <FormField

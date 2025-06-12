@@ -38,6 +38,7 @@ import { VitalsCard } from "@/features/cases/VitalsCard";
 import { LabResultsCard } from "@/features/cases/LabResultsCard";
 import { RadiologyCard } from "@/features/cases/RadiologyCard";
 import { useFormValidation } from "@/hooks/use-form-validation";
+import { StepHeader } from "./components/StepHeader";
 
 // 1. CENTRALIZED CONFIGURATION: All form field names are now in one place.
 // This prevents typos and makes refactoring easier.
@@ -308,32 +309,11 @@ export const ClinicalDetailStep = memo(({ className }: { className?: string }) =
 
   return (
     <section className={cn("space-y-6", className)}>
-      <motion.header
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 p-8 text-white shadow-2xl"
-      >
-        <div className="absolute inset-0 bg-black/10"></div>
-        <div className="absolute -top-4 -right-4 opacity-10">
-          <StethoscopeIcon className="h-24 w-24" />
-        </div>
-        <div className="relative space-y-3">
-          <h3 className="flex items-center text-2xl font-bold">
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="mr-4 rounded-xl bg-white/20 p-3 backdrop-blur-sm"
-            >
-              <StethoscopeIcon className="h-7 w-7" />
-            </motion.div>
-            Clinical Assessment & Documentation
-          </h3>
-          <p className="text-blue-100 text-lg max-w-2xl leading-relaxed">
-            Comprehensive clinical evaluation and diagnostic work-up
-          </p>
-        </div>
-      </motion.header>
+      <StepHeader
+        title="Clinical Assessment & Documentation"
+        description="Comprehensive clinical evaluation and diagnostic work-up"
+        icon={StethoscopeIcon}
+      />
 
       {/* Validation summary alert */}
       {Object.keys(errors).length > 0 && (

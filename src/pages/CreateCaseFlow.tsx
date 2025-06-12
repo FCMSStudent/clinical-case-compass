@@ -317,13 +317,6 @@ const CreateCaseFlow = () => {
         Skip to main content
       </a>
 
-      {/* Glassy background elements */}
-      <div className="absolute inset-0" aria-hidden="true">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/3 rounded-full blur-3xl"></div>
-      </div>
-
       <div 
         ref={mainContentRef}
         id="main-content"
@@ -374,9 +367,8 @@ const CreateCaseFlow = () => {
             
             {/* Error Summary for Accessibility */}
             {Object.keys(errors).length > 0 && (
-              <div className="relative" role="alert" aria-live="polite">
-                <div className="absolute inset-0 bg-red-400/10 backdrop-blur-xl rounded-xl border border-red-400/20 shadow-xl"></div>
-                <div className="relative bg-red-400/10 backdrop-blur-md rounded-xl border border-red-400/20 p-4">
+              <div role="alert" aria-live="polite">
+                <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4">
                   <ErrorSummary
                     errors={errors}
                     setFocus={setFocus as (name: string) => void}
