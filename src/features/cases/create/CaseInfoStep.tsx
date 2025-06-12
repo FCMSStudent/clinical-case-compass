@@ -140,21 +140,18 @@ export const CaseInfoStep = memo(function CaseInfoStep<
                 Case Title
               </FormLabel>
               <FormControl>
-                <div className="relative">
-                  <Input
-                    id="case-title-input"
-                    placeholder="e.g., Complex Hypertension Management in Elderly Patient with Comorbidities"
-                    className={cn(
-                      "relative z-10 bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 text-base rounded-xl py-3 px-4 transition-all duration-200",
-                      fieldState.error && "text-red-300 placeholder:text-red-300/50"
-                    )}
-                    aria-describedby={fieldState.error ? "case-title-error" : "case-title-help"}
-                    aria-invalid={fieldState.error ? "true" : "false"}
-                    aria-required="true"
-                    {...field}
-                  />
-                  <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 z-0"></div>
-                </div>
+                <Input
+                  id="case-title-input"
+                  placeholder="e.g., Complex Hypertension Management in Elderly Patient with Comorbidities"
+                  className={cn(
+                    undefined,
+                    fieldState.error && "border-red-400/50 focus-visible:ring-red-400/30"
+                  )}
+                  aria-describedby={fieldState.error ? "case-title-error" : "case-title-help"}
+                  aria-invalid={fieldState.error ? "true" : "false"}
+                  aria-required="true"
+                  {...field}
+                />
               </FormControl>
               <ValidationFeedback
                 isValid={!fieldState.error}
@@ -196,21 +193,18 @@ export const CaseInfoStep = memo(function CaseInfoStep<
                 Chief Complaint
               </FormLabel>
               <FormControl>
-                <div className="relative">
-                  <Textarea
-                    id="chief-complaint-textarea"
-                    placeholder="e.g., 65-year-old patient presents with acute onset chest pain radiating to left arm, accompanied by shortness of breath and diaphoresis. Symptoms began 2 hours ago during mild physical activity..."
-                    className={cn(
-                      "relative z-10 bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 min-h-[140px] text-base rounded-xl p-4 leading-6 transition-all duration-200 resize-none",
-                      fieldState.error && "text-red-300 placeholder:text-red-300/50"
-                    )}
-                    aria-describedby={fieldState.error ? "chief-complaint-error" : "chief-complaint-help"}
-                    aria-invalid={fieldState.error ? "true" : "false"}
-                    aria-required="true"
-                    {...field}
-                  />
-                  <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 z-0"></div>
-                </div>
+                <Textarea
+                  id="chief-complaint-textarea"
+                  placeholder="e.g., 65-year-old patient presents with acute onset chest pain radiating to left arm, accompanied by shortness of breath and diaphoresis. Symptoms began 2 hours ago during mild physical activity..."
+                  className={cn(
+                    undefined,
+                    fieldState.error && "border-red-400/50 focus-visible:ring-red-400/30"
+                  )}
+                  aria-describedby={fieldState.error ? "chief-complaint-error" : "chief-complaint-help"}
+                  aria-invalid={fieldState.error ? "true" : "false"}
+                  aria-required="true"
+                  {...field}
+                />
               </FormControl>
               <ValidationFeedback
                 isValid={!fieldState.error}
@@ -251,36 +245,36 @@ export const CaseInfoStep = memo(function CaseInfoStep<
                 Medical Specialty
               </FormLabel>
               <FormControl>
-                <div className="relative">
-                  <Select 
-                    onValueChange={field.onChange} 
-                    defaultValue={field.value}
-                    aria-describedby="specialty-help"
+                <Select 
+                  onValueChange={field.onChange} 
+                  defaultValue={field.value}
+                  aria-describedby="specialty-help"
+                >
+                  <SelectTrigger 
+                    id="specialty-select"
+                    className={cn(
+                      undefined,
+                      fieldState.error && "border-red-400/50 focus-visible:ring-red-400/30"
+                    )}
+                    aria-invalid={fieldState.error ? "true" : "false"}
                   >
-                    <SelectTrigger 
-                      id="specialty-select"
-                      className="relative z-10 bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 text-base rounded-xl py-3 px-4 h-auto transition-all duration-200"
-                      aria-invalid={fieldState.error ? "true" : "false"}
-                    >
-                      <SelectValue placeholder="Select the most relevant medical specialty" />
-                    </SelectTrigger>
-                    <SelectContent 
-                      className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 shadow-xl"
-                      aria-label="Medical specialty options"
-                    >
-                      {MEDICAL_SPECIALTIES.map((specialty) => (
-                        <SelectItem 
-                          key={specialty} 
-                          value={specialty}
-                          className="py-3 px-4 text-base text-white hover:bg-white/20 focus:bg-white/20 rounded-lg mx-1"
-                        >
-                          {specialty}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 z-0"></div>
-                </div>
+                    <SelectValue placeholder="Select the most relevant medical specialty" />
+                  </SelectTrigger>
+                  <SelectContent 
+                    className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 shadow-xl"
+                    aria-label="Medical specialty options"
+                  >
+                    {MEDICAL_SPECIALTIES.map((specialty) => (
+                      <SelectItem 
+                        key={specialty} 
+                        value={specialty}
+                        className="py-3 px-4 text-base text-white hover:bg-white/20 focus:bg-white/20 rounded-lg mx-1"
+                      >
+                        {specialty}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </FormControl>
               <ValidationFeedback
                 isValid={!fieldState.error}

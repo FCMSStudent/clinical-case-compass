@@ -69,17 +69,14 @@ export const PatientStep = memo(function PatientStep<
           render={({ field, fieldState }) => (
             <FormItem>
               <FormControl>
-                <div className="relative">
-                  <Input
-                    placeholder="e.g., John Doe"
-                    className={cn(
-                      "relative z-10 bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 text-base rounded-xl py-3 px-4 transition-all duration-200",
-                      fieldState.error && "text-red-300 placeholder:text-red-300/50"
-                    )}
-                    {...field}
-                  />
-                  <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 z-0"></div>
-                </div>
+                <Input
+                  placeholder="e.g., John Doe"
+                  className={cn(
+                    undefined,
+                    fieldState.error && "border-red-400/50 focus-visible:ring-red-400/30"
+                  )}
+                  {...field}
+                />
               </FormControl>
               <ValidationFeedback
                 isValid={!fieldState.error}
@@ -110,17 +107,14 @@ export const PatientStep = memo(function PatientStep<
           render={({ field, fieldState }) => (
             <FormItem>
               <FormControl>
-                <div className="relative">
-                  <Input
-                    placeholder="e.g., 1234567"
-                    className={cn(
-                      "relative z-10 bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 text-base rounded-xl py-3 px-4 transition-all duration-200",
-                      fieldState.error && "text-red-300 placeholder:text-red-300/50"
-                    )}
-                    {...field}
-                  />
-                  <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 z-0"></div>
-                </div>
+                <Input
+                  placeholder="e.g., 1234567"
+                  className={cn(
+                    undefined,
+                    fieldState.error && "border-red-400/50 focus-visible:ring-red-400/30"
+                  )}
+                  {...field}
+                />
               </FormControl>
               <ValidationFeedback
                 isValid={!fieldState.error}
@@ -153,18 +147,15 @@ export const PatientStep = memo(function PatientStep<
             render={({ field, fieldState }) => (
               <FormItem>
                 <FormControl>
-                  <div className="relative">
-                    <Input
-                      type="number"
-                      placeholder="e.g., 42"
-                      className={cn(
-                        "relative z-10 bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 text-base rounded-xl py-3 px-4 transition-all duration-200",
-                        fieldState.error && "text-red-300 placeholder:text-red-300/50"
-                      )}
-                      {...field}
-                    />
-                    <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 z-0"></div>
-                  </div>
+                  <Input
+                    type="number"
+                    placeholder="e.g., 42"
+                    className={cn(
+                      undefined,
+                      fieldState.error && "border-red-400/50 focus-visible:ring-red-400/30"
+                    )}
+                    {...field}
+                  />
                 </FormControl>
                 <ValidationFeedback
                   isValid={!fieldState.error}
@@ -195,19 +186,19 @@ export const PatientStep = memo(function PatientStep<
             render={({ field, fieldState }) => (
               <FormItem>
                 <FormControl>
-                  <div className="relative">
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <SelectTrigger className="relative z-10 bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 text-base rounded-xl py-3 px-4 h-auto transition-all duration-200">
-                        <SelectValue placeholder="Select sex" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 shadow-xl">
-                        <SelectItem value="male" className="py-3 px-4 text-base text-white hover:bg-white/20 focus:bg-white/20 rounded-lg mx-1">Male</SelectItem>
-                        <SelectItem value="female" className="py-3 px-4 text-base text-white hover:bg-white/20 focus:bg-white/20 rounded-lg mx-1">Female</SelectItem>
-                        <SelectItem value="other" className="py-3 px-4 text-base text-white hover:bg-white/20 focus:bg-white/20 rounded-lg mx-1">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 z-0"></div>
-                  </div>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <SelectTrigger className={cn(
+                      "relative z-10 bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 text-base rounded-xl py-3 px-4 h-auto transition-all duration-200",
+                      fieldState.error && "border-red-400/50 focus-visible:ring-red-400/30"
+                    )}>
+                      <SelectValue placeholder="Select sex" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 shadow-xl">
+                      <SelectItem value="male" className="py-3 px-4 text-base text-white hover:bg-white/20 focus:bg-white/20 rounded-lg mx-1">Male</SelectItem>
+                      <SelectItem value="female" className="py-3 px-4 text-base text-white hover:bg-white/20 focus:bg-white/20 rounded-lg mx-1">Female</SelectItem>
+                      <SelectItem value="other" className="py-3 px-4 text-base text-white hover:bg-white/20 focus:bg-white/20 rounded-lg mx-1">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </FormControl>
                 <ValidationFeedback
                   isValid={!fieldState.error}
@@ -239,17 +230,14 @@ export const PatientStep = memo(function PatientStep<
           render={({ field, fieldState }) => (
             <FormItem>
               <FormControl>
-                <div className="relative">
-                  <Textarea
-                    placeholder="e.g., Hypertension, Type 2 Diabetes, Previous appendectomy in 2010..."
-                    className={cn(
-                      "relative z-10 bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 min-h-[100px] text-base rounded-xl p-4 leading-6 transition-all duration-200 resize-none",
-                      fieldState.error && "text-red-300 placeholder:text-red-300/50"
-                    )}
-                    {...field}
-                  />
-                  <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 z-0"></div>
-                </div>
+                <Textarea
+                  placeholder="e.g., Hypertension, Type 2 Diabetes, Previous appendectomy in 2010..."
+                  className={cn(
+                    undefined,
+                    fieldState.error && "border-red-400/50 focus-visible:ring-red-400/30"
+                  )}
+                  {...field}
+                />
               </FormControl>
               <ValidationFeedback
                 isValid={!fieldState.error}

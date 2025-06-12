@@ -98,19 +98,14 @@ const FormTextAreaField = memo(({
             )}
           </div>
           <FormControl>
-            <div className="relative">
-              <Textarea
-                placeholder={placeholder}
-                className={cn(
-                  "relative z-10 min-h-[160px] text-sm border-2 transition-all duration-200",
-                  fieldState.error
-                    ? "border-red-300 focus:border-red-400 bg-red-50/50"
-                    : "border-gray-200 focus:border-blue-400"
-                )}
-                {...field}
-              />
-              <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 z-0"></div>
-            </div>
+            <Textarea
+              placeholder={placeholder}
+              className={cn(
+                undefined,
+                fieldState.error && "border-red-400/50 focus-visible:ring-red-400/30"
+              )}
+              {...field}
+            />
           </FormControl>
           <div className="mt-2 flex items-center gap-2">
             {fieldState.error ? (

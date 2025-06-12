@@ -374,19 +374,14 @@ export const LearningPointsStep = memo(function LearningPointsStep<
               render={({ field, fieldState }) => (
                 <FormItem>
                   <FormControl>
-                    <div className="relative">
-                      <Textarea
-                        placeholder="• Importance of early ECG in suspected MI\n• Differential diagnosis for acute chest pain\n• Management protocol for STEMI"
-                        className={cn(
-                          "relative z-10 min-h-[200px] text-base border-2 focus:ring-amber-100 rounded-xl p-4 leading-6 transition-all duration-200 resize-none",
-                          fieldState.error 
-                            ? "border-red-300 focus:border-red-400 bg-red-50/50" 
-                            : "border-gray-200 focus:border-amber-400"
-                        )}
-                        {...field}
-                      />
-                      <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 z-0"></div>
-                    </div>
+                    <Textarea
+                      placeholder="• Importance of early ECG in suspected MI\n• Differential diagnosis for acute chest pain\n• Management protocol for STEMI"
+                      className={cn(
+                        undefined,
+                        fieldState.error && "border-red-400/50 focus-visible:ring-red-400/30"
+                      )}
+                      {...field}
+                    />
                   </FormControl>
                   <FormDescription className="text-gray-600 mt-3 flex items-start gap-2">
                     <div className={cn(
