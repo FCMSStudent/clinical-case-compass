@@ -299,15 +299,7 @@ const UserProfile: React.FC<{ collapsed: boolean; isMobile: boolean }> = ({ coll
                   role="menuitem"
                 >
                   <User className="h-4 w-4" aria-hidden="true" />
-                  <span>Profile</span>
-                </button>
-                <button
-                  className="w-full px-4 py-2 text-sm text-left text-white hover:bg-white/20 flex items-center space-x-2 transition-colors focus:outline-none focus:ring-2 focus:ring-white/30"
-                  onClick={() => { navigate("/settings"); setShowUserMenu(false); }}
-                  role="menuitem"
-                >
-                  <Settings className="h-4 w-4" aria-hidden="true" />
-                  <span>Settings</span>
+                  <span>Profile & Settings</span>
                 </button>
                 <div className="h-px bg-white/20 my-2" role="separator" />
                 <button 
