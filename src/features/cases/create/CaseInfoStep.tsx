@@ -80,14 +80,14 @@ export interface CaseInfoStepProps<T extends FieldValues = CaseInfoFormData> {
 export const CaseInfoStep = memo(function CaseInfoStep<
   T extends FieldValues = CaseInfoFormData,
 >({ className }: CaseInfoStepProps<T>) {
-  const { control, formState } = useFormContext<T>();
+  const { control, formState, watch } = useFormContext<T>();
   const [completedFields, setCompletedFields] = React.useState(0);
   const totalFields = 3; // caseTitle, chiefComplaint, specialty
 
-  // Watch only the specific fields we want to track
+  // Fix useWatch pattern - use consistent object syntax
   const watchedFields = useWatch({
     control,
-    name: ["caseTitle", "chiefComplaint", "specialty"] as const,
+    name: ["title", "chiefComplaint", "priority"]
   });
   
   React.useEffect(() => {

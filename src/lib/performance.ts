@@ -418,4 +418,16 @@ export const useComputationCache = <K, V>(
   cacheRef.current.set(key, computedValue);
   
   return computedValue;
+};
+
+/**
+ * Virtualization hook for large lists
+ */
+export const useVirtualization = <T>(
+  items: T[],
+  itemHeight: number,
+  containerHeight: number,
+  overscan: number = 5
+) => {
+  return useVirtualScroll(items, itemHeight, containerHeight, overscan);
 }; 

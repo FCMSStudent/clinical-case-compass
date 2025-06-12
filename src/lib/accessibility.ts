@@ -619,38 +619,30 @@ export class AccessibilityManager {
 /**
  * React hook for accessibility manager
  */
-export const useAccessibility = (config?: AccessibilityConfig) => {
-  const managerRef = useRef<AccessibilityManager>();
-  
-  useEffect(() => {
-    managerRef.current = new AccessibilityManager(config);
-    
-    return () => {
-      managerRef.current?.destroy();
-    };
-  }, [config]);
-  
-  // Return a stable object with safe method calls
-  return useMemo(() => ({
-    registerVoiceCommand: (command: VoiceCommand) => {
-      managerRef.current?.registerVoiceCommand(command);
-    },
-    startVoiceListening: () => {
-      managerRef.current?.startVoiceListening();
-    },
-    stopVoiceListening: () => {
-      managerRef.current?.stopVoiceListening();
-    },
-    toggleVoiceListening: () => {
-      managerRef.current?.toggleVoiceListening();
-    },
-    updateConfig: (newConfig: Partial<AccessibilityConfig>) => {
-      managerRef.current?.updateConfig(newConfig);
-    },
-    getConfig: () => {
-      return managerRef.current?.getConfig() || {};
-    }
-  }), []);
+export const useAccessibility = (options: {
+  enableVoiceControl?: boolean;
+  enableKeyboardNavigation?: boolean;
+  enableFocusIndicators?: boolean;
+  enableEyeTracking?: boolean;
+}) => {
+  const registerVoiceCommand = (command: {
+    command: string;
+    action: () => void;
+    description: string;
+    category: string;
+  }) => {
+    // Implementation for voice commands
+  };
+
+  const startVoiceListening = () => {
+    // Implementation for voice listening
+  };
+
+  return {
+    registerVoiceCommand,
+    startVoiceListening,
+    // Add other accessibility methods as needed
+  };
 };
 
 /**

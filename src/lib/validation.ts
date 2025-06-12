@@ -1,4 +1,3 @@
-
 import { z } from 'zod';
 
 // Patient validation schema
@@ -90,7 +89,25 @@ export const labTestSchema = z.object({
     .max(20, 'Lab test unit must be less than 20 characters')
 });
 
-// Radiology exam validation schema
+// Update radiology schema to match RadiologyStudy
+export const radiologyStudySchema = z.object({
+  id: z.string().optional(),
+  name: z.string()
+    .min(1, 'Study name is required')
+    .max(100, 'Study name must be less than 100 characters'),
+  type: z.string()
+    .min(1, 'Study type is required')
+    .max(50, 'Study type must be less than 50 characters'),
+  findings: z.string()
+    .min(1, 'Radiology findings are required')
+    .max(1000, 'Radiology findings must be less than 1000 characters'),
+  date: z.string().optional(),
+  impression: z.string().optional(),
+});
+
+export type RadiologyStudyFormData = z.infer<typeof radiologyStudySchema>;
+
+// Keep old schema for backward compatibility
 export const radiologyExamSchema = z.object({
   modality: z.string()
     .min(1, 'Radiology modality is required')
@@ -99,6 +116,8 @@ export const radiologyExamSchema = z.object({
     .min(1, 'Radiology findings are required')
     .max(1000, 'Radiology findings must be less than 1000 characters')
 });
+
+export type RadiologyExamFormData = z.infer<typeof radiologyExamSchema>;
 
 // Combined case form schema
 export const caseFormSchema = z.object({
@@ -115,5 +134,4 @@ export type MedicalCaseFormData = z.infer<typeof medicalCaseSchema>;
 export type DiagnosisFormData = z.infer<typeof diagnosisSchema>;
 export type ResourceFormData = z.infer<typeof resourceSchema>;
 export type LabTestFormData = z.infer<typeof labTestSchema>;
-export type RadiologyExamFormData = z.infer<typeof radiologyExamSchema>;
 export type CaseFormData = z.infer<typeof caseFormSchema>;

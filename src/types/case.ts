@@ -36,6 +36,17 @@ export interface LabTest {
   unit: string;
 }
 
+export interface RadiologyStudy {
+  id: string;
+  name: string;
+  type: string;
+  findings: string;
+  date: string;
+  impression?: string;
+}
+
+// Keep RadiologyExam for backward compatibility, but mark as deprecated
+/** @deprecated Use RadiologyStudy instead */
 export interface RadiologyExam {
   id: string;
   modality: string;
@@ -46,6 +57,7 @@ export interface MedicalCase {
   id: string;
   title: string;
   priority: "low" | "medium" | "high";
+  status: "draft" | "active" | "completed" | "archived";
   patient: Patient;
   createdAt: string;
   updatedAt: string;
@@ -62,6 +74,7 @@ export interface MedicalCase {
   symptoms?: Record<string, boolean>;
   systemSymptoms?: Record<string, string[]>;
   labTests?: LabTest[];
+  radiologyStudies?: RadiologyStudy[];
   radiologyExams?: RadiologyExam[];
   pastMedicalHistory?: string[];
   medications?: string[];
