@@ -25,29 +25,11 @@ import { useLocalStorage } from "@/hooks/use-local-storage";
 import { InteractiveVitalsCard } from "@/features/cases/InteractiveVitalsCard";
 import { UrinaryReviewCard } from "@/features/cases/UrinaryReviewCard";
 import { SymptomChecklist } from "@/features/cases/SymptomChecklist";
-import { LabResultsCard } from "@/features/cases/LabResultsCard";
-import { RadiologyCard } from "@/features/cases/RadiologyCard";
+import { LabResultsCard, LabTest } from "@/features/cases/LabResultsCard";
+import { RadiologyCard, RadiologyExam } from "@/features/cases/RadiologyCard";
 import { getCaseById } from "@/data/mock-data";
-import { MedicalCase, Patient, Diagnosis, CaseTag, Resource } from "@/types/case";
+import { MedicalCase, Patient, Diagnosis, CaseTag, Resource, RadiologyExam as UnifiedRadiologyExam } from "@/types/case";
 import { ErrorSummary } from "@/components/ui/ErrorSummary";
-
-// Define local types for lab tests and radiology
-interface LabTest {
-  id: string;
-  name: string;
-  value: string;
-  unit: string;
-  referenceRange: string;
-  status: 'normal' | 'high' | 'low' | 'critical';
-}
-
-interface RadiologyExam {
-  id: string;
-  name: string;
-  type: string;
-  findings: string;
-  date: string;
-}
 
 // Define the form schema
 const formSchema = z.object({
@@ -77,7 +59,7 @@ const CaseEdit = () => {
   const [symptoms, setSymptoms] = useState<Record<string, boolean>>({});
   const [systemSymptoms, setSystemSymptoms] = useState<Record<string, string[]>>({});
   const [labResults, setLabResults] = useState<LabTest[]>([]);
-  const [radiologyExams, setRadiologyExams] = useState<RadiologyExam[]>([]);
+  const [radiologyExams, setRadiologyExams] = useState<UnifiedRadiologyExam[]>([]);
   
   // Set up form with existing case data
   const form = useForm<FormValues>({
