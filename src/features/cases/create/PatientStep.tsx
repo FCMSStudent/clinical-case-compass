@@ -1,6 +1,5 @@
 import React, { memo } from "react";
 import { useFormContext, FieldValues, Path } from "react-hook-form";
-import { z } from "zod";
 import {
   FormField,
   FormItem,
@@ -20,26 +19,8 @@ import {
 import { User, Calendar, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { StepHeader, FormFieldCard, ValidationFeedback } from "./components";
-
-/**
- * ────────────────────────────────────────────────────────────────────────────────
- * SCHEMA
- * ────────────────────────────────────────────────────────────────────────────────
- */
-export const patientStepSchema = z.object({
-  patientName: z.string()
-    .min(1, "Patient name is required")
-    .min(3, "Patient name must be at least 3 characters")
-    .max(200, "Patient name must be less than 200 characters"),
-  medicalRecordNumber: z.string().optional(),
-  patientAge: z.coerce.number()
-    .min(0, "Age must be a positive number")
-    .max(120, "Age must be less than 120"),
-  patientSex: z.enum(["male", "female", "other"]),
-  medicalHistory: z.string().optional(),
-});
-
-export type PatientFormData = z.infer<typeof patientStepSchema>;
+import { useFormValidation } from "@/hooks/use-form-validation";
+import { patientStepSchema, PatientFormData } from "./schemas/patient-schema";
 
 /**
  * ────────────────────────────────────────────────────────────────────────────────
@@ -58,28 +39,12 @@ export interface PatientStepProps<T extends FieldValues = PatientFormData> {
 export const PatientStep = memo(function PatientStep<
   T extends FieldValues = PatientFormData,
 >({ className }: PatientStepProps<T>) {
-  const { control, formState, watch } = useFormContext<T>();
-  const [completedFields, setCompletedFields] = React.useState(0);
-  const totalFields = 5;
-
-  // Watch fields individually to avoid type issues
-  const patientName = watch("patientName" as Path<T>);
-  const medicalRecordNumber = watch("medicalRecordNumber" as Path<T>);
-  const patientAge = watch("patientAge" as Path<T>);
-  const patientSex = watch("patientSex" as Path<T>);
-  const medicalHistory = watch("medicalHistory" as Path<T>);
-  
-  React.useEffect(() => {
-    const fields = [patientName, medicalRecordNumber, patientAge, patientSex, medicalHistory];
-    const completed = fields.filter(value => {
-      if (typeof value === 'string') {
-        return value.trim().length > 0;
-      }
-      return !!value;
-    }).length;
-    
-    setCompletedFields(completed);
-  }, [patientName, medicalRecordNumber, patientAge, patientSex, medicalHistory]);
+  const { control } = useFormContext<T>();
+  // Use shared validation utilities
+  const { completedFields, totalFields, completionPercentage, errors } = useFormValidation<T>({
+    requiredFields: ["patientName", "patientAge", "patientSex"],
+    watchFields: ["patientName", "medicalRecordNumber", "patientAge", "patientSex", "medicalHistory"],
+  });
 
   return (
     <section className={cn("space-y-8", className)}>
@@ -221,7 +186,7 @@ export const PatientStep = memo(function PatientStep<
           icon={User}
           title="Patient Sex"
           gradient="blue"
-          tooltip="Select the patient's sex."
+          tooltip="Select the patient's sex as recorded in their medical records."
           isRequired
         >
           <FormField
@@ -234,27 +199,12 @@ export const PatientStep = memo(function PatientStep<
                     <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <SelectTrigger className="relative bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 text-base rounded-xl py-3 px-4 h-auto transition-all duration-200">
-                        <SelectValue placeholder="Select patient sex" />
+                        <SelectValue placeholder="Select sex" />
                       </SelectTrigger>
                       <SelectContent className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 shadow-xl">
-                        <SelectItem
-                          value="male"
-                          className="py-3 px-4 text-base text-white hover:bg-white/20 focus:bg-white/20 rounded-lg mx-1"
-                        >
-                          Male
-                        </SelectItem>
-                        <SelectItem
-                          value="female"
-                          className="py-3 px-4 text-base text-white hover:bg-white/20 focus:bg-white/20 rounded-lg mx-1"
-                        >
-                          Female
-                        </SelectItem>
-                        <SelectItem
-                          value="other"
-                          className="py-3 px-4 text-base text-white hover:bg-white/20 focus:bg-white/20 rounded-lg mx-1"
-                        >
-                          Other
-                        </SelectItem>
+                        <SelectItem value="male" className="py-3 px-4 text-base text-white hover:bg-white/20 focus:bg-white/20 rounded-lg mx-1">Male</SelectItem>
+                        <SelectItem value="female" className="py-3 px-4 text-base text-white hover:bg-white/20 focus:bg-white/20 rounded-lg mx-1">Female</SelectItem>
+                        <SelectItem value="other" className="py-3 px-4 text-base text-white hover:bg-white/20 focus:bg-white/20 rounded-lg mx-1">Other</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -264,8 +214,11 @@ export const PatientStep = memo(function PatientStep<
                   message={fieldState.error?.message}
                 />
                 <FormDescription className="text-white/70 mt-3 flex items-start gap-2">
-                  <div className="w-2 h-2 rounded-full bg-blue-400 mt-2 flex-shrink-0"></div>
-                  Select the patient's sex
+                  <div className={cn(
+                    "w-2 h-2 rounded-full mt-2 flex-shrink-0",
+                    fieldState.error ? "bg-red-400" : "bg-blue-400"
+                  )}></div>
+                  Select the patient's sex as recorded in their medical records
                 </FormDescription>
               </FormItem>
             )}
@@ -276,9 +229,9 @@ export const PatientStep = memo(function PatientStep<
       {/* Medical History */}
       <FormFieldCard
         icon={FileText}
-        title="Relevant Medical History"
+        title="Medical History"
         gradient="amber"
-        tooltip="Include any pre-existing conditions, past surgeries, allergies, and current medications."
+        tooltip="Summarize the patient's relevant past medical history, chronic conditions, and previous interventions."
       >
         <FormField
           control={control}
@@ -289,9 +242,9 @@ export const PatientStep = memo(function PatientStep<
                 <div className="relative">
                   <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
                   <Textarea
-                    placeholder="e.g., Hypertension, Type 2 Diabetes, Allergic to Penicillin"
+                    placeholder="e.g., Hypertension, Type 2 Diabetes, Previous appendectomy in 2010..."
                     className={cn(
-                      "relative bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 min-h-[140px] text-base rounded-xl p-4 leading-6 transition-all duration-200 resize-none",
+                      "relative bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 min-h-[100px] text-base rounded-xl p-4 leading-6 transition-all duration-200 resize-none",
                       fieldState.error && "text-red-300 placeholder:text-red-300/50"
                     )}
                     {...field}
@@ -303,8 +256,11 @@ export const PatientStep = memo(function PatientStep<
                 message={fieldState.error?.message}
               />
               <FormDescription className="text-white/70 mt-3 flex items-start gap-2">
-                <div className="w-2 h-2 rounded-full bg-amber-400 mt-2 flex-shrink-0"></div>
-                Include any pre-existing conditions, past surgeries, allergies, and current medications
+                <div className={cn(
+                  "w-2 h-2 rounded-full mt-2 flex-shrink-0",
+                  fieldState.error ? "bg-red-400" : "bg-amber-400"
+                )}></div>
+                Summarize the patient's relevant past medical history, chronic conditions, and previous interventions
               </FormDescription>
             </FormItem>
           )}

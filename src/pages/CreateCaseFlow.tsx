@@ -4,7 +4,6 @@ import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
-import { v4 as uuidv4 } from "uuid";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Save, FileText, User, Stethoscope, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -21,11 +20,10 @@ import {
   LearningPointsStep,
   learningPointsStepSchema
 } from "@/features/cases";
-import { useLocalStorage } from "@/hooks/use-local-storage";
-import { MedicalCase } from "@/types/case";
 import { cn } from "@/lib/utils";
 import { useAutoSave } from "@/hooks/use-autosave";
 import { AutosaveIndicator } from "@/features/cases/AutosaveIndicator";
+import { useCaseOperations } from "@/hooks/use-case-operations";
 
 // Combine all schemas into one
 const createCaseSchema = z.object({
@@ -72,9 +70,10 @@ const STEPS = [
 const CreateCaseFlow = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
-  const [storedCases, setStoredCases] = useLocalStorage<MedicalCase[]>("medical-cases", []);
   const [isSaving, setIsSaving] = useState(false);
   const [autoSaveStatus, setAutoSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  
+  const { createCase } = useCaseOperations();
   
   // Create form with all schemas combined
   const methods = useForm<CreateCaseFormData>({
@@ -136,52 +135,21 @@ const CreateCaseFlow = () => {
     }
   }, [currentStep]);
   
-  // Handle form submission
-  const onSubmit = useCallback((data: CreateCaseFormData) => {
+  // Handle form submission using service layer
+  const onSubmit = useCallback(async (data: CreateCaseFormData) => {
     setIsSaving(true);
     
     try {
-      // Create new case object
-      const newCase: MedicalCase = {
-        id: uuidv4(),
-        title: data.caseTitle,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        priority: "medium",
-        chiefComplaint: data.chiefComplaint,
-        patient: {
-          name: data.patientName,
-          age: data.patientAge || 0,
-          gender: data.patientSex === "unknown" ? "male" : data.patientSex || "male",
-          medicalRecordNumber: data.medicalRecordNumber,
-        },
-        vitals: data.vitals,
-        history: data.medicalHistory,
-        physicalExam: data.physicalExam,
-        learningPoints: data.learningPoints,
-        labTests: data.labResults,
-        radiologyStudies: data.radiologyStudies,
-      };
-      
-      // Add to stored cases
-      const updatedCases = storedCases ? [...storedCases, newCase] : [newCase];
-      setStoredCases(updatedCases);
-      
-      toast.success("Case created successfully", {
-        description: "Your new clinical case has been saved.",
-      });
-      
-      // Navigate to case detail page
-      navigate(`/cases/${newCase.id}`);
+      const result = await createCase(data);
+      if (!result.success) {
+        // Error handling is done in the service layer
+        setIsSaving(false);
+      }
     } catch (error) {
-      console.error("Error creating case:", error);
-      toast.error("Failed to create case", {
-        description: "An error occurred while saving your case.",
-      });
-    } finally {
+      console.error("Error in form submission:", error);
       setIsSaving(false);
     }
-  }, [navigate, storedCases, setStoredCases]);
+  }, [createCase]);
   
   // Auto-save form data
   const formData = watch();

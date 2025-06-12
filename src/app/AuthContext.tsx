@@ -1,7 +1,8 @@
-import React, { createContext, useState, useEffect, useContext } from "react";
+import React, { createContext, useReducer, useEffect, useContext } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { authReducer, initialAuthState, type AuthState, type AuthAction } from "@/lib/reducers/authReducer";
 
 type AuthContextType = {
   session: Session | null;
@@ -17,10 +18,8 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [session, setSession] = useState<Session | null>(null);
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [isOfflineMode, setIsOfflineMode] = useState(false);
+  const [state, dispatch] = useReducer(authReducer, initialAuthState);
+  const { session, user, loading, isOfflineMode } = state;
   const { toast } = useToast();
 
   useEffect(() => {
@@ -32,8 +31,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       import.meta.env.VITE_SUPABASE_ANON_KEY === "YOUR_SUPABASE_ANON_KEY";
 
     if (isCredentialsMissing) {
-      setIsOfflineMode(true);
-      setLoading(false);
+      dispatch({ type: 'SET_OFFLINE_MODE', payload: true });
       console.warn("Running in offline mode - Supabase credentials not configured");
       return;
     }
@@ -41,8 +39,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Set up auth state listener first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, currentSession) => {
-        setSession(currentSession);
-        setUser(currentSession?.user ?? null);
+        dispatch({ type: 'SET_SESSION', payload: currentSession });
         
         if (event === 'SIGNED_IN') {
           toast({
@@ -62,12 +59,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // Then check for existing session
     supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
-      setSession(currentSession);
-      setUser(currentSession?.user ?? null);
-      setLoading(false);
+      dispatch({ 
+        type: 'INITIALIZE_AUTH', 
+        payload: { 
+          session: currentSession, 
+          user: currentSession?.user ?? null, 
+          isOfflineMode: false 
+        } 
+      });
     }).catch((error) => {
       console.error("Error getting session:", error);
-      setLoading(false);
+      dispatch({ type: 'SET_LOADING', payload: false });
     });
 
     return () => {
@@ -171,7 +173,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (authError) throw authError;
 
       if (authData?.user) {
-        setUser(authData.user);
+        dispatch({ type: 'SET_USER', payload: authData.user });
       }
 
       toast({

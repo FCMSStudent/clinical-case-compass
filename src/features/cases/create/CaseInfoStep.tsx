@@ -1,6 +1,10 @@
 import React, { memo } from "react";
-import { useFormContext, FieldValues, Path, useWatch } from "react-hook-form";
-import { z } from "zod";
+import { useFormContext, Path, FieldValues } from "react-hook-form";
+import { FileText, Stethoscope, Tag, AlertCircle } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { StepHeader } from "./components/StepHeader";
+import { FormFieldCard } from "./components/FormFieldCard";
+import { ValidationFeedback } from "./components/ValidationFeedback";
 import {
   FormField,
   FormItem,
@@ -17,46 +21,35 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { FileText, Stethoscope, Tag } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
-import { StepHeader, FormFieldCard, StepProgress, ValidationFeedback } from "./components";
-
-/**
- * ────────────────────────────────────────────────────────────────────────────────
- * SCHEMA
- * ────────────────────────────────────────────────────────────────────────────────
- */
-export const caseInfoSchema = z.object({
-  caseTitle: z.string()
-    .min(1, "Case title is required")
-    .min(3, "Case title must be at least 3 characters")
-    .max(200, "Case title must be less than 200 characters"),
-  chiefComplaint: z.string()
-    .min(1, "Chief complaint is required")
-    .min(5, "Chief complaint must be at least 5 characters")
-    .max(500, "Chief complaint must be less than 500 characters"),
-  specialty: z.string().optional(),
-});
-
-export type CaseInfoFormData = z.infer<typeof caseInfoSchema>;
+import { useFormValidation } from "@/hooks/use-form-validation";
+import { caseInfoSchema, CaseInfoFormData } from "./schemas/case-info-schema";
 
 /**
  * Constants
  */
 const MEDICAL_SPECIALTIES = [
-  "Internal Medicine",
   "Cardiology",
   "Dermatology",
   "Emergency Medicine",
+  "Endocrinology",
   "Family Medicine",
   "Gastroenterology",
+  "General Surgery",
+  "Geriatrics",
+  "Hematology",
+  "Infectious Disease",
+  "Internal Medicine",
+  "Nephrology",
   "Neurology",
+  "Obstetrics & Gynecology",
   "Oncology",
+  "Ophthalmology",
   "Orthopedics",
+  "Otolaryngology",
+  "Pathology",
   "Pediatrics",
   "Psychiatry",
+  "Pulmonology",
   "Radiology",
   "Surgery",
   "Urology",
@@ -80,26 +73,13 @@ export interface CaseInfoStepProps<T extends FieldValues = CaseInfoFormData> {
 export const CaseInfoStep = memo(function CaseInfoStep<
   T extends FieldValues = CaseInfoFormData,
 >({ className }: CaseInfoStepProps<T>) {
-  const { control, formState, watch } = useFormContext<T>();
-  const [completedFields, setCompletedFields] = React.useState(0);
-  const totalFields = 3; // caseTitle, chiefComplaint, specialty
-
-  // Watch specific fields individually to avoid type issues
-  const caseTitle = watch("caseTitle" as Path<T>);
-  const chiefComplaint = watch("chiefComplaint" as Path<T>);
-  const specialty = watch("specialty" as Path<T>);
+  const { control, formState } = useFormContext<T>();
   
-  React.useEffect(() => {
-    const fields = [caseTitle, chiefComplaint, specialty];
-    const completed = fields.filter(value => {
-      if (typeof value === 'string') {
-        return value.trim().length > 0;
-      }
-      return !!value;
-    }).length;
-    
-    setCompletedFields(completed);
-  }, [caseTitle, chiefComplaint, specialty]);
+  // Use shared validation utilities
+  const { completedFields, totalFields, completionPercentage, errors } = useFormValidation<T>({
+    requiredFields: ["caseTitle", "chiefComplaint"],
+    watchFields: ["caseTitle", "chiefComplaint", "specialty"],
+  });
 
   return (
     <section className={cn("space-y-8", className)}>
@@ -111,7 +91,7 @@ export const CaseInfoStep = memo(function CaseInfoStep<
       />
 
       {/* Validation summary alert */}
-      {Object.keys(formState.errors).length > 0 && (
+      {Object.keys(errors).length > 0 && (
         <div className="relative">
           <div className="absolute inset-0 bg-red-400/10 backdrop-blur-xl rounded-xl border border-red-400/20 shadow-xl"></div>
           <div className="relative bg-red-400/10 backdrop-blur-md rounded-xl border border-red-400/20 p-4">

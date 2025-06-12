@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useMemo } from "react";
-import { useFormContext, Controller, Path, useWatch } from "react-hook-form";
+import { useFormContext, Controller, Path } from "react-hook-form";
 import { z } from "zod";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -37,6 +37,7 @@ import { SystemReviewChecklist } from "@/features/cases/SystemReviewChecklist";
 import { VitalsCard } from "@/features/cases/VitalsCard";
 import { LabResultsCard } from "@/features/cases/LabResultsCard";
 import { RadiologyCard } from "@/features/cases/RadiologyCard";
+import { useFormValidation } from "@/hooks/use-form-validation";
 
 // 1. CENTRALIZED CONFIGURATION: All form field names are now in one place.
 // This prevents typos and makes refactoring easier.
@@ -285,47 +286,27 @@ export const ClinicalDetailStep = memo(({ className }: { className?: string }) =
   const { setValue, control, formState } = useFormContext<ClinicalDetailFormData>();
   const [currentTab, setCurrentTab] = React.useState("history");
 
-  // Watch form values for progress tracking
-  const watchedFields = useWatch({
-    control,
-    name: [
-      FORM_FIELDS.PATIENT_HISTORY,
-      FORM_FIELDS.PHYSICAL_EXAM,
-      FORM_FIELDS.SELECTED_BODY_PARTS,
-      FORM_FIELDS.SYSTEM_SYMPTOMS,
-      FORM_FIELDS.VITALS,
-      FORM_FIELDS.LAB_RESULTS,
-      FORM_FIELDS.RADIOLOGY_STUDIES,
-    ] as const,
+  // Use shared validation utilities
+  const { completedFields, totalFields, completionPercentage, errors } = useFormValidation<ClinicalDetailFormData>({
+    requiredFields: [
+      "patientHistory",
+      "physicalExam",
+      "selectedBodyParts",
+      "systemSymptoms",
+      "vitals",
+      "labResults",
+      "radiologyStudies",
+    ],
+    watchFields: [
+      "patientHistory",
+      "physicalExam",
+      "selectedBodyParts",
+      "systemSymptoms",
+      "vitals",
+      "labResults",
+      "radiologyStudies",
+    ],
   });
-
-  // Calculate progress for current tab
-  const tabProgress = useMemo(() => {
-    const [history, exam, bodyParts, systems, vitals, labs, radiology] = watchedFields;
-    const tabFields = {
-      history: [history, exam],
-      systems: [bodyParts, systems, vitals],
-      diagnostics: [labs, radiology],
-    }[currentTab] || [];
-
-    const completed = tabFields.filter(field => {
-      if (Array.isArray(field)) {
-        return field.length > 0;
-      }
-      if (typeof field === "string") {
-        return field.trim().length > 0;
-      }
-      if (typeof field === "object" && field !== null) {
-        return Object.keys(field).length > 0;
-      }
-      return !!field;
-    }).length;
-
-    return {
-      completed,
-      total: tabFields.length,
-    };
-  }, [watchedFields, currentTab]);
 
   return (
     <section className={cn("space-y-6", className)}>
@@ -357,7 +338,7 @@ export const ClinicalDetailStep = memo(({ className }: { className?: string }) =
       </motion.header>
 
       {/* Validation summary alert */}
-      {Object.keys(formState.errors).length > 0 && (
+      {Object.keys(errors).length > 0 && (
         <Alert variant="destructive" className="mb-6">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Validation Errors</AlertTitle>

@@ -44,44 +44,12 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-
-/**
- * ────────────────────────────────────────────────────────────────────────────────
- * SCHEMA
- * ────────────────────────────────────────────────────────────────────────────────
- */
-export const learningPointsStepSchema = z.object({
-  learningPoints: z.string()
-    .min(1, "Learning points are required")
-    .min(10, "Learning points must be at least 10 characters")
-    .max(1000, "Learning points must be less than 1000 characters"),
-  generalNotes: z.string()
-    .max(2000, "General notes must be less than 2000 characters")
-    .optional(),
-  resourceLinks: z.array(
-    z.object({
-      url: z.string()
-        .min(1, "Resource URL is required")
-        .url("Please enter a valid URL"),
-      description: z.string()
-        .max(500, "Description must be less than 500 characters")
-        .optional(),
-    })
-  ).optional(),
-});
-
-// Define a more specific type for resource links
-interface ResourceLink {
-  url: string;
-  description: string;
-}
-
-// Define the form data type with proper constraints
-interface LearningPointsFormData extends FieldValues {
-  learningPoints?: string;
-  generalNotes?: string;
-  resourceLinks: ResourceLink[];
-}
+import { useFormValidation } from "@/hooks/use-form-validation";
+import { 
+  learningPointsStepSchema, 
+  LearningPointsFormData, 
+  ResourceLink 
+} from "./schemas/learning-points-schema";
 
 // Create a type for the field array
 type ResourceLinksFieldArray = FieldArrayWithId<LearningPointsFormData, "resourceLinks", "id">;
@@ -312,6 +280,12 @@ export const LearningPointsStep = memo(function LearningPointsStep<
     name: "resourceLinks" as ArrayPath<T>,
   });
 
+  // Use shared validation utilities
+  const { completedFields, totalFields, completionPercentage, errors } = useFormValidation<T>({
+    requiredFields: ["learningPoints"],
+    watchFields: ["learningPoints", "generalNotes", "resourceLinks"],
+  });
+
   // Create a memoized append function with proper documentation
   const handleAppendResourceLink = React.useMemo(
     () => appendResourceLinkSafely<T>(append),
@@ -330,15 +304,6 @@ export const LearningPointsStep = memo(function LearningPointsStep<
     control,
     name: "resourceLinks" as Path<T>,
   }) as ResourceLink[];
-
-  const completedFields = [
-    learningPoints?.trim() ? 1 : 0,
-    generalNotes?.trim() ? 1 : 0,
-    resourceLinks?.some(link => link?.url?.trim() && link?.description?.trim()) ? 1 : 0,
-  ].reduce((sum, val) => sum + val, 0);
-
-  const totalFields = 3;
-  const completionPercentage = (completedFields / totalFields) * 100;
 
   const canAddMoreLinks = fields.length < maxLinks;
 
