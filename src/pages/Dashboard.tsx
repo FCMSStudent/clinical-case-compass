@@ -10,26 +10,12 @@ import {
 } from "@/features/dashboard";
 import { UserRound, TrendingUp, Activity, Sparkles, Target, Zap, Plus, BookOpen, Users, Settings } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { useEffect, useState, useRef, useCallback } from "react";
-import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
+import { useEffect, useState } from "react";
 import { useDashboardData } from "@/features/dashboard/hooks/use-dashboard-data";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
-
-// Enhanced utilities
-import { useParallaxScroll } from "@/lib/motion";
-import { useGestureDetection } from "@/lib/interactions";
-import { useDeepMemo } from "@/lib/performance";
-import { useAccessibility } from "@/lib/accessibility";
-import { usePerformanceMonitor } from "@/lib/performance";
-import { AccessibleMotion } from "@/lib/motion";
 import { useTheme } from "@/app/ThemeContext";
-import { useLazyLoad } from "@/lib/performance";
-import { useMotionResponsiveHover } from "@/lib/motion";
-import { useSpatialAudioCues } from "@/lib/interactions";
-import { useEyeTracking } from "@/lib/accessibility";
-import type { GestureEvent } from "@/lib/interactions";
 
 const Dashboard = () => {
   const [showWelcome, setShowWelcome] = useState(true);
@@ -37,137 +23,23 @@ const Dashboard = () => {
   const stats = getStatistics();
   const specialtyProgress = getSpecialtyProgress();
   const navigate = useNavigate();
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  // Performance monitoring
-  usePerformanceMonitor("Dashboard");
-
-  // Accessibility features
-  const accessibility = useAccessibility({
-    enableVoiceControl: true,
-    enableKeyboardNavigation: true,
-    enableFocusIndicators: true,
-    enableEyeTracking: true,
-  });
 
   // Theme management
   const { currentTheme } = useTheme();
-
-  // Parallax scroll effect
-  const { scrollYProgress } = useParallaxScroll(0.3);
-
-  // Spatial audio cues
-  const { playNavigationCue, playSuccessCue } = useSpatialAudioCues();
-
-  // Eye tracking for focus detection
-  const { focusedElement, isFocused } = useEyeTracking({
-    dwellTime: 800,
-    enableFocusIndicators: true,
-  });
-
-  // Lazy loading for performance
-  const { elementRef: lazyLoadRef, isVisible } = useLazyLoad({
-    threshold: 0.1,
-    rootMargin: "50px"
-  });
-
-  // Gesture detection for interactive elements
-  const handleGesture = useCallback((event: GestureEvent) => {
-    if (event.type === "swipe") {
-      if (event.direction === "left") {
-        playNavigationCue("right");
-        navigate("/cases");
-      } else if (event.direction === "right") {
-        playNavigationCue("left");
-        navigate("/settings");
-      }
-    } else if (event.type === "doubleTap") {
-      playSuccessCue();
-      // Quick action on double tap
-      navigate("/cases/new");
-    }
-  }, [navigate, playNavigationCue, playSuccessCue]);
-
-  useGestureDetection(handleGesture, {
-    threshold: 50,
-    direction: "any"
-  });
-
-  // Memoized data for performance
-  const memoizedStats = useDeepMemo(() => stats, [stats]);
-  const memoizedSpecialtyProgress = useDeepMemo(() => specialtyProgress, [specialtyProgress]);
-
-  // Motion responsive hover effects
-  const { scale, rotateX, rotateY, handleMouseMove, handleMouseLeave } = useMotionResponsiveHover();
 
   useEffect(() => {
     const timer = setTimeout(() => setShowWelcome(false), 6000);
     return () => clearTimeout(timer);
   }, []);
 
-  // Register voice commands
-  useEffect(() => {
-    accessibility.registerVoiceCommand({
-      command: "create new case",
-      action: () => {
-        playSuccessCue();
-        navigate("/cases/new");
-      },
-      description: "Create a new clinical case",
-      category: "interaction"
-    });
-
-    accessibility.registerVoiceCommand({
-      command: "view all cases",
-      action: () => {
-        playNavigationCue("right");
-        navigate("/cases");
-      },
-      description: "Navigate to cases page",
-      category: "navigation"
-    });
-
-    accessibility.registerVoiceCommand({
-      command: "open settings",
-      action: () => {
-        playNavigationCue("left");
-        navigate("/settings");
-      },
-      description: "Navigate to settings",
-      category: "navigation"
-    });
-  }, [accessibility, navigate, playSuccessCue, playNavigationCue]);
-
   return (
-    <AccessibleMotion
-      variants={{
-        initial: { opacity: 0, y: 20 },
-        animate: { opacity: 1, y: 0 },
-        exit: { opacity: 0, y: -20 }
-      }}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className="w-full space-y-6"
-      ref={containerRef}
-    >
-      {/* Glassy Medical Header with Parallax */}
-      <motion.div
-        style={{ y: scrollYProgress?.get?.() ? scrollYProgress.get() * -50 : 0 }}
-        className="text-center space-y-3"
-      >
+    <div className="w-full space-y-6">
+      {/* Medical Header */}
+      <div className="text-center space-y-3">
         <div className="flex items-center justify-center gap-3 mb-4">
-          <motion.div 
-            className="p-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20"
-            whileHover={{ scale: 1.1, rotate: 5 }}
-            whileTap={{ scale: 0.95 }}
-            style={{ scale, rotateX, rotateY }}
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-          >
+          <div className="p-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20">
             <Activity className="h-8 w-8 text-white" />
-          </motion.div>
+          </div>
           <h1 className="text-4xl font-bold text-white">
             Clinical Dashboard
           </h1>
@@ -175,220 +47,158 @@ const Dashboard = () => {
         <p className="text-white/80 text-lg">
           Medical Learning & Case Management
         </p>
-      </motion.div>
+      </div>
 
-      {/* Welcome Alert with Motion */}
-      <AnimatePresence>
-        {showWelcome && (
-          <motion.div
-            initial={{ opacity: 0, y: -20, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -20, scale: 0.9 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-          >
-            <Alert className="border-blue-200 bg-blue-50/50 backdrop-blur-sm">
-              <Sparkles className="h-4 w-4" />
-              <AlertDescription>
-                Welcome back! Your clinical cases are ready for review.
-              </AlertDescription>
-            </Alert>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Welcome Alert */}
+      {showWelcome && (
+        <Alert className="border-blue-200 bg-blue-50/50 backdrop-blur-sm">
+          <Sparkles className="h-4 w-4" />
+          <AlertDescription>
+            Welcome back! Your clinical cases are ready for review.
+          </AlertDescription>
+        </Alert>
+      )}
 
-      {/* Glassy Medical Metrics */}
-      <motion.div
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
-        variants={{
-          hidden: { opacity: 0 },
-          visible: {
-            opacity: 1,
-            transition: {
-              staggerChildren: 0.1,
-              delayChildren: 0.2,
-            },
-          },
-        }}
-        initial="hidden"
-        animate="visible"
-      >
-        <motion.div
-          variants={{
-            hidden: { opacity: 0, y: 20 },
-            visible: { opacity: 1, y: 0 },
-          }}
-          whileHover={{ scale: 1.02, y: -2 }}
-          ref={lazyLoadRef}
-        >
-          <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/15 transition-all duration-300">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-white/70">Total Cases</p>
-                  <p className="text-2xl font-bold text-white">
-                    {memoizedStats.totalCases}
-                  </p>
-                </div>
-                <div className="p-3 rounded-full bg-blue-500/20">
-                  <BookOpen className="h-6 w-6 text-blue-300" />
-                </div>
+      {/* Medical Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-colors">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-white/70">Total Cases</p>
+                <p className="text-2xl font-bold text-white">{stats.totalCases}</p>
               </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div
-          variants={{
-            hidden: { opacity: 0, y: 20 },
-            visible: { opacity: 1, y: 0 },
-          }}
-          whileHover={{ scale: 1.02, y: -2 }}
-          ref={lazyLoadRef}
-        >
-          <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/15 transition-all duration-300">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-white/70">This Week</p>
-                  <p className="text-2xl font-bold text-white">
-                    {memoizedStats.thisWeekCases}
-                  </p>
-                </div>
-                <div className="p-3 rounded-full bg-green-500/20">
-                  <TrendingUp className="h-6 w-6 text-green-300" />
-                </div>
+              <div className="p-2 bg-blue-500/20 rounded-lg">
+                <BookOpen className="h-6 w-6 text-blue-400" />
               </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+            </div>
+          </CardContent>
+        </Card>
 
-        <motion.div
-          variants={{
-            hidden: { opacity: 0, y: 20 },
-            visible: { opacity: 1, y: 0 },
-          }}
-          whileHover={{ scale: 1.02, y: -2 }}
-          ref={lazyLoadRef}
-        >
-          <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/15 transition-all duration-300">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-white/70">Resources</p>
-                  <p className="text-2xl font-bold text-white">
-                    {memoizedStats.totalResources}
-                  </p>
-                </div>
-                <div className="p-3 rounded-full bg-purple-500/20">
-                  <Target className="h-6 w-6 text-purple-300" />
-                </div>
+        <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-colors">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-white/70">Active Cases</p>
+                <p className="text-2xl font-bold text-white">{stats.activeCases}</p>
               </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div
-          variants={{
-            hidden: { opacity: 0, y: 20 },
-            visible: { opacity: 1, y: 0 },
-          }}
-          whileHover={{ scale: 1.02, y: -2 }}
-          ref={lazyLoadRef}
-        >
-          <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/15 transition-all duration-300">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-white/70">Learning Points</p>
-                  <p className="text-2xl font-bold text-white">
-                    {memoizedStats.casesWithLearningPoints}
-                  </p>
-                </div>
-                <div className="p-3 rounded-full bg-orange-500/20">
-                  <Zap className="h-6 w-6 text-orange-300" />
-                </div>
+              <div className="p-2 bg-green-500/20 rounded-lg">
+                <Activity className="h-6 w-6 text-green-400" />
               </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </motion.div>
+            </div>
+          </CardContent>
+        </Card>
 
-      {/* Interactive Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Quick Start Panel */}
-        <motion.div
-          className="lg:col-span-1"
-          variants={{
-            hidden: { opacity: 0, x: -20 },
-            visible: { opacity: 1, x: 0 },
-          }}
-          initial="hidden"
-          animate="visible"
-          transition={{ delay: 0.3 }}
-          ref={lazyLoadRef}
-        >
-          <QuickStartPanel />
-        </motion.div>
+        <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-colors">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-white/70">Completion Rate</p>
+                <p className="text-2xl font-bold text-white">{stats.completionRate}%</p>
+              </div>
+              <div className="p-2 bg-purple-500/20 rounded-lg">
+                <TrendingUp className="h-6 w-6 text-purple-400" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-        {/* Progress Chart */}
-        <motion.div
-          className="lg:col-span-2"
-          variants={{
-            hidden: { opacity: 0, x: 20 },
-            visible: { opacity: 1, x: 0 },
-          }}
-          initial="hidden"
-          animate="visible"
-          transition={{ delay: 0.4 }}
-          ref={lazyLoadRef}
-        >
-          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-            <CardContent className="p-6">
-              <h3 className="text-lg font-semibold text-white mb-4">Progress Overview</h3>
-              <ProgressChart stats={memoizedStats} />
-            </CardContent>
-          </Card>
-        </motion.div>
+        <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-colors">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-white/70">Study Time</p>
+                <p className="text-2xl font-bold text-white">{stats.studyTime}h</p>
+              </div>
+              <div className="p-2 bg-orange-500/20 rounded-lg">
+                <Target className="h-6 w-6 text-orange-400" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-white">Quick Actions</h3>
+              <Zap className="h-5 w-5 text-yellow-400" />
+            </div>
+            <div className="space-y-3">
+              <Button 
+                onClick={() => navigate("/cases/new")}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Create New Case
+              </Button>
+              <Button 
+                onClick={() => navigate("/cases")}
+                variant="outline"
+                className="w-full border-white/20 text-white hover:bg-white/10"
+              >
+                <BookOpen className="h-4 w-4 mr-2" />
+                View All Cases
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-white">Recent Activity</h3>
+              <Activity className="h-5 w-5 text-green-400" />
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-white/70">Case #1234 updated</span>
+                <Badge variant="secondary" className="bg-green-500/20 text-green-400">
+                  2h ago
+                </Badge>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-white/70">New case created</span>
+                <Badge variant="secondary" className="bg-blue-500/20 text-blue-400">
+                  4h ago
+                </Badge>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-white/70">Study session completed</span>
+                <Badge variant="secondary" className="bg-purple-500/20 text-purple-400">
+                  6h ago
+                </Badge>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Specialty Progress */}
-      <motion.div
-        variants={{
-          hidden: { opacity: 0, y: 20 },
-          visible: { opacity: 1, y: 0 },
-        }}
-        initial="hidden"
-        animate="visible"
-        transition={{ delay: 0.5 }}
-        ref={lazyLoadRef}
-      >
-        <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-          <CardContent className="p-6">
-            <h3 className="text-lg font-semibold text-white mb-4">Specialty Progress</h3>
-            <SpecialtyProgress data={memoizedSpecialtyProgress} />
-          </CardContent>
-        </Card>
-      </motion.div>
-
-      {/* Recent Activity */}
-      <motion.div
-        variants={{
-          hidden: { opacity: 0, y: 20 },
-          visible: { opacity: 1, y: 0 },
-        }}
-        initial="hidden"
-        animate="visible"
-        transition={{ delay: 0.6 }}
-        ref={lazyLoadRef}
-      >
-        <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-          <CardContent className="p-6">
-            <h3 className="text-lg font-semibold text-white mb-4">Recent Activity</h3>
-            <RecentActivityList />
-          </CardContent>
-        </Card>
-      </motion.div>
-    </AccessibleMotion>
+      <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+        <CardContent className="p-6">
+          <h3 className="text-lg font-semibold text-white mb-4">Specialty Progress</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {specialtyProgress.map((specialty) => (
+              <div key={specialty.name} className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-white/70">{specialty.name}</span>
+                  <span className="text-sm font-bold text-white">{specialty.progress}%</span>
+                </div>
+                <div className="w-full bg-white/20 rounded-full h-2">
+                  <div 
+                    className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${specialty.progress}%` }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 
