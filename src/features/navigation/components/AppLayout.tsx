@@ -15,7 +15,6 @@ const HeaderActions = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const navigate = useNavigate();
   const userMenuRef = useRef<HTMLDivElement>(null);
-  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const handleNavigate = (path: string) => {
     navigate(path);
@@ -59,60 +58,6 @@ const HeaderActions = () => {
 
   return (
     <div className="flex items-center space-x-4">
-      {/* Desktop Search */}
-      <div className="hidden md:flex items-center relative">
-        <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
-        <div className="relative flex items-center">
-          <Search className="h-4 w-4 text-white/70 ml-3" aria-hidden="true" />
-          <input
-            ref={searchInputRef}
-            type="text"
-            placeholder="Search cases, symptoms..."
-            className="bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 pl-10 pr-4 py-2 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-white/30"
-            aria-label="Search cases and symptoms"
-          />
-        </div>
-      </div>
-
-      {/* Mobile Search Button */}
-      <button
-        className="md:hidden p-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl hover:bg-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-white/30"
-        aria-label="Search"
-        onClick={() => setIsSearchOpen(!isSearchOpen)}
-        aria-expanded={isSearchOpen}
-      >
-        <Search className="h-5 w-5 text-white" aria-hidden="true" />
-      </button>
-
-      {/* Mobile Search Input */}
-      <AnimatePresence>
-        {isSearchOpen && (
-          <motion.div
-            initial={{ opacity: 0, width: 0 }}
-            animate={{ opacity: 1, width: "auto" }}
-            exit={{ opacity: 0, width: 0 }}
-            transition={{ duration: 0.2 }}
-            className="md:hidden absolute top-full left-0 right-0 mt-2 mx-4 z-50"
-          >
-            <div className="relative">
-              <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 shadow-xl"></div>
-              <div className="relative bg-white/10 backdrop-blur-md rounded-xl border border-white/20 p-3">
-                <div className="flex items-center">
-                  <Search className="h-4 w-4 text-white/70 mr-2" aria-hidden="true" />
-                  <input
-                    type="text"
-                    placeholder="Search cases, symptoms..."
-                    className="bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 flex-1 text-sm focus:outline-none"
-                    aria-label="Search cases and symptoms"
-                    autoFocus
-                  />
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       {/* User Menu */}
       <div className="relative" ref={userMenuRef}>
         <button
@@ -122,11 +67,8 @@ const HeaderActions = () => {
           aria-expanded={isUserMenuOpen}
           aria-haspopup="true"
         >
-          <div className="h-8 w-8 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center">
-            <User className="h-5 w-5 text-white" aria-hidden="true" />
-          </div>
+          <span className="text-white">Profile</span>
         </button>
-
         <AnimatePresence>
           {isUserMenuOpen && (
             <motion.div
@@ -146,8 +88,8 @@ const HeaderActions = () => {
                     onClick={() => handleNavigate("/settings")}
                     role="menuitem"
                   >
-                    <User className="h-4 w-4" aria-hidden="true" />
-                    <span>Profile & Settings</span>
+                    <Settings className="h-4 w-4" aria-hidden="true" />
+                    <span>Settings</span>
                   </button>
                   <div className="h-px bg-white/20 my-2" role="separator" />
                   <button 
@@ -246,8 +188,7 @@ const ProfileMenu: React.FC = () => {
         aria-haspopup="true"
         aria-expanded={open}
       >
-        <User className="h-5 w-5 mr-2" />
-        <span>Profile</span>
+        <span>Profile & Settings</span>
       </button>
       {open && (
         <div className="absolute right-0 mt-2 w-40 z-50 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 shadow-xl py-2">
