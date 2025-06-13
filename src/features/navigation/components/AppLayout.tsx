@@ -170,19 +170,16 @@ const HeaderActions = () => {
 
 const NAV_ITEMS = [
   { label: "Home", to: "/dashboard" },
-  { label: "Projects", to: "/projects" },
-  { label: "Deployments", to: "/deployments" },
-  { label: "Members", to: "/members" },
-  { label: "Settings", to: "/settings" },
+  { label: "New Cases", to: "/cases/new" },
 ];
 
 const TopNavBar: React.FC = () => {
   const location = useLocation();
   return (
     <nav className="w-full flex justify-center mt-12 mb-16">
-      <ul className="flex gap-2 bg-white/10 backdrop-blur-xl border border-white/20 rounded-full px-6 py-2 shadow-xl">
+      <ul className="flex gap-2 bg-white/10 backdrop-blur-xl border border-white/20 rounded-full px-6 py-2 shadow-xl items-center">
         {NAV_ITEMS.map((item) => {
-          const isActive = location.pathname.startsWith(item.to);
+          const isActive = location.pathname === item.to;
           return (
             <li key={item.to}>
               <NavLink
@@ -201,8 +198,77 @@ const TopNavBar: React.FC = () => {
             </li>
           );
         })}
+        {/* Centered Search Bar */}
+        <li className="mx-4 flex-1 flex justify-center min-w-[250px] max-w-xs">
+          <div className="relative w-full">
+            <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
+            <div className="relative flex items-center">
+              <Search className="h-4 w-4 text-white/70 ml-3 absolute left-2 top-1/2 -translate-y-1/2" aria-hidden="true" />
+              <input
+                type="text"
+                placeholder="Search cases, symptoms..."
+                className="bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 pl-10 pr-4 py-2 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-white/30 w-full"
+                aria-label="Search cases and symptoms"
+              />
+            </div>
+          </div>
+        </li>
+        {/* Settings/Profile Dropdown */}
+        <li>
+          <ProfileMenu />
+        </li>
       </ul>
     </nav>
+  );
+};
+
+// ProfileMenu component for settings/profile dropdown
+const ProfileMenu: React.FC = () => {
+  const [open, setOpen] = React.useState(false);
+  const navigate = useNavigate();
+  const menuRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    if (open) document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [open]);
+
+  return (
+    <div className="relative" ref={menuRef}>
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="flex items-center px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/30"
+        aria-haspopup="true"
+        aria-expanded={open}
+      >
+        <User className="h-5 w-5 mr-2" />
+        <span>Profile</span>
+      </button>
+      {open && (
+        <div className="absolute right-0 mt-2 w-40 z-50 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 shadow-xl py-2">
+          <button
+            className="w-full px-4 py-2 text-left text-white hover:bg-white/20 flex items-center space-x-2 transition-colors focus:outline-none focus:ring-2 focus:ring-white/30"
+            onClick={() => { setOpen(false); navigate('/settings'); }}
+          >
+            <Settings className="h-4 w-4" />
+            <span>Settings</span>
+          </button>
+          <div className="h-px bg-white/20 my-2" role="separator" />
+          <button
+            className="w-full px-4 py-2 text-left text-red-300 hover:bg-white/20 flex items-center space-x-2 transition-colors focus:outline-none focus:ring-2 focus:ring-white/30"
+            onClick={() => { setOpen(false); /* add sign out logic here */ }}
+          >
+            <LogOut className="h-4 w-4" />
+            <span>Log out</span>
+          </button>
+        </div>
+      )}
+    </div>
   );
 };
 
