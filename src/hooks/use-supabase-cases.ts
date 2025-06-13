@@ -294,6 +294,7 @@ function transformDbCaseToMedicalCase(dbCase: Record<string, unknown>): MedicalC
       id: assignment.case_tags.id,
       name: assignment.case_tags.name,
       color: assignment.case_tags.color
-    }))
+    })),
+    status: "draft" // Add missing status field
   };
 }

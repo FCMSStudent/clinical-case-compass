@@ -1,6 +1,26 @@
+
 import { v4 as uuidv4 } from "uuid";
 import { MedicalCase } from "@/types/case";
-import { CreateCaseFormData } from "@/pages/CreateCaseFlow";
+
+// Define the form data type locally since it's not properly exported
+export interface CreateCaseFormData {
+  caseTitle: string;
+  chiefComplaint: string;
+  specialty?: string;
+  patientName: string;
+  patientAge?: number;
+  patientSex?: "male" | "female" | "other" | "unknown";
+  medicalRecordNumber?: string;
+  medicalHistory?: string;
+  vitals?: Record<string, string>;
+  selectedBodyParts?: string[];
+  systemSymptoms?: Record<string, boolean>;
+  physicalExam?: string;
+  labResults?: any[];
+  radiologyStudies?: any[];
+  learningPoints?: string;
+  resourceLinks?: any[];
+}
 
 export interface CaseCreationResult {
   success: boolean;
@@ -22,6 +42,7 @@ export class CaseService {
         priority: "medium",
         chiefComplaint: formData.chiefComplaint,
         patient: {
+          id: uuidv4(), // Add missing id field
           name: formData.patientName,
           age: formData.patientAge || 0,
           gender: formData.patientSex === "unknown" ? "male" : formData.patientSex || "male",

@@ -159,8 +159,8 @@ export const useSpatialAudioCues = () => {
   
   const playSuccessCue = useCallback(() => {
     // Visual feedback instead of audio
-    const element = document.activeElement;
-    if (element) {
+    const element = document.activeElement as HTMLElement;
+    if (element && element.style) {
       element.style.transform = 'scale(1.05)';
       setTimeout(() => {
         element.style.transform = '';
@@ -170,8 +170,8 @@ export const useSpatialAudioCues = () => {
   
   const playErrorCue = useCallback(() => {
     // Visual feedback instead of audio
-    const element = document.activeElement;
-    if (element) {
+    const element = document.activeElement as HTMLElement;
+    if (element && element.style) {
       element.style.transform = 'scale(0.95)';
       setTimeout(() => {
         element.style.transform = '';

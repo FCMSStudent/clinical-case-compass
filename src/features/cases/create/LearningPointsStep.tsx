@@ -1,3 +1,4 @@
+
 import React, { memo } from "react";
 import {
   useFormContext,
@@ -155,17 +156,18 @@ const ResourceLinkCard = memo(({
                       </TooltipProvider>
                     </FormLabel>
                     <FormControl>
-                      <div className="relative">
-                        <Input
-                          placeholder="https://example.com/resource"
-                          className={cn(
-                            "relative z-10 font-mono text-sm transition-all duration-200",
-                            urlError ? "border-red-300 focus:border-red-400 bg-red-50/50" : "border-gray-200 focus:border-blue-400"
-                          )}
-                          {...field}
-                        />
-                        <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 z-0"></div>
-                      </div>
+                      <Input
+                        placeholder="https://example.com/resource"
+                        className={cn(
+                          "font-mono text-sm transition-all duration-200",
+                          urlError ? "border-red-300 focus:border-red-400 bg-red-50/50" : "border-gray-200 focus:border-blue-400"
+                        )}
+                        value={field.value || ""}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
+                      />
                     </FormControl>
                     <ResourceLinkValidation
                       isValid={!urlError}
@@ -196,17 +198,18 @@ const ResourceLinkCard = memo(({
                       </TooltipProvider>
                     </FormLabel>
                     <FormControl>
-                      <div className="relative">
-                        <Input
-                          placeholder="Brief description of the resource's key points or relevance"
-                          className={cn(
-                            "relative z-10 text-sm transition-all duration-200",
-                            descriptionError ? "border-red-300 focus:border-red-400 bg-red-50/50" : "border-gray-200 focus:border-blue-400"
-                          )}
-                          {...field}
-                        />
-                        <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 z-0"></div>
-                      </div>
+                      <Input
+                        placeholder="Brief description of the resource's key points or relevance"
+                        className={cn(
+                          "text-sm transition-all duration-200",
+                          descriptionError ? "border-red-300 focus:border-red-400 bg-red-50/50" : "border-gray-200 focus:border-blue-400"
+                        )}
+                        value={field.value || ""}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
+                      />
                     </FormControl>
                     <ResourceLinkValidation
                       isValid={!descriptionError}
@@ -252,22 +255,12 @@ ResourceLinkCard.displayName = "ResourceLinkCard";
 
 /**
  * Type-safe wrapper for the field array append function.
- * 
- * Note: We use a type assertion here because react-hook-form's field array types
- * are complex and don't work well with our generic type constraints. The assertion
- * is safe because we know the shape of our data matches what the form expects.
- * 
- * @see https://github.com/react-hook-form/react-hook-form/issues/4059
  */
 function appendResourceLinkSafely<T extends LearningPointsFormData>(
   append: ReturnType<typeof useFieldArray<T>>["append"]
 ) {
   return () => {
     const newLink: ResourceLink = { url: "", description: "" };
-    // TypeScript limitation: react-hook-form's field array types are too complex
-    // for our generic constraints. This assertion is safe because we know the
-    // shape of our data matches what the form expects.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (append as any)(newLink);
   };
 }
@@ -359,7 +352,11 @@ export const LearningPointsStep = memo(function LearningPointsStep<
                         undefined,
                         fieldState.error && "border-red-400/50 focus-visible:ring-red-400/30"
                       )}
-                      {...field}
+                      value={(field.value as string) || ""}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                      name={field.name}
+                      ref={field.ref}
                     />
                   </FormControl>
                   <FormDescription className="mt-3 flex items-start gap-2 text-white/70">
@@ -398,7 +395,11 @@ export const LearningPointsStep = memo(function LearningPointsStep<
                     <Textarea
                       placeholder="Any other thoughts, reflections, areas for further study, or personal notes…"
                       className="min-h-[200px] text-base border-2 border-gray-200 focus:border-blue-400 focus:ring-blue-100 rounded-xl p-4 leading-6 transition-all duration-200 resize-none"
-                      {...field}
+                      value={(field.value as string) || ""}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                      name={field.name}
+                      ref={field.ref}
                     />
                   </FormControl>
                   <FormDescription className="mt-3 flex items-start gap-2 text-white/70">
