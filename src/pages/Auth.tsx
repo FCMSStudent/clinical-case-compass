@@ -268,7 +268,7 @@ const Auth = () => {
                                   aria-describedby={fieldState.error ? "login-email-error" : undefined}
                                   aria-invalid={fieldState.error ? "true" : "false"}
                                   aria-required="true"
-                                  placeholder=""
+                                  placeholder="Enter your email"
                                   className="bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 pl-12"
                                 />
                               </div>
@@ -302,7 +302,7 @@ const Auth = () => {
                                   aria-describedby={fieldState.error ? "login-password-error" : undefined}
                                   aria-invalid={fieldState.error ? "true" : "false"}
                                   aria-required="true"
-                                  placeholder=""
+                                  placeholder="Enter your password"
                                   className="bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 pl-12 pr-10"
                                 />
                                 <button
@@ -376,9 +376,6 @@ const Auth = () => {
                                 />
                               </div>
                             </FormControl>
-                            <FormDescription id="signup-fullname-description" className="text-white/60 text-xs">
-                              Enter your full name as it should appear on your account
-                            </FormDescription>
                             <FormMessage id="signup-fullname-error" className="text-red-300" />
                           </FormItem>
                         )}
@@ -413,9 +410,6 @@ const Auth = () => {
                                 />
                               </div>
                             </FormControl>
-                            <FormDescription id="signup-email-description" className="text-white/60 text-xs">
-                              Enter a valid email address for your account
-                            </FormDescription>
                             <FormMessage id="signup-email-error" className="text-red-300" />
                           </FormItem>
                         )}
@@ -462,9 +456,6 @@ const Auth = () => {
                                 </button>
                               </div>
                             </FormControl>
-                            <FormDescription id="signup-password-description" className="text-white/60 text-xs">
-                              Must be at least 8 characters
-                            </FormDescription>
                             <FormMessage id="signup-password-error" className="text-red-300" />
                           </FormItem>
                         )}
@@ -511,9 +502,6 @@ const Auth = () => {
                                 </button>
                               </div>
                             </FormControl>
-                            <FormDescription id="signup-confirm-password-description" className="text-white/60 text-xs">
-                              Re-enter your password to confirm
-                            </FormDescription>
                             <FormMessage id="signup-confirm-password-error" className="text-red-300" />
                           </FormItem>
                         )}
