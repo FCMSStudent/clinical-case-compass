@@ -341,7 +341,7 @@ export const LearningPointsStep = memo(function LearningPointsStep<
               <div className="p-2 rounded-lg bg-primary/10">
                 <Lightbulb className="h-5 w-5 text-primary" />
               </div>
-              <CardTitle className="text-lg font-semibold text-foreground">
+              <CardTitle className="text-lg font-semibold text-white">
                 Key Learning Points
               </CardTitle>
             </div>
@@ -383,7 +383,7 @@ export const LearningPointsStep = memo(function LearningPointsStep<
               <div className="p-2 rounded-lg bg-primary/10">
                 <FileText className="h-5 w-5 text-primary" />
               </div>
-              <CardTitle className="text-lg font-semibold text-foreground">
+              <CardTitle className="text-lg font-semibold text-white">
                 General Notes & Reflections
               </CardTitle>
             </div>
@@ -421,7 +421,7 @@ export const LearningPointsStep = memo(function LearningPointsStep<
               <div className="p-2 rounded-lg bg-primary/10">
                 <BookOpen className="h-5 w-5 text-primary" />
               </div>
-              <CardTitle className="text-lg font-semibold text-foreground">
+              <CardTitle className="text-lg font-semibold text-white">
                 Educational Resources
               </CardTitle>
               <TooltipProvider>

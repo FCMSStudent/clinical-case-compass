@@ -33,7 +33,7 @@ export const StepHeader = React.memo(function StepHeader({
           <div className="space-y-3">
             <h3 
               id={`${headerId}-title`}
-              className="flex items-center text-2xl font-bold text-white"
+              className="flex items-center text-lg font-semibold text-white"
             >
               <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
