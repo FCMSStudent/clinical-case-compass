@@ -470,8 +470,7 @@ const Sidebar = React.memo(function Sidebar() {
           aria-hidden={!open}
         >
           <div className="backdrop-blur-lg bg-white/40 border-r border-white/30 shadow-xl h-full">
-              {content}
-            </div>
+            {content}
           </div>
         </aside>
       </>
