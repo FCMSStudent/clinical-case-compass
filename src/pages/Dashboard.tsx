@@ -1,3 +1,4 @@
+
 import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -58,7 +59,7 @@ const Dashboard = () => {
             <Activity className="h-8 w-8 text-white" aria-hidden="true" />
           </div>
           <h1 id="dashboard-title" className="text-4xl font-bold text-white">
-            Clinical Dashboard
+            Medica Dashboard
           </h1>
         </div>
         <p className="text-white/80 text-lg">
