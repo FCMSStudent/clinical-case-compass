@@ -209,10 +209,8 @@ export function SystemReviewChecklist({
   };
 
   return (
-    <div className="relative">
-      <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-      <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-4">
-        <Card className="border-medical-200 shadow-sm">
+    <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-4">
+      <Card className="border-medical-200 shadow-sm">
           <CardHeader className="space-y-4 pb-4">
             <div className="flex items-center justify-between">
               <CardTitle className="text-lg font-semibold">System Review & Symptoms</CardTitle>
@@ -337,8 +335,7 @@ export function SystemReviewChecklist({
               )}
             </AnimatePresence>
           </CardContent>
-        </Card>
-      </div>
+          </Card>
     </div>
   );
 }
