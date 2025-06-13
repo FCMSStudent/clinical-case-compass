@@ -80,7 +80,7 @@ export const PatientStep = memo(function PatientStep<
                 isValid={!fieldState.error}
                 message={fieldState.error?.message || "Patient name looks good!"}
               />
-              <FormDescription className="mt-3 flex items-start gap-2 text-muted-foreground">
+              <FormDescription className="mt-3 flex items-start gap-2 text-white/70">
                 <div className={cn(
                   "w-2 h-2 rounded-full mt-2 flex-shrink-0",
                   fieldState.error ? "bg-red-400" : "bg-emerald-400"
@@ -117,7 +117,7 @@ export const PatientStep = memo(function PatientStep<
                 isValid={!fieldState.error}
                 message={fieldState.error?.message}
               />
-              <FormDescription className="mt-3 flex items-start gap-2 text-muted-foreground">
+              <FormDescription className="mt-3 flex items-start gap-2 text-white/70">
                 <div className={cn(
                   "w-2 h-2 rounded-full mt-2 flex-shrink-0",
                   fieldState.error ? "bg-red-400" : "bg-rose-400"
@@ -157,7 +157,7 @@ export const PatientStep = memo(function PatientStep<
                   isValid={!fieldState.error}
                   message={fieldState.error?.message}
                 />
-                <FormDescription className="mt-3 flex items-start gap-2 text-muted-foreground">
+                <FormDescription className="mt-3 flex items-start gap-2 text-white/70">
                   <div className={cn(
                     "w-2 h-2 rounded-full mt-2 flex-shrink-0",
                     fieldState.error ? "bg-red-400" : "bg-violet-400"
@@ -199,7 +199,7 @@ export const PatientStep = memo(function PatientStep<
                   isValid={!fieldState.error}
                   message={fieldState.error?.message}
                 />
-                <FormDescription className="mt-3 flex items-start gap-2 text-muted-foreground">
+                <FormDescription className="mt-3 flex items-start gap-2 text-white/70">
                   <div className={cn(
                     "w-2 h-2 rounded-full mt-2 flex-shrink-0",
                     fieldState.error ? "bg-red-400" : "bg-blue-400"
@@ -237,7 +237,7 @@ export const PatientStep = memo(function PatientStep<
                 isValid={!fieldState.error}
                 message={fieldState.error?.message}
               />
-              <FormDescription className="mt-3 flex items-start gap-2 text-muted-foreground">
+              <FormDescription className="mt-3 flex items-start gap-2 text-white/70">
                 <div className={cn(
                   "w-2 h-2 rounded-full mt-2 flex-shrink-0",
                   fieldState.error ? "bg-red-400" : "bg-amber-400"

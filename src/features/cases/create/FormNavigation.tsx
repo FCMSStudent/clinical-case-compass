@@ -110,7 +110,7 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
               <span className="font-medium" aria-live="polite">
                 Step {currentStep} of {totalSteps}
               </span>
-              <span className="text-muted-foreground" aria-live="polite">
+              <span className="text-white/70" aria-live="polite">
                 {currentStepLabel}
               </span>
             </div>
@@ -229,7 +229,7 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
         </div>
 
         {/* Keyboard Shortcuts Help */}
-        <div className="mt-2 text-xs text-muted-foreground flex items-center gap-2">
+        <div className="mt-2 text-xs text-white/70 flex items-center gap-2">
           <Keyboard className="h-3 w-3" aria-hidden="true" />
           <span>Keyboard shortcuts: Alt + ←/→ to navigate, Alt + S to save</span>
         </div>

@@ -155,8 +155,8 @@ export const CaseInfoStep = memo(function CaseInfoStep<
                 message={fieldState.error?.message || "Title looks good!"}
                 id={fieldState.error ? "case-title-error" : "case-title-help"}
               />
-              <FormDescription 
-                className="mt-3 flex items-start gap-2 text-muted-foreground"
+              <FormDescription
+                className="mt-3 flex items-start gap-2 text-white/70"
                 id="case-title-help"
               >
                 <div className={cn(
@@ -207,8 +207,8 @@ export const CaseInfoStep = memo(function CaseInfoStep<
                 message={fieldState.error?.message}
                 id={fieldState.error ? "chief-complaint-error" : "chief-complaint-help"}
               />
-              <FormDescription 
-                className="mt-3 flex items-start gap-2 text-muted-foreground"
+              <FormDescription
+                className="mt-3 flex items-start gap-2 text-white/70"
                 id="chief-complaint-help"
               >
                 <div className={cn(
@@ -276,8 +276,8 @@ export const CaseInfoStep = memo(function CaseInfoStep<
                 message={fieldState.error?.message}
                 id={fieldState.error ? "specialty-error" : "specialty-help"}
               />
-              <FormDescription 
-                className="mt-3 flex items-start gap-2 text-muted-foreground"
+              <FormDescription
+                className="mt-3 flex items-start gap-2 text-white/70"
                 id="specialty-help"
               >
                 <div className="w-2 h-2 rounded-full bg-violet-400 mt-2 flex-shrink-0" aria-hidden="true"></div>
