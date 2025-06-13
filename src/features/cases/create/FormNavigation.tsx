@@ -181,10 +181,8 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
                   <Button
                     onClick={onNext}
                     disabled={isSubmitting}
-                    className={cn(
-                      "gap-2",
-                      isLast ? "bg-emerald-600 hover:bg-emerald-700" : ""
-                    )}
+                    className="gap-2"
+                    variant={isLast ? "success" : "default"}
                     aria-label={isLast ? "Submit the case" : "Go to next step"}
                     aria-describedby="next-submit-button-tooltip"
                     aria-busy={isSubmitting}
