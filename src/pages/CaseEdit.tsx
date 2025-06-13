@@ -28,9 +28,23 @@ import { SymptomChecklist } from "@/features/cases/SymptomChecklist";
 import { LabResultsCard } from "@/features/cases/LabResultsCard";
 import { RadiologyCard } from "@/features/cases/RadiologyCard";
 import { getCaseById } from "@/data/mock-data";
-import { MedicalCase, Patient, Diagnosis, CaseTag, Resource, RadiologyStudy, LabTest } from "@/types/case";
+import {
+  MedicalCase,
+  Patient,
+  Diagnosis,
+  CaseTag,
+  Resource,
+  RadiologyStudy,
+  LabTest,
+} from "@/types/case";
 import { ErrorSummary } from "@/components/ui/ErrorSummary";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 // Define the form schema
 const formSchema = z.object({
@@ -51,17 +65,26 @@ const CaseEdit = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [isSaving, setIsSaving] = useState(false);
-  const [storedCases, setStoredCases] = useLocalStorage<MedicalCase[]>("medical-cases", []);
-  const [medicalCase, setMedicalCase] = useState<MedicalCase | undefined>(undefined);
-  
+  const [storedCases, setStoredCases] = useLocalStorage<MedicalCase[]>(
+    "medical-cases",
+    [],
+  );
+  const [medicalCase, setMedicalCase] = useState<MedicalCase | undefined>(
+    undefined,
+  );
+
   // State for specialized inputs
   const [vitals, setVitals] = useState<Record<string, string>>({});
   const [urinarySymptoms, setUrinarySymptoms] = useState<string[]>([]);
   const [symptoms, setSymptoms] = useState<Record<string, boolean>>({});
-  const [systemSymptoms, setSystemSymptoms] = useState<Record<string, string[]>>({});
+  const [systemSymptoms, setSystemSymptoms] = useState<
+    Record<string, string[]>
+  >({});
   const [labResults, setLabResults] = useState<LabTest[]>([]);
-  const [radiologyStudies, setRadiologyStudies] = useState<RadiologyStudy[]>([]);
-  
+  const [radiologyStudies, setRadiologyStudies] = useState<RadiologyStudy[]>(
+    [],
+  );
+
   // Set up form with existing case data
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -78,31 +101,31 @@ const CaseEdit = () => {
     },
     mode: "onChange", // Enable real-time validation
   });
-  
+
   // Load case data
   useEffect(() => {
     if (!id) {
       navigate("/cases");
       return;
     }
-    
+
     // First check localStorage
-    let foundCase = storedCases?.find(c => c.id === id);
-    
+    let foundCase = storedCases?.find((c) => c.id === id);
+
     // If not found in localStorage, check mock data
     if (!foundCase) {
       foundCase = getCaseById(id);
     }
-    
+
     // Case not found in either source
     if (!foundCase) {
       toast.error("Case not found");
       navigate("/cases");
       return;
     }
-    
+
     setMedicalCase(foundCase);
-    
+
     // Populate form with case data
     form.reset({
       title: foundCase.title || "",
@@ -115,16 +138,16 @@ const CaseEdit = () => {
       physicalExam: foundCase.physicalExam || "",
       learningPoints: foundCase.learningPoints || "",
     });
-    
+
     // Load specialized inputs if they exist
     if (foundCase.vitals) {
       setVitals(foundCase.vitals);
     }
-    
+
     if (foundCase.urinarySymptoms) {
       setUrinarySymptoms(foundCase.urinarySymptoms);
     }
-    
+
     if (foundCase.symptoms) {
       setSymptoms(foundCase.symptoms);
     }
@@ -132,21 +155,21 @@ const CaseEdit = () => {
     if (foundCase.systemSymptoms) {
       setSystemSymptoms(foundCase.systemSymptoms);
     }
-    
+
     if (foundCase.labTests) {
       setLabResults(foundCase.labTests);
     }
-    
+
     if (foundCase.radiologyStudies) {
       setRadiologyStudies(foundCase.radiologyStudies);
     }
   }, [id, storedCases, navigate, form]);
-  
+
   const onSubmit = (values: FormValues) => {
     if (!medicalCase) return;
-    
+
     setIsSaving(true);
-    
+
     try {
       // Create updated case object
       const updatedCase: MedicalCase = {
@@ -170,14 +193,14 @@ const CaseEdit = () => {
         labTests: labResults,
         radiologyStudies: radiologyStudies,
       };
-      
+
       // Update case in localStorage
       const updatedCases = storedCases
-        ? storedCases.map(c => c.id === id ? updatedCase : c)
+        ? storedCases.map((c) => (c.id === id ? updatedCase : c))
         : [updatedCase];
-      
+
       setStoredCases(updatedCases);
-      
+
       toast.success("Case updated successfully");
       navigate(`/cases/${id}`);
     } catch (error) {
@@ -189,13 +212,15 @@ const CaseEdit = () => {
   };
 
   // Convert boolean record format to system-based string arrays
-  const handleSymptomSelectionChange = (selections: Record<string, string[]>) => {
+  const handleSymptomSelectionChange = (
+    selections: Record<string, string[]>,
+  ) => {
     setSystemSymptoms(selections);
-    
+
     // Also update the old format for backward compatibility
     const booleanFormat: Record<string, boolean> = {};
     Object.entries(selections).forEach(([system, symptoms]) => {
-      symptoms.forEach(symptom => {
+      symptoms.forEach((symptom) => {
         booleanFormat[`${system}-${symptom}`] = true;
       });
     });
@@ -221,34 +246,36 @@ const CaseEdit = () => {
             Back to case
           </Link>
         </div>
-        
-        <PageHeader 
-          title="Edit Case" 
+
+        <PageHeader
+          title="Edit Case"
           description="Update an existing medical case"
         />
 
         {/* Error Summary */}
-        {form.formState.isSubmitted && !form.formState.isValid && Object.keys(form.formState.errors).length > 0 && (
-          <div className="relative">
-            <div className="absolute inset-0 bg-red-500/20 backdrop-blur-xl rounded-xl border border-red-400/30 shadow-xl"></div>
-            <div className="relative bg-red-500/20 backdrop-blur-md rounded-xl border border-red-400/30 p-4">
-              <ErrorSummary
-                errors={form.formState.errors}
-                setFocus={form.setFocus as (name: string) => void}
-                className="mb-0"
-                formId="case-edit-form"
-              />
-            </div>
-          </div>
-        )}
-        
+        {form.formState.isSubmitted &&
+          !form.formState.isValid &&
+          Object.keys(form.formState.errors).length > 0 && (
+            <ErrorSummary
+              errors={form.formState.errors}
+              setFocus={form.setFocus as (name: string) => void}
+              formId="case-edit-form"
+            />
+          )}
+
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} id="case-edit-form" className="space-y-8">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            id="case-edit-form"
+            className="space-y-8"
+          >
             {/* Basic Information Section */}
             <div className="relative">
               <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
               <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
-                <h3 className="text-lg font-semibold text-white mb-6">Basic Information</h3>
+                <h3 className="text-lg font-semibold text-white mb-6">
+                  Basic Information
+                </h3>
                 <div className="grid gap-6 md:grid-cols-2">
                   <FormField
                     control={form.control}
@@ -259,8 +286,8 @@ const CaseEdit = () => {
                         <FormControl>
                           <div className="relative">
                             <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
-                            <Input 
-                              {...field} 
+                            <Input
+                              {...field}
                               className="relative bg-transparent border-0 text-white placeholder:text-white/60 focus-visible:ring-0 focus-visible:ring-offset-0"
                             />
                           </div>
@@ -269,18 +296,20 @@ const CaseEdit = () => {
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={form.control}
                     name="chiefComplaint"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white">Chief Complaint</FormLabel>
+                        <FormLabel className="text-white">
+                          Chief Complaint
+                        </FormLabel>
                         <FormControl>
                           <div className="relative">
                             <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
-                            <Input 
-                              {...field} 
+                            <Input
+                              {...field}
                               className="relative bg-transparent border-0 text-white placeholder:text-white/60 focus-visible:ring-0 focus-visible:ring-offset-0"
                             />
                           </div>
@@ -289,18 +318,20 @@ const CaseEdit = () => {
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={form.control}
                     name="patientName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white">Patient Name</FormLabel>
+                        <FormLabel className="text-white">
+                          Patient Name
+                        </FormLabel>
                         <FormControl>
                           <div className="relative">
                             <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
-                            <Input 
-                              {...field} 
+                            <Input
+                              {...field}
                               className="relative bg-transparent border-0 text-white placeholder:text-white/60 focus-visible:ring-0 focus-visible:ring-offset-0"
                             />
                           </div>
@@ -309,7 +340,7 @@ const CaseEdit = () => {
                       </FormItem>
                     )}
                   />
-                  
+
                   <div className="grid grid-cols-3 gap-4">
                     <FormField
                       control={form.control}
@@ -320,10 +351,10 @@ const CaseEdit = () => {
                           <FormControl>
                             <div className="relative">
                               <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
-                              <Input 
-                                {...field} 
-                                type="number" 
-                                min={0} 
+                              <Input
+                                {...field}
+                                type="number"
+                                min={0}
                                 max={120}
                                 className="relative bg-transparent border-0 text-white placeholder:text-white/60 focus-visible:ring-0 focus-visible:ring-offset-0"
                               />
@@ -333,7 +364,7 @@ const CaseEdit = () => {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form.control}
                       name="patientGender"
@@ -341,14 +372,32 @@ const CaseEdit = () => {
                         <FormItem className="col-span-2">
                           <FormLabel className="text-white">Gender</FormLabel>
                           <FormControl>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
                               <SelectTrigger className="bg-white/10 backdrop-blur-sm border border-white/20 text-white">
                                 <SelectValue placeholder="Select gender" />
                               </SelectTrigger>
                               <SelectContent className="bg-white/10 backdrop-blur-md border border-white/20">
-                                <SelectItem value="male" className="text-white hover:bg-white/20">Male</SelectItem>
-                                <SelectItem value="female" className="text-white hover:bg-white/20">Female</SelectItem>
-                                <SelectItem value="other" className="text-white hover:bg-white/20">Other</SelectItem>
+                                <SelectItem
+                                  value="male"
+                                  className="text-white hover:bg-white/20"
+                                >
+                                  Male
+                                </SelectItem>
+                                <SelectItem
+                                  value="female"
+                                  className="text-white hover:bg-white/20"
+                                >
+                                  Female
+                                </SelectItem>
+                                <SelectItem
+                                  value="other"
+                                  className="text-white hover:bg-white/20"
+                                >
+                                  Other
+                                </SelectItem>
                               </SelectContent>
                             </Select>
                           </FormControl>
@@ -357,23 +406,27 @@ const CaseEdit = () => {
                       )}
                     />
                   </div>
-                  
+
                   <FormField
                     control={form.control}
                     name="patientMRN"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white">Medical Record Number (Optional)</FormLabel>
+                        <FormLabel className="text-white">
+                          Medical Record Number (Optional)
+                        </FormLabel>
                         <FormControl>
                           <div className="relative">
                             <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
-                            <Input 
-                              {...field} 
+                            <Input
+                              {...field}
                               className="relative bg-transparent border-0 text-white placeholder:text-white/60 focus-visible:ring-0 focus-visible:ring-offset-0"
                             />
                           </div>
                         </FormControl>
-                        <FormDescription className="text-white/70">If applicable</FormDescription>
+                        <FormDescription className="text-white/70">
+                          If applicable
+                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -381,7 +434,7 @@ const CaseEdit = () => {
                 </div>
               </div>
             </div>
-            
+
             {/* Vital Signs Section */}
             <div className="relative">
               <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
@@ -391,20 +444,22 @@ const CaseEdit = () => {
                   Vital Signs & Symptoms
                 </h3>
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  <InteractiveVitalsCard 
-                    onVitalsChange={setVitals} 
-                    initialVitals={vitals} 
+                  <InteractiveVitalsCard
+                    onVitalsChange={setVitals}
+                    initialVitals={vitals}
                     patientAge={form.watch("patientAge")}
                   />
-                  <UrinaryReviewCard 
-                    onSelectionChange={setUrinarySymptoms} 
+                  <UrinaryReviewCard
+                    onSelectionChange={setUrinarySymptoms}
                     initialSelections={urinarySymptoms}
                   />
                   <div className="relative">
                     <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
                     <div className="relative bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 p-4">
-                      <h3 className="font-medium text-sm mb-2 text-white">Other Symptoms</h3>
-                      <SymptomChecklist 
+                      <h3 className="font-medium text-sm mb-2 text-white">
+                        Other Symptoms
+                      </h3>
+                      <SymptomChecklist
                         onSelectionChange={handleSymptomSelectionChange}
                         initialSelections={systemSymptoms}
                       />
@@ -413,7 +468,7 @@ const CaseEdit = () => {
                 </div>
               </div>
             </div>
-            
+
             {/* History & Physical Exam Section */}
             <div className="grid gap-6 md:grid-cols-2">
               <div className="relative">
@@ -428,10 +483,10 @@ const CaseEdit = () => {
                         <FormControl>
                           <div className="relative">
                             <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
-                            <Textarea 
-                              placeholder="Relevant medical history" 
-                              className="relative bg-transparent border-0 text-white placeholder:text-white/60 focus-visible:ring-0 focus-visible:ring-offset-0 min-h-32" 
-                              {...field} 
+                            <Textarea
+                              placeholder="Relevant medical history"
+                              className="relative bg-transparent border-0 text-white placeholder:text-white/60 focus-visible:ring-0 focus-visible:ring-offset-0 min-h-32"
+                              {...field}
                               value={field.value || ""}
                             />
                           </div>
@@ -442,7 +497,7 @@ const CaseEdit = () => {
                   />
                 </div>
               </div>
-              
+
               <div className="relative">
                 <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
                 <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
@@ -451,14 +506,16 @@ const CaseEdit = () => {
                     name="physicalExam"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white">Physical Examination</FormLabel>
+                        <FormLabel className="text-white">
+                          Physical Examination
+                        </FormLabel>
                         <FormControl>
                           <div className="relative">
                             <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
-                            <Textarea 
-                              placeholder="Physical examination findings" 
-                              className="relative bg-transparent border-0 text-white placeholder:text-white/60 focus-visible:ring-0 focus-visible:ring-offset-0 min-h-32" 
-                              {...field} 
+                            <Textarea
+                              placeholder="Physical examination findings"
+                              className="relative bg-transparent border-0 text-white placeholder:text-white/60 focus-visible:ring-0 focus-visible:ring-offset-0 min-h-32"
+                              {...field}
                               value={field.value || ""}
                             />
                           </div>
@@ -470,7 +527,7 @@ const CaseEdit = () => {
                 </div>
               </div>
             </div>
-            
+
             {/* Lab Results & Radiology Section */}
             <div className="grid gap-6 md:grid-cols-2">
               <div className="relative">
@@ -480,13 +537,13 @@ const CaseEdit = () => {
                     <TestTube className="mr-2 h-6 w-6" />
                     Laboratory Results
                   </h3>
-                  <LabResultsCard 
-                    onLabResultsChange={setLabResults} 
+                  <LabResultsCard
+                    onLabResultsChange={setLabResults}
                     initialResults={labResults}
                   />
                 </div>
               </div>
-              
+
               <div className="relative">
                 <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
                 <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
@@ -494,14 +551,14 @@ const CaseEdit = () => {
                     <Scan className="mr-2 h-6 w-6" />
                     Radiology Exams
                   </h3>
-                  <RadiologyCard 
+                  <RadiologyCard
                     onRadiologyChange={setRadiologyStudies}
                     initialStudies={radiologyStudies}
                   />
                 </div>
               </div>
             </div>
-            
+
             {/* Learning Points Section */}
             <div className="relative">
               <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
@@ -511,14 +568,16 @@ const CaseEdit = () => {
                   name="learningPoints"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-white">Learning Points</FormLabel>
+                      <FormLabel className="text-white">
+                        Learning Points
+                      </FormLabel>
                       <FormControl>
                         <div className="relative">
                           <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
-                          <Textarea 
-                            placeholder="Key learning points for this case" 
-                            className="relative bg-transparent border-0 text-white placeholder:text-white/60 focus-visible:ring-0 focus-visible:ring-offset-0 min-h-32" 
-                            {...field} 
+                          <Textarea
+                            placeholder="Key learning points for this case"
+                            className="relative bg-transparent border-0 text-white placeholder:text-white/60 focus-visible:ring-0 focus-visible:ring-offset-0 min-h-32"
+                            {...field}
                             value={field.value || ""}
                           />
                         </div>
@@ -529,12 +588,12 @@ const CaseEdit = () => {
                 />
               </div>
             </div>
-            
+
             {/* Submit Button */}
             <div className="flex justify-end">
-              <Button 
-                type="submit" 
-                disabled={isSaving} 
+              <Button
+                type="submit"
+                disabled={isSaving}
                 className="bg-blue-500/20 backdrop-blur-sm border border-blue-400/30 hover:bg-blue-500/30 text-white"
               >
                 <Save className="mr-2 h-4 w-4" />
