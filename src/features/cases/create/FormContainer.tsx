@@ -59,8 +59,8 @@ export const FormContainer = memo(
         />
         
         <div className="relative">
-          <div className="absolute inset-0 bg-black/20 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-          <div className="relative bg-black/20 backdrop-blur-md rounded-2xl border border-white/20 p-6 group overflow-hidden transition-all duration-300 hover:bg-black/30 hover:border-white/30 before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-blue-500/5 before:to-transparent before:translate-x-[-100%] before:group-hover:translate-x-[100%] before:transition-transform before:duration-700">
+        <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
+        <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 group overflow-hidden transition-all duration-300 hover:bg-white/20 hover:border-white/30 before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-blue-500/5 before:to-transparent before:translate-x-[-100%] before:group-hover:translate-x-[100%] before:transition-transform before:duration-700">
             {children}
           </div>
         </div>

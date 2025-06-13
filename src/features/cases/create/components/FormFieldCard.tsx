@@ -86,11 +86,11 @@ export const FormFieldCard = React.memo(function FormFieldCard({
       onHoverEnd={() => setIsHovered(false)}
     >
       <div className="relative">
-        <div className="absolute inset-0 bg-black/20 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
+        <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
         <div
           className={cn(
-            "relative bg-black/20 backdrop-blur-md rounded-2xl border border-white/20 p-6 group overflow-hidden transition-all duration-300",
-            "hover:bg-black/30 hover:border-white/30",
+            "relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 group overflow-hidden transition-all duration-300",
+            "hover:bg-white/20 hover:border-white/30",
             "before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-blue-500/5 before:to-transparent before:translate-x-[-100%] before:group-hover:translate-x-[100%] before:transition-transform before:duration-700",
             isHighlighted && "ring-2 ring-blue-400/30 ring-offset-2 ring-offset-transparent",
             isDisabled && "opacity-50 cursor-not-allowed",
@@ -138,7 +138,7 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <div 
-                            className="p-1 rounded-full bg-black/20 backdrop-blur-sm border border-white/20"
+                            className="p-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20"
                             role="img"
                             aria-label={statusMessages[status]}
                           >
