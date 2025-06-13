@@ -245,18 +245,18 @@ export const CaseInfoStep = memo(function CaseInfoStep<
                   defaultValue={field.value}
                   aria-describedby="specialty-help"
                 >
-                  <SelectTrigger 
+                  <SelectTrigger
                     id="specialty-select"
                     className={cn(
-                      undefined,
+                      "rounded-xl shadow-xl py-3 px-4",
                       fieldState.error && "border-red-400/50 focus-visible:ring-red-400/30"
                     )}
                     aria-invalid={fieldState.error ? "true" : "false"}
                   >
                     <SelectValue placeholder="Select the most relevant medical specialty" />
                   </SelectTrigger>
-                  <SelectContent 
-                    className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 shadow-xl"
+                  <SelectContent
+                    className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 shadow-xl p-1"
                     aria-label="Medical specialty options"
                   >
                     {MEDICAL_SPECIALTIES.map((specialty) => (

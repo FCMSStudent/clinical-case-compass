@@ -212,13 +212,15 @@ export function LabResultsCard({ onLabResultsChange, initialResults = [] }: LabR
                         }
                       }}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="rounded-xl shadow-xl py-3 px-4">
                         <SelectValue placeholder="Select a test" />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="">Custom Test</SelectItem>
+                      <SelectContent className="rounded-xl p-1">
+                        <SelectItem value="" className="py-3 px-4 rounded-lg">
+                          Custom Test
+                        </SelectItem>
                         {COMMON_LAB_TESTS.map((test) => (
-                          <SelectItem key={test.id} value={test.id}>
+                          <SelectItem key={test.id} value={test.id} className="py-3 px-4 rounded-lg">
                             {test.name}
                           </SelectItem>
                         ))}
