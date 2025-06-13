@@ -122,8 +122,8 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                       </span>
                     </div>
                     {badge && (
-                      <Badge 
-                        variant="outline" 
+                      <Badge
+                        variant="outline"
                         aria-label={`Status: ${badge}`}
                         className="ml-2 bg-blue-500/20 border-blue-400/30 text-white"
                       >
@@ -137,7 +137,7 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <div 
+                          <div
                             className="p-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20"
                             role="img"
                             aria-label={statusMessages[status]}
@@ -145,7 +145,7 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                             {statusIcons[status]}
                           </div>
                         </TooltipTrigger>
-                        <TooltipContent 
+                        <TooltipContent
                           id={`${cardId}-status-tooltip`}
                           className="bg-black/30 backdrop-blur-md border-white/20 text-white"
                         >
@@ -160,7 +160,7 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                     <TooltipProvider delayDuration={0}>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <div 
+                          <div
                             className="flex items-center justify-center h-8 w-8 rounded-full hover:bg-blue-500/20 cursor-help transition-colors backdrop-blur-sm border border-blue-400/30"
                             role="button"
                             tabIndex={0}
@@ -170,8 +170,8 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                             <Info className="h-4 w-4 text-white/70 hover:text-white" aria-hidden="true" />
                           </div>
                         </TooltipTrigger>
-                        <TooltipContent 
-                          side="right" 
+                        <TooltipContent
+                          side="right"
                           align="start"
                           sideOffset={5}
                           id={`${cardId}-tooltip`}
@@ -204,7 +204,7 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                 </div>
               </div>
             </div>
-            
+
             <CollapsibleContent>
               <div className="pt-0">
                 {children}
@@ -222,4 +222,4 @@ export const FormFieldCard = React.memo(function FormFieldCard({
   );
 });
 
-FormFieldCard.displayName = "FormFieldCard"; 
+FormFieldCard.displayName = "FormFieldCard";

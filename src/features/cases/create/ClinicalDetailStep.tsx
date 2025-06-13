@@ -184,7 +184,7 @@ SectionCard.displayName = "SectionCard";
 
 const HistoryAndExamTab = memo(() => (
   <TabsContent value="history" className="space-y-6">
-    <SectionCard icon={FileTextIcon} title="History of Present Illness" headerClass="bg-gradient-to-r from-medical-50 to-blue-50 text-medical-800">
+    <SectionCard icon={FileTextIcon} title="History of Present Illness" headerClass="bg-gradient-to-r from-medical-700 to-blue-700 text-white">
       <FormTextAreaField
         name={FORM_FIELDS.PATIENT_HISTORY}
         label="Clinical History"
@@ -192,7 +192,7 @@ const HistoryAndExamTab = memo(() => (
         description="Provide a detailed chronological account of the patient's condition and relevant background."
       />
     </SectionCard>
-    <SectionCard icon={StethoscopeIcon} title="Physical Examination" headerClass="bg-gradient-to-r from-blue-50 to-purple-50 text-blue-800">
+    <SectionCard icon={StethoscopeIcon} title="Physical Examination" headerClass="bg-gradient-to-r from-blue-700 to-purple-700 text-white">
       <FormTextAreaField
         name={FORM_FIELDS.PHYSICAL_EXAM}
         label="Examination Findings"
@@ -237,17 +237,17 @@ const SystemsReviewTab = memo(() => {
   return (
     <TabsContent value="systems" className="space-y-6">
       <div className="grid gap-6 lg:grid-cols-2">
-        <SectionCard icon={BrainIcon} title="Review of Systems" headerClass="bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-800">
+        <SectionCard icon={BrainIcon} title="Review of Systems" headerClass="bg-gradient-to-r from-blue-700 to-indigo-700 text-white">
           <SystemReviewChecklist onSystemSymptomsChange={setSystemSymptoms} />
         </SectionCard>
-        <SectionCard icon={UserIcon} title="Affected Body Areas" headerClass="bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-800">
+        <SectionCard icon={UserIcon} title="Affected Body Areas" headerClass="bg-gradient-to-r from-blue-700 to-indigo-700 text-white">
           <InteractiveBodyDiagram onBodyPartSelected={handleBodyPartSelected} />
           <FormDescription className="mt-3 text-blue-600">Click on body parts to mark affected areas</FormDescription>
           {PartBadges}
           <Controller name={FORM_FIELDS.SELECTED_BODY_PARTS} render={({ fieldState }) => fieldState.error ? <FormMessage className="mt-2">{fieldState.error.message}</FormMessage> : null} />
         </SectionCard>
       </div>
-      <SectionCard icon={HeartIcon} title="Vital Signs & Physiological Parameters" headerClass="bg-gradient-to-r from-green-50 to-teal-50 text-green-800">
+      <SectionCard icon={HeartIcon} title="Vital Signs & Physiological Parameters" headerClass="bg-gradient-to-r from-green-700 to-teal-700 text-white">
         <VitalsCard onVitalsChange={setVitals} />
       </SectionCard>
     </TabsContent>
@@ -268,10 +268,10 @@ const DiagnosticsTab = memo(() => {
   return (
     <TabsContent value="diagnostics" className="space-y-6">
       <div className="grid gap-6 lg:grid-cols-2">
-        <SectionCard icon={MicroscopeIcon} title="Laboratory Studies" headerClass="bg-gradient-to-r from-purple-50 to-pink-50 text-purple-800">
+        <SectionCard icon={MicroscopeIcon} title="Laboratory Studies" headerClass="bg-gradient-to-r from-purple-700 to-pink-700 text-white">
           <LabResultsCard onLabResultsChange={setLabResults} />
         </SectionCard>
-        <SectionCard icon={ScanIcon} title="Imaging Studies" headerClass="bg-gradient-to-r from-pink-50 to-red-50 text-red-800">
+        <SectionCard icon={ScanIcon} title="Imaging Studies" headerClass="bg-gradient-to-r from-pink-700 to-red-700 text-white">
           <RadiologyCard onRadiologyChange={setRadiology} />
         </SectionCard>
       </div>
