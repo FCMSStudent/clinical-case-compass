@@ -51,9 +51,8 @@ export const FormHeader = memo(function FormHeader({
     <div className={cn("space-y-4", className)}>
       {/* Main Header Card */}
       <div className="relative">
-        <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl" aria-hidden="true"></div>
-        <div 
-          className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6"
+        <div
+          className="relative bg-black/20 backdrop-blur-md rounded-2xl border border-white/20 shadow-xl p-6"
           role="banner"
           aria-labelledby="form-title"
         >
