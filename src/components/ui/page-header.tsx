@@ -6,23 +6,38 @@ interface PageHeaderProps {
   description?: string;
   className?: string;
   children?: React.ReactNode;
+  actions?: React.ReactNode;
+  icon?: React.ReactNode;
 }
 
 export function PageHeader({ 
   title, 
   description, 
   className,
-  children 
+  children,
+  actions,
+  icon
 }: PageHeaderProps) {
   return (
     <div className={cn("mb-6 flex flex-col gap-1 md:flex-row md:items-center md:justify-between", className)}>
-      <div>
-        <h1 className="text-2xl md:text-3xl font-bold tracking-tight">{title}</h1>
-        {description && (
-          <p className="text-muted-foreground">{description}</p>
+      <div className="flex items-center gap-3">
+        {icon && (
+          <div className="flex items-center">
+            {icon}
+          </div>
         )}
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">{title}</h1>
+          {description && (
+            <p className="text-muted-foreground">{description}</p>
+          )}
+        </div>
       </div>
-      {children && <div className="mt-4 md:mt-0">{children}</div>}
+      {(children || actions) && (
+        <div className="mt-4 md:mt-0">
+          {actions || children}
+        </div>
+      )}
     </div>
   );
 }

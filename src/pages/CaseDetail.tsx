@@ -102,6 +102,22 @@ const CaseDetail = () => {
     toast.success("Case deleted successfully");
   };
 
+  // Handle vitals change for InteractiveVitalsCard
+  const handleVitalsChange = (vitals: Record<string, string>) => {
+    console.log("Vitals updated:", vitals);
+    // Here you could update the case vitals if needed
+  };
+
+  // Extract initial vitals from the medical case
+  const initialVitals = medicalCase.vitals ? {
+    temperature: medicalCase.vitals.temperature?.toString() || "37",
+    heartRate: medicalCase.vitals.heartRate?.toString() || "80",
+    systolicBP: medicalCase.vitals.systolicBP?.toString() || "120",
+    diastolicBP: medicalCase.vitals.diastolicBP?.toString() || "80",
+    respiratoryRate: medicalCase.vitals.respiratoryRate?.toString() || "16",
+    oxygenSaturation: medicalCase.vitals.oxygenSaturation?.toString() || "98"
+  } : undefined;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-blue-700 dark:from-blue-900 dark:via-blue-800 dark:to-blue-900 relative">
       {/* Glassy background elements */}
@@ -346,7 +362,11 @@ const CaseDetail = () => {
                 <CardTitle className="text-base text-white">Vitals</CardTitle>
               </CardHeader>
               <CardContent>
-                <InteractiveVitalsCard medicalCase={medicalCase} />
+                <InteractiveVitalsCard 
+                  onVitalsChange={handleVitalsChange}
+                  initialVitals={initialVitals}
+                  patientAge={medicalCase.patient.age}
+                />
               </CardContent>
             </Card>
           </div>
