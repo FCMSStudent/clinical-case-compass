@@ -10,6 +10,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
+        primary: "bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm border border-white/20",
         default: "bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm border border-white/20",
         destructive:
           "bg-red-500/20 text-red-300 hover:bg-red-500/30 backdrop-blur-sm border border-red-400/30",
@@ -18,6 +19,7 @@ const buttonVariants = cva(
         secondary:
           "bg-white/10 text-white/90 hover:bg-white/20 backdrop-blur-sm border border-white/20",
         ghost: "hover:bg-white/10 text-white/90 hover:text-white backdrop-blur-sm",
+        success: "bg-emerald-600 text-white hover:bg-emerald-700",
         link: "text-white underline-offset-4 hover:underline",
       },
       size: {
