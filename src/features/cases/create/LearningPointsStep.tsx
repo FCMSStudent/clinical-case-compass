@@ -155,17 +155,14 @@ const ResourceLinkCard = memo(({
                       </TooltipProvider>
                     </FormLabel>
                     <FormControl>
-                      <div className="relative">
-                        <Input
-                          placeholder="https://example.com/resource"
-                          className={cn(
-                            "relative z-10 font-mono text-sm transition-all duration-200",
-                            urlError ? "border-red-300 focus:border-red-400 bg-red-50/50" : "border-gray-200 focus:border-blue-400"
-                          )}
-                          {...field}
-                        />
-                        <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 z-0"></div>
-                      </div>
+                      <Input
+                        placeholder="https://example.com/resource"
+                        className={cn(
+                          "font-mono text-sm transition-all duration-200",
+                          urlError ? "border-red-300 focus:border-red-400 bg-red-50/50" : "border-gray-200 focus:border-blue-400"
+                        )}
+                        {...field}
+                      />
                     </FormControl>
                     <ResourceLinkValidation
                       isValid={!urlError}
@@ -196,17 +193,14 @@ const ResourceLinkCard = memo(({
                       </TooltipProvider>
                     </FormLabel>
                     <FormControl>
-                      <div className="relative">
-                        <Input
-                          placeholder="Brief description of the resource's key points or relevance"
-                          className={cn(
-                            "relative z-10 text-sm transition-all duration-200",
-                            descriptionError ? "border-red-300 focus:border-red-400 bg-red-50/50" : "border-gray-200 focus:border-blue-400"
-                          )}
-                          {...field}
-                        />
-                        <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 z-0"></div>
-                      </div>
+                      <Input
+                        placeholder="Brief description of the resource's key points or relevance"
+                        className={cn(
+                          "text-sm transition-all duration-200",
+                          descriptionError ? "border-red-300 focus:border-red-400 bg-red-50/50" : "border-gray-200 focus:border-blue-400"
+                        )}
+                        {...field}
+                      />
                     </FormControl>
                     <ResourceLinkValidation
                       isValid={!descriptionError}
