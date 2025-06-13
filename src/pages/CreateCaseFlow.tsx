@@ -324,7 +324,7 @@ const CreateCaseFlow = () => {
         aria-labelledby="form-title"
       >
         <header role="banner">
-          <div className="mb-4">
+          <div className="mb-6">
             <Button
               variant="ghost"
               onClick={() => navigate("/dashboard")}
