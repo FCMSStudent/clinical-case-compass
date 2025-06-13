@@ -39,13 +39,8 @@ const AppContent = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
-        <div className="flex flex-col items-center space-y-4">
-          <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
-          <p className="text-lg font-medium text-gray-600 dark:text-gray-300">
-            Loading Clinical Case Compass...
-          </p>
-        </div>
+      <div className="min-h-screen flex items-center justify-center">
+        <span className="text-2xl font-semibold text-gray-700 dark:text-gray-200">Loading</span>
       </div>
     );
   }
