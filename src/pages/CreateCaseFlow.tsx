@@ -4,7 +4,6 @@ import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
-import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Save, FileText, User, Stethoscope, BookOpen, SkipForward, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FormContainer, StepMeta } from "@/features/cases/create/FormContainer";
@@ -331,14 +330,14 @@ const CreateCaseFlow = () => {
         aria-labelledby="form-title"
       >
         <header role="banner">
-          <div className="mb-4">
+          <div className="mb-6">
             <Button
               variant="ghost"
               onClick={() => navigate("/dashboard")}
-              className="inline-flex items-center text-sm text-white/70 hover:text-white transition-colors"
+              className="gap-2 text-white/70 hover:text-white"
               aria-label="Return to dashboard"
             >
-              <ChevronLeft className="mr-1 h-4 w-4" />
+              <ChevronLeft className="h-4 w-4" />
               Back to Dashboard
             </Button>
           </div>
