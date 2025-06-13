@@ -36,6 +36,7 @@ const queryClient = new QueryClient({
 // Simplified App component without advanced features
 const AppContent = () => {
   const { session, loading, isOfflineMode } = useAuth();
+  const location = window.location;
 
   if (loading) {
     return (
@@ -48,6 +49,11 @@ const AppContent = () => {
         </div>
       </div>
     );
+  }
+
+  // If on the /auth route, render Auth page only (no layout/sidebar/header)
+  if (location.pathname === "/auth") {
+    return <Auth />;
   }
 
   return (
