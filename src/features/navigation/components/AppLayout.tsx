@@ -230,28 +230,6 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
 
       <div className="relative z-10 flex flex-col min-h-screen">
         <TopNavBar />
-        {/* Desktop Header */}
-        <header className="hidden md:flex items-center justify-between px-6 py-4 sticky top-0 z-30">
-          <div className="relative">
-            <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-            <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 px-6 py-4 flex items-center space-x-4">
-              <h1 className="text-xl font-semibold text-white">{title}</h1>
-            </div>
-          </div>
-          <div className="flex items-center space-x-4">
-            {actions || <HeaderActions />}
-          </div>
-        </header>
-        {/* Mobile Header */}
-        <header className="flex md:hidden items-center justify-between px-4 py-3 sticky top-0 z-30">
-          <div className="relative">
-            <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-            <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 px-4 py-3 flex items-center space-x-3">
-              <h1 className="text-lg font-semibold text-white">{title}</h1>
-            </div>
-          </div>
-          <HeaderActions />
-        </header>
         {/* Main Content */}
         <main className={`flex-1 flex flex-col ${className}`} role="main" aria-label="Main content">
           <div className="container mx-auto px-4 py-6 flex-1">
