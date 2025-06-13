@@ -184,7 +184,7 @@ export const PatientStep = memo(function PatientStep<
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <SelectTrigger
                       className={cn(
-                        "relative z-10 bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 text-base rounded-xl py-3 px-4 h-auto transition-all duration-200 shadow-xl",
+                        "relative z-10 bg-transparent border-0 text-white placeholder:text-white/50 text-base rounded-xl py-3 px-4 h-auto transition-all duration-200 focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:ring-offset-2",
                         fieldState.error && "border-red-400/50 focus-visible:ring-red-400/30"
                       )}
                     >
