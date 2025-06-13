@@ -4,7 +4,6 @@ import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
-import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Save, FileText, User, Stethoscope, BookOpen, SkipForward, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FormContainer, StepMeta } from "@/features/cases/create/FormContainer";
