@@ -48,7 +48,12 @@ export const FormHeader = memo(function FormHeader({
   formTitle = "Create New Clinical Case",
 }: FormHeaderProps) {
   return (
-    <div className={cn("space-y-4", className)}>
+    <div
+      className={cn(
+        "mb-6 flex flex-col gap-1 md:flex-row md:items-center md:justify-between",
+        className
+      )}
+    >
       {/* Main Header Card */}
       <div className="relative">
         <div
@@ -64,9 +69,9 @@ export const FormHeader = memo(function FormHeader({
                 animate={{ opacity: 1, y: 0 }}
                 className="space-y-1"
               >
-                <h1 
+                <h1
                   id="form-title"
-                  className="text-2xl font-bold tracking-tight text-white"
+                  className="text-2xl md:text-3xl font-bold tracking-tight text-white"
                 >
                   {formTitle}
                 </h1>

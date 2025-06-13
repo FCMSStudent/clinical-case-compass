@@ -1,23 +1,39 @@
-import React, { useState, useCallback, useMemo, useRef, useEffect } from "react";
+import React, {
+  useState,
+  useCallback,
+  useMemo,
+  useRef,
+  useEffect,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
-import { ChevronLeft, ChevronRight, Save, FileText, User, Stethoscope, BookOpen, SkipForward, AlertCircle } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Save,
+  FileText,
+  User,
+  Stethoscope,
+  BookOpen,
+  SkipForward,
+  AlertCircle,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FormContainer, StepMeta } from "@/features/cases/create/FormContainer";
 import { FormHeader } from "@/features/cases/create/FormHeader";
 import { FormNavigation } from "@/features/cases/create/FormNavigation";
-import { 
-  CaseInfoStep, 
+import {
+  CaseInfoStep,
   caseInfoSchema,
   PatientStep,
   patientStepSchema,
   ClinicalDetailStep,
   clinicalDetailStepSchema,
   LearningPointsStep,
-  learningPointsStepSchema
+  learningPointsStepSchema,
 } from "@/features/cases";
 import { cn } from "@/lib/utils";
 import { useAutoSave } from "@/hooks/use-autosave";
@@ -71,16 +87,18 @@ const CreateCaseFlow = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
-  const [autoSaveStatus, setAutoSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const [autoSaveStatus, setAutoSaveStatus] = useState<
+    "idle" | "saving" | "saved" | "error"
+  >("idle");
   const [showSkipNav, setShowSkipNav] = useState(false);
-  
+
   // Accessibility refs
   const mainContentRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const errorAnnouncementRef = useRef<HTMLDivElement>(null);
-  
+
   const { createCase } = useCaseOperations();
-  
+
   // Create form with all schemas combined
   const methods = useForm<CreateCaseFormData>({
     resolver: zodResolver(createCaseSchema),
@@ -107,24 +125,26 @@ const CreateCaseFlow = () => {
 
   const { handleSubmit, watch, formState, trigger, setFocus } = methods;
   const { errors, isValid, isDirty } = formState;
-  
+
   // Get current step component
   const CurrentStepComponent = STEPS[currentStep].component;
-  
+
   // Check if current step is valid
   const validateCurrentStep = useCallback(async () => {
     const currentStepSchema = STEPS[currentStep].schema;
-    const result = await trigger(Object.keys(currentStepSchema.shape) as (keyof CreateCaseFormData)[]);
+    const result = await trigger(
+      Object.keys(currentStepSchema.shape) as (keyof CreateCaseFormData)[],
+    );
     return result;
   }, [currentStep, trigger]);
-  
+
   // Handle next step
   const handleNext = useCallback(async () => {
     const isStepValid = await validateCurrentStep();
-    
+
     if (isStepValid) {
       if (currentStep < STEPS.length - 1) {
-        setCurrentStep(prev => prev + 1);
+        setCurrentStep((prev) => prev + 1);
         // Announce step change to screen readers
         setTimeout(() => {
           const stepLabel = STEPS[currentStep + 1].label;
@@ -138,19 +158,19 @@ const CreateCaseFlow = () => {
       toast.error("Please fix the errors before proceeding", {
         description: "There are validation errors in the current step.",
       });
-      
+
       // Announce errors to screen readers
       if (errorAnnouncementRef.current) {
         const errorCount = Object.keys(errors).length;
-        errorAnnouncementRef.current.textContent = `Form has ${errorCount} validation error${errorCount !== 1 ? 's' : ''}. Please review and correct the highlighted fields.`;
+        errorAnnouncementRef.current.textContent = `Form has ${errorCount} validation error${errorCount !== 1 ? "s" : ""}. Please review and correct the highlighted fields.`;
       }
     }
   }, [currentStep, validateCurrentStep, errors]);
-  
+
   // Handle previous step
   const handlePrevious = useCallback(() => {
     if (currentStep > 0) {
-      setCurrentStep(prev => prev - 1);
+      setCurrentStep((prev) => prev - 1);
       // Announce step change to screen readers
       setTimeout(() => {
         const stepLabel = STEPS[currentStep - 1].label;
@@ -160,38 +180,43 @@ const CreateCaseFlow = () => {
       }, 100);
     }
   }, [currentStep]);
-  
+
   // Handle form submission using service layer
-  const onSubmit = useCallback(async (data: CreateCaseFormData) => {
-    setIsSaving(true);
-    
-    // Announce submission to screen readers
-    if (errorAnnouncementRef.current) {
-      errorAnnouncementRef.current.textContent = "Submitting case. Please wait...";
-    }
-    
-    try {
-      const result = await createCase(data);
-      if (!result.success) {
-        // Error handling is done in the service layer
+  const onSubmit = useCallback(
+    async (data: CreateCaseFormData) => {
+      setIsSaving(true);
+
+      // Announce submission to screen readers
+      if (errorAnnouncementRef.current) {
+        errorAnnouncementRef.current.textContent =
+          "Submitting case. Please wait...";
+      }
+
+      try {
+        const result = await createCase(data);
+        if (!result.success) {
+          // Error handling is done in the service layer
+          setIsSaving(false);
+
+          // Announce error to screen readers
+          if (errorAnnouncementRef.current) {
+            errorAnnouncementRef.current.textContent = `Failed to create case: ${result.error}`;
+          }
+        }
+      } catch (error) {
+        console.error("Error in form submission:", error);
         setIsSaving(false);
-        
+
         // Announce error to screen readers
         if (errorAnnouncementRef.current) {
-          errorAnnouncementRef.current.textContent = `Failed to create case: ${result.error}`;
+          errorAnnouncementRef.current.textContent =
+            "An unexpected error occurred while creating the case.";
         }
       }
-    } catch (error) {
-      console.error("Error in form submission:", error);
-      setIsSaving(false);
-      
-      // Announce error to screen readers
-      if (errorAnnouncementRef.current) {
-        errorAnnouncementRef.current.textContent = "An unexpected error occurred while creating the case.";
-      }
-    }
-  }, [createCase]);
-  
+    },
+    [createCase],
+  );
+
   // Auto-save form data
   const formData = watch();
   useAutoSave({
@@ -202,21 +227,22 @@ const CreateCaseFlow = () => {
       if (errorAnnouncementRef.current) {
         errorAnnouncementRef.current.textContent = "Auto-saving draft...";
       }
-      
+
       try {
         localStorage.setItem("case-form-draft", JSON.stringify(formData));
         setAutoSaveStatus("saved");
-        
+
         // Announce success to screen readers
         setTimeout(() => {
           if (errorAnnouncementRef.current) {
-            errorAnnouncementRef.current.textContent = "Draft saved successfully.";
+            errorAnnouncementRef.current.textContent =
+              "Draft saved successfully.";
           }
         }, 1000);
       } catch (error) {
         console.error("Auto-save error:", error);
         setAutoSaveStatus("error");
-        
+
         // Announce error to screen readers
         if (errorAnnouncementRef.current) {
           errorAnnouncementRef.current.textContent = "Failed to save draft.";
@@ -231,29 +257,29 @@ const CreateCaseFlow = () => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       // Skip navigation (Alt + S)
-      if (event.altKey && event.key === 's') {
+      if (event.altKey && event.key === "s") {
         event.preventDefault();
         setShowSkipNav(true);
         setTimeout(() => setShowSkipNav(false), 3000);
       }
-      
+
       // Focus first error (Alt + E)
-      if (event.altKey && event.key === 'e' && Object.keys(errors).length > 0) {
+      if (event.altKey && event.key === "e" && Object.keys(errors).length > 0) {
         event.preventDefault();
         const firstErrorField = Object.keys(errors)[0];
         setFocus(firstErrorField as any);
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [errors, setFocus]);
 
   // Announce validation errors to screen readers
   useEffect(() => {
     if (Object.keys(errors).length > 0 && errorAnnouncementRef.current) {
       const errorCount = Object.keys(errors).length;
-      errorAnnouncementRef.current.textContent = `Form has ${errorCount} validation error${errorCount !== 1 ? 's' : ''}. Please review and correct the highlighted fields.`;
+      errorAnnouncementRef.current.textContent = `Form has ${errorCount} validation error${errorCount !== 1 ? "s" : ""}. Please review and correct the highlighted fields.`;
     }
   }, [errors]);
 
@@ -261,14 +287,17 @@ const CreateCaseFlow = () => {
   const stepMeta = useMemo<StepMeta[]>(() => {
     return STEPS.map((step, index) => {
       // Check if previous steps are completed to determine if this step is navigable
-      const previousStepsCompleted = index === 0 ? true : 
-        Array.from({ length: index }, (_, i) => i)
-          .every(i => {
-            const stepSchema = STEPS[i].schema;
-            const stepFields = Object.keys(stepSchema.shape);
-            return stepFields.every(field => !errors[field as keyof typeof errors]);
-          });
-      
+      const previousStepsCompleted =
+        index === 0
+          ? true
+          : Array.from({ length: index }, (_, i) => i).every((i) => {
+              const stepSchema = STEPS[i].schema;
+              const stepFields = Object.keys(stepSchema.shape);
+              return stepFields.every(
+                (field) => !errors[field as keyof typeof errors],
+              );
+            });
+
       return {
         id: step.id,
         label: step.label,
@@ -280,12 +309,12 @@ const CreateCaseFlow = () => {
   }, [currentStep, errors]);
 
   const handleStepChange = useCallback((stepId: string) => {
-    const stepIndex = STEPS.findIndex(step => step.id === stepId);
+    const stepIndex = STEPS.findIndex((step) => step.id === stepId);
     if (stepIndex !== -1) {
       setCurrentStep(stepIndex);
     }
   }, []);
-  
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-blue-700 dark:from-blue-900 dark:via-blue-800 dark:to-blue-900 relative">
       {/* Glassy background elements */}
@@ -322,7 +351,7 @@ const CreateCaseFlow = () => {
         Skip to main content
       </a>
 
-      <div 
+      <div
         ref={mainContentRef}
         id="main-content"
         className="relative z-10 w-full max-w-6xl mx-auto space-y-6 p-4 md:p-6"
@@ -342,57 +371,61 @@ const CreateCaseFlow = () => {
             </Button>
           </div>
         </header>
-        
+
         <FormProvider {...methods}>
-          <form 
+          <form
             ref={formRef}
-            onSubmit={handleSubmit(onSubmit)} 
+            onSubmit={handleSubmit(onSubmit)}
             className="space-y-6"
             aria-label="Create new clinical case form"
             noValidate
           >
-            <FormHeader 
+            <FormHeader
               currentStep={currentStep + 1}
               totalSteps={STEPS.length}
-              completionPercentage={Math.round(((currentStep + 1) / STEPS.length) * 100)}
+              completionPercentage={Math.round(
+                ((currentStep + 1) / STEPS.length) * 100,
+              )}
               currentStepLabel={STEPS[currentStep].label}
               formTitle="Create New Clinical Case"
               isDraftSaving={autoSaveStatus === "saving"}
               onSaveDraft={() => {
                 // Trigger auto-save manually
-                localStorage.setItem("case-form-draft", JSON.stringify(formData));
+                localStorage.setItem(
+                  "case-form-draft",
+                  JSON.stringify(formData),
+                );
                 setAutoSaveStatus("saved");
-                
+
                 // Announce to screen readers
                 if (errorAnnouncementRef.current) {
-                  errorAnnouncementRef.current.textContent = "Draft saved successfully.";
+                  errorAnnouncementRef.current.textContent =
+                    "Draft saved successfully.";
                 }
               }}
             />
-            
+
             {/* Error Summary for Accessibility */}
             {Object.keys(errors).length > 0 && (
-              <div role="alert" aria-live="polite">
-                <div className="bg-red-500/20 border border-red-400/30 rounded-lg p-4">
-                  <ErrorSummary
-                    errors={errors}
-                    setFocus={setFocus as (name: string) => void}
-                    className="mb-0"
-                    formId="create-case-form"
-                  />
-                </div>
-              </div>
+              <ErrorSummary
+                errors={errors}
+                setFocus={setFocus as (name: string) => void}
+                formId="create-case-form"
+              />
             )}
-            
+
             <FormContainer
               currentStepIndex={currentStep}
               steps={stepMeta}
               onStepChange={handleStepChange}
             >
-              <div role="region" aria-labelledby={`step-${currentStep + 1}-title`}>
+              <div
+                role="region"
+                aria-labelledby={`step-${currentStep + 1}-title`}
+              >
                 <CurrentStepComponent />
               </div>
-              
+
               <FormNavigation
                 currentStep={currentStep + 1}
                 totalSteps={STEPS.length}
