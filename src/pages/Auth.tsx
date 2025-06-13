@@ -199,10 +199,7 @@ const Auth = () => {
             <CardHeader className="text-center pb-6">
               <div className="text-center mb-8">
                 <div className="flex items-center justify-center gap-3 mb-4">
-                  <div className="p-3 rounded-2xl bg-white/20 backdrop-blur-sm">
-                    <Sparkles className="h-8 w-8 text-white" />
-                  </div>
-                  <h1 className="text-3xl font-bold text-white">Clinical Case Compass</h1>
+                  <h1 className="text-3xl font-bold text-white">Medica</h1>
                 </div>
                 <p className="text-white/80 text-lg">
                   Sign in to your account or create a new one

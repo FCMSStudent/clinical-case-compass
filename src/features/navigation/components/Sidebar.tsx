@@ -383,10 +383,10 @@ const Sidebar = React.memo(function Sidebar() {
         collapsed && !isMobile && "justify-center px-2"
       )}>
         {(!collapsed || isMobile) && (
-          <h1 className="text-xl font-bold text-white">Clinical Case Compass</h1>
+          <h1 className="text-xl font-bold text-white">Medica</h1>
         )}
         {collapsed && !isMobile && (
-          <div className="text-xl font-bold text-white" aria-label="Clinical Case Compass">CCC</div>
+          <div className="text-xl font-bold text-white" aria-label="Medica">M</div>
         )}
 
         {isMobile && (
