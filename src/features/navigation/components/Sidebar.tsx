@@ -25,7 +25,7 @@ interface SidebarProviderProps {
 export const SidebarProvider: React.FC<SidebarProviderProps> = ({ children }) => {
   const defaultOpen =
     typeof window !== "undefined" && window.innerWidth >= 768 ? true : false;
-  const [open, setOpen] = useState(() => getInitialSidebarState(defaultOpen));
+  const [open, setOpen] = useState(() => getInitialSidebarState() ?? defaultOpen);
   const [isMobile, setIsMobile] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
 
