@@ -155,8 +155,8 @@ export const CaseInfoStep = memo(function CaseInfoStep<
                 message={fieldState.error?.message || "Title looks good!"}
                 id={fieldState.error ? "case-title-error" : "case-title-help"}
               />
-              <FormDescription 
-                className="mt-3 flex items-start gap-2 text-muted-foreground"
+              <FormDescription
+                className="mt-3 flex items-start gap-2 text-white/70"
                 id="case-title-help"
               >
                 <div className={cn(
@@ -207,8 +207,8 @@ export const CaseInfoStep = memo(function CaseInfoStep<
                 message={fieldState.error?.message}
                 id={fieldState.error ? "chief-complaint-error" : "chief-complaint-help"}
               />
-              <FormDescription 
-                className="mt-3 flex items-start gap-2 text-muted-foreground"
+              <FormDescription
+                className="mt-3 flex items-start gap-2 text-white/70"
                 id="chief-complaint-help"
               >
                 <div className={cn(
@@ -245,18 +245,18 @@ export const CaseInfoStep = memo(function CaseInfoStep<
                   defaultValue={field.value}
                   aria-describedby="specialty-help"
                 >
-                  <SelectTrigger 
+                  <SelectTrigger
                     id="specialty-select"
                     className={cn(
-                      undefined,
+                      "rounded-xl shadow-xl py-3 px-4",
                       fieldState.error && "border-red-400/50 focus-visible:ring-red-400/30"
                     )}
                     aria-invalid={fieldState.error ? "true" : "false"}
                   >
                     <SelectValue placeholder="Select the most relevant medical specialty" />
                   </SelectTrigger>
-                  <SelectContent 
-                    className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 shadow-xl"
+                  <SelectContent
+                    className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 shadow-xl p-1"
                     aria-label="Medical specialty options"
                   >
                     {MEDICAL_SPECIALTIES.map((specialty) => (
@@ -276,8 +276,8 @@ export const CaseInfoStep = memo(function CaseInfoStep<
                 message={fieldState.error?.message}
                 id={fieldState.error ? "specialty-error" : "specialty-help"}
               />
-              <FormDescription 
-                className="mt-3 flex items-start gap-2 text-muted-foreground"
+              <FormDescription
+                className="mt-3 flex items-start gap-2 text-white/70"
                 id="specialty-help"
               >
                 <div className="w-2 h-2 rounded-full bg-violet-400 mt-2 flex-shrink-0" aria-hidden="true"></div>

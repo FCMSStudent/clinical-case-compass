@@ -258,13 +258,15 @@ export const RadiologyCard: React.FC<RadiologyCardProps> = ({
                         }
                       }}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="rounded-xl shadow-xl py-3 px-4">
                         <SelectValue placeholder="Select a study" />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="">Custom Study</SelectItem>
+                      <SelectContent className="rounded-xl p-1">
+                        <SelectItem value="" className="py-3 px-4 rounded-lg">
+                          Custom Study
+                        </SelectItem>
                         {COMMON_RADIOLOGY_STUDIES.map((study) => (
-                          <SelectItem key={study.id} value={study.id}>
+                          <SelectItem key={study.id} value={study.id} className="py-3 px-4 rounded-lg">
                             {study.name}
                           </SelectItem>
                         ))}
@@ -279,12 +281,12 @@ export const RadiologyCard: React.FC<RadiologyCardProps> = ({
                         value={selectedFinding}
                         onValueChange={setSelectedFinding}
                       >
-                        <SelectTrigger>
+                        <SelectTrigger className="rounded-xl shadow-xl py-3 px-4">
                           <SelectValue placeholder="Select common finding" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="rounded-xl p-1">
                           {COMMON_RADIOLOGY_STUDIES.find(s => s.id === selectedStudy)?.commonFindings.map((finding) => (
-                            <SelectItem key={finding} value={finding}>
+                            <SelectItem key={finding} value={finding} className="py-3 px-4 rounded-lg">
                               {finding}
                             </SelectItem>
                           ))}
@@ -307,16 +309,16 @@ export const RadiologyCard: React.FC<RadiologyCardProps> = ({
                           value={customStudy.type}
                           onValueChange={(value) => setCustomStudy(prev => ({ ...prev, type: value }))}
                         >
-                          <SelectTrigger>
+                          <SelectTrigger className="rounded-xl shadow-xl py-3 px-4">
                             <SelectValue placeholder="Select type" />
                           </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="X-Ray">X-Ray</SelectItem>
-                            <SelectItem value="CT">CT</SelectItem>
-                            <SelectItem value="MRI">MRI</SelectItem>
-                            <SelectItem value="Ultrasound">Ultrasound</SelectItem>
-                            <SelectItem value="Nuclear Medicine">Nuclear Medicine</SelectItem>
-                            <SelectItem value="Other">Other</SelectItem>
+                          <SelectContent className="rounded-xl p-1">
+                            <SelectItem value="X-Ray" className="py-3 px-4 rounded-lg">X-Ray</SelectItem>
+                            <SelectItem value="CT" className="py-3 px-4 rounded-lg">CT</SelectItem>
+                            <SelectItem value="MRI" className="py-3 px-4 rounded-lg">MRI</SelectItem>
+                            <SelectItem value="Ultrasound" className="py-3 px-4 rounded-lg">Ultrasound</SelectItem>
+                            <SelectItem value="Nuclear Medicine" className="py-3 px-4 rounded-lg">Nuclear Medicine</SelectItem>
+                            <SelectItem value="Other" className="py-3 px-4 rounded-lg">Other</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>

@@ -80,7 +80,7 @@ export const PatientStep = memo(function PatientStep<
                 isValid={!fieldState.error}
                 message={fieldState.error?.message || "Patient name looks good!"}
               />
-              <FormDescription className="mt-3 flex items-start gap-2 text-muted-foreground">
+              <FormDescription className="mt-3 flex items-start gap-2 text-white/70">
                 <div className={cn(
                   "w-2 h-2 rounded-full mt-2 flex-shrink-0",
                   fieldState.error ? "bg-red-400" : "bg-emerald-400"
@@ -117,7 +117,7 @@ export const PatientStep = memo(function PatientStep<
                 isValid={!fieldState.error}
                 message={fieldState.error?.message}
               />
-              <FormDescription className="mt-3 flex items-start gap-2 text-muted-foreground">
+              <FormDescription className="mt-3 flex items-start gap-2 text-white/70">
                 <div className={cn(
                   "w-2 h-2 rounded-full mt-2 flex-shrink-0",
                   fieldState.error ? "bg-red-400" : "bg-rose-400"
@@ -157,7 +157,7 @@ export const PatientStep = memo(function PatientStep<
                   isValid={!fieldState.error}
                   message={fieldState.error?.message}
                 />
-                <FormDescription className="mt-3 flex items-start gap-2 text-muted-foreground">
+                <FormDescription className="mt-3 flex items-start gap-2 text-white/70">
                   <div className={cn(
                     "w-2 h-2 rounded-full mt-2 flex-shrink-0",
                     fieldState.error ? "bg-red-400" : "bg-violet-400"
@@ -190,7 +190,7 @@ export const PatientStep = memo(function PatientStep<
                     >
                       <SelectValue placeholder="Select sex" />
                     </SelectTrigger>
-                    <SelectContent className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 shadow-xl">
+                    <SelectContent className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 shadow-xl p-1">
                       <SelectItem value="male" className="py-3 px-4 text-base text-white hover:bg-white/20 focus:bg-white/20 rounded-lg mx-1">Male</SelectItem>
                       <SelectItem value="female" className="py-3 px-4 text-base text-white hover:bg-white/20 focus:bg-white/20 rounded-lg mx-1">Female</SelectItem>
                       <SelectItem value="other" className="py-3 px-4 text-base text-white hover:bg-white/20 focus:bg-white/20 rounded-lg mx-1">Other</SelectItem>
@@ -201,7 +201,7 @@ export const PatientStep = memo(function PatientStep<
                   isValid={!fieldState.error}
                   message={fieldState.error?.message}
                 />
-                <FormDescription className="mt-3 flex items-start gap-2 text-muted-foreground">
+                <FormDescription className="mt-3 flex items-start gap-2 text-white/70">
                   <div className={cn(
                     "w-2 h-2 rounded-full mt-2 flex-shrink-0",
                     fieldState.error ? "bg-red-400" : "bg-blue-400"
@@ -239,7 +239,7 @@ export const PatientStep = memo(function PatientStep<
                 isValid={!fieldState.error}
                 message={fieldState.error?.message}
               />
-              <FormDescription className="mt-3 flex items-start gap-2 text-muted-foreground">
+              <FormDescription className="mt-3 flex items-start gap-2 text-white/70">
                 <div className={cn(
                   "w-2 h-2 rounded-full mt-2 flex-shrink-0",
                   fieldState.error ? "bg-red-400" : "bg-amber-400"
