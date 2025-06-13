@@ -182,13 +182,15 @@ export const PatientStep = memo(function PatientStep<
               <FormItem>
                 <FormControl>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <SelectTrigger className={cn(
-                      "relative z-10 bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 text-base rounded-xl py-3 px-4 h-auto transition-all duration-200",
-                      fieldState.error && "border-red-400/50 focus-visible:ring-red-400/30"
-                    )}>
+                    <SelectTrigger
+                      className={cn(
+                        "relative z-10 bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 text-base rounded-xl py-3 px-4 h-auto transition-all duration-200 shadow-xl",
+                        fieldState.error && "border-red-400/50 focus-visible:ring-red-400/30"
+                      )}
+                    >
                       <SelectValue placeholder="Select sex" />
                     </SelectTrigger>
-                    <SelectContent className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 shadow-xl">
+                    <SelectContent className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 shadow-xl p-1">
                       <SelectItem value="male" className="py-3 px-4 text-base text-white hover:bg-white/20 focus:bg-white/20 rounded-lg mx-1">Male</SelectItem>
                       <SelectItem value="female" className="py-3 px-4 text-base text-white hover:bg-white/20 focus:bg-white/20 rounded-lg mx-1">Female</SelectItem>
                       <SelectItem value="other" className="py-3 px-4 text-base text-white hover:bg-white/20 focus:bg-white/20 rounded-lg mx-1">Other</SelectItem>
