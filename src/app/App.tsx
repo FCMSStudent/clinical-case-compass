@@ -36,7 +36,6 @@ const queryClient = new QueryClient({
 // Simplified App component without advanced features
 const AppContent = () => {
   const { session, loading, isOfflineMode } = useAuth();
-  const location = window.location;
 
   if (loading) {
     return (
@@ -51,84 +50,39 @@ const AppContent = () => {
     );
   }
 
-  // If on the /auth route, render Auth page only (no layout/sidebar/header)
-  if (location.pathname === "/auth") {
-    return <Auth />;
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
       <Router>
-        <SidebarProvider>
-          <AppLayout>
-            {isOfflineMode && (
-              <div className="mb-4">
-                <OfflineBanner />
-              </div>
-            )}
-            <Routes>
-              <Route path="/auth" element={<Auth />} />
-              <Route
-                path="/dashboard"
-                element={
-                  <PrivateRoute>
-                    <Dashboard />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/cases"
-                element={
-                  <PrivateRoute>
-                    <Cases />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/cases/:id"
-                element={
-                  <PrivateRoute>
-                    <CaseDetail />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/cases/:id/edit"
-                element={
-                  <PrivateRoute>
-                    <CaseEdit />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/cases/new"
-                element={
-                  <PrivateRoute>
-                    <CreateCaseFlow />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/profile"
-                element={
-                  <PrivateRoute>
-                    <Profile />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/settings"
-                element={
-                  <PrivateRoute>
-                    <Settings />
-                  </PrivateRoute>
-                }
-              />
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </AppLayout>
-        </SidebarProvider>
+        <Routes>
+          {/* Auth page without layout/sidebar */}
+          <Route path="/auth" element={<Auth />} />
+          {/* All other routes with layout/sidebar */}
+          <Route
+            path="*"
+            element={
+              <SidebarProvider>
+                <AppLayout>
+                  {isOfflineMode && (
+                    <div className="mb-4">
+                      <OfflineBanner />
+                    </div>
+                  )}
+                  <Routes>
+                    <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+                    <Route path="/cases" element={<PrivateRoute><Cases /></PrivateRoute>} />
+                    <Route path="/cases/:id" element={<PrivateRoute><CaseDetail /></PrivateRoute>} />
+                    <Route path="/cases/:id/edit" element={<PrivateRoute><CaseEdit /></PrivateRoute>} />
+                    <Route path="/cases/new" element={<PrivateRoute><CreateCaseFlow /></PrivateRoute>} />
+                    <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+                    <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
+                    <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </AppLayout>
+              </SidebarProvider>
+            }
+          />
+        </Routes>
       </Router>
     </div>
   );
