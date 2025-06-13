@@ -310,12 +310,12 @@ const Auth = () => {
                                   aria-label={showPassword ? "Hide password" : "Show password"}
                                   aria-pressed={showPassword}
                                   onClick={() => setShowPassword(!showPassword)}
-                                  className="absolute right-3 text-white/70 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 rounded p-1"
+                                  className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center h-10 w-10 text-white/70 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 rounded"
                                 >
                                   <span className="sr-only">
                                     {showPassword ? "Hide password" : "Show password"}
                                   </span>
-                                  {showPassword ? <EyeOff className="h-4 w-4" aria-hidden="true" /> : <Eye className="h-4 w-4" aria-hidden="true" />}
+                                  {showPassword ? <EyeOff className="h-5 w-5" aria-hidden="true" /> : <Eye className="h-5 w-5" aria-hidden="true" />}
                                 </button>
                               </div>
                             </FormControl>
@@ -447,12 +447,12 @@ const Auth = () => {
                                   aria-label={showPassword ? "Hide password" : "Show password"}
                                   aria-pressed={showPassword}
                                   onClick={() => setShowPassword(!showPassword)}
-                                  className="absolute right-3 text-white/70 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 rounded p-1"
+                                  className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center h-10 w-10 text-white/70 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 rounded"
                                 >
                                   <span className="sr-only">
                                     {showPassword ? "Hide password" : "Show password"}
                                   </span>
-                                  {showPassword ? <EyeOff className="h-4 w-4" aria-hidden="true" /> : <Eye className="h-4 w-4" aria-hidden="true" />}
+                                  {showPassword ? <EyeOff className="h-5 w-5" aria-hidden="true" /> : <Eye className="h-5 w-5" aria-hidden="true" />}
                                 </button>
                               </div>
                             </FormControl>
@@ -493,12 +493,12 @@ const Auth = () => {
                                   aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
                                   aria-pressed={showConfirmPassword}
                                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                  className="absolute right-3 text-white/70 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 rounded p-1"
+                                  className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center h-10 w-10 text-white/70 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 rounded"
                                 >
                                   <span className="sr-only">
                                     {showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
                                   </span>
-                                  {showConfirmPassword ? <EyeOff className="h-4 w-4" aria-hidden="true" /> : <Eye className="h-4 w-4" aria-hidden="true" />}
+                                  {showConfirmPassword ? <EyeOff className="h-5 w-5" aria-hidden="true" /> : <Eye className="h-5 w-5" aria-hidden="true" />}
                                 </button>
                               </div>
                             </FormControl>
