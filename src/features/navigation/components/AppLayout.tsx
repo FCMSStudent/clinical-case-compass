@@ -61,28 +61,25 @@ const HeaderActions = () => {
   return (
     <div className="flex items-center space-x-4">
       {/* Desktop Search */}
-      <div className="hidden md:flex items-center relative">
-        <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
-        <div className="relative flex items-center">
-          <Search className="h-4 w-4 text-white/70 ml-3" aria-hidden="true" />
-          <input
-            ref={searchInputRef}
-            type="text"
-            placeholder="Search cases, symptoms..."
-            className="bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 pl-10 pr-4 py-2 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-white/30"
-            aria-label="Search cases and symptoms"
-          />
-        </div>
+      <div className="hidden md:flex items-center backdrop-blur-lg bg-white/40 rounded-xl border border-white/30 shadow-lg">
+        <Search className="h-4 w-4 text-gray-600 ml-3" aria-hidden="true" />
+        <input
+          ref={searchInputRef}
+          type="text"
+          placeholder="Search cases, symptoms..."
+          className="bg-transparent border-0 text-gray-800 placeholder:text-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 pl-2 pr-4 py-2 rounded-xl text-sm focus:outline-none"
+          aria-label="Search cases and symptoms"
+        />
       </div>
 
       {/* Mobile Search Button */}
       <button
-        className="md:hidden p-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl hover:bg-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-white/30"
+        className="md:hidden p-2 backdrop-blur-lg bg-white/40 border border-white/30 rounded-xl hover:bg-white/50 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400"
         aria-label="Search"
         onClick={() => setIsSearchOpen(!isSearchOpen)}
         aria-expanded={isSearchOpen}
       >
-        <Search className="h-5 w-5 text-white" aria-hidden="true" />
+        <Search className="h-5 w-5 text-gray-800" aria-hidden="true" />
       </button>
 
       {/* Mobile Search Input */}
@@ -118,13 +115,13 @@ const HeaderActions = () => {
       <div className="relative" ref={userMenuRef}>
         <button
           onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-          className="flex items-center p-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl hover:bg-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-white/30"
+          className="flex items-center p-2 backdrop-blur-lg bg-white/40 border border-white/30 rounded-xl hover:bg-white/50 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400"
           aria-label="User menu"
           aria-expanded={isUserMenuOpen}
           aria-haspopup="true"
         >
-          <div className="h-8 w-8 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center">
-            <User className="h-5 w-5 text-white" aria-hidden="true" />
+          <div className="h-8 w-8 rounded-full bg-white/30 backdrop-blur-sm border border-white/40 flex items-center justify-center">
+            <User className="h-5 w-5 text-gray-800" aria-hidden="true" />
           </div>
         </button>
 
@@ -176,12 +173,12 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   actions
 }) => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-blue-700 dark:from-blue-900 dark:via-blue-800 dark:to-blue-900">
-      {/* Glassy background elements */}
-      <div className="absolute inset-0" aria-hidden="true">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/3 rounded-full blur-3xl"></div>
+    <div className="min-h-screen relative">
+      {/* Subtle background elements */}
+      <div className="absolute inset-0 -z-10" aria-hidden="true">
+        <div className="absolute top-20 left-20 w-96 h-96 bg-purple-200/30 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 right-20 w-80 h-80 bg-blue-200/30 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/3 w-72 h-72 bg-pink-200/30 rounded-full blur-3xl"></div>
       </div>
 
       <div className="relative z-10 flex min-h-screen">
@@ -190,10 +187,9 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
           {/* Desktop Header */}
           <header className="hidden md:flex items-center justify-between px-6 py-4 sticky top-0 z-30">
             <div className="relative">
-              <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-              <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 px-6 py-4 flex items-center space-x-4">
+              <div className="backdrop-blur-lg bg-white/40 rounded-2xl border border-white/30 shadow-xl px-6 py-4 flex items-center space-x-4">
                 <SidebarTrigger />
-                <h1 className="text-xl font-semibold text-white">{title}</h1>
+                <h1 className="text-xl font-semibold text-gray-800">{title}</h1>
               </div>
             </div>
             
@@ -204,12 +200,9 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
 
           {/* Mobile Header */}
           <header className="flex md:hidden items-center justify-between px-4 py-3 sticky top-0 z-30">
-            <div className="relative">
-              <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-              <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 px-4 py-3 flex items-center space-x-3">
-                <SidebarTrigger />
-                <h1 className="text-lg font-semibold text-white">{title}</h1>
-              </div>
+            <div className="backdrop-blur-lg bg-white/40 rounded-2xl border border-white/30 shadow-xl px-4 py-3 flex items-center space-x-3">
+              <SidebarTrigger />
+              <h1 className="text-lg font-semibold text-gray-800">{title}</h1>
             </div>
             
             <HeaderActions />
@@ -218,7 +211,9 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
           {/* Main Content */}
           <main className={`flex-1 flex flex-col ${className}`} role="main" aria-label="Main content">
             <div className="container mx-auto px-4 py-6 flex-1">
-              {children}
+              <div className="backdrop-blur-lg bg-white/40 rounded-2xl border border-white/30 shadow-xl p-8 min-h-[calc(100vh-200px)]">
+                {children}
+              </div>
             </div>
           </main>
         </div>

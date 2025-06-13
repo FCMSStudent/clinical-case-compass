@@ -98,8 +98,8 @@ export const SidebarTrigger = ({ className }: { className?: string }) => {
       type="button"
       className={cn(
         "inline-flex items-center justify-center p-2 rounded-xl transition-colors",
-        "bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20",
-        "focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2",
+        "bg-white/20 backdrop-blur-sm border border-white/30 hover:bg-white/30",
+        "focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2",
         className
       )}
       onClick={toggle}
@@ -107,7 +107,7 @@ export const SidebarTrigger = ({ className }: { className?: string }) => {
       aria-expanded={open}
       aria-controls="sidebar-navigation"
     >
-      <Menu className={cn(ICON_SIZE, "text-white")} aria-hidden="true" />
+      <Menu className={cn(ICON_SIZE, "text-gray-800")} aria-hidden="true" />
     </button>
   );
 };
@@ -176,19 +176,19 @@ const NavItem: React.FC<NavItemProps> = ({ item, collapsed, isMobile, onNavigate
         className={({ isActive }) =>
           cn(
             'group relative flex items-center rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200',
-            'bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20',
-            'focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2',
-            isActive && 'bg-white/20 text-white shadow-sm border-white/30',
+            'bg-white/20 backdrop-blur-sm border border-white/30 hover:bg-white/30',
+            'focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2',
+            isActive && 'bg-white/30 text-gray-900 shadow-sm border-white/40',
             collapsed && !isMobile && 'justify-center px-2'
           )
         }
         aria-current={isActive ? "page" : undefined}
         aria-describedby={collapsed && !isMobile ? `${item.href}-tooltip` : undefined}
       >
-        <item.icon className={cn(ICON_SIZE, "flex-shrink-0 text-white")} aria-hidden="true" />
+        <item.icon className={cn(ICON_SIZE, "flex-shrink-0 text-gray-800")} aria-hidden="true" />
 
         {(!collapsed || isMobile) && (
-          <span className="ml-3 truncate text-white">{item.label}</span>
+          <span className="ml-3 truncate text-gray-800">{item.label}</span>
         )}
 
         {/* Accessible Tooltip for collapsed state */}
@@ -383,10 +383,10 @@ const Sidebar = React.memo(function Sidebar() {
         collapsed && !isMobile && "justify-center px-2"
       )}>
         {(!collapsed || isMobile) && (
-          <h1 className="text-xl font-bold text-white">Medica</h1>
+          <h1 className="text-xl font-bold text-gray-800">Medica</h1>
         )}
         {collapsed && !isMobile && (
-          <div className="text-xl font-bold text-white" aria-label="Medica">M</div>
+          <div className="text-xl font-bold text-gray-800" aria-label="Medica">M</div>
         )}
 
         {isMobile && (
@@ -395,7 +395,7 @@ const Sidebar = React.memo(function Sidebar() {
             onClick={closeSidebar}
             aria-label="Close sidebar"
           >
-            <X className={cn(ICON_SIZE, "text-white")} aria-hidden="true" />
+            <X className={cn(ICON_SIZE, "text-gray-800")} aria-hidden="true" />
           </button>
         )}
       </header>
@@ -469,9 +469,7 @@ const Sidebar = React.memo(function Sidebar() {
           aria-label="Mobile navigation sidebar"
           aria-hidden={!open}
         >
-          <div className="relative h-full w-full">
-            <div className="absolute inset-0 bg-white/10 backdrop-blur-xl border-r border-white/20 shadow-xl"></div>
-            <div className="relative bg-white/10 backdrop-blur-md border-r border-white/20 h-full">
+          <div className="backdrop-blur-lg bg-white/40 border-r border-white/30 shadow-xl h-full">
               {content}
             </div>
           </div>
@@ -495,8 +493,7 @@ const Sidebar = React.memo(function Sidebar() {
       aria-hidden={!open}
     >
       <div className="relative h-full w-full">
-        <div className="absolute inset-0 bg-white/10 backdrop-blur-xl border-r border-white/20 shadow-xl"></div>
-        <div className="relative bg-white/10 backdrop-blur-md border-r border-white/20 h-full">
+        <div className="backdrop-blur-lg bg-white/40 border-r border-white/30 shadow-xl h-full">
           {content}
         </div>
       </div>
