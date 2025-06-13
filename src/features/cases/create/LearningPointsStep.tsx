@@ -356,7 +356,7 @@ export const LearningPointsStep = memo(function LearningPointsStep<
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription className="mt-3 flex items-start gap-2 text-muted-foreground">
+                  <FormDescription className="mt-3 flex items-start gap-2 text-white/70">
                     <div className={cn(
                       "w-2 h-2 rounded-full mt-2 flex-shrink-0",
                       fieldState.error ? "bg-red-400" : "bg-amber-400"
@@ -395,7 +395,7 @@ export const LearningPointsStep = memo(function LearningPointsStep<
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription className="mt-3 flex items-start gap-2 text-muted-foreground">
+                  <FormDescription className="mt-3 flex items-start gap-2 text-white/70">
                     <div className="w-2 h-2 rounded-full bg-blue-400 mt-2 flex-shrink-0"></div>
                     Optional space for additional reflections or miscellaneous notes.
                   </FormDescription>
@@ -421,7 +421,7 @@ export const LearningPointsStep = memo(function LearningPointsStep<
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Info className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+                    <Info className="h-4 w-4 text-white/70 hover:text-white" />
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Add links to educational resources like journal articles, guidelines, or videos</p>
@@ -485,7 +485,7 @@ export const LearningPointsStep = memo(function LearningPointsStep<
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="text-center py-8 text-muted-foreground"
+                className="text-center py-8 text-white/70"
               >
                 <BookOpen className="h-8 w-8 mx-auto mb-3 text-gray-400" />
                 <p>No resources added yet. Click "Add Resource" to include educational materials.</p>
