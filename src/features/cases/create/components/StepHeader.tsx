@@ -49,10 +49,10 @@ export const StepHeader = React.memo(function StepHeader({
                 {title}
               </span>
             </h3>
-            <p 
-              id={`${headerId}-description`}
-              className="text-lg max-w-2xl leading-relaxed text-white/80"
-            >
+              <p
+                id={`${headerId}-description`}
+                className="text-lg max-w-2xl leading-relaxed text-white/70"
+              >
               {description}
             </p>
           </div>
