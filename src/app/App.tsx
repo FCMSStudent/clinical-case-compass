@@ -6,7 +6,6 @@ import { AuthProvider, useAuth } from "./AuthContext";
 import { ThemeProvider } from "./ThemeContext";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 import { AppLayout } from "@/features/navigation/components/AppLayout";
-import { SidebarProvider } from "@/features/navigation/components/Sidebar";
 import { PrivateRoute } from "@/features/auth/PrivateRoute";
 import { OfflineBanner } from "@/components/ui/OfflineBanner";
 
@@ -55,26 +54,24 @@ const AppContent = () => {
           <Route
             path="*"
             element={
-              <SidebarProvider>
-                <AppLayout>
-                  {isOfflineMode && (
-                    <div className="mb-4">
-                      <OfflineBanner />
-                    </div>
-                  )}
-                  <Routes>
-                    <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-                    <Route path="/cases" element={<PrivateRoute><Cases /></PrivateRoute>} />
-                    <Route path="/cases/:id" element={<PrivateRoute><CaseDetail /></PrivateRoute>} />
-                    <Route path="/cases/:id/edit" element={<PrivateRoute><CaseEdit /></PrivateRoute>} />
-                    <Route path="/cases/new" element={<PrivateRoute><CreateCaseFlow /></PrivateRoute>} />
-                    <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
-                    <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
-                    <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </AppLayout>
-              </SidebarProvider>
+              <AppLayout>
+                {isOfflineMode && (
+                  <div className="mb-4">
+                    <OfflineBanner />
+                  </div>
+                )}
+                <Routes>
+                  <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+                  <Route path="/cases" element={<PrivateRoute><Cases /></PrivateRoute>} />
+                  <Route path="/cases/:id" element={<PrivateRoute><CaseDetail /></PrivateRoute>} />
+                  <Route path="/cases/:id/edit" element={<PrivateRoute><CaseEdit /></PrivateRoute>} />
+                  <Route path="/cases/new" element={<PrivateRoute><CreateCaseFlow /></PrivateRoute>} />
+                  <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+                  <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
+                  <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </AppLayout>
             }
           />
         </Routes>

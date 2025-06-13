@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Search, Settings, LogOut, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sidebar, SidebarTrigger } from "@/features/navigation";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, NavLink, useLocation } from "react-router-dom";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -169,6 +168,44 @@ const HeaderActions = () => {
   );
 };
 
+const NAV_ITEMS = [
+  { label: "Home", to: "/dashboard" },
+  { label: "Projects", to: "/projects" },
+  { label: "Deployments", to: "/deployments" },
+  { label: "Members", to: "/members" },
+  { label: "Settings", to: "/settings" },
+];
+
+const TopNavBar: React.FC = () => {
+  const location = useLocation();
+  return (
+    <nav className="w-full flex justify-center mt-12 mb-16">
+      <ul className="flex gap-2 bg-white/10 backdrop-blur-xl border border-white/20 rounded-full px-6 py-2 shadow-xl">
+        {NAV_ITEMS.map((item) => {
+          const isActive = location.pathname.startsWith(item.to);
+          return (
+            <li key={item.to}>
+              <NavLink
+                to={item.to}
+                className={({ isActive: navActive }) =>
+                  `relative px-6 py-2 rounded-full text-lg font-medium text-white transition-all duration-200 outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 ` +
+                  (isActive || navActive
+                    ? "bg-white/20 shadow-md text-white" +
+                      " before:absolute before:inset-0 before:rounded-full before:bg-white/10 before:blur-lg before:opacity-80 before:z-[-1]"
+                    : "hover:bg-white/10 text-white/80")
+                }
+                aria-current={isActive ? "page" : undefined}
+              >
+                {item.label}
+              </NavLink>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
+  );
+};
+
 export const AppLayout: React.FC<AppLayoutProps> = ({
   children,
   className,
@@ -184,44 +221,36 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/3 rounded-full blur-3xl"></div>
       </div>
 
-      <div className="relative z-10 flex min-h-screen">
-        <Sidebar />
-        <div className="flex-1 flex flex-col min-h-screen transition-all duration-300 ease-in-out">
-          {/* Desktop Header */}
-          <header className="hidden md:flex items-center justify-between px-6 py-4 sticky top-0 z-30">
-            <div className="relative">
-              <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-              <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 px-6 py-4 flex items-center space-x-4">
-                <SidebarTrigger />
-                <h1 className="text-xl font-semibold text-white">{title}</h1>
-              </div>
+      <div className="relative z-10 flex flex-col min-h-screen">
+        <TopNavBar />
+        {/* Desktop Header */}
+        <header className="hidden md:flex items-center justify-between px-6 py-4 sticky top-0 z-30">
+          <div className="relative">
+            <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
+            <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 px-6 py-4 flex items-center space-x-4">
+              <h1 className="text-xl font-semibold text-white">{title}</h1>
             </div>
-            
-            <div className="flex items-center space-x-4">
-              {actions || <HeaderActions />}
+          </div>
+          <div className="flex items-center space-x-4">
+            {actions || <HeaderActions />}
+          </div>
+        </header>
+        {/* Mobile Header */}
+        <header className="flex md:hidden items-center justify-between px-4 py-3 sticky top-0 z-30">
+          <div className="relative">
+            <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
+            <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 px-4 py-3 flex items-center space-x-3">
+              <h1 className="text-lg font-semibold text-white">{title}</h1>
             </div>
-          </header>
-
-          {/* Mobile Header */}
-          <header className="flex md:hidden items-center justify-between px-4 py-3 sticky top-0 z-30">
-            <div className="relative">
-              <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-              <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 px-4 py-3 flex items-center space-x-3">
-                <SidebarTrigger />
-                <h1 className="text-lg font-semibold text-white">{title}</h1>
-              </div>
-            </div>
-            
-            <HeaderActions />
-          </header>
-
-          {/* Main Content */}
-          <main className={`flex-1 flex flex-col ${className}`} role="main" aria-label="Main content">
-            <div className="container mx-auto px-4 py-6 flex-1">
-              {children}
-            </div>
-          </main>
-        </div>
+          </div>
+          <HeaderActions />
+        </header>
+        {/* Main Content */}
+        <main className={`flex-1 flex flex-col ${className}`} role="main" aria-label="Main content">
+          <div className="container mx-auto px-4 py-6 flex-1">
+            {children}
+          </div>
+        </main>
       </div>
     </div>
   );
