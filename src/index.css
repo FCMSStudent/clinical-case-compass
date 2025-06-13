@@ -101,10 +101,8 @@
     @apply border-border;
   }
   body {
-    @apply text-foreground;
+    @apply bg-background text-foreground;
     font-family: "Inter", sans-serif;
-    background: linear-gradient(135deg, #e8f0fe 0%, #f1f5f9 50%, #fdf2f8 100%);
-    min-height: 100vh;
   }
 }
 
