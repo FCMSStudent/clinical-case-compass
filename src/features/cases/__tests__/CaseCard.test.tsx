@@ -26,6 +26,7 @@ const mockMedicalCase: MedicalCase = {
   resources: [],
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
+  status: 'draft', // Add missing status field
 };
 
 describe('CaseCard', () => {

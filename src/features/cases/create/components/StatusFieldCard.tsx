@@ -61,6 +61,16 @@ export const StatusFieldCard: React.FC<StatusFieldCardProps> = ({
     return "default";
   }, [propStatus, hasError, fieldValue]);
 
+  // Map StatusType to FormFieldCard status type
+  const formFieldStatus = React.useMemo(() => {
+    switch (determinedStatus) {
+      case "loading":
+        return "default"; // FormFieldCard doesn't support loading, so use default
+      default:
+        return determinedStatus;
+    }
+  }, [determinedStatus]);
+
   // Enhanced actions with status indicator
   const enhancedActions = (
     <div className="flex items-center gap-2">
@@ -82,7 +92,7 @@ export const StatusFieldCard: React.FC<StatusFieldCardProps> = ({
         determinedStatus === "warning" && "ring-1 ring-amber-400/20",
         className
       )}
-      status={determinedStatus}
+      status={formFieldStatus}
       badge={badge}
       isCollapsible={isCollapsible}
       defaultCollapsed={defaultCollapsed}

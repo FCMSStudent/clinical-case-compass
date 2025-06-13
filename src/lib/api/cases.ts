@@ -1,3 +1,4 @@
+
 import { MedicalCase, BodyPart } from "@/types/case";
 
 export interface CreateCaseRequest {
@@ -40,7 +41,8 @@ export const createCase = async (data: CreateCaseRequest): Promise<MedicalCase> 
     chiefComplaint: "Sample chief complaint",
     diagnoses: [],
     tags: [],
-    resources: []
+    resources: [],
+    status: "draft" // Add missing status field
   };
 
   return newCase;
@@ -55,4 +57,3 @@ export const deleteCase = async (caseId: string): Promise<void> => {
     localStorage.setItem('cases', JSON.stringify(updated));
   }
 }
-
