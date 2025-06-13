@@ -1,10 +1,10 @@
 import React from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { LucideIcon, Info, AlertCircle, CheckCircle2, ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import {
   Tooltip,
   TooltipContent,
@@ -87,14 +87,11 @@ export const FormFieldCard = React.memo(function FormFieldCard({
     >
       <div className="relative">
         <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-        <div
+        <Card
           className={cn(
             "relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 group overflow-hidden transition-all duration-300",
-            "hover:bg-white/20 hover:border-white/30",
-            "before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-blue-500/5 before:to-transparent before:translate-x-[-100%] before:group-hover:translate-x-[100%] before:transition-transform before:duration-700",
             isHighlighted && "ring-2 ring-blue-400/30 ring-offset-2 ring-offset-transparent",
-            isDisabled && "opacity-50 cursor-not-allowed",
-            isHovered && "shadow-2xl -translate-y-0.5"
+            isDisabled && "opacity-50 cursor-not-allowed"
           )}
           role="group"
           aria-labelledby={`${cardId}-title`}
@@ -216,7 +213,7 @@ export const FormFieldCard = React.memo(function FormFieldCard({
               </div>
             </CollapsibleContent>
           </Collapsible>
-        </div>
+        </Card>
       </div>
     </motion.div>
   );
