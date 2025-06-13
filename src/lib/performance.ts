@@ -218,7 +218,7 @@ export const useListOptimization = <T>(
 /**
  * Lazy component wrapper with performance optimizations
  */
-export const createLazyComponent = <T extends React.ComponentType<unknown>>(
+export const createLazyComponent = <T extends React.ComponentType<any>>(
   importFunc: () => Promise<{ default: T }>,
   fallback?: React.ReactNode
 ) => {
@@ -228,7 +228,7 @@ export const createLazyComponent = <T extends React.ComponentType<unknown>>(
     return React.createElement(
       React.Suspense,
       { fallback: fallback || React.createElement('div', null, 'Loading...') },
-      React.createElement(LazyComponent, props)
+      React.createElement(LazyComponent, props as any)
     );
   };
 };
@@ -433,4 +433,4 @@ export const useVirtualization = <T>(
   overscan: number = 5
 ) => {
   return useVirtualScroll(items, itemHeight, containerHeight, overscan);
-}; 
+};
