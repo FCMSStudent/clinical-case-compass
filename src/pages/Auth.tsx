@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/alert";
 import { CheckCircle2 } from "lucide-react";
 import UnifiedBackground from "@/components/backgrounds/UnifiedBackground";
+import { useTheme } from "@/lib/themes";
 
 import type { LoginFormData, SignupFormData } from "@/features/auth/authSchemas";
 import LoginForm from "@/features/auth/components/LoginForm";
@@ -35,6 +36,7 @@ const Auth = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
+  const { currentTheme } = useTheme();
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -90,10 +92,14 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-blue-600 via-blue-500 to-blue-700 dark:from-blue-900 dark:via-blue-800 dark:to-blue-900">
+    <div className="min-h-screen relative overflow-hidden" style={{ background: currentTheme.colors.background }}>
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded-lg z-50 focus:outline-none focus:ring-2 focus:ring-white/30"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 px-4 py-2 rounded-lg z-50 focus:outline-none focus:ring-2 focus:ring-white/30"
+        style={{ 
+          backgroundColor: currentTheme.colors.primary,
+          color: currentTheme.colors.text
+        }}
       >
         Skip to main content
       </a>
@@ -107,7 +113,15 @@ const Auth = () => {
           transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
           className="w-full max-w-sm sm:max-w-md lg:max-w-lg"
         >
-          <Card className="bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl transition-all duration-300 hover:bg-white/15 hover:border-white/30">
+          <Card 
+            className="border shadow-2xl transition-all duration-300 hover:border-opacity-30"
+            style={{
+              backgroundColor: currentTheme.colors.glass.background,
+              backdropFilter: currentTheme.colors.glass.backdrop,
+              borderColor: currentTheme.colors.glass.border,
+              boxShadow: currentTheme.colors.glass.shadow,
+            }}
+          >
             <CardHeader className="text-center pb-8">
               <motion.div
                 initial={{ opacity: 0, y: -20 }}
@@ -116,9 +130,11 @@ const Auth = () => {
                 className="text-center mb-6"
               >
                 <div className="flex items-center justify-center gap-3 mb-4">
-                  <h1 className="text-3xl font-bold text-white tracking-wide">Medica</h1>
+                  <h1 className="text-3xl font-bold tracking-wide" style={{ color: currentTheme.colors.text }}>
+                    Medica
+                  </h1>
                 </div>
-                <p className="text-white/70 text-base font-light">
+                <p className="text-base font-light" style={{ color: currentTheme.colors.textSecondary }}>
                   Sign in to your account or create a new one
                 </p>
               </motion.div>
@@ -126,9 +142,19 @@ const Auth = () => {
 
             <CardContent className="px-8 pb-8 space-y-8">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-1 mb-8 relative overflow-hidden">
+                <TabsList 
+                  className="grid w-full grid-cols-2 rounded-2xl p-1 mb-8 relative overflow-hidden"
+                  style={{
+                    backgroundColor: currentTheme.colors.glass.background,
+                    backdropFilter: currentTheme.colors.glass.backdrop,
+                    borderColor: currentTheme.colors.glass.border,
+                  }}
+                >
                   <motion.div
-                    className="absolute inset-y-1 bg-white/20 rounded-xl shadow-sm"
+                    className="absolute inset-y-1 rounded-xl shadow-sm"
+                    style={{
+                      backgroundColor: currentTheme.colors.glass.background.replace('0.1', '0.2'),
+                    }}
                     initial={false}
                     animate={{
                       x: activeTab === "login" ? "2px" : "calc(50% - 2px)",
@@ -138,14 +164,20 @@ const Auth = () => {
                   />
                   <TabsTrigger 
                     value="login" 
-                    className="relative z-10 rounded-xl text-sm font-medium transition-all text-white/90 data-[state=active]:text-white"
+                    className="relative z-10 rounded-xl text-sm font-medium transition-all data-[state=active]:text-opacity-100"
+                    style={{ 
+                      color: `${currentTheme.colors.text}90`,
+                    }}
                     aria-label="Sign in to your account"
                   >
                     Sign In
                   </TabsTrigger>
                   <TabsTrigger 
                     value="signup" 
-                    className="relative z-10 rounded-xl text-sm font-medium transition-all text-white/90 data-[state=active]:text-white"
+                    className="relative z-10 rounded-xl text-sm font-medium transition-all data-[state=active]:text-opacity-100"
+                    style={{ 
+                      color: `${currentTheme.colors.text}90`,
+                    }}
                     aria-label="Create a new account"
                   >
                     Sign Up
@@ -174,10 +206,19 @@ const Auth = () => {
                     role="alert"
                     aria-live="polite"
                   >
-                    <Alert className="bg-green-500/10 backdrop-blur-sm border border-green-400/20 rounded-xl">
-                      <CheckCircle2 className="h-4 w-4 text-green-400" aria-hidden="true" />
-                      <AlertTitle className="text-green-400 font-medium">Verification Email Sent</AlertTitle>
-                      <AlertDescription className="text-green-300 font-light">
+                    <Alert 
+                      className="rounded-xl"
+                      style={{
+                        backgroundColor: `${currentTheme.colors.status.success}10`,
+                        backdropFilter: currentTheme.colors.glass.backdrop,
+                        borderColor: `${currentTheme.colors.status.success}20`,
+                      }}
+                    >
+                      <CheckCircle2 className="h-4 w-4" style={{ color: currentTheme.colors.status.success }} aria-hidden="true" />
+                      <AlertTitle style={{ color: currentTheme.colors.status.success }} className="font-medium">
+                        Verification Email Sent
+                      </AlertTitle>
+                      <AlertDescription style={{ color: `${currentTheme.colors.status.success}CC` }} className="font-light">
                         Please check your email to verify your account before signing in.
                       </AlertDescription>
                     </Alert>

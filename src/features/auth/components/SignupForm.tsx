@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { signupSchema, type SignupFormData } from "@/features/auth/authSchemas";
+import { useTheme } from "@/lib/themes";
 
 interface SignupFormProps {
   onSignupSubmit: (data: SignupFormData) => Promise<void>;
@@ -18,6 +18,7 @@ interface SignupFormProps {
 const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { currentTheme } = useTheme();
 
   const form = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
@@ -28,6 +29,19 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
       confirmPassword: "",
     },
   });
+
+  const inputStyles = {
+    backgroundColor: currentTheme.colors.glass.background.replace('0.1', '0.05'),
+    borderColor: currentTheme.colors.glass.border,
+    color: currentTheme.colors.text,
+  };
+
+  const buttonStyles = {
+    backgroundColor: currentTheme.colors.glass.background.replace('0.1', '0.15'),
+    backdropFilter: currentTheme.colors.glass.backdrop,
+    borderColor: currentTheme.colors.glass.border,
+    color: currentTheme.colors.text,
+  };
 
   return (
     <motion.div
@@ -46,7 +60,8 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
               <FormItem>
                 <FormLabel 
                   id="signup-fullname-label"
-                  className="text-white/90 text-sm font-medium"
+                  className="text-sm font-medium"
+                  style={{ color: `${currentTheme.colors.text}E6` }}
                 >
                   Full Name
                 </FormLabel>
@@ -57,7 +72,11 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
                     transition={{ duration: 0.2 }}
                   >
                     <span className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center justify-center w-12 h-12">
-                      <User className="h-5 w-5 text-white/70 group-focus-within:text-white/90 transition-colors" aria-hidden="true" />
+                      <User 
+                        className="h-5 w-5 group-focus-within:opacity-90 transition-colors" 
+                        style={{ color: `${currentTheme.colors.text}B3` }}
+                        aria-hidden="true" 
+                      />
                     </span>
                     <Input
                       {...field}
@@ -68,11 +87,15 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
                       aria-invalid={fieldState.error ? "true" : "false"}
                       aria-required="true"
                       placeholder="Enter your full name"
-                      className="bg-white/5 border border-white/20 text-white placeholder:text-white/50 focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:border-blue-400/50 focus-visible:bg-white/10 pl-12 h-12 rounded-xl transition-all duration-300 hover:bg-white/10 hover:border-white/30"
+                      className="border pl-12 h-12 rounded-xl transition-all duration-300 hover:border-opacity-30 focus-visible:ring-2 focus-visible:ring-opacity-50"
+                      style={{
+                        ...inputStyles,
+                        '--tw-ring-color': `${currentTheme.colors.primary}80`
+                      } as any}
                     />
                   </motion.div>
                 </FormControl>
-                <FormMessage id="signup-fullname-error" className="text-red-300" />
+                <FormMessage id="signup-fullname-error" style={{ color: currentTheme.colors.status.error }} />
               </FormItem>
             )}
           />
@@ -83,7 +106,8 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
               <FormItem>
                 <FormLabel 
                   id="signup-email-label"
-                  className="text-white/90 text-sm font-medium"
+                  className="text-sm font-medium"
+                  style={{ color: `${currentTheme.colors.text}E6` }}
                 >
                   Email
                 </FormLabel>
@@ -94,7 +118,11 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
                     transition={{ duration: 0.2 }}
                   >
                     <span className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center justify-center w-12 h-12">
-                      <Mail className="h-5 w-5 text-white/70 group-focus-within:text-white/90 transition-colors" aria-hidden="true" />
+                      <Mail 
+                        className="h-5 w-5 group-focus-within:opacity-90 transition-colors" 
+                        style={{ color: `${currentTheme.colors.text}B3` }}
+                        aria-hidden="true" 
+                      />
                     </span>
                     <Input
                       {...field}
@@ -105,11 +133,15 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
                       aria-invalid={fieldState.error ? "true" : "false"}
                       aria-required="true"
                       placeholder="Enter your email"
-                      className="bg-white/5 border border-white/20 text-white placeholder:text-white/50 focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:border-blue-400/50 focus-visible:bg-white/10 pl-12 h-12 rounded-xl transition-all duration-300 hover:bg-white/10 hover:border-white/30"
+                      className="border pl-12 h-12 rounded-xl transition-all duration-300 hover:border-opacity-30 focus-visible:ring-2 focus-visible:ring-opacity-50"
+                      style={{
+                        ...inputStyles,
+                        '--tw-ring-color': `${currentTheme.colors.primary}80`
+                      } as any}
                     />
                   </motion.div>
                 </FormControl>
-                <FormMessage id="signup-email-error" className="text-red-300" />
+                <FormMessage id="signup-email-error" style={{ color: currentTheme.colors.status.error }} />
               </FormItem>
             )}
           />
@@ -120,7 +152,8 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
               <FormItem>
                 <FormLabel 
                   id="signup-password-label"
-                  className="text-white/90 text-sm font-medium"
+                  className="text-sm font-medium"
+                  style={{ color: `${currentTheme.colors.text}E6` }}
                 >
                   Password
                 </FormLabel>
@@ -131,7 +164,11 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
                     transition={{ duration: 0.2 }}
                   >
                     <span className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center justify-center w-12 h-12">
-                      <Lock className="h-5 w-5 text-white/70 group-focus-within:text-white/90 transition-colors" aria-hidden="true" />
+                      <Lock 
+                        className="h-5 w-5 group-focus-within:opacity-90 transition-colors" 
+                        style={{ color: `${currentTheme.colors.text}B3` }}
+                        aria-hidden="true" 
+                      />
                     </span>
                     <Input
                       {...field}
@@ -142,7 +179,11 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
                       aria-invalid={fieldState.error ? "true" : "false"}
                       aria-required="true"
                       placeholder="Create a password"
-                      className="bg-white/5 border border-white/20 text-white placeholder:text-white/50 focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:border-blue-400/50 focus-visible:bg-white/10 pl-12 pr-12 h-12 rounded-xl transition-all duration-300 hover:bg-white/10 hover:border-white/30"
+                      className="border pl-12 pr-12 h-12 rounded-xl transition-all duration-300 hover:border-opacity-30 focus-visible:ring-2 focus-visible:ring-opacity-50"
+                      style={{
+                        ...inputStyles,
+                        '--tw-ring-color': `${currentTheme.colors.primary}80`
+                      } as any}
                     />
                     <motion.button
                       type="button"
@@ -151,13 +192,17 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
                       aria-label={showPassword ? "Hide password" : "Show password"}
                       aria-pressed={showPassword}
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center h-8 w-8 text-white/70 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 rounded"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center h-8 w-8 hover:opacity-100 transition-colors focus:outline-none focus:ring-2 focus:ring-opacity-30 rounded"
+                      style={{ 
+                        color: `${currentTheme.colors.text}B3`,
+                        '--tw-ring-color': `${currentTheme.colors.text}4D`
+                      } as any}
                     >
                       {showPassword ? <EyeOff className="h-5 w-5" aria-hidden="true" /> : <Eye className="h-5 w-5" aria-hidden="true" />}
                     </motion.button>
                   </motion.div>
                 </FormControl>
-                <FormMessage id="signup-password-error" className="text-red-300" />
+                <FormMessage id="signup-password-error" style={{ color: currentTheme.colors.status.error }} />
               </FormItem>
             )}
           />
@@ -168,7 +213,8 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
               <FormItem>
                 <FormLabel 
                   id="signup-confirm-password-label"
-                  className="text-white/90 text-sm font-medium"
+                  className="text-sm font-medium"
+                  style={{ color: `${currentTheme.colors.text}E6` }}
                 >
                   Confirm Password
                 </FormLabel>
@@ -179,7 +225,11 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
                     transition={{ duration: 0.2 }}
                   >
                     <span className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center justify-center w-12 h-12">
-                      <Lock className="h-5 w-5 text-white/70 group-focus-within:text-white/90 transition-colors" aria-hidden="true" />
+                      <Lock 
+                        className="h-5 w-5 group-focus-within:opacity-90 transition-colors" 
+                        style={{ color: `${currentTheme.colors.text}B3` }}
+                        aria-hidden="true" 
+                      />
                     </span>
                     <Input
                       {...field}
@@ -190,7 +240,11 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
                       aria-invalid={fieldState.error ? "true" : "false"}
                       aria-required="true"
                       placeholder="Confirm your password"
-                      className="bg-white/5 border border-white/20 text-white placeholder:text-white/50 focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:border-blue-400/50 focus-visible:bg-white/10 pl-12 pr-12 h-12 rounded-xl transition-all duration-300 hover:bg-white/10 hover:border-white/30"
+                      className="border pl-12 pr-12 h-12 rounded-xl transition-all duration-300 hover:border-opacity-30 focus-visible:ring-2 focus-visible:ring-opacity-50"
+                      style={{
+                        ...inputStyles,
+                        '--tw-ring-color': `${currentTheme.colors.primary}80`
+                      } as any}
                     />
                     <motion.button
                       type="button"
@@ -199,13 +253,17 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
                       aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
                       aria-pressed={showConfirmPassword}
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center h-8 w-8 text-white/70 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 rounded"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center h-8 w-8 hover:opacity-100 transition-colors focus:outline-none focus:ring-2 focus:ring-opacity-30 rounded"
+                      style={{ 
+                        color: `${currentTheme.colors.text}B3`,
+                        '--tw-ring-color': `${currentTheme.colors.text}4D`
+                      } as any}
                     >
                       {showConfirmPassword ? <EyeOff className="h-5 w-5" aria-hidden="true" /> : <Eye className="h-5 w-5" aria-hidden="true" />}
                     </motion.button>
                   </motion.div>
                 </FormControl>
-                <FormMessage id="signup-confirm-password-error" className="text-red-300" />
+                <FormMessage id="signup-confirm-password-error" style={{ color: currentTheme.colors.status.error }} />
               </FormItem>
             )}
           />
@@ -216,7 +274,8 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-white/15 backdrop-blur-sm border border-white/20 text-white hover:bg-white/25 transition-all duration-300 rounded-xl h-12 font-medium"
+              className="w-full border transition-all duration-300 rounded-xl h-12 font-medium hover:border-opacity-30"
+              style={buttonStyles}
             >
               {isLoading ? (
                 <>
