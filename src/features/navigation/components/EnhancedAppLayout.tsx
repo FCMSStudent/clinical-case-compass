@@ -1,8 +1,8 @@
-
 import React from "react";
 import EnhancedNavbar from "@/components/navigation/EnhancedNavbar";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import ParallaxBackground from "@/components/ui/parallax-background";
+import AnimatedMedicalIcons from "@/components/ui/animated-medical-icons";
 
 interface EnhancedAppLayoutProps {
   children: React.ReactNode;
@@ -14,8 +14,9 @@ export const EnhancedAppLayout: React.FC<EnhancedAppLayoutProps> = ({
   className = ""
 }) => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-blue-700 dark:from-blue-900 dark:via-blue-800 dark:to-blue-900">
+    <div className="min-h-screen">
       <ParallaxBackground />
+      <AnimatedMedicalIcons />
       
       <div className="relative z-10 flex flex-col min-h-screen">
         {/* Floating Navbar */}

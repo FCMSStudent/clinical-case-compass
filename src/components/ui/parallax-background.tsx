@@ -1,97 +1,92 @@
 
 import React, { useEffect, useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { useTheme } from "@/lib/themes";
+import { cn } from "@/lib/utils";
+import { prefersReducedMotion } from "@/lib/motion";
+
+const Hexagon = ({ className, ...props }: React.ComponentProps<typeof motion.div>) => (
+  <motion.div className={cn("absolute", className)} {...props}>
+    <svg viewBox="0 0 100 86.6" className="w-full h-full fill-current">
+      <polygon points="50,0 100,25 100,75 50,100 0,75 0,25" />
+    </svg>
+  </motion.div>
+);
 
 const ParallaxBackground = () => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const { currentTheme } = useTheme();
   const { scrollY } = useScroll();
-  
-  const y1 = useTransform(scrollY, [0, 1000], [0, -200]);
-  const y2 = useTransform(scrollY, [0, 1000], [0, -100]);
-  const y3 = useTransform(scrollY, [0, 1000], [0, -50]);
+  const [isReducedMotion, setIsReducedMotion] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
+    setIsReducedMotion(prefersReducedMotion());
+
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({
-        x: (e.clientX / window.innerWidth - 0.5) * 20,
-        y: (e.clientY / window.innerHeight - 0.5) * 20,
+        x: (e.clientX / window.innerWidth - 0.5) * 40,
+        y: (e.clientY / window.innerHeight - 0.5) * 40,
       });
     };
-
-    window.addEventListener("mousemove", handleMouseMove);
+    if (!prefersReducedMotion()) {
+      window.addEventListener("mousemove", handleMouseMove);
+    }
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
+  const y1 = useSpring(useTransform(scrollY, [0, 1000], [0, -300]), { stiffness: 100, damping: 30 });
+  const y2 = useSpring(useTransform(scrollY, [0, 1000], [0, -200]), { stiffness: 100, damping: 30 });
+  const y3 = useSpring(useTransform(scrollY, [0, 1000], [0, -100]), { stiffness: 100, damping: 30 });
+
+  const themeColor = (opacity: number) => {
+    const hex = currentTheme.colors.primary.replace("#", "");
+    const r = parseInt(hex.substring(0, 2), 16) || 0;
+    const g = parseInt(hex.substring(2, 4), 16) || 0;
+    const b = parseInt(hex.substring(4, 6), 16) || 0;
+    return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+  };
+
+  if (isReducedMotion) {
+    return (
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute inset-0" style={{ background: currentTheme.colors.background }} />
+      </div>
+    );
+  }
+
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {/* Parallax layer 1 - Background layer */}
-      <motion.div
-        className="absolute inset-0 will-change-transform"
-        style={{ y: y1 }}
-        animate={{
-          x: mousePosition.x * 0.1,
-          y: mousePosition.y * 0.1,
-        }}
-        transition={{ type: "spring", stiffness: 50, damping: 20 }}
-      >
-        <div 
-          className="absolute top-1/4 left-1/4 w-[400px] h-[400px] rounded-full"
-          style={{
-            background: 'radial-gradient(circle, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 40%, transparent 70%)',
-            filter: 'blur(60px)',
-            transform: 'translate3d(0, 0, 0)',
-          }}
+      {/* Layer 1: Deepest layer - Large glows */}
+      <motion.div className="absolute inset-0 will-change-transform" style={{ y: y1 }}>
+        <div
+          className="absolute top-1/4 left-1/4 w-[50vw] h-[50vh] rounded-full"
+          style={{ background: `radial-gradient(circle, ${themeColor(0.05)} 0%, transparent 70%)`, filter: 'blur(80px)' }}
+        />
+        <div
+          className="absolute bottom-1/4 right-1/4 w-[40vw] h-[40vh] rounded-full"
+          style={{ background: `radial-gradient(circle, ${themeColor(0.03)} 0%, transparent 70%)`, filter: 'blur(100px)' }}
         />
       </motion.div>
 
-      {/* Parallax layer 2 - Middle layer */}
-      <motion.div
-        className="absolute inset-0 will-change-transform"
-        style={{ y: y2 }}
-        animate={{
-          x: mousePosition.x * 0.2,
-          y: mousePosition.y * 0.2,
-        }}
-        transition={{ type: "spring", stiffness: 100, damping: 25 }}
-      >
-        <div 
-          className="absolute bottom-1/4 right-1/4 w-[350px] h-[350px] rounded-full"
-          style={{
-            background: 'radial-gradient(circle, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.015) 50%, transparent 80%)',
-            filter: 'blur(80px)',
-            transform: 'translate3d(0, 0, 0)',
-          }}
-        />
+      {/* Layer 2: Hexagon patterns */}
+      <motion.div className="absolute inset-0 will-change-transform" style={{ y: y2 }}>
+        <Hexagon className="w-48 h-48 top-[10%] left-[5%] text-white/5 opacity-50" />
+        <Hexagon className="w-64 h-64 top-[60%] right-[10%] text-white/5 opacity-50" />
+        <Hexagon className="w-32 h-32 top-[75%] left-[20%] text-white/5 opacity-50" />
       </motion.div>
 
-      {/* Parallax layer 3 - Foreground layer */}
+      {/* Layer 3: Interactive mouse-based glow */}
       <motion.div
         className="absolute inset-0 will-change-transform"
         style={{ y: y3 }}
-        animate={{
-          x: mousePosition.x * 0.3,
-          y: mousePosition.y * 0.3,
-        }}
-        transition={{ type: "spring", stiffness: 150, damping: 30 }}
+        animate={{ x: mousePosition.x * 0.2, y: mousePosition.y * 0.2 }}
+        transition={{ type: "spring", stiffness: 100, damping: 25 }}
       >
-        <div 
-          className="absolute top-1/2 left-1/2 w-[500px] h-[500px] rounded-full"
-          style={{
-            background: 'radial-gradient(circle, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 60%, transparent 90%)',
-            filter: 'blur(100px)',
-            transform: 'translate(-50%, -50%) translate3d(0, 0, 0)',
-          }}
+        <div
+          className="absolute top-[60%] left-[40%] w-[30vw] h-[30vh] rounded-full"
+          style={{ background: `radial-gradient(circle, ${themeColor(0.04)} 0%, transparent 60%)`, filter: 'blur(70px)' }}
         />
       </motion.div>
-
-      {/* Additional ambient glow to ensure smooth blending */}
-      <div 
-        className="absolute inset-0 opacity-50"
-        style={{
-          background: 'radial-gradient(ellipse 120% 80% at 50% 50%, rgba(255,255,255,0.01) 0%, transparent 70%)',
-          filter: 'blur(120px)',
-        }}
-      />
     </div>
   );
 };

@@ -1,10 +1,9 @@
-
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
 import { AuthProvider, useAuth } from "./AuthContext";
-import { ThemeProvider } from "./ThemeContext";
+import { ThemeProvider } from "@/lib/themes";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 import { EnhancedAppLayout } from "@/features/navigation/components/EnhancedAppLayout";
 import { PrivateRoute } from "@/features/auth/PrivateRoute";
