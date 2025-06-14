@@ -23,45 +23,75 @@ const ParallaxBackground = () => {
   }, []);
 
   return (
-    <div className="absolute inset-0 overflow-hidden">
-      {/* Parallax layer 1 - Slowest */}
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* Parallax layer 1 - Background layer */}
       <motion.div
-        className="absolute inset-0"
+        className="absolute inset-0 will-change-transform"
         style={{ y: y1 }}
         animate={{
           x: mousePosition.x * 0.1,
           y: mousePosition.y * 0.1,
         }}
-        transition={{ type: "spring", stiffness: 50 }}
+        transition={{ type: "spring", stiffness: 50, damping: 20 }}
       >
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
+        <div 
+          className="absolute top-1/4 left-1/4 w-[400px] h-[400px] rounded-full"
+          style={{
+            background: 'radial-gradient(circle, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 40%, transparent 70%)',
+            filter: 'blur(60px)',
+            transform: 'translate3d(0, 0, 0)',
+          }}
+        />
       </motion.div>
 
-      {/* Parallax layer 2 - Medium */}
+      {/* Parallax layer 2 - Middle layer */}
       <motion.div
-        className="absolute inset-0"
+        className="absolute inset-0 will-change-transform"
         style={{ y: y2 }}
         animate={{
           x: mousePosition.x * 0.2,
           y: mousePosition.y * 0.2,
         }}
-        transition={{ type: "spring", stiffness: 100 }}
+        transition={{ type: "spring", stiffness: 100, damping: 25 }}
       >
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
+        <div 
+          className="absolute bottom-1/4 right-1/4 w-[350px] h-[350px] rounded-full"
+          style={{
+            background: 'radial-gradient(circle, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.015) 50%, transparent 80%)',
+            filter: 'blur(80px)',
+            transform: 'translate3d(0, 0, 0)',
+          }}
+        />
       </motion.div>
 
-      {/* Parallax layer 3 - Fastest */}
+      {/* Parallax layer 3 - Foreground layer */}
       <motion.div
-        className="absolute inset-0"
+        className="absolute inset-0 will-change-transform"
         style={{ y: y3 }}
         animate={{
           x: mousePosition.x * 0.3,
           y: mousePosition.y * 0.3,
         }}
-        transition={{ type: "spring", stiffness: 150 }}
+        transition={{ type: "spring", stiffness: 150, damping: 30 }}
       >
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/3 rounded-full blur-3xl"></div>
+        <div 
+          className="absolute top-1/2 left-1/2 w-[500px] h-[500px] rounded-full"
+          style={{
+            background: 'radial-gradient(circle, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 60%, transparent 90%)',
+            filter: 'blur(100px)',
+            transform: 'translate(-50%, -50%) translate3d(0, 0, 0)',
+          }}
+        />
       </motion.div>
+
+      {/* Additional ambient glow to ensure smooth blending */}
+      <div 
+        className="absolute inset-0 opacity-50"
+        style={{
+          background: 'radial-gradient(ellipse 120% 80% at 50% 50%, rgba(255,255,255,0.01) 0%, transparent 70%)',
+          filter: 'blur(120px)',
+        }}
+      />
     </div>
   );
 };

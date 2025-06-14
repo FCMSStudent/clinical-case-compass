@@ -232,19 +232,13 @@ const Cases = () => {
             <div key={caseItem.id}>
               {viewMode === "grid" ? (
                 <CaseCard
-                  caseData={caseItem}
+                  medicalCase={caseItem}
                   onDelete={handleDelete}
-                  isSelected={selectedCases.has(caseItem.id)}
-                  onSelect={handleCaseSelect}
-                  isMultiSelectMode={isMultiSelectMode}
                 />
               ) : (
                 <CaseListItem
-                  caseData={caseItem}
+                  medicalCase={caseItem}
                   onDelete={handleDelete}
-                  isSelected={selectedCases.has(caseItem.id)}
-                  onSelect={handleCaseSelect}
-                  isMultiSelectMode={isMultiSelectMode}
                 />
               )}
             </div>
