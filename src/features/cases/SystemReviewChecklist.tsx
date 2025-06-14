@@ -128,9 +128,9 @@ export function SystemReviewChecklist({
     return (
       <div
         className={cn(
-          "flex items-center space-x-2 p-2 rounded-md transition-colors hover:bg-slate-600/50",
+          "flex items-center space-x-2 p-2 rounded-md transition-colors hover:bg-white/10",
           isHighlighted && "bg-blue-500/20 ring-1 ring-blue-400/30",
-          isSelected && "bg-slate-600/60"
+          isSelected && "bg-white/20"
         )}
       >
         <Checkbox
@@ -138,14 +138,14 @@ export function SystemReviewChecklist({
           checked={isSelected}
           onCheckedChange={(checked) => handleSymptomChange(system, symptom, checked as boolean)}
           className={cn(
-            "border-slate-400/50 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500",
+            "border-white/30 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500",
             isHighlighted && "border-blue-400/50"
           )}
         />
         <Label
           htmlFor={`${system}-${symptom}`}
           className={cn(
-            "text-xs cursor-pointer flex-1 text-slate-200",
+            "text-xs cursor-pointer flex-1 text-white/80",
             isHighlighted && "text-blue-200 font-medium",
             isSelected && "font-semibold text-white"
           )}
@@ -158,7 +158,7 @@ export function SystemReviewChecklist({
               <TooltipTrigger asChild>
                 <History className="h-3 w-3 text-blue-400" />
               </TooltipTrigger>
-              <TooltipContent className="bg-slate-800/90 border-slate-600/50 text-slate-100">Recently used</TooltipContent>
+              <TooltipContent className="bg-white/10 backdrop-blur-md border border-white/20 text-white">Recently used</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         )}
@@ -184,17 +184,17 @@ export function SystemReviewChecklist({
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.2 }}
         className={cn(
-          "bg-slate-800/60 backdrop-blur-sm rounded-xl border border-slate-600/50 p-4 transition-all hover:bg-slate-700/60 hover:border-slate-500/70",
+          "bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-4 transition-all hover:bg-white/20",
           getCardClassName()
         )}
       >
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-lg bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-blue-300">
+            <div className="h-8 w-8 rounded-lg bg-white/20 border border-white/20 flex items-center justify-center text-white">
               {icon}
             </div>
             <div className="flex items-center gap-2">
-              <span className="font-medium text-slate-200 text-sm">{system}</span>
+              <span className="font-medium text-white text-sm">{system}</span>
               {selectedCount > 0 && (
                 <Badge variant="outline" className="bg-blue-500/20 border-blue-400/30 text-white text-xs">
                   {selectedCount}/{symptoms.length}
@@ -206,7 +206,7 @@ export function SystemReviewChecklist({
             <Button
               variant="outline"
               size="sm"
-              className="h-6 w-6 p-0 border-slate-500/50 bg-slate-700/50 text-slate-300 hover:bg-slate-600/60 hover:text-white"
+              className="h-6 w-6 p-0 border-white/30 bg-white/10 text-white/80 hover:bg-white/20 hover:text-white"
               onClick={() => handleSelectAll(system)}
             >
               <Check className="h-3 w-3" />
@@ -215,7 +215,7 @@ export function SystemReviewChecklist({
               <Button
                 variant="outline"
                 size="sm"
-                className="h-6 w-6 p-0 border-slate-500/50 bg-slate-700/50 text-slate-300 hover:bg-slate-600/60 hover:text-white"
+                className="h-6 w-6 p-0 border-white/30 bg-white/10 text-white/80 hover:bg-white/20 hover:text-white"
                 onClick={() => handleClearAll(system)}
               >
                 <X className="h-3 w-3" />
@@ -224,7 +224,7 @@ export function SystemReviewChecklist({
           </div>
         </div>
         
-        <div className="grid grid-cols-1 gap-1 max-h-40 overflow-y-auto scrollbar-thin scrollbar-track-slate-700/50 scrollbar-thumb-slate-500/50">
+        <div className="grid grid-cols-1 gap-1 max-h-40 overflow-y-auto scrollbar-thin scrollbar-track-white/10 scrollbar-thumb-white/30">
           {symptoms.map((symptom) => (
             <SymptomItem
               key={symptom}
@@ -241,12 +241,12 @@ export function SystemReviewChecklist({
     <div className="space-y-4">
       <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:justify-between sm:space-y-0 sm:space-x-4">
         <div className="relative flex-grow">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/70" />
           <Input
             placeholder="Search symptoms..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9 w-full bg-slate-700/50 border-slate-500/50 placeholder:text-slate-400 text-slate-100"
+            className="pl-9 w-full bg-white/10 border-white/20 placeholder:text-white/60 text-white"
           />
         </div>
         {totalSelected > 0 && (
@@ -264,9 +264,9 @@ export function SystemReviewChecklist({
             exit={{ opacity: 0 }}
             className="mt-4"
           >
-            <Alert variant="default" className="bg-slate-800/60 border-slate-600/50">
-              <AlertCircle className="h-5 w-5 text-slate-300" />
-              <AlertDescription className="ml-2 text-slate-200">
+            <Alert variant="default" className="bg-white/10 border-white/20">
+              <AlertCircle className="h-5 w-5 text-white/80" />
+              <AlertDescription className="ml-2 text-white">
                 {searchTerm ? "No symptoms found matching your search." : "No symptoms available."}
               </AlertDescription>
             </Alert>

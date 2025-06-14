@@ -196,24 +196,24 @@ export function SimpleImaging({ onImagingChange }: SimpleImagingProps) {
   return (
     <div className="space-y-4">
       {/* Add Study Section */}
-      <div className="bg-slate-800/60 backdrop-blur-sm rounded-xl border border-slate-600/50 p-4">
+      <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 p-4">
         <div className="flex items-center gap-3 mb-4">
           <div className="h-8 w-8 rounded-lg bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-blue-300">
             <Plus className="h-4 w-4" />
           </div>
-          <h3 className="text-sm font-medium text-slate-200">Add Imaging Study</h3>
+          <h3 className="text-sm font-medium text-white">Add Imaging Study</h3>
         </div>
 
         <div className="space-y-3">
           <div>
-            <Label className="text-slate-200 text-sm">Imaging Category</Label>
+            <Label className="text-white text-sm">Imaging Category</Label>
             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="bg-slate-700/50 border-slate-500/50 text-slate-100 mt-1">
+              <SelectTrigger className="bg-white/5 border-white/20 text-white mt-1">
                 <SelectValue placeholder="Select imaging category" />
               </SelectTrigger>
-              <SelectContent className="bg-slate-800/90 border-slate-600/50">
+              <SelectContent className="bg-white/10 backdrop-blur-md border-white/20 text-white">
                 {Object.keys(IMAGING_CATEGORIES).map((category) => (
-                  <SelectItem key={category} value={category} className="text-slate-100">
+                  <SelectItem key={category} value={category} className="text-white focus:bg-white/20">
                     {category}
                   </SelectItem>
                 ))}
@@ -224,27 +224,27 @@ export function SimpleImaging({ onImagingChange }: SimpleImagingProps) {
           {selectedCategory && (
             <>
               <div className="relative">
-                <Label className="text-slate-200 text-sm">Search Studies</Label>
+                <Label className="text-white text-sm">Search Studies</Label>
                 <div className="relative mt-1">
-                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/70" />
                   <Input
                     placeholder="Search imaging studies..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-9 bg-slate-700/50 border-slate-500/50 text-slate-100 placeholder:text-slate-400"
+                    className="pl-9 bg-white/5 border-white/20 text-white placeholder:text-white/60"
                   />
                 </div>
               </div>
 
               <div>
-                <Label className="text-slate-200 text-sm">Specific Study</Label>
+                <Label className="text-white text-sm">Specific Study</Label>
                 <Select value={selectedType} onValueChange={setSelectedType}>
-                  <SelectTrigger className="bg-slate-700/50 border-slate-500/50 text-slate-100 mt-1">
+                  <SelectTrigger className="bg-white/5 border-white/20 text-white mt-1">
                     <SelectValue placeholder="Select specific study" />
                   </SelectTrigger>
-                  <SelectContent className="bg-slate-800/90 border-slate-600/50">
+                  <SelectContent className="bg-white/10 backdrop-blur-md border-white/20 text-white">
                     {getFilteredStudies().map((study) => (
-                      <SelectItem key={study} value={study} className="text-slate-100">
+                      <SelectItem key={study} value={study} className="text-white focus:bg-white/20">
                         {study}
                       </SelectItem>
                     ))}
@@ -255,12 +255,12 @@ export function SimpleImaging({ onImagingChange }: SimpleImagingProps) {
           )}
           
           <div>
-            <Label className="text-slate-200 text-sm">Findings</Label>
+            <Label className="text-white text-sm">Findings</Label>
             <Textarea
               placeholder="Enter study findings..."
               value={findings}
               onChange={(e) => setFindings(e.target.value)}
-              className="bg-slate-700/50 border-slate-500/50 text-slate-100 placeholder:text-slate-400 mt-1"
+              className="mt-1"
               rows={3}
             />
           </div>
@@ -269,7 +269,7 @@ export function SimpleImaging({ onImagingChange }: SimpleImagingProps) {
             type="button"
             onClick={addStudy}
             size="sm"
-            className="bg-blue-500/80 text-white w-full"
+            className="bg-blue-500/80 text-white w-full hover:bg-blue-500"
             disabled={!selectedType || !findings}
           >
             <Plus className="h-4 w-4 mr-2" />
@@ -285,37 +285,37 @@ export function SimpleImaging({ onImagingChange }: SimpleImagingProps) {
             <div
               key={category}
               className={cn(
-                "bg-slate-800/60 backdrop-blur-sm rounded-xl border border-slate-600/50 p-4 transition-all",
+                "bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 p-4 transition-all",
                 categoryStudies.length > 2 && "md:col-span-2",
                 category === "Computed Tomography (CT)" && "lg:col-span-2"
               )}
             >
               <div className="flex items-center gap-3 mb-3">
-                <div className="h-8 w-8 rounded-lg bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-blue-300">
+                <div className="h-8 w-8 rounded-lg bg-white/20 border border-white/20 flex items-center justify-center text-white">
                   {categoryIcons[category] || <Scan className="h-4 w-4" />}
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="font-medium text-slate-200 text-sm">{category}</span>
+                  <span className="font-medium text-white text-sm">{category}</span>
                   <Badge variant="outline" className="bg-blue-500/20 border-blue-400/30 text-white text-xs">
                     {categoryStudies.length}
                   </Badge>
                 </div>
               </div>
               
-              <div className="space-y-2 max-h-40 overflow-y-auto scrollbar-thin scrollbar-track-slate-700/50 scrollbar-thumb-slate-500/50">
+              <div className="space-y-2 max-h-40 overflow-y-auto scrollbar-thin scrollbar-track-white/10 scrollbar-thumb-white/30">
                 {categoryStudies.map((study) => (
-                  <div key={study.id} className="p-3 bg-slate-700/50 rounded-md">
+                  <div key={study.id} className="p-3 bg-white/5 rounded-md">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <div className="font-medium text-slate-200 text-sm">{study.type}</div>
-                        <div className="text-slate-300 text-xs mt-1 line-clamp-2">{study.findings}</div>
+                        <div className="font-medium text-white text-sm">{study.type}</div>
+                        <div className="text-white/80 text-xs mt-1 line-clamp-2">{study.findings}</div>
                       </div>
                       <Button
                         type="button"
                         variant="ghost"
                         size="sm"
                         onClick={() => removeStudy(study.id)}
-                        className="h-6 w-6 p-0 text-slate-400 ml-2 flex-shrink-0"
+                        className="h-6 w-6 p-0 text-white/70 ml-2 flex-shrink-0"
                       >
                         <X className="h-3 w-3" />
                       </Button>
@@ -327,9 +327,9 @@ export function SimpleImaging({ onImagingChange }: SimpleImagingProps) {
           ))}
         </div>
       ) : (
-        <div className="bg-slate-800/60 backdrop-blur-sm rounded-xl border border-slate-600/50 p-8 text-center">
-          <Scan className="h-8 w-8 text-slate-400 mx-auto mb-2" />
-          <p className="text-sm text-slate-400">No imaging studies added yet</p>
+        <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 p-8 text-center">
+          <Scan className="h-8 w-8 text-white/60 mx-auto mb-2" />
+          <p className="text-sm text-white/70">No imaging studies added yet</p>
         </div>
       )}
     </div>

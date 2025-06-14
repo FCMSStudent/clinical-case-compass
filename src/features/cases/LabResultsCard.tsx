@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -115,10 +114,10 @@ export function LabResultsCard({ onLabResultsChange, initialResults = [] }: LabR
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -10 }}
         className={cn(
-          "flex items-center justify-between p-3 rounded-lg border",
-          status === "high" && "bg-red-50 border-red-200",
-          status === "low" && "bg-blue-50 border-blue-200",
-          status === "normal" && "bg-green-50 border-green-200"
+          "flex items-center justify-between p-3 rounded-lg border text-white",
+          status === "high" && "bg-red-500/10 border-red-400/30",
+          status === "low" && "bg-blue-500/10 border-blue-400/30",
+          status === "normal" && "bg-green-500/10 border-green-400/30"
         )}
       >
         <div className="flex-1">
@@ -136,7 +135,7 @@ export function LabResultsCard({ onLabResultsChange, initialResults = [] }: LabR
                       <CheckCircle2 className="h-4 w-4 text-green-500" />
                     )}
                   </TooltipTrigger>
-                  <TooltipContent>
+                  <TooltipContent className="bg-white/10 backdrop-blur-md border border-white/20 text-white">
                     {status === "high" ? "Above normal range" :
                      status === "low" ? "Below normal range" :
                      "Within normal range"}
@@ -150,7 +149,7 @@ export function LabResultsCard({ onLabResultsChange, initialResults = [] }: LabR
               </TooltipProvider>
             )}
           </div>
-          <div className="text-sm text-muted-foreground mt-1">
+          <div className="text-sm text-white/70 mt-1">
             {test.value} {test.unit}
           </div>
         </div>
@@ -168,123 +167,120 @@ export function LabResultsCard({ onLabResultsChange, initialResults = [] }: LabR
   };
 
   return (
-    <div className="relative">
-      <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-      <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20">
-        <div className="pb-4 pt-6 px-6 flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-            <FileText className="h-5 w-5 text-white/80" />
-            Laboratory Studies
-          </h3>
-          <Button
-            type="button" // Added type="button"
-            variant="outline"
-            size="sm"
-            className="h-8 bg-white/10 border-white/20 hover:bg-white/20 text-white"
-            onClick={() => setShowAddForm(!showAddForm)}
-          >
-            {showAddForm ? (
-              <X className="h-4 w-4 mr-2" />
-            ) : (
-              <Plus className="h-4 w-4 mr-2" />
-            )}
-            {showAddForm ? "Cancel" : "Add Test"}
-          </Button>
-        </div>
-        <div className="p-6 space-y-4">
-          <AnimatePresence mode="wait">
-            {showAddForm && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                className="space-y-4 p-4 border rounded-lg bg-white/10 backdrop-blur-md border-white/20"
-              >
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label className="text-white">Test Type</Label>
-                    <Select
-                      value={selectedTest}
-                      onValueChange={(value) => {
-                        setSelectedTest(value);
-                        if (value) {
-                          const test = COMMON_LAB_TESTS.find(t => t.id === value);
-                          if (test) {
-                            setCustomTest({ name: "", unit: "" });
-                          }
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+          <FileText className="h-5 w-5 text-white/80" />
+          Laboratory Studies
+        </h3>
+        <Button
+          type="button" // Added type="button"
+          variant="outline"
+          size="sm"
+          className="h-8 bg-white/10 border-white/20 hover:bg-white/20 text-white"
+          onClick={() => setShowAddForm(!showAddForm)}
+        >
+          {showAddForm ? (
+            <X className="h-4 w-4 mr-2" />
+          ) : (
+            <Plus className="h-4 w-4 mr-2" />
+          )}
+          {showAddForm ? "Cancel" : "Add Test"}
+        </Button>
+      </div>
+      <div className="space-y-4">
+        <AnimatePresence mode="wait">
+          {showAddForm && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="space-y-4 p-4 border rounded-lg bg-white/5 backdrop-blur-md border-white/10"
+            >
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label className="text-white">Test Type</Label>
+                  <Select
+                    value={selectedTest}
+                    onValueChange={(value) => {
+                      setSelectedTest(value);
+                      if (value) {
+                        const test = COMMON_LAB_TESTS.find(t => t.id === value);
+                        if (test) {
+                          setCustomTest({ name: "", unit: "" });
                         }
-                      }}
-                    >
-                      <SelectTrigger className="rounded-xl shadow-xl py-3 px-4">
-                        <SelectValue placeholder="Select a test" />
-                      </SelectTrigger>
-                      <SelectContent className="rounded-xl p-1">
-                        <SelectItem value="" className="py-3 px-4 rounded-lg">
-                          Custom Test
+                      }
+                    }}
+                  >
+                    <SelectTrigger className="rounded-xl shadow-xl py-3 px-4 bg-white/10 border-white/20 text-white">
+                      <SelectValue placeholder="Select a test" />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-xl p-1 bg-white/10 backdrop-blur-md border-white/20 text-white">
+                      <SelectItem value="" className="py-3 px-4 rounded-lg focus:bg-white/20">
+                        Custom Test
+                      </SelectItem>
+                      {COMMON_LAB_TESTS.map((test) => (
+                        <SelectItem key={test.id} value={test.id} className="py-3 px-4 rounded-lg focus:bg-white/20">
+                          {test.name}
                         </SelectItem>
-                        {COMMON_LAB_TESTS.map((test) => (
-                          <SelectItem key={test.id} value={test.id} className="py-3 px-4 rounded-lg">
-                            {test.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-white">Value</Label>
-                    <div className="flex gap-2">
-                      <Input
-                        type="number"
-                        value={testValue}
-                        onChange={(e) => setTestValue(e.target.value)}
-                        placeholder="Enter value"
-                      />
-                      <div className="flex items-center px-3 bg-muted rounded-md text-sm text-muted-foreground">
-                        {COMMON_LAB_TESTS.find(t => t.id === selectedTest)?.unit}
-                      </div>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-white">Value</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      type="number"
+                      value={testValue}
+                      onChange={(e) => setTestValue(e.target.value)}
+                      placeholder="Enter value"
+                    />
+                    <div className="flex items-center px-3 bg-white/10 rounded-md text-sm text-white/80">
+                      {COMMON_LAB_TESTS.find(t => t.id === selectedTest)?.unit}
                     </div>
                   </div>
                 </div>
-                <div className="flex gap-2 justify-end">
-                  <Button
-                    type="button" // Added type="button"
-                    variant="outline"
-                    size="sm"
-                    className="bg-white/10 border-white/20 hover:bg-white/20 text-white"
-                    onClick={() => setShowAddForm(false)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    type="button" // Added type="button"
-                    variant="default"
-                    size="sm"
-                    className="bg-blue-500/80 hover:bg-blue-600 text-white"
-                    onClick={handleAddTest}
-                  >
-                    Add
-                  </Button>
-                </div>
+              </div>
+              <div className="flex gap-2 justify-end">
+                <Button
+                  type="button" // Added type="button"
+                  variant="outline"
+                  size="sm"
+                  className="bg-white/10 border-white/20 hover:bg-white/20 text-white"
+                  onClick={() => setShowAddForm(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="button" // Added type="button"
+                  variant="default"
+                  size="sm"
+                  className="bg-blue-500/80 hover:bg-blue-600 text-white"
+                  onClick={handleAddTest}
+                >
+                  Add
+                </Button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <div className="space-y-3">
+          <AnimatePresence>
+            {labResults.length === 0 && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="text-white/70 text-sm"
+              >
+                No lab results added yet.
               </motion.div>
             )}
+            {labResults.map((test) => (
+              <LabTestItem key={test.id} test={test} />
+            ))}
           </AnimatePresence>
-          <div className="space-y-3">
-            <AnimatePresence>
-              {labResults.length === 0 && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="text-white/70 text-sm"
-                >
-                  No lab results added yet.
-                </motion.div>
-              )}
-              {labResults.map((test) => (
-                <LabTestItem key={test.id} test={test} />
-              ))}
-            </AnimatePresence>
-          </div>
         </div>
       </div>
     </div>
