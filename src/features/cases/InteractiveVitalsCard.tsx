@@ -2,15 +2,16 @@ import React, { useState, useEffect, useCallback, memo, useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Thermometer, Heart, ArrowUp, ArrowDown, Wind, Activity } from "lucide-react";
+import { Thermometer, Heart, ArrowUp, ArrowDown, Wind, Activity, ChevronDown, ChevronRight, HeartPulse } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 
 export type VitalName =
   | "temperature"
@@ -55,9 +56,9 @@ const VitalSlider = memo(({
 }) => {
   // Status color and classes for the value display
   const getStatusColor = (value: number, range: VitalRange): string => {
-    if (value < range.min) return "text-blue-500";
-    if (value > range.max) return "text-red-500";
-    return "text-green-600";
+    if (value < range.min) return "text-blue-400";
+    if (value > range.max) return "text-red-400";
+    return "text-green-400";
   };
 
   const getStatusIcon = (value: number, range: VitalRange) => {
@@ -91,15 +92,15 @@ const VitalSlider = memo(({
   const pulseAnimation = vital.name === "heartRate" ? "animate-pulse" : "";
 
   return (
-    <div key={vital.name} className="p-3 bg-medical-50 rounded-lg border border-border transition-all hover:shadow-sm">
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-2">
-            {vital.icon && (
-              <span className={cn("text-medical-600", pulseAnimation)}>
-                {vital.icon}
-              </span>
-            )}
-          <Label htmlFor={`slider-${vital.name}`} className="font-medium">
+    <div key={vital.name} className="bg-white/5 backdrop-blur-sm rounded-lg border border-white/10 p-4 transition-all hover:bg-white/10">
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-3">
+          {vital.icon && (
+            <div className={cn("text-white/80 h-5 w-5", pulseAnimation)}>
+              {vital.icon}
+            </div>
+          )}
+          <Label htmlFor={`slider-${vital.name}`} className="font-medium text-white text-sm">
             {vital.name.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
           </Label>
         </div>
@@ -116,19 +117,19 @@ const VitalSlider = memo(({
                 {vital.value} {vital.unit}
               </span>
             </TooltipTrigger>
-            <TooltipContent className="p-3 max-w-xs">
+            <TooltipContent className="bg-white/10 backdrop-blur-xl border-white/20 text-white p-3 max-w-xs">
               <div className="space-y-1">
                 <p className="font-medium">Normal range: {vital.range.min}-{vital.range.max} {vital.unit}</p>
                 {vital.value < vital.range.min && (
-                  <p className="text-blue-500">Below normal range</p>
+                  <p className="text-blue-400">Below normal range</p>
                 )}
                 {vital.value > vital.range.max && (
-                  <p className="text-red-500">Above normal range</p>
+                  <p className="text-red-400">Above normal range</p>
                 )}
                 {vital.value >= vital.range.min && vital.value <= vital.range.max && (
-                  <p className="text-green-600">Within normal range</p>
+                  <p className="text-green-400">Within normal range</p>
                 )}
-                {vital.info && <p className="text-xs text-muted-foreground">{vital.info}</p>}
+                {vital.info && <p className="text-xs text-white/70">{vital.info}</p>}
               </div>
             </TooltipContent>
           </Tooltip>
@@ -136,10 +137,10 @@ const VitalSlider = memo(({
       </div>
 
       <div className="relative pt-1">
-        <div className="overflow-hidden h-2 mb-1 text-xs flex bg-muted rounded">
-          <div className="h-2 rounded absolute bg-blue-500/20" style={rangeIndicatorStyle.lowRange}></div>
-          <div className="h-2 rounded absolute bg-green-500/20" style={rangeIndicatorStyle.normalRange}></div>
-          <div className="h-2 rounded absolute bg-red-500/20" style={rangeIndicatorStyle.highRange}></div>
+        <div className="overflow-hidden h-2 mb-1 text-xs flex bg-white/10 rounded">
+          <div className="h-2 rounded absolute bg-blue-500/30" style={rangeIndicatorStyle.lowRange}></div>
+          <div className="h-2 rounded absolute bg-green-500/30" style={rangeIndicatorStyle.normalRange}></div>
+          <div className="h-2 rounded absolute bg-red-500/30" style={rangeIndicatorStyle.highRange}></div>
         </div>
         <Slider
           id={`slider-${vital.name}`}
@@ -157,9 +158,9 @@ const VitalSlider = memo(({
             vital.value >= vital.range.min && vital.value <= vital.range.max && "[&_[role=slider]]:bg-green-600 [&_[role=slider]]:border-green-700"
           )}
         />
-        <div className="flex justify-between text-xs text-muted-foreground mt-1">
+        <div className="flex justify-between text-xs text-white/60 mt-1">
           <span>{vital.min}</span>
-          <div className="text-center text-xs font-medium text-muted-foreground">{vital.range.min} - {vital.range.max}</div>
+          <div className="text-center text-xs font-medium text-white/80">{vital.range.min} - {vital.range.max}</div>
           <span>{vital.max}</span>
         </div>
       </div>
@@ -167,6 +168,43 @@ const VitalSlider = memo(({
   );
 });
 VitalSlider.displayName = "VitalSlider";
+
+const VitalGroup = memo<{ 
+  title: string; 
+  icon: React.ReactNode; 
+  children: React.ReactNode; 
+  defaultOpen?: boolean;
+}>(({ title, icon, children, defaultOpen = true }) => {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+
+  return (
+    <Collapsible open={isOpen} onOpenChange={setIsOpen} className="space-y-2">
+      <CollapsibleTrigger asChild>
+        <Button
+          variant="ghost"
+          className="w-full justify-between p-3 h-auto bg-white/5 backdrop-blur-sm border border-white/20 rounded-lg hover:bg-white/10 transition-all text-white"
+        >
+          <div className="flex items-center gap-3">
+            <div className="h-6 w-6 text-white/80">
+              {icon}
+            </div>
+            <span className="font-medium text-sm">{title}</span>
+          </div>
+          {isOpen ? (
+            <ChevronDown className="h-4 w-4 text-white/60" />
+          ) : (
+            <ChevronRight className="h-4 w-4 text-white/60" />
+          )}
+        </Button>
+      </CollapsibleTrigger>
+      <CollapsibleContent className="space-y-3 pl-9">
+        {children}
+      </CollapsibleContent>
+    </Collapsible>
+  );
+});
+
+VitalGroup.displayName = "VitalGroup";
 
 // Define preset vital signs for quick selection
 export const VITAL_PRESETS: Record<string, Record<VitalName, number>> = {
@@ -399,68 +437,112 @@ export function InteractiveVitalsCard({
     );
   }, [normalRanges]);
 
+  const temperatureVitals = vitalSigns.filter(v => v.name === "temperature");
+  const cardiovascularVitals = vitalSigns.filter(v => ["heartRate", "systolicBP", "diastolicBP"].includes(v.name));
+  const respiratoryVitals = vitalSigns.filter(v => ["respiratoryRate", "oxygenSaturation"].includes(v.name));
+
   return (
     <div className="relative">
       <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
       <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
-        <div className="flex justify-end gap-1 mb-4">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-7 text-xs text-medical-600 border-medical-300 hover:bg-medical-50 hover:text-medical-700"
-                  onClick={() => applyPreset("normal")}
-                >
-                  Normal
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Apply normal vital signs</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-7 text-xs text-medical-600 border-medical-300 hover:bg-medical-50 hover:text-medical-700"
-                  onClick={() => applyPreset("fever")}
-                >
-                  Fever
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Apply febrile vital signs</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-7 text-xs text-medical-600 border-medical-300 hover:bg-medical-50 hover:text-medical-700"
-                  onClick={() => applyPreset("hypotension")}
-                >
-                  Shock
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Apply shock/hypotension vital signs</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <HeartPulse className="h-5 w-5 text-white/80" />
+            <h3 className="text-lg font-semibold text-white">Interactive Vitals</h3>
+          </div>
+          <div className="flex gap-1">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-7 text-xs text-white/80 border-white/30 bg-white/10 hover:bg-white/20 hover:text-white"
+                    onClick={() => applyPreset("normal")}
+                  >
+                    Normal
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent className="bg-white/10 backdrop-blur-xl border-white/20 text-white">Apply normal vital signs</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-7 text-xs text-white/80 border-white/30 bg-white/10 hover:bg-white/20 hover:text-white"
+                    onClick={() => applyPreset("fever")}
+                  >
+                    Fever
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent className="bg-white/10 backdrop-blur-xl border-white/20 text-white">Apply febrile vital signs</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-7 text-xs text-white/80 border-white/30 bg-white/10 hover:bg-white/20 hover:text-white"
+                    onClick={() => applyPreset("hypotension")}
+                  >
+                    Shock
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent className="bg-white/10 backdrop-blur-xl border-white/20 text-white">Apply shock/hypotension vital signs</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {vitalSigns.map((vital, index) => (
-            <VitalSlider 
-              key={vital.name} 
-              vital={vital} 
-              index={index} 
-              handleVitalChange={handleVitalChange} 
-            />
-          ))}
+        
+        <div className="space-y-4">
+          <VitalGroup title="Core Temperature" icon={<Thermometer className="h-4 w-4" />}>
+            {temperatureVitals.map((vital, index) => {
+              const originalIndex = vitalSigns.findIndex(v => v.name === vital.name);
+              return (
+                <VitalSlider 
+                  key={vital.name} 
+                  vital={vital} 
+                  index={originalIndex} 
+                  handleVitalChange={handleVitalChange} 
+                />
+              );
+            })}
+          </VitalGroup>
+
+          <VitalGroup title="Cardiovascular System" icon={<HeartPulse className="h-4 w-4" />}>
+            {cardiovascularVitals.map((vital, index) => {
+              const originalIndex = vitalSigns.findIndex(v => v.name === vital.name);
+              return (
+                <VitalSlider 
+                  key={vital.name} 
+                  vital={vital} 
+                  index={originalIndex} 
+                  handleVitalChange={handleVitalChange} 
+                />
+              );
+            })}
+          </VitalGroup>
+
+          <VitalGroup title="Respiratory System" icon={<Wind className="h-4 w-4" />}>
+            {respiratoryVitals.map((vital, index) => {
+              const originalIndex = vitalSigns.findIndex(v => v.name === vital.name);
+              return (
+                <VitalSlider 
+                  key={vital.name} 
+                  vital={vital} 
+                  index={originalIndex} 
+                  handleVitalChange={handleVitalChange} 
+                />
+              );
+            })}
+          </VitalGroup>
         </div>
       </div>
     </div>
