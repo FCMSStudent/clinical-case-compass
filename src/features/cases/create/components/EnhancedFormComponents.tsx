@@ -69,6 +69,16 @@ interface FormNavigationProps {
   submitLabel?: string;
 }
 
+interface FieldGroupProps {
+  title: string;
+  description: string;
+  icon: LucideIcon;
+  status: string;
+  completedFields: number;
+  totalFields: number;
+  children: React.ReactNode;
+}
+
 // Step Header Component
 export const StepHeader: React.FC<StepHeaderProps> = ({ title, description, icon: Icon }) => (
   <motion.div 
@@ -181,6 +191,69 @@ export const StatusFieldCard: React.FC<StatusFieldCardProps> = ({
   );
 };
 
+// Field Group Component
+export const FieldGroup: React.FC<FieldGroupProps> = ({ 
+  title, 
+  description, 
+  icon: Icon, 
+  status, 
+  completedFields, 
+  totalFields, 
+  children 
+}) => {
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'success': return 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800';
+      case 'error': return 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800';
+      case 'warning': return 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800';
+      default: return 'bg-gray-50 dark:bg-gray-900/20 border-gray-200 dark:border-gray-800';
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'success': return <CheckCircle2 className="h-4 w-4 text-green-600" />;
+      case 'error': return <AlertCircle className="h-4 w-4 text-red-600" />;
+      case 'warning': return <Clock className="h-4 w-4 text-yellow-600" />;
+      default: return <Circle className="h-4 w-4 text-gray-400" />;
+    }
+  };
+
+  const progressPercentage = totalFields > 0 ? (completedFields / totalFields) * 100 : 0;
+
+  return (
+    <Card className={`mb-6 border-2 ${getStatusColor(status)} transition-all duration-200 hover:shadow-md`}>
+      <CardHeader className="pb-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="bg-white dark:bg-gray-800 p-2 rounded-lg shadow-sm">
+              <Icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                {title}
+                {getStatusIcon(status)}
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-300">{description}</p>
+            </div>
+          </div>
+          <div className="text-right">
+            <div className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              {completedFields}/{totalFields} fields
+            </div>
+            <div className="w-16 mt-1">
+              <Progress value={progressPercentage} className="h-2" />
+            </div>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent className="pt-0">
+        {children}
+      </CardContent>
+    </Card>
+  );
+};
+
 // Validation Feedback Component
 export const ValidationFeedback: React.FC<ValidationFeedbackProps> = ({ isValid, message, id }) => {
   if (!message) return null;
@@ -244,6 +317,9 @@ export const FormHeader: React.FC<FormHeaderProps> = ({
     </div>
   </div>
 );
+
+// Enhanced Form Header Component (alias for compatibility)
+export const EnhancedFormHeader = FormHeader;
 
 // Form Navigation Component
 export const FormNavigation: React.FC<FormNavigationProps> = ({
@@ -312,3 +388,5 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
   </div>
 );
 
+// Enhanced Form Navigation Component (alias for compatibility)
+export const EnhancedFormNavigation = FormNavigation;
