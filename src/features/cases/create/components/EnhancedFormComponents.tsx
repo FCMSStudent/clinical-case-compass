@@ -1,3 +1,4 @@
+
 import React from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -16,6 +17,8 @@ import {
   Info,
   LucideIcon
 } from "lucide-react";
+import { FormHeader } from "../FormHeader";
+import { FormNavigation } from "../FormNavigation";
 
 interface StepHeaderProps {
   title: string;
@@ -291,11 +294,9 @@ export const ValidationFeedback: React.FC<ValidationFeedbackProps> = ({ isValid,
   );
 };
 
-// Form Header Component - Import from separate file
-export { FormHeader } from "../FormHeader";
-
-// Form Navigation Component - Import from separate file  
-export { FormNavigation } from "../FormNavigation";
+// Export components from their separate files
+export { FormHeader };
+export { FormNavigation };
 
 // Enhanced Form Header Component (alias for compatibility)
 export const EnhancedFormHeader = FormHeader;
