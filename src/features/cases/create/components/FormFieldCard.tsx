@@ -1,10 +1,10 @@
 import React from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { LucideIcon, Info, AlertCircle, CheckCircle2, ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import {
   Tooltip,
   TooltipContent,
@@ -86,15 +86,12 @@ export const FormFieldCard = React.memo(function FormFieldCard({
       onHoverEnd={() => setIsHovered(false)}
     >
       <div className="relative">
-        <div className="absolute inset-0 bg-black/20 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-        <div
+        <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
+        <Card
           className={cn(
-            "relative bg-black/20 backdrop-blur-md rounded-2xl border border-white/20 p-6 group overflow-hidden transition-all duration-300",
-            "hover:bg-black/30 hover:border-white/30",
-            "before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-blue-500/5 before:to-transparent before:translate-x-[-100%] before:group-hover:translate-x-[100%] before:transition-transform before:duration-700",
+            "relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 group overflow-hidden transition-all duration-300",
             isHighlighted && "ring-2 ring-blue-400/30 ring-offset-2 ring-offset-transparent",
-            isDisabled && "opacity-50 cursor-not-allowed",
-            isHovered && "shadow-2xl -translate-y-0.5"
+            isDisabled && "opacity-50 cursor-not-allowed"
           )}
           role="group"
           aria-labelledby={`${cardId}-title`}
@@ -122,8 +119,8 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                       </span>
                     </div>
                     {badge && (
-                      <Badge 
-                        variant="outline" 
+                      <Badge
+                        variant="outline"
                         aria-label={`Status: ${badge}`}
                         className="ml-2 bg-blue-500/20 border-blue-400/30 text-white"
                       >
@@ -137,15 +134,15 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <div 
-                            className="p-1 rounded-full bg-black/20 backdrop-blur-sm border border-white/20"
+                          <div
+                            className="p-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20"
                             role="img"
                             aria-label={statusMessages[status]}
                           >
                             {statusIcons[status]}
                           </div>
                         </TooltipTrigger>
-                        <TooltipContent 
+                        <TooltipContent
                           id={`${cardId}-status-tooltip`}
                           className="bg-black/30 backdrop-blur-md border-white/20 text-white"
                         >
@@ -160,7 +157,7 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                     <TooltipProvider delayDuration={0}>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <div 
+                          <div
                             className="flex items-center justify-center h-8 w-8 rounded-full hover:bg-blue-500/20 cursor-help transition-colors backdrop-blur-sm border border-blue-400/30"
                             role="button"
                             tabIndex={0}
@@ -170,8 +167,8 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                             <Info className="h-4 w-4 text-white/70 hover:text-white" aria-hidden="true" />
                           </div>
                         </TooltipTrigger>
-                        <TooltipContent 
-                          side="right" 
+                        <TooltipContent
+                          side="right"
                           align="start"
                           sideOffset={5}
                           id={`${cardId}-tooltip`}
@@ -204,7 +201,7 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                 </div>
               </div>
             </div>
-            
+
             <CollapsibleContent>
               <div className="pt-0">
                 {children}
@@ -216,10 +213,10 @@ export const FormFieldCard = React.memo(function FormFieldCard({
               </div>
             </CollapsibleContent>
           </Collapsible>
-        </div>
+        </Card>
       </div>
     </motion.div>
   );
 });
 
-FormFieldCard.displayName = "FormFieldCard"; 
+FormFieldCard.displayName = "FormFieldCard";

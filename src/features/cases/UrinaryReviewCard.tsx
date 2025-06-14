@@ -64,9 +64,7 @@ export function UrinaryReviewCard({ onSelectionChange, initialSelections = [] }:
   };
 
   return (
-    <div className="relative">
-      <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-      <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20">
+    <Card className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20">
         <div className="pb-2 pt-4 px-6 flex items-center gap-2">
           <Droplet className="h-5 w-5 text-white/80" />
           <h3 className="text-sm font-medium text-white">Urinary System Review</h3>
@@ -99,23 +97,17 @@ export function UrinaryReviewCard({ onSelectionChange, initialSelections = [] }:
         <div className="p-6">
           <div className="grid grid-cols-2 gap-2">
             {URINARY_SYMPTOMS.map((symptom) => (
-              <div 
-                key={symptom} 
-                className={cn(
-                  "flex items-center space-x-2 p-1 rounded transition-colors",
-                  selections.includes(symptom) && "bg-white/10"
-                )}
+              <div
+                key={symptom}
+                className="flex items-center space-x-2"
               >
-                <Checkbox 
+                <Checkbox
                   id={`urinary-${symptom}`}
                   checked={selections.includes(symptom)}
                   onCheckedChange={(checked) => handleCheckboxChange(symptom, checked === true)}
-                  className={cn(
-                    "border-white/20 transition-all duration-200",
-                    selections.includes(symptom) && "bg-blue-500 border-blue-500"
-                  )}
+                  className={cn(selections.includes(symptom) && "bg-blue-500 border-blue-500")}
                 />
-                <Label 
+                <Label
                   htmlFor={`urinary-${symptom}`}
                   className={cn(
                     "text-xs cursor-pointer text-white",
@@ -128,7 +120,6 @@ export function UrinaryReviewCard({ onSelectionChange, initialSelections = [] }:
             ))}
           </div>
         </div>
-      </div>
-    </div>
+      </Card>
   );
 }

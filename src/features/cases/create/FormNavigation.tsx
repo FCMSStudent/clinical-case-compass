@@ -110,7 +110,7 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
               <span className="font-medium" aria-live="polite">
                 Step {currentStep} of {totalSteps}
               </span>
-              <span className="text-muted-foreground" aria-live="polite">
+              <span className="text-white/70" aria-live="polite">
                 {currentStepLabel}
               </span>
             </div>
@@ -181,10 +181,8 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
                   <Button
                     onClick={onNext}
                     disabled={isSubmitting}
-                    className={cn(
-                      "gap-2",
-                      isLast ? "bg-emerald-600 hover:bg-emerald-700" : ""
-                    )}
+                    className="gap-2"
+                    variant={isLast ? "success" : "default"}
                     aria-label={isLast ? "Submit the case" : "Go to next step"}
                     aria-describedby="next-submit-button-tooltip"
                     aria-busy={isSubmitting}
@@ -231,7 +229,7 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
         </div>
 
         {/* Keyboard Shortcuts Help */}
-        <div className="mt-2 text-xs text-muted-foreground flex items-center gap-2">
+        <div className="mt-2 text-xs text-white/70 flex items-center gap-2">
           <Keyboard className="h-3 w-3" aria-hidden="true" />
           <span>Keyboard shortcuts: Alt + ←/→ to navigate, Alt + S to save</span>
         </div>

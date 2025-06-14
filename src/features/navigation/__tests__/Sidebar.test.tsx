@@ -1,3 +1,4 @@
+
 /** @vitest-environment jsdom */
 import React from 'react';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
@@ -43,9 +44,9 @@ describe('Sidebar Provider', () => {
 
   it('getInitialSidebarState reads open and closed values from localStorage', () => {
     localStorage.setItem(SIDEBAR_CONFIG.STORAGE_KEY, 'true');
-    expect(getInitialSidebarState(false)).toBe(true);
+    expect(getInitialSidebarState()).toBe(true);
     localStorage.setItem(SIDEBAR_CONFIG.STORAGE_KEY, 'false');
-    expect(getInitialSidebarState(true)).toBe(false);
+    expect(getInitialSidebarState()).toBe(false);
   });
 
   it('SidebarTrigger toggles state on desktop', () => {

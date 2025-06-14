@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useAuth } from "@/app/AuthContext";
 import { PageHeader } from "@/components/ui/page-header";
@@ -46,7 +47,6 @@ import { cn } from "@/lib/utils";
 
 // Define extended MedicalCase type for profile statistics
 interface MedicalCaseWithStats extends MedicalCase {
-  status?: string;
   rating?: number;
   specialty?: string;
 }
@@ -72,7 +72,7 @@ const Profile = () => {
   useEffect(() => {
     if (storedCases.length > 0) {
       // Calculate statistics
-      const completedCases = storedCases.filter((c) => (c as MedicalCaseWithStats).status === "completed");
+      const completedCases = storedCases.filter((c) => c.status === "completed");
       const totalRating = storedCases.reduce((acc, c) => acc + ((c as MedicalCaseWithStats).rating ?? 0), 0);
       const casesBySpecialty = storedCases.reduce((acc, c) => {
         const specialty = (c as MedicalCaseWithStats).specialty || "General";

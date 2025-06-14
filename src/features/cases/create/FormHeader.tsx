@@ -48,12 +48,16 @@ export const FormHeader = memo(function FormHeader({
   formTitle = "Create New Clinical Case",
 }: FormHeaderProps) {
   return (
-    <div className={cn("space-y-4", className)}>
+    <div
+      className={cn(
+        "mb-6 flex flex-col gap-1 md:flex-row md:items-center md:justify-between",
+        className
+      )}
+    >
       {/* Main Header Card */}
       <div className="relative">
-        <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl" aria-hidden="true"></div>
-        <div 
-          className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6"
+        <div
+          className="relative bg-black/20 backdrop-blur-md rounded-2xl border border-white/20 shadow-xl p-6"
           role="banner"
           aria-labelledby="form-title"
         >
@@ -65,9 +69,9 @@ export const FormHeader = memo(function FormHeader({
                 animate={{ opacity: 1, y: 0 }}
                 className="space-y-1"
               >
-                <h1 
+                <h1
                   id="form-title"
-                  className="text-2xl font-bold tracking-tight text-white"
+                  className="text-2xl md:text-3xl font-bold tracking-tight text-white"
                 >
                   {formTitle}
                 </h1>
@@ -119,7 +123,7 @@ export const FormHeader = memo(function FormHeader({
                       variant="outline"
                       onClick={onSaveDraft}
                       disabled={isDraftSaving}
-                      className="gap-2 whitespace-nowrap bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 text-white"
+                      className="gap-2 whitespace-nowrap"
                       aria-label={isDraftSaving ? "Saving draft..." : "Save draft"}
                       aria-describedby="save-draft-tooltip"
                       aria-busy={isDraftSaving}

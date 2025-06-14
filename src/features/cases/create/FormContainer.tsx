@@ -19,7 +19,8 @@ export interface FormContainerProps {
   currentStepIndex: number;
   /** Ordered list of step definitions. The total number of steps is derived from this array's length. */
   steps: StepMeta[];
-  /** * Callback when the user clicks a step in the progress indicator.
+  /**
+   * Callback when the user clicks a step in the progress indicator.
    * Receives the id of the clicked step.
    */
   onStepChange?: (stepId: string) => void;
@@ -30,8 +31,8 @@ export interface FormContainerProps {
 }
 
 /**
- * A generic, stylized wrapper that pairs a step-based progress indicator 
- * with a clean card to house the active form section. It manages the layout 
+ * A generic, stylized wrapper that pairs a step-based progress indicator
+ * with a clean card to house the active form section. It manages the layout
  * and progress visualization for a multi-step form.
  */
 // 1. MODERNIZED DEFINITION: Using a standard function with typed props is a more
@@ -57,10 +58,10 @@ export const FormContainer = memo(
           steps={steps}
           onStepClick={onStepChange} // Renamed for clarity.
         />
-        
+
         <div className="relative">
-          <div className="absolute inset-0 rounded-2xl bg-[#e0e0e0] shadow-[8px_8px_24px_#bebebe,_-8px_-8px_24px_#ffffff]" />
-          <div className="relative rounded-2xl bg-[#e0e0e0] p-6 group overflow-hidden transition-all duration-300">
+          <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-2xl" />
+          <div className="relative bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-6 group overflow-hidden transition-all duration-300 hover:bg-white/20 hover:border-white/30">
             {children}
           </div>
         </div>
