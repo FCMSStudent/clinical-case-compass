@@ -1,9 +1,8 @@
 
 import React, { useState, useRef, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PageHeader } from "@/components/ui/page-header";
 import { FormProgress } from "@/components/ui/form-progress";
@@ -82,7 +81,7 @@ const Settings = () => {
     },
   });
 
-  // Calculate completed fields for progress indicator (simplified)
+  // Calculate completed fields for progress indicator
   const getCompletedFields = () => {
     const values = profileForm.getValues();
     let completed = 0;
@@ -114,7 +113,6 @@ const Settings = () => {
   const onProfileSubmit = async (data: ProfileFormData) => {
     try {
       setAutosaveStatus('saving');
-      // Cast to UserMetadata type to ensure compatibility
       const updateData: UserMetadata = {
         full_name: data.fullName,
         specialty: data.specialty,
@@ -134,7 +132,6 @@ const Settings = () => {
 
   const onSecuritySubmit = async (data: SecurityFormData) => {
     try {
-      // Handle password change
       toast({
         title: "Security updated",
         description: "Your security settings have been updated successfully.",
@@ -148,7 +145,6 @@ const Settings = () => {
   const handleDeleteAccount = async () => {
     setIsDeleting(true);
     try {
-      // Handle account deletion logic here
       toast({
         title: "Account deleted",
         description: "Your account has been deleted successfully.",
@@ -170,7 +166,7 @@ const Settings = () => {
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Simplified Profile Card */}
+        {/* Profile Card */}
         <div className="lg:col-span-1">
           <SettingsCard
             title="Profile"
@@ -199,7 +195,7 @@ const Settings = () => {
           </SettingsCard>
         </div>
 
-        {/* Simplified Settings Tabs */}
+        {/* Settings Tabs */}
         <div className="lg:col-span-3">
           <Card className="bg-white/5 backdrop-blur-sm border-white/20">
             <CardContent className="p-6">
@@ -210,11 +206,11 @@ const Settings = () => {
 
               <Tabs value={activeTab} onValueChange={setActiveTab}>
                 <TabsList className="grid w-full grid-cols-2 bg-white/10">
-                  <TabsTrigger value="profile" className="text-white data-[state=active]:bg-white/20">
+                  <TabsTrigger value="profile" className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white">
                     <User className="h-4 w-4 mr-2" />
                     Profile
                   </TabsTrigger>
-                  <TabsTrigger value="security" className="text-white data-[state=active]:bg-white/20">
+                  <TabsTrigger value="security" className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white">
                     <Shield className="h-4 w-4 mr-2" />
                     Security
                   </TabsTrigger>
@@ -230,11 +226,11 @@ const Settings = () => {
                           name="fullName"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Full Name *</FormLabel>
+                              <FormLabel className="text-white">Full Name *</FormLabel>
                               <FormControl>
-                                <Input {...field} className="bg-white/10 border-white/20 text-white" />
+                                <Input {...field} className="bg-white/10 border-white/20 text-white placeholder:text-white/60" />
                               </FormControl>
-                              <FormMessage />
+                              <FormMessage className="text-red-300" />
                             </FormItem>
                           )}
                         />
@@ -243,11 +239,11 @@ const Settings = () => {
                           name="email"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Email *</FormLabel>
+                              <FormLabel className="text-white">Email *</FormLabel>
                               <FormControl>
-                                <Input {...field} type="email" className="bg-white/10 border-white/20 text-white" />
+                                <Input {...field} type="email" className="bg-white/10 border-white/20 text-white placeholder:text-white/60" />
                               </FormControl>
-                              <FormMessage />
+                              <FormMessage className="text-red-300" />
                             </FormItem>
                           )}
                         />
@@ -258,11 +254,11 @@ const Settings = () => {
                         name="specialty"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Specialty</FormLabel>
+                            <FormLabel className="text-white">Specialty</FormLabel>
                             <FormControl>
-                              <Input {...field} className="bg-white/10 border-white/20 text-white" />
+                              <Input {...field} className="bg-white/10 border-white/20 text-white placeholder:text-white/60" />
                             </FormControl>
-                            <FormMessage />
+                            <FormMessage className="text-red-300" />
                           </FormItem>
                         )}
                       />
@@ -290,26 +286,26 @@ const Settings = () => {
                             name="currentPassword"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Current Password</FormLabel>
+                                <FormLabel className="text-white">Current Password</FormLabel>
                                 <FormControl>
                                   <div className="relative">
                                     <Input
                                       {...field}
                                       type={showCurrentPassword ? "text" : "password"}
-                                      className="bg-white/10 border-white/20 text-white pr-10"
+                                      className="bg-white/10 border-white/20 text-white pr-10 placeholder:text-white/60"
                                     />
                                     <Button
                                       type="button"
                                       variant="ghost"
                                       size="sm"
-                                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-white/10"
+                                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-white/10 text-white/70"
                                       onClick={() => setShowCurrentPassword(!showCurrentPassword)}
                                     >
                                       {showCurrentPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                                     </Button>
                                   </div>
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage className="text-red-300" />
                               </FormItem>
                             )}
                           />
@@ -320,26 +316,26 @@ const Settings = () => {
                               name="newPassword"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>New Password</FormLabel>
+                                  <FormLabel className="text-white">New Password</FormLabel>
                                   <FormControl>
                                     <div className="relative">
                                       <Input
                                         {...field}
                                         type={showNewPassword ? "text" : "password"}
-                                        className="bg-white/10 border-white/20 text-white pr-10"
+                                        className="bg-white/10 border-white/20 text-white pr-10 placeholder:text-white/60"
                                       />
                                       <Button
                                         type="button"
                                         variant="ghost"
                                         size="sm"
-                                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-white/10"
+                                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-white/10 text-white/70"
                                         onClick={() => setShowNewPassword(!showNewPassword)}
                                       >
                                         {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                                       </Button>
                                     </div>
                                   </FormControl>
-                                  <FormMessage />
+                                  <FormMessage className="text-red-300" />
                                 </FormItem>
                               )}
                             />
@@ -349,26 +345,26 @@ const Settings = () => {
                               name="confirmPassword"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>Confirm Password</FormLabel>
+                                  <FormLabel className="text-white">Confirm Password</FormLabel>
                                   <FormControl>
                                     <div className="relative">
                                       <Input
                                         {...field}
                                         type={showConfirmPassword ? "text" : "password"}
-                                        className="bg-white/10 border-white/20 text-white pr-10"
+                                        className="bg-white/10 border-white/20 text-white pr-10 placeholder:text-white/60"
                                       />
                                       <Button
                                         type="button"
                                         variant="ghost"
                                         size="sm"
-                                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-white/10"
+                                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-white/10 text-white/70"
                                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                                       >
                                         {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                                       </Button>
                                     </div>
                                   </FormControl>
-                                  <FormMessage />
+                                  <FormMessage className="text-red-300" />
                                 </FormItem>
                               )}
                             />
@@ -395,7 +391,7 @@ const Settings = () => {
                         <Button
                           variant="destructive"
                           onClick={() => deleteConfirmRef.current?.showModal()}
-                          className="bg-red-600 hover:bg-red-700"
+                          className="bg-red-600 hover:bg-red-700 text-white"
                         >
                           Delete Account
                         </Button>
@@ -434,7 +430,7 @@ const Settings = () => {
               variant="destructive"
               onClick={handleDeleteAccount}
               disabled={isDeleting}
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-red-600 hover:bg-red-700 text-white"
             >
               {isDeleting ? "Deleting..." : "Delete Account"}
             </Button>

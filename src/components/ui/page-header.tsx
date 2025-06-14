@@ -22,14 +22,14 @@ export function PageHeader({
     <div className={cn("mb-6 flex flex-col gap-1 md:flex-row md:items-center md:justify-between", className)}>
       <div className="flex items-center gap-3">
         {icon && (
-          <div className="flex items-center">
+          <div className="flex items-center text-white">
             {icon}
           </div>
         )}
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">{title}</h1>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-white">{title}</h1>
           {description && (
-            <p className="text-muted-foreground">{description}</p>
+            <p className="text-white/80">{description}</p>
           )}
         </div>
       </div>
