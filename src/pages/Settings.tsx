@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -33,7 +34,6 @@ import {
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFormValidation } from "@/hooks/use-form-validation";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import type { UserMetadata } from "@/types/auth";
 
@@ -85,15 +85,20 @@ const Settings = () => {
   const { handleError } = useErrorHandler();
   const deleteConfirmRef = useRef<HTMLDialogElement>(null);
 
+  // Safe access to user metadata with fallbacks
+  const getUserMetadata = (field: keyof UserMetadata): string => {
+    return user?.user_metadata?.[field] as string || "";
+  };
+
   const profileForm = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      fullName: user?.user_metadata?.full_name || "",
-      specialty: user?.user_metadata?.specialty || "",
+      fullName: getUserMetadata('full_name'),
+      specialty: getUserMetadata('specialty'),
       email: user?.email || "",
-      bio: user?.user_metadata?.bio || "",
-      phone: user?.user_metadata?.phone || "",
-      location: user?.user_metadata?.location || "",
+      bio: getUserMetadata('bio'),
+      phone: getUserMetadata('phone'),
+      location: getUserMetadata('location'),
     },
   });
 
@@ -121,15 +126,27 @@ const Settings = () => {
     },
   });
 
-  // Form validation hooks
-  const profileValidation = useFormValidation<ProfileFormData>({
-    requiredFields: ['fullName', 'email'],
-  });
+  // Calculate completed fields for progress indicator
+  const getCompletedFields = () => {
+    const values = profileForm.getValues();
+    let completed = 0;
+    if (values.fullName) completed++;
+    if (values.email) completed++;
+    if (values.specialty) completed++;
+    if (values.bio) completed++;
+    if (values.phone) completed++;
+    if (values.location) completed++;
+    return completed;
+  };
 
   // Auto-save functionality
   useEffect(() => {
-    const subscription = profileForm.watch((data) => {
-      if (profileValidation.isValid) {
+    const subscription = profileForm.watch(() => {
+      const values = profileForm.getValues();
+      const errors = profileForm.formState.errors;
+      
+      // Only auto-save if form is valid
+      if (Object.keys(errors).length === 0 && values.fullName && values.email) {
         setAutosaveStatus('saving');
         const timeoutId = setTimeout(() => {
           setAutosaveStatus('saved');
@@ -139,7 +156,7 @@ const Settings = () => {
       }
     });
     return () => subscription.unsubscribe();
-  }, [profileForm, profileValidation.isValid]);
+  }, [profileForm]);
 
   const onProfileSubmit = async (data: ProfileFormData) => {
     try {
@@ -211,14 +228,6 @@ const Settings = () => {
     console.log('Avatar changed:', file);
   };
 
-  const getInitials = (name: string) => {
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase();
-  };
-
   return (
     <main className="space-y-6 max-w-6xl mx-auto">
       <PageHeader
@@ -237,21 +246,21 @@ const Settings = () => {
           >
             <div className="text-center space-y-4">
               <AvatarUpload
-                currentAvatar={user?.user_metadata?.avatar_url}
+                currentAvatar={getUserMetadata('avatar_url')}
                 onAvatarChange={handleAvatarChange}
                 className="mx-auto"
               />
               <div>
                 <h3 className="text-lg font-semibold text-white">
-                  {user?.user_metadata?.full_name || "User"}
+                  {getUserMetadata('full_name') || "User"}
                 </h3>
                 <p className="text-white/70 text-sm">
-                  {user?.user_metadata?.specialty || "Medical Professional"}
+                  {getUserMetadata('specialty') || "Medical Professional"}
                 </p>
               </div>
               <FormProgress
                 totalFields={6}
-                completedFields={profileValidation.completedFields}
+                completedFields={getCompletedFields()}
               />
             </div>
           </SettingsCard>
@@ -352,6 +361,20 @@ const Settings = () => {
                             <FormLabel>Location</FormLabel>
                             <FormControl>
                               <Input {...field} className="bg-white/10 border-white/20 text-white" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={profileForm.control}
+                        name="bio"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Bio</FormLabel>
+                            <FormControl>
+                              <Input {...field} className="bg-white/10 border-white/20 text-white" placeholder="Tell us about yourself..." />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
