@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useMemo } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -196,7 +197,7 @@ export function SystemReviewChecklist({
                 className="border border-white/20 rounded-lg overflow-hidden bg-transparent"
               >
                 <AccordionTrigger className="flex items-center justify-between w-full p-3 bg-white/[.03] hover:bg-white/[.06] transition-colors hover:no-underline text-white">
-                  <div className="flex items-center justify-between w-full">
+                  <div className="flex items-center justify-between flex-1">
                     <div className="flex items-center space-x-2">
                       <span className="font-medium">{system}</span>
                       {selectedSymptoms[system]?.length > 0 && (
