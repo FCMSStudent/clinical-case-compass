@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -10,8 +10,6 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Check, 
-  ChevronDown, 
-  ChevronRight, 
   Search, 
   AlertCircle,
   History
@@ -34,20 +32,15 @@ export function SystemReviewChecklist({
   recentSymptoms = []
 }: SystemReviewChecklistProps) {
   const [selectedSymptoms, setSelectedSymptoms] = useState<Record<string, string[]>>(initialSystemSymptoms);
-  const [expandedSystems, setExpandedSystems] = useState<Record<string, boolean>>({}); // Initialize as empty
+  const [openSystems, setOpenSystems] = useState<string[]>(
+    systemSymptoms.length > 0 ? [systemSymptoms[0].system] : []
+  );
   const [searchTerm, setSearchTerm] = useState("");
   const isMobile = useIsMobile();
 
   useEffect(() => {
     setSelectedSymptoms(initialSystemSymptoms);
   }, [initialSystemSymptoms]);
-
-  useEffect(() => {
-    // Set the first system as expanded on initial mount
-    if (systemSymptoms.length > 0 && Object.keys(expandedSystems).length === 0) {
-      setExpandedSystems({ [systemSymptoms[0].system]: true });
-    }
-  }, [systemSymptoms, expandedSystems]); // Depend on systemSymptoms in case it could change, and expandedSystems to prevent loop if already set by other means
 
   const handleSymptomChange = (system: string, symptom: string, checked: boolean) => {
     const updatedSymptoms = { ...selectedSymptoms };
@@ -92,13 +85,6 @@ export function SystemReviewChecklist({
     if (onSystemSymptomsChange) {
       onSystemSymptomsChange(updatedSymptoms);
     }
-  };
-
-  const toggleSystem = (system: string) => {
-    setExpandedSystems(prev => ({
-      ...prev,
-      [system]: !prev[system]
-    }));
   };
 
   const filteredSystems = useMemo(() => {
@@ -197,51 +183,52 @@ export function SystemReviewChecklist({
             </Alert>
           </motion.div>
         ) : (
-          <div className="space-y-3">
+          <Accordion
+            type="multiple"
+            className="space-y-3 border-none"
+            value={openSystems}
+            onValueChange={setOpenSystems}
+          >
             {filteredSystems.map(({ system, symptoms }) => (
-              <Collapsible
+              <AccordionItem
                 key={system}
-                open={!!expandedSystems[system]}
-                onOpenChange={() => toggleSystem(system)}
+                value={system}
                 className="border border-white/20 rounded-lg overflow-hidden bg-transparent"
               >
-                <CollapsibleTrigger className="flex items-center justify-between w-full p-3 bg-white/[.03] hover:bg-white/[.06] transition-colors">
-                  <div className="flex items-center space-x-2">
-                    <span className="font-medium text-white">{system}</span>
-                    {selectedSymptoms[system]?.length > 0 && (
-                      <Badge variant="outline" className="bg-blue-500/20 border-blue-400/30 text-white text-xs font-normal py-0.5 px-1.5">
-                        {selectedSymptoms[system].length}/{systemSymptoms.find(s => s.system === system)?.symptoms.length}
-                      </Badge>
-                    )}
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    {selectedSymptoms[system]?.length > 0 && (
-                       <div
-                        role="button"
-                        tabIndex={0}
-                        className="h-7 px-2 inline-flex items-center justify-center rounded-md text-xs font-medium text-blue-300 hover:text-blue-100 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-blue-400/50 cursor-pointer"
-                        onClick={(e) => {
-                          e.stopPropagation(); 
-                          handleClearAll(system);
-                        }}
-                        onKeyDown={(e) => { 
-                          if (e.key === 'Enter' || e.key === ' ') {
-                            e.stopPropagation();
+                <AccordionTrigger className="flex items-center justify-between w-full p-3 bg-white/[.03] hover:bg-white/[.06] transition-colors hover:no-underline text-white">
+                  <div className="flex items-center justify-between w-full">
+                    <div className="flex items-center space-x-2">
+                      <span className="font-medium">{system}</span>
+                      {selectedSymptoms[system]?.length > 0 && (
+                        <Badge variant="outline" className="bg-blue-500/20 border-blue-400/30 text-white text-xs font-normal py-0.5 px-1.5">
+                          {selectedSymptoms[system].length}/{systemSymptoms.find(s => s.system === system)?.symptoms.length}
+                        </Badge>
+                      )}
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      {selectedSymptoms[system]?.length > 0 && (
+                        <div
+                          role="button"
+                          tabIndex={0}
+                          className="h-7 px-2 inline-flex items-center justify-center rounded-md text-xs font-medium text-blue-300 hover:text-blue-100 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-blue-400/50 cursor-pointer"
+                          onClick={(e) => {
+                            e.stopPropagation(); 
                             handleClearAll(system);
-                          }
-                        }}
-                      >
-                        Clear
-                      </div>
-                    )}
-                    {expandedSystems[system] ? (
-                      <ChevronDown className="h-4 w-4 text-blue-300" />
-                    ) : (
-                      <ChevronRight className="h-4 w-4 text-blue-300" />
-                    )}
+                          }}
+                          onKeyDown={(e) => { 
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.stopPropagation();
+                              handleClearAll(system);
+                            }
+                          }}
+                        >
+                          Clear
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </CollapsibleTrigger>
-                <CollapsibleContent className="bg-white/[.01]">
+                </AccordionTrigger>
+                <AccordionContent className="bg-white/[.01]">
                   <div className="p-3 space-y-2">
                     {symptoms.length > 0 && (
                       <div className="flex justify-end">
@@ -266,10 +253,10 @@ export function SystemReviewChecklist({
                       ))}
                     </div>
                   </div>
-                </CollapsibleContent>
-              </Collapsible>
+                </AccordionContent>
+              </AccordionItem>
             ))}
-          </div>
+          </Accordion>
         )}
       </AnimatePresence>
     </div>
