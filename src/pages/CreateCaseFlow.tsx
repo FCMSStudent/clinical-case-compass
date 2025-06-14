@@ -1,410 +1,297 @@
 import React, {
   useState,
   useCallback,
-  useMemo,
-  useRef,
   useEffect,
+  useRef,
+  useMemo,
 } from "react";
-import { useNavigate } from "react-router-dom";
-import { useForm, FormProvider } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { toast } from "sonner";
-import {
-  ChevronLeft,
-  FileText,
-  User,
-  Stethoscope,
-  BookOpen,
-  AlertCircle,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { FormContainer, StepMeta } from "@/features/cases/create/FormContainer";
-import { 
-  FormHeader,
-  FormNavigation,
-} from "@/features/cases/create/components/EnhancedFormComponents";
-import {
-  CaseInfoStep,
-  caseInfoSchema,
-  PatientStep,
-  patientStepSchema,
-  ClinicalDetailStep,
-  clinicalDetailStepSchema,
-  LearningPointsStep,
-  learningPointsStepSchema,
-} from "@/features/cases";
-import { cn } from "@/lib/utils";
-import { useAutoSave } from "@/hooks/use-autosave";
-import { useCaseOperations } from "@/hooks/use-case-operations";
-import { ErrorSummary } from "@/components/ui/ErrorSummary";
 import { PageHeader } from "@/components/ui/page-header";
+import { FormContainer } from "@/features/cases/create/FormContainer";
+import { FormHeader } from "@/features/cases/create/FormHeader";
+import { FormNavigation } from "@/features/cases/create/FormNavigation";
+import { PatientStep } from "@/features/cases/create/PatientStep";
+import { CaseInfoStep } from "@/features/cases/create/CaseInfoStep";
+import { ClinicalDetailStep } from "@/features/cases/create/ClinicalDetailStep";
+import { LearningPointsStep } from "@/features/cases/create/LearningPointsStep";
+import { ErrorSummary } from "@/components/ui/ErrorSummary";
+import { useErrorHandler } from "@/hooks/use-error-handler";
+import { useToast } from "@/hooks/use-toast";
+import { FileText, Heart } from "lucide-react";
+import {
+  patientSchema,
+  type PatientFormData,
+} from "@/features/cases/create/schemas/patient-schema";
+import {
+  caseInfoSchema,
+  type CaseInfoFormData,
+} from "@/features/cases/create/schemas/case-info-schema";
+import {
+  learningPointsSchema,
+  type LearningPointsFormData,
+} from "@/features/cases/create/schemas/learning-points-schema";
+import { z } from "zod";
 
-// Combine all schemas into one
-const createCaseSchema = z.object({
-  ...caseInfoSchema.shape,
-  ...patientStepSchema.shape,
-  ...clinicalDetailStepSchema.shape,
-  ...learningPointsStepSchema.shape,
-});
+// Define form data types
+interface FormData {
+  patient: PatientFormData;
+  caseInfo: CaseInfoFormData;
+  clinicalDetails: any; // Replace 'any' with a more specific type if possible
+  learningPoints: LearningPointsFormData;
+}
 
-type CreateCaseFormData = z.infer<typeof createCaseSchema>;
+// Define error types for each step
+interface FormErrors {
+  patient?: z.ZodError<PatientFormData>["formErrors"];
+  caseInfo?: z.ZodError<CaseInfoFormData>["formErrors"];
+  clinicalDetails?: any; // Replace 'any' with a more specific type if possible
+  learningPoints?: z.ZodError<LearningPointsFormData>["formErrors"];
+}
 
-// Step definitions
-const STEPS = [
-  {
-    id: "case-info",
-    label: "Case Information",
-    icon: <FileText className="h-4 w-4" />,
-    component: CaseInfoStep,
-    schema: caseInfoSchema,
-  },
-  {
-    id: "patient",
-    label: "Patient Details",
-    icon: <User className="h-4 w-4" />,
-    component: PatientStep,
-    schema: patientStepSchema,
-  },
-  {
-    id: "clinical-details",
-    label: "Clinical Details",
-    icon: <Stethoscope className="h-4 w-4" />,
-    component: ClinicalDetailStep,
-    schema: clinicalDetailStepSchema,
-  },
-  {
-    id: "learning-points",
-    label: "Learning Points",
-    icon: <BookOpen className="h-4 w-4" />,
-    component: LearningPointsStep,
-    schema: learningPointsStepSchema,
-  },
+// Define the structure for each step in the form
+interface Step {
+  id: string;
+  label: string;
+  icon: React.ReactNode;
+}
+
+// Define the steps for the form
+const STEPS: Step[] = [
+  { id: "patient", label: "Patient Info", icon: <Heart className="h-5 w-5" /> },
+  { id: "caseInfo", label: "Case Info", icon: <FileText className="h-5 w-5" /> },
+  { id: "clinicalDetails", label: "Clinical Details", icon: null },
+  { id: "learningPoints", label: "Learning Points", icon: null },
 ];
 
 const CreateCaseFlow = () => {
-  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
-  const [isSaving, setIsSaving] = useState(false);
-  const [autoSaveStatus, setAutoSaveStatus] = useState<
-    "idle" | "saving" | "saved" | "error"
-  >("idle");
-
-  // Accessibility refs
-  const mainContentRef = useRef<HTMLDivElement>(null);
-  const formRef = useRef<HTMLFormElement>(null);
-  const errorAnnouncementRef = useRef<HTMLDivElement>(null);
-
-  const { createCase } = useCaseOperations();
-
-  // Create form with all schemas combined
-  const methods = useForm<CreateCaseFormData>({
-    resolver: zodResolver(createCaseSchema),
-    mode: "onChange",
-    defaultValues: {
-      caseTitle: "",
+  const [formData, setFormData] = useState<FormData>({
+    patient: {
+      firstName: "",
+      lastName: "",
+      age: "",
+      gender: "male",
+    },
+    caseInfo: {
+      title: "",
       chiefComplaint: "",
-      specialty: "",
-      patientName: "",
-      patientAge: undefined,
-      patientSex: undefined,
-      medicalRecordNumber: "",
-      medicalHistory: "",
-      vitals: {},
-      selectedBodyParts: [],
-      systemSymptoms: {},
-      physicalExam: "",
-      labResults: [],
-      radiologyStudies: [],
-      learningPoints: "",
-      resourceLinks: [],
+    },
+    clinicalDetails: {},
+    learningPoints: {
+      summary: "",
+      keyTakeaways: [""],
     },
   });
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [autoSaveStatus, setAutoSaveStatus] =
+    useState<"idle" | "saving" | "saved" | "error">("idle");
+  const errorAnnouncementRef = useRef(null);
+  const { handleError } = useErrorHandler();
+  const { toast } = useToast();
 
-  const { handleSubmit, watch, formState, trigger, setFocus } = methods;
-  const { errors, isValid, isDirty } = formState;
-
-  // Get current step component
-  const CurrentStepComponent = STEPS[currentStep].component;
-
-  // Check if current step is valid
-  const validateCurrentStep = useCallback(async () => {
-    const currentStepSchema = STEPS[currentStep].schema;
-    const result = await trigger(
-      Object.keys(currentStepSchema.shape) as (keyof CreateCaseFormData)[],
-    );
-    return result;
-  }, [currentStep, trigger]);
-
-  // Handle next step
-  const handleNext = useCallback(async () => {
-    const isStepValid = await validateCurrentStep();
-
-    if (isStepValid) {
-      if (currentStep < STEPS.length - 1) {
-        setCurrentStep((prev) => prev + 1);
-        // Announce step change to screen readers
-        setTimeout(() => {
-          const stepLabel = STEPS[currentStep + 1].label;
-          if (errorAnnouncementRef.current) {
-            errorAnnouncementRef.current.textContent = `Moved to step ${currentStep + 2}: ${stepLabel}`;
-          }
-        }, 100);
-      }
-    } else {
-      // Show error toast if validation fails
-      toast.error("Please fix the errors before proceeding", {
-        description: "There are validation errors in the current step.",
-      });
-
-      // Announce errors to screen readers
-      if (errorAnnouncementRef.current) {
-        const errorCount = Object.keys(errors).length;
-        errorAnnouncementRef.current.textContent = `Form has ${errorCount} validation error${errorCount !== 1 ? "s" : ""}. Please review and correct the highlighted fields.`;
-      }
-    }
-  }, [currentStep, validateCurrentStep, errors]);
-
-  // Handle previous step
-  const handlePrevious = useCallback(() => {
-    if (currentStep > 0) {
-      setCurrentStep((prev) => prev - 1);
-      // Announce step change to screen readers
-      setTimeout(() => {
-        const stepLabel = STEPS[currentStep - 1].label;
-        if (errorAnnouncementRef.current) {
-          errorAnnouncementRef.current.textContent = `Moved to step ${currentStep}: ${stepLabel}`;
-        }
-      }, 100);
-    }
-  }, [currentStep]);
-
-  // Handle form submission using service layer
-  const onSubmit = useCallback(
-    async (data: CreateCaseFormData) => {
-      setIsSaving(true);
-
-      // Announce submission to screen readers
-      if (errorAnnouncementRef.current) {
-        errorAnnouncementRef.current.textContent =
-          "Submitting case. Please wait...";
-      }
-
-      try {
-        const result = await createCase(data);
-        if (!result.success) {
-          // Error handling is done in the service layer
-          setIsSaving(false);
-
-          // Announce error to screen readers
-          if (errorAnnouncementRef.current) {
-            errorAnnouncementRef.current.textContent = `Failed to create case: ${result.error}`;
-          }
-        }
-      } catch (error) {
-        console.error("Error in form submission:", error);
-        setIsSaving(false);
-
-        // Announce error to screen readers
-        if (errorAnnouncementRef.current) {
-          errorAnnouncementRef.current.textContent =
-            "An unexpected error occurred while creating the case.";
-        }
-      }
-    },
-    [createCase],
+  // Validation Schemas
+  const validationSchemas = useMemo(
+    () => ({
+      patient: patientSchema,
+      caseInfo: caseInfoSchema,
+      learningPoints: learningPointsSchema,
+    }),
+    [],
   );
 
-  // Auto-save form data
-  const formData = watch();
-  useAutoSave({
-    data: formData,
-    onSave: async () => {
-      setAutoSaveStatus("saving");
-      // Announce auto-save to screen readers
-      if (errorAnnouncementRef.current) {
-        errorAnnouncementRef.current.textContent = "Auto-saving draft...";
-      }
-
+  // Function to validate a specific step
+  const validateStep = useCallback(
+    (stepId: string, data: any) => {
       try {
-        localStorage.setItem("case-form-draft", JSON.stringify(formData));
-        setAutoSaveStatus("saved");
-
-        // Announce success to screen readers
-        setTimeout(() => {
-          if (errorAnnouncementRef.current) {
-            errorAnnouncementRef.current.textContent =
-              "Draft saved successfully.";
-          }
-        }, 1000);
+        validationSchemas[stepId].parse(data);
+        return null;
       } catch (error) {
-        console.error("Auto-save error:", error);
-        setAutoSaveStatus("error");
-
-        // Announce error to screen readers
-        if (errorAnnouncementRef.current) {
-          errorAnnouncementRef.current.textContent = "Failed to save draft.";
-        }
+        return error.format();
       }
     },
-    debounceMs: 2000,
-    enabled: isDirty,
-  });
+    [validationSchemas],
+  );
 
-  // Handle keyboard shortcuts for accessibility
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      // Focus first error (Alt + E)
-      if (event.altKey && event.key === "e" && Object.keys(errors).length > 0) {
-        event.preventDefault();
-        const firstErrorField = Object.keys(errors)[0];
-        setFocus(firstErrorField as keyof CreateCaseFormData);
+  // Function to handle changes in form data for each step
+  const handleStepDataChange = useCallback(
+    (stepId: string, data: any) => {
+      setFormData((prev) => ({ ...prev, [stepId]: data }));
+      // Clear errors for the current step when data changes
+      setErrors((prevErrors) => ({ ...prevErrors, [stepId]: null }));
+    },
+    [],
+  );
+
+  // Function to handle moving to the next step
+  const handleNext = useCallback(() => {
+    const stepId = STEPS[currentStep].id;
+    const stepData = formData[stepId];
+    const validationError = validateStep(stepId, stepData);
+
+    if (validationError) {
+      setErrors((prevErrors) => ({ ...prevErrors, [stepId]: validationError }));
+      // Announce the error
+      if (errorAnnouncementRef.current) {
+        errorAnnouncementRef.current.innerText = "Please correct the errors.";
       }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [errors, setFocus]);
-
-  // Announce validation errors to screen readers
-  useEffect(() => {
-    if (Object.keys(errors).length > 0 && errorAnnouncementRef.current) {
-      const errorCount = Object.keys(errors).length;
-      errorAnnouncementRef.current.textContent = `Form has ${errorCount} validation error${errorCount !== 1 ? "s" : ""}. Please review and correct the highlighted fields.`;
+      return;
+    } else {
+      setErrors((prevErrors) => ({ ...prevErrors, [stepId]: null }));
+      if (errorAnnouncementRef.current) {
+        errorAnnouncementRef.current.innerText = "";
+      }
     }
-  }, [errors]);
 
-  // Create step metadata for progress indicator
-  const stepMeta = useMemo<StepMeta[]>(() => {
-    return STEPS.map((step, index) => {
-      // Check if previous steps are completed to determine if this step is navigable
-      const previousStepsCompleted =
-        index === 0
-          ? true
-          : Array.from({ length: index }, (_, i) => i).every((i) => {
-              const stepSchema = STEPS[i].schema;
-              const stepFields = Object.keys(stepSchema.shape);
-              return stepFields.every(
-                (field) => !errors[field as keyof typeof errors],
-              );
-            });
+    setCurrentStep((prev) => Math.min(prev + 1, STEPS.length - 1));
+  }, [currentStep, formData, validateStep]);
 
-      return {
-        id: step.id,
-        label: step.label,
-        icon: step.icon,
-        isCompleted: index < currentStep,
-        isNavigable: previousStepsCompleted,
-      };
-    });
-  }, [currentStep, errors]);
+  // Function to handle moving to the previous step
+  const handlePrevious = useCallback(() => {
+    setCurrentStep((prev) => Math.max(prev - 1, 0));
+  }, []);
 
-  const handleStepChange = useCallback((stepId: string) => {
+  // Function to handle form submission
+  const handleSubmit = useCallback(async () => {
+    setIsSubmitting(true);
+    try {
+      // Validate all steps
+      let hasErrors = false;
+      const newErrors: FormErrors = {};
+
+      for (const step of STEPS) {
+        const stepId = step.id;
+        const stepData = formData[stepId];
+        const validationError = validateStep(stepId, stepData);
+
+        if (validationError) {
+          newErrors[stepId] = validationError;
+          hasErrors = true;
+        }
+      }
+
+      if (hasErrors) {
+        setErrors(newErrors);
+        // Announce the errors
+        if (errorAnnouncementRef.current) {
+          errorAnnouncementRef.current.innerText = "Please correct the errors.";
+        }
+        return;
+      } else {
+        setErrors({});
+        if (errorAnnouncementRef.current) {
+          errorAnnouncementRef.current.innerText = "";
+        }
+      }
+
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      toast({
+        title: "Case Created",
+        description: "Your case has been successfully created.",
+      });
+    } catch (error) {
+      handleError(error, "creating case");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [formData, validateStep, handleError, toast]);
+
+  // Function to determine if the user can proceed to the next step
+  const canProceed = useMemo(() => {
+    const stepId = STEPS[currentStep].id;
+    const stepData = formData[stepId];
+    const validationError = validateStep(stepId, stepData);
+    return !validationError;
+  }, [currentStep, formData, validateStep]);
+
+  // Function to handle step change
+  const handleStepChange = (stepId: string) => {
     const stepIndex = STEPS.findIndex((step) => step.id === stepId);
     if (stepIndex !== -1) {
       setCurrentStep(stepIndex);
     }
-  }, []);
+  };
 
   return (
-    <div className="space-y-6">
-      {/* Screen Reader Announcements */}
-      <div
-        ref={errorAnnouncementRef}
-        aria-live="polite"
-        aria-atomic="true"
-        className="sr-only"
-      />
-
-      {/* Skip to Main Content Link */}
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-white/10 focus:backdrop-blur-md focus:border focus:border-white/20 focus:rounded-lg focus:px-4 focus:py-2 focus:text-white focus:text-sm"
-      >
-        Skip to main content
-      </a>
-
+    <main className="space-y-6 max-w-6xl mx-auto">
       <PageHeader
-        title="Create New Clinical Case"
-        description="Build a comprehensive case study for medical education"
-        actions={
-          <Button
-            variant="ghost"
-            onClick={() => navigate("/dashboard")}
-            className="gap-2 text-white/70 hover:text-white hover:bg-white/10"
-            aria-label="Return to dashboard"
-          >
-            <ChevronLeft className="h-4 w-4" />
-            Back to Dashboard
-          </Button>
-        }
+        title="Create Clinical Case"
+        description="Create a new clinical case for educational purposes"
+        icon={<FileText className="h-6 w-6" />}
       />
 
-      <div
-        ref={mainContentRef}
-        id="main-content"
-        className="space-y-6"
-        role="main"
-        aria-labelledby="form-title"
-      >
-        <FormProvider {...methods}>
-          <form
-            ref={formRef}
-            onSubmit={handleSubmit(onSubmit)}
-            className="space-y-6"
-            aria-label="Create new clinical case form"
-            noValidate
-          >
+      <div className="space-y-6">
+        <FormContainer
+          currentStepIndex={currentStep}
+          steps={STEPS}
+          onStepChange={handleStepChange}
+        >
+          <div className="space-y-6">
             <FormHeader
               currentStep={currentStep + 1}
               totalSteps={STEPS.length}
-              completionPercentage={Math.round(
-                ((currentStep + 1) / STEPS.length) * 100,
-              )}
               currentStepLabel={STEPS[currentStep].label}
               formTitle="Create New Clinical Case"
               isDraftSaving={autoSaveStatus === "saving"}
               hideDraftButton={true}
             />
 
-            {Object.keys(errors).length > 0 && (
-              <ErrorSummary
-                errors={errors}
-                setFocus={setFocus as (name: string) => void}
-                formId="create-case-form"
-              />
-            )}
-
-            <FormContainer
-              currentStepIndex={currentStep}
-              steps={stepMeta}
-              onStepChange={handleStepChange}
-            >
-              <div
-                role="region"
-                aria-labelledby={`step-${currentStep + 1}-title`}
-              >
-                <CurrentStepComponent />
-              </div>
-            </FormContainer>
+            <div className="space-y-6">
+              {currentStep === 0 && (
+                <PatientStep
+                  data={formData.patient}
+                  onChange={(data) => handleStepDataChange("patient", data)}
+                  errors={errors.patient || {}}
+                />
+              )}
+              {currentStep === 1 && (
+                <CaseInfoStep
+                  data={formData.caseInfo}
+                  onChange={(data) => handleStepDataChange("caseInfo", data)}
+                  errors={errors.caseInfo || {}}
+                />
+              )}
+              {currentStep === 2 && (
+                <ClinicalDetailStep
+                  data={formData.clinicalDetails}
+                  onChange={(data) =>
+                    handleStepDataChange("clinicalDetails", data)
+                  }
+                />
+              )}
+              {currentStep === 3 && (
+                <LearningPointsStep
+                  data={formData.learningPoints}
+                  onChange={(data) =>
+                    handleStepDataChange("learningPoints", data)
+                  }
+                  errors={errors.learningPoints || {}}
+                />
+              )}
+            </div>
 
             <FormNavigation
-              currentStep={currentStep + 1}
+              currentStep={currentStep}
               totalSteps={STEPS.length}
-              currentStepLabel={STEPS[currentStep].label}
-              onNext={handleNext}
               onPrevious={handlePrevious}
-              isSubmitting={isSaving}
-              onSaveAndExit={() => {
-                // Save draft and navigate away
-                localStorage.setItem("case-form-draft", JSON.stringify(formData));
-                navigate("/dashboard");
-              }}
+              onNext={handleNext}
+              onSubmit={handleSubmit}
+              isSubmitting={isSubmitting}
+              canProceed={canProceed}
             />
-          </form>
-        </FormProvider>
+          </div>
+        </FormContainer>
       </div>
-    </div>
+
+      {/* Accessibility announcements */}
+      <div
+        ref={errorAnnouncementRef}
+        className="sr-only"
+        aria-live="polite"
+        aria-atomic="true"
+      />
+    </main>
   );
 };
 
