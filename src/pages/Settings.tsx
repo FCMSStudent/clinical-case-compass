@@ -4,10 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PageHeader } from "@/components/ui/page-header";
-import { AvatarUpload } from "@/components/ui/avatar-upload";
 import { FormProgress } from "@/components/ui/form-progress";
 import { SettingsCard } from "@/components/ui/settings-card";
 import { AutosaveIndicator } from "@/components/ui/autosave-indicator";
@@ -18,18 +16,10 @@ import {
   User, 
   Settings as SettingsIcon, 
   Shield, 
-  Palette,
-  Sun,
-  Moon,
-  Monitor,
   AlertTriangle,
   Eye,
   EyeOff,
-  Bell,
-  Lock,
-  Globe,
-  Smartphone,
-  Mail
+  Lock
 } from "lucide-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -37,40 +27,24 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import type { UserMetadata } from "@/types/auth";
 
-// Enhanced form schemas
+// Simplified form schemas
 const profileSchema = z.object({
   fullName: z.string().min(1, "Full name is required").max(100, "Name too long"),
   specialty: z.string().optional(),
   email: z.string().email("Invalid email address"),
-  bio: z.string().max(500, "Bio must be less than 500 characters").optional(),
-  phone: z.string().optional(),
-  location: z.string().optional(),
 });
 
 const securitySchema = z.object({
   currentPassword: z.string().min(6, "Password must be at least 6 characters"),
   newPassword: z.string().min(6, "Password must be at least 6 characters"),
   confirmPassword: z.string(),
-  twoFactorEnabled: z.boolean(),
-  sessionTimeout: z.enum(["15", "30", "60", "never"]),
 }).refine((data) => data.newPassword === data.confirmPassword, {
   message: "Passwords don't match",
   path: ["confirmPassword"],
 });
 
-const preferencesSchema = z.object({
-  theme: z.enum(["light", "dark", "system"]),
-  language: z.enum(["en", "es", "fr", "de"]),
-  timezone: z.string(),
-  emailNotifications: z.boolean(),
-  pushNotifications: z.boolean(),
-  marketingEmails: z.boolean(),
-  dataSharing: z.boolean(),
-});
-
 type ProfileFormData = z.infer<typeof profileSchema>;
 type SecurityFormData = z.infer<typeof securitySchema>;
-type PreferencesFormData = z.infer<typeof preferencesSchema>;
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState("profile");
@@ -96,9 +70,6 @@ const Settings = () => {
       fullName: getUserMetadata('full_name'),
       specialty: getUserMetadata('specialty'),
       email: user?.email || "",
-      bio: getUserMetadata('bio'),
-      phone: getUserMetadata('phone'),
-      location: getUserMetadata('location'),
     },
   });
 
@@ -108,34 +79,16 @@ const Settings = () => {
       currentPassword: "",
       newPassword: "",
       confirmPassword: "",
-      twoFactorEnabled: false,
-      sessionTimeout: "30",
     },
   });
 
-  const preferencesForm = useForm<PreferencesFormData>({
-    resolver: zodResolver(preferencesSchema),
-    defaultValues: {
-      theme: "system",
-      language: "en",
-      timezone: "UTC",
-      emailNotifications: true,
-      pushNotifications: true,
-      marketingEmails: false,
-      dataSharing: false,
-    },
-  });
-
-  // Calculate completed fields for progress indicator
+  // Calculate completed fields for progress indicator (simplified)
   const getCompletedFields = () => {
     const values = profileForm.getValues();
     let completed = 0;
     if (values.fullName) completed++;
     if (values.email) completed++;
     if (values.specialty) completed++;
-    if (values.bio) completed++;
-    if (values.phone) completed++;
-    if (values.location) completed++;
     return completed;
   };
 
@@ -165,9 +118,6 @@ const Settings = () => {
       const updateData: UserMetadata = {
         full_name: data.fullName,
         specialty: data.specialty,
-        bio: data.bio,
-        phone: data.phone,
-        location: data.location,
       };
       await updateProfile(updateData);
       setAutosaveStatus('saved');
@@ -184,7 +134,7 @@ const Settings = () => {
 
   const onSecuritySubmit = async (data: SecurityFormData) => {
     try {
-      // Handle password change and security settings
+      // Handle password change
       toast({
         title: "Security updated",
         description: "Your security settings have been updated successfully.",
@@ -192,18 +142,6 @@ const Settings = () => {
       securityForm.reset();
     } catch (error) {
       handleError(error, "updating security settings");
-    }
-  };
-
-  const onPreferencesSubmit = async (data: PreferencesFormData) => {
-    try {
-      // Handle preferences update
-      toast({
-        title: "Preferences updated",
-        description: "Your preferences have been updated successfully.",
-      });
-    } catch (error) {
-      handleError(error, "updating preferences");
     }
   };
 
@@ -223,11 +161,6 @@ const Settings = () => {
     }
   };
 
-  const handleAvatarChange = (file: File) => {
-    // Handle avatar upload
-    console.log('Avatar changed:', file);
-  };
-
   return (
     <main className="space-y-6 max-w-6xl mx-auto">
       <PageHeader
@@ -237,7 +170,7 @@ const Settings = () => {
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Enhanced Profile Card */}
+        {/* Simplified Profile Card */}
         <div className="lg:col-span-1">
           <SettingsCard
             title="Profile"
@@ -245,11 +178,11 @@ const Settings = () => {
             className="h-fit"
           >
             <div className="text-center space-y-4">
-              <AvatarUpload
-                currentAvatar={getUserMetadata('avatar_url')}
-                onAvatarChange={handleAvatarChange}
-                className="mx-auto"
-              />
+              <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center border-4 border-white/20">
+                <span className="text-white text-lg font-bold">
+                  {getUserMetadata('full_name') ? getUserMetadata('full_name').charAt(0) : "U"}
+                </span>
+              </div>
               <div>
                 <h3 className="text-lg font-semibold text-white">
                   {getUserMetadata('full_name') || "User"}
@@ -259,14 +192,14 @@ const Settings = () => {
                 </p>
               </div>
               <FormProgress
-                totalFields={6}
+                totalFields={3}
                 completedFields={getCompletedFields()}
               />
             </div>
           </SettingsCard>
         </div>
 
-        {/* Enhanced Settings Tabs */}
+        {/* Simplified Settings Tabs */}
         <div className="lg:col-span-3">
           <Card className="bg-white/5 backdrop-blur-sm border-white/20">
             <CardContent className="p-6">
@@ -276,7 +209,7 @@ const Settings = () => {
               </div>
 
               <Tabs value={activeTab} onValueChange={setActiveTab}>
-                <TabsList className="grid w-full grid-cols-3 bg-white/10">
+                <TabsList className="grid w-full grid-cols-2 bg-white/10">
                   <TabsTrigger value="profile" className="text-white data-[state=active]:bg-white/20">
                     <User className="h-4 w-4 mr-2" />
                     Profile
@@ -284,10 +217,6 @@ const Settings = () => {
                   <TabsTrigger value="security" className="text-white data-[state=active]:bg-white/20">
                     <Shield className="h-4 w-4 mr-2" />
                     Security
-                  </TabsTrigger>
-                  <TabsTrigger value="preferences" className="text-white data-[state=active]:bg-white/20">
-                    <Palette className="h-4 w-4 mr-2" />
-                    Preferences
                   </TabsTrigger>
                 </TabsList>
 
@@ -324,57 +253,14 @@ const Settings = () => {
                         />
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <FormField
-                          control={profileForm.control}
-                          name="specialty"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Specialty</FormLabel>
-                              <FormControl>
-                                <Input {...field} className="bg-white/10 border-white/20 text-white" />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={profileForm.control}
-                          name="phone"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Phone</FormLabel>
-                              <FormControl>
-                                <Input {...field} className="bg-white/10 border-white/20 text-white" />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-
                       <FormField
                         control={profileForm.control}
-                        name="location"
+                        name="specialty"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Location</FormLabel>
+                            <FormLabel>Specialty</FormLabel>
                             <FormControl>
                               <Input {...field} className="bg-white/10 border-white/20 text-white" />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={profileForm.control}
-                        name="bio"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Bio</FormLabel>
-                            <FormControl>
-                              <Input {...field} className="bg-white/10 border-white/20 text-white" placeholder="Tell us about yourself..." />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -495,21 +381,6 @@ const Settings = () => {
                       </Form>
                     </SettingsCard>
 
-                    {/* Two-Factor Authentication */}
-                    <SettingsCard
-                      title="Two-Factor Authentication"
-                      description="Add an extra layer of security to your account"
-                      icon={<Smartphone className="h-5 w-5 text-white" />}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-white text-sm">Secure your account with 2FA</p>
-                          <p className="text-white/60 text-xs mt-1">Recommended for enhanced security</p>
-                        </div>
-                        <Switch />
-                      </div>
-                    </SettingsCard>
-
                     {/* Danger Zone */}
                     <SettingsCard
                       title="Danger Zone"
@@ -531,128 +402,6 @@ const Settings = () => {
                       </div>
                     </SettingsCard>
                   </div>
-                </TabsContent>
-
-                {/* Preferences Tab */}
-                <TabsContent value="preferences" className="space-y-6 mt-6">
-                  <Form {...preferencesForm}>
-                    <form onSubmit={preferencesForm.handleSubmit(onPreferencesSubmit)} className="space-y-6">
-                      {/* Theme Settings */}
-                      <SettingsCard
-                        title="Appearance"
-                        description="Customize how the app looks and feels"
-                        icon={<Palette className="h-5 w-5 text-white" />}
-                      >
-                        <div className="space-y-4">
-                          <FormField
-                            control={preferencesForm.control}
-                            name="theme"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Theme</FormLabel>
-                                <div className="grid grid-cols-3 gap-2 mt-2">
-                                  {[
-                                    { value: "light", icon: Sun, label: "Light" },
-                                    { value: "dark", icon: Moon, label: "Dark" },
-                                    { value: "system", icon: Monitor, label: "System" }
-                                  ].map(({ value, icon: Icon, label }) => (
-                                    <Button
-                                      key={value}
-                                      type="button"
-                                      variant={field.value === value ? "default" : "outline"}
-                                      onClick={() => field.onChange(value)}
-                                      className="bg-white/10 border-white/20 text-white hover:bg-white/20"
-                                    >
-                                      <Icon className="h-4 w-4 mr-2" />
-                                      {label}
-                                    </Button>
-                                  ))}
-                                </div>
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-                      </SettingsCard>
-
-                      {/* Notification Settings */}
-                      <SettingsCard
-                        title="Notifications"
-                        description="Choose what notifications you receive"
-                        icon={<Bell className="h-5 w-5 text-white" />}
-                      >
-                        <div className="space-y-4">
-                          <FormField
-                            control={preferencesForm.control}
-                            name="emailNotifications"
-                            render={({ field }) => (
-                              <div className="flex items-center justify-between">
-                                <div>
-                                  <Label>Email Notifications</Label>
-                                  <p className="text-white/60 text-xs">Receive notifications via email</p>
-                                </div>
-                                <Switch checked={field.value} onCheckedChange={field.onChange} />
-                              </div>
-                            )}
-                          />
-
-                          <FormField
-                            control={preferencesForm.control}
-                            name="pushNotifications"
-                            render={({ field }) => (
-                              <div className="flex items-center justify-between">
-                                <div>
-                                  <Label>Push Notifications</Label>
-                                  <p className="text-white/60 text-xs">Receive push notifications in your browser</p>
-                                </div>
-                                <Switch checked={field.value} onCheckedChange={field.onChange} />
-                              </div>
-                            )}
-                          />
-
-                          <FormField
-                            control={preferencesForm.control}
-                            name="marketingEmails"
-                            render={({ field }) => (
-                              <div className="flex items-center justify-between">
-                                <div>
-                                  <Label>Marketing Emails</Label>
-                                  <p className="text-white/60 text-xs">Receive updates about new features</p>
-                                </div>
-                                <Switch checked={field.value} onCheckedChange={field.onChange} />
-                              </div>
-                            )}
-                          />
-                        </div>
-                      </SettingsCard>
-
-                      {/* Privacy Settings */}
-                      <SettingsCard
-                        title="Privacy"
-                        description="Control your data and privacy settings"
-                        icon={<Globe className="h-5 w-5 text-white" />}
-                      >
-                        <div className="space-y-4">
-                          <FormField
-                            control={preferencesForm.control}
-                            name="dataSharing"
-                            render={({ field }) => (
-                              <div className="flex items-center justify-between">
-                                <div>
-                                  <Label>Data Sharing</Label>
-                                  <p className="text-white/60 text-xs">Allow anonymous usage data collection</p>
-                                </div>
-                                <Switch checked={field.value} onCheckedChange={field.onChange} />
-                              </div>
-                            )}
-                          />
-                        </div>
-                      </SettingsCard>
-
-                      <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white">
-                        Save Preferences
-                      </Button>
-                    </form>
-                  </Form>
                 </TabsContent>
               </Tabs>
             </CardContent>
