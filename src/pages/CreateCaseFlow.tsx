@@ -11,25 +11,12 @@ import { PageHeader } from "@/components/ui/page-header";
 import { FormContainer } from "@/features/cases/create/FormContainer";
 import { FormHeader } from "@/features/cases/create/FormHeader";
 import { FormNavigation } from "@/features/cases/create/FormNavigation";
-import { PatientStep } from "@/features/cases/create/PatientStep";
-import { CaseInfoStep } from "@/features/cases/create/CaseInfoStep";
+import { CaseOverviewStep } from "@/features/cases/create/CaseOverviewStep";
 import { ClinicalDetailStep } from "@/features/cases/create/ClinicalDetailStep";
 import { LearningPointsStep } from "@/features/cases/create/LearningPointsStep";
 import { useErrorHandler } from "@/hooks/use-error-handler";
 import { useToast } from "@/hooks/use-toast";
-import { FileText, Heart } from "lucide-react";
-import {
-  patientStepSchema,
-  type PatientFormData,
-} from "@/features/cases/create/schemas/patient-schema";
-import {
-  caseInfoSchema,
-  type CaseInfoFormData,
-} from "@/features/cases/create/schemas/case-info-schema";
-import {
-  learningPointsStepSchema,
-  type LearningPointsFormData,
-} from "@/features/cases/create/schemas/learning-points-schema";
+import { FileText, Heart, TestTube } from "lucide-react";
 import { z } from "zod";
 
 // Define form data types
@@ -59,13 +46,12 @@ interface StepMeta {
 
 // Combined schema for all steps
 const combinedSchema = z.object({
-  // Patient step
+  // Merged case overview step
   patientName: z.string().optional(),
   medicalRecordNumber: z.string().optional(),
   patientAge: z.number().optional(),
   patientSex: z.string().optional(),
   medicalHistory: z.string().optional(),
-  // Case info step
   caseTitle: z.string().optional(),
   chiefComplaint: z.string().optional(),
   specialty: z.string().optional(),
@@ -80,33 +66,26 @@ const combinedSchema = z.object({
   })).optional(),
 });
 
-// Define the steps for the form
+// Define the updated steps for the form (reduced from 4 to 3)
 const STEPS: StepMeta[] = [
   { 
-    id: "patient", 
-    label: "Patient Info", 
+    id: "caseOverview", 
+    label: "Case Overview", 
     icon: <Heart className="h-5 w-5" />,
-    isCompleted: false,
-    isNavigable: true
-  },
-  { 
-    id: "caseInfo", 
-    label: "Case Info", 
-    icon: <FileText className="h-5 w-5" />,
     isCompleted: false,
     isNavigable: true
   },
   { 
     id: "clinicalDetails", 
     label: "Clinical Details", 
-    icon: null,
+    icon: <TestTube className="h-5 w-5" />,
     isCompleted: false,
     isNavigable: true
   },
   { 
     id: "learningPoints", 
     label: "Learning Points", 
-    icon: null,
+    icon: <FileText className="h-5 w-5" />,
     isCompleted: false,
     isNavigable: true
   },
@@ -155,10 +134,8 @@ const CreateCaseFlow = () => {
   const validateStep = useCallback(
     async (stepId: string) => {
       switch (stepId) {
-        case "patient":
-          return await trigger(["patientName", "patientAge", "patientSex"]);
-        case "caseInfo":
-          return await trigger(["caseTitle", "chiefComplaint"]);
+        case "caseOverview":
+          return await trigger(["patientName", "patientAge", "patientSex", "caseTitle", "chiefComplaint"]);
         case "clinicalDetails":
           return true; // No validation for clinical details step
         case "learningPoints":
@@ -274,10 +251,9 @@ const CreateCaseFlow = () => {
               />
 
               <div className="space-y-6">
-                {currentStep === 0 && <PatientStep />}
-                {currentStep === 1 && <CaseInfoStep />}
-                {currentStep === 2 && <ClinicalDetailStep />}
-                {currentStep === 3 && <LearningPointsStep />}
+                {currentStep === 0 && <CaseOverviewStep />}
+                {currentStep === 1 && <ClinicalDetailStep />}
+                {currentStep === 2 && <LearningPointsStep />}
               </div>
 
               <FormNavigation

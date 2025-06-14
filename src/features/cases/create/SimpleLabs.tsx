@@ -146,7 +146,8 @@ export function SimpleLabs({ onLabChange }: SimpleLabsProps) {
 
   const getFilteredTests = () => {
     if (!selectedCategory) return [];
-    const tests = LAB_TEST_CATEGORIES[selectedCategory as keyof typeof LAB_TEST_CATEGORIES] || [];
+    const categoryKey = selectedCategory as keyof typeof LAB_TEST_CATEGORIES;
+    const tests = LAB_TEST_CATEGORIES[categoryKey] || [];
     return searchTerm
       ? tests.filter(test => test.name.toLowerCase().includes(searchTerm.toLowerCase()))
       : tests;

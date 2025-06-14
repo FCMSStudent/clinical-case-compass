@@ -161,7 +161,8 @@ export function SimpleImaging({ onImagingChange }: SimpleImagingProps) {
 
   const getFilteredStudies = () => {
     if (!selectedCategory) return [];
-    const studies = IMAGING_CATEGORIES[selectedCategory as keyof typeof IMAGING_CATEGORIES] || [];
+    const categoryKey = selectedCategory as keyof typeof IMAGING_CATEGORIES;
+    const studies = IMAGING_CATEGORIES[categoryKey] || [];
     return searchTerm
       ? studies.filter(study => study.toLowerCase().includes(searchTerm.toLowerCase()))
       : studies;
