@@ -2,10 +2,10 @@
 import { Stethoscope, Pill } from "lucide-react";
 
 export const animatedIconsConfig = [
-    { Icon: Stethoscope, initialPosition: { x: "20%", y: "10%" }, animationDelay: 0, duration: 8 },
-    { Icon: Pill, initialPosition: { x: "80%", y: "20%" }, animationDelay: 2, duration: 10 },
-    { Icon: Stethoscope, initialPosition: { x: "15%", y: "70%" }, animationDelay: 4, duration: 12 },
-    { Icon: Pill, initialPosition: { x: "85%", y: "80%" }, animationDelay: 6, duration: 9 },
+    { icon: Stethoscope, initialPosition: { x: "20%", y: "10%" }, animationDelay: 0, duration: 8 },
+    { icon: Pill, initialPosition: { x: "80%", y: "20%" }, animationDelay: 2, duration: 10 },
+    { icon: Stethoscope, initialPosition: { x: "15%", y: "70%" }, animationDelay: 4, duration: 12 },
+    { icon: Pill, initialPosition: { x: "85%", y: "80%" }, animationDelay: 6, duration: 9 },
 ];
 
 export const particleConfig = {

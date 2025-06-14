@@ -43,8 +43,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import AnimatedMedicalIcons from "@/components/ui/animated-medical-icons";
-import ParallaxBackground from "@/components/ui/parallax-background";
+import UnifiedBackground from "@/components/backgrounds/UnifiedBackground";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -177,8 +176,7 @@ const Auth = () => {
       </a>
 
       {/* Enhanced background with parallax and animations */}
-      <ParallaxBackground />
-      <AnimatedMedicalIcons />
+      <UnifiedBackground />
 
       {/* Main Content */}
       <div id="main-content" className="relative z-10 min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8">
