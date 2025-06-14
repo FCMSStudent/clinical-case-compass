@@ -231,7 +231,7 @@ export const ClinicalDetailStep = memo(({ className }: { className?: string }) =
                 className={cn(
                   "flex items-center justify-center gap-2 py-2.5 text-sm font-medium rounded-md",
                   "data-[state=active]:bg-blue-500/20 data-[state=active]:text-white data-[state=active]:shadow-sm",
-                  "text-white/70 hover:bg-white/10 hover:text-white" 
+                  "text-white/70"
                 )}
               >
                 <Icon className="h-4 w-4" />

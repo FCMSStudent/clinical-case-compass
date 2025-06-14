@@ -134,7 +134,7 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
                     variant="outline"
                     onClick={onPrevious}
                     disabled={isFirst || isSubmitting}
-                    className="gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20 hover:border-white/30 disabled:opacity-50"
+                    className="gap-2 bg-white/10 border-white/20 text-white disabled:opacity-50"
                     aria-label={isFirst ? "Cannot go back - this is the first step" : "Go to previous step"}
                     aria-describedby={!isFirst ? "previous-button-tooltip" : undefined}
                   >
@@ -161,7 +161,7 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
                       variant="outline"
                       onClick={onSaveAndExit}
                       disabled={isSubmitting}
-                      className="gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20 hover:border-white/30"
+                      className="gap-2 bg-white/10 border-white/20 text-white"
                       aria-label="Save your progress and return later"
                       aria-describedby="save-exit-button-tooltip"
                     >
@@ -187,7 +187,7 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
                   <Button
                     onClick={onNext}
                     disabled={isSubmitting}
-                    className="gap-2 bg-white/20 border-white/30 text-white hover:bg-white/30 hover:border-white/40"
+                    className="gap-2 bg-white/20 border-white/30 text-white"
                     aria-label={isLast ? "Submit the case" : "Go to next step"}
                     aria-describedby="next-submit-button-tooltip"
                     aria-busy={isSubmitting}

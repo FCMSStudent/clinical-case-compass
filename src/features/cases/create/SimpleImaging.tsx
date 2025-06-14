@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -268,7 +269,7 @@ export function SimpleImaging({ onImagingChange }: SimpleImagingProps) {
             type="button"
             onClick={addStudy}
             size="sm"
-            className="bg-blue-500/80 hover:bg-blue-600 text-white w-full"
+            className="bg-blue-500/80 text-white w-full"
             disabled={!selectedType || !findings}
           >
             <Plus className="h-4 w-4 mr-2" />
@@ -284,7 +285,7 @@ export function SimpleImaging({ onImagingChange }: SimpleImagingProps) {
             <div
               key={category}
               className={cn(
-                "bg-slate-800/60 backdrop-blur-sm rounded-xl border border-slate-600/50 p-4 transition-all hover:bg-slate-700/60 hover:border-slate-500/70",
+                "bg-slate-800/60 backdrop-blur-sm rounded-xl border border-slate-600/50 p-4 transition-all",
                 categoryStudies.length > 2 && "md:col-span-2",
                 category === "Computed Tomography (CT)" && "lg:col-span-2"
               )}
@@ -314,7 +315,7 @@ export function SimpleImaging({ onImagingChange }: SimpleImagingProps) {
                         variant="ghost"
                         size="sm"
                         onClick={() => removeStudy(study.id)}
-                        className="h-6 w-6 p-0 text-slate-400 hover:text-white hover:bg-slate-600/50 ml-2 flex-shrink-0"
+                        className="h-6 w-6 p-0 text-slate-400 ml-2 flex-shrink-0"
                       >
                         <X className="h-3 w-3" />
                       </Button>

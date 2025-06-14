@@ -1,3 +1,4 @@
+
 import React, { memo } from "react";
 import { Button } from "@/components/ui/button";
 import { Loader2, Save } from "lucide-react";
@@ -110,7 +111,7 @@ export const FormHeader = memo(function FormHeader({
                     variant="outline"
                     onClick={onSaveDraft}
                     disabled={isDraftSaving}
-                    className="gap-2 whitespace-nowrap bg-white/10 border-white/20 text-white hover:bg-white/20 hover:border-white/30"
+                    className="gap-2 whitespace-nowrap bg-white/10 border-white/20 text-white"
                     aria-label={isDraftSaving ? "Saving draft..." : "Save draft"}
                     aria-describedby="save-draft-tooltip"
                     aria-busy={isDraftSaving}

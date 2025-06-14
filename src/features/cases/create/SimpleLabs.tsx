@@ -271,7 +271,7 @@ export function SimpleLabs({ onLabChange }: SimpleLabsProps) {
             type="button"
             onClick={addLab}
             size="sm"
-            className="bg-blue-500/80 hover:bg-blue-600 text-white w-full"
+            className="bg-blue-500/80 text-white w-full"
             disabled={!selectedTest || !testValue}
           >
             <Plus className="h-4 w-4 mr-2" />
@@ -287,7 +287,7 @@ export function SimpleLabs({ onLabChange }: SimpleLabsProps) {
             <div
               key={category}
               className={cn(
-                "bg-slate-800/60 backdrop-blur-sm rounded-xl border border-slate-600/50 p-4 transition-all hover:bg-slate-700/60 hover:border-slate-500/70",
+                "bg-slate-800/60 backdrop-blur-sm rounded-xl border border-slate-600/50 p-4 transition-all",
                 categoryLabs.length > 3 && "md:col-span-2",
                 category === "Complete Blood Count (CBC)" && "lg:col-span-2"
               )}
@@ -315,7 +315,7 @@ export function SimpleLabs({ onLabChange }: SimpleLabsProps) {
                       variant="ghost"
                       size="sm"
                       onClick={() => removeLab(lab.id)}
-                      className="h-6 w-6 p-0 text-slate-400 hover:text-white hover:bg-slate-600/50"
+                      className="h-6 w-6 p-0 text-slate-400"
                     >
                       <X className="h-3 w-3" />
                     </Button>
