@@ -7,7 +7,6 @@ import React, {
 } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PageHeader } from "@/components/ui/page-header";
 import { FormContainer } from "@/features/cases/create/FormContainer";
 import { FormHeader } from "@/features/cases/create/FormHeader";
 import { FormNavigation } from "@/features/cases/create/FormNavigation";
@@ -18,7 +17,6 @@ import { useErrorHandler } from "@/hooks/use-error-handler";
 import { useToast } from "@/hooks/use-toast";
 import { FileText, Heart, TestTube } from "lucide-react";
 import { z } from "zod";
-import { Button } from "@/components/ui/button";
 
 // Define form data types
 interface FormData {
@@ -226,20 +224,7 @@ const CreateCaseFlow = () => {
   };
 
   return (
-    <main className="space-y-6 max-w-6xl mx-auto">
-      <PageHeader
-        title="Create Clinical Case"
-        description="Create a new clinical case for educational purposes"
-        icon={<FileText className="h-6 w-6" />}
-      />
-
-      {/* If you want to forcefully show a call-to-action at the top, use this block (ensure you remove any other similar blocks elsewhere): */}
-      <div className="mb-4 flex justify-end">
-        <Button variant="primary" size="lg">
-          + Create New Case
-        </Button>
-      </div>
-
+    <main className="space-y-6 max-w-6xl mx-auto py-8">
       <FormProvider {...form}>
         <div className="space-y-6">
           <FormContainer
@@ -253,24 +238,10 @@ const CreateCaseFlow = () => {
                 totalSteps={STEPS.length}
                 currentStepLabel={STEPS[currentStep].label}
                 formTitle="Create New Clinical Case"
-                completionPercentage={completionPercentage}
                 isDraftSaving={autoSaveStatus === "saving"}
                 hideDraftButton={true}
               />
               <div className="space-y-6">
-                {/* Conditional rendering for "Create First Case" CTA if there are no cases */}
-                {/* Replace any previous raw <button> logic with: */}
-                {watchedValues && watchedValues.patientName === "" && (
-                  <div className="flex flex-col items-center py-6">
-                    <p className="text-white/80 text-lg mb-4">
-                      No cases yet! Get started by creating your first case:
-                    </p>
-                    <Button variant="primary" size="lg">
-                      Create First Case
-                    </Button>
-                  </div>
-                )}
-                {/* ...or just keep the normal flow... */}
                 {currentStep === 0 && <CaseOverviewStep />}
                 {currentStep === 1 && <ClinicalDetailStep />}
                 {currentStep === 2 && <LearningPointsStep />}

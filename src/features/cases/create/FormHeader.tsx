@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Loader2, Save } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
-import { Progress } from "@/components/ui/progress";
 import {
   Tooltip,
   TooltipContent,
@@ -17,8 +16,6 @@ export interface FormHeaderProps {
   currentStep: number;
   /** Total number of steps in the wizard. */
   totalSteps: number;
-  /** Value from 0 - 100 for completion indicator. */
-  completionPercentage: number;
   /** `true` while a draft save is pending. */
   isDraftSaving?: boolean;
   /** Callback to trigger a manual draft save. */
@@ -39,7 +36,6 @@ export interface FormHeaderProps {
 export const FormHeader = memo(function FormHeader({
   currentStep,
   totalSteps,
-  completionPercentage,
   isDraftSaving = false,
   onSaveDraft,
   currentStepLabel,
@@ -55,7 +51,7 @@ export const FormHeader = memo(function FormHeader({
         className="p-0" // Removed card specific padding, adjust if necessary for alignment
       >
         <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-          {/* Title and Progress */}
+          {/* Title and Step Info */}
           <div className="space-y-4 flex-1">
             <motion.div
               initial={{ opacity: 0, y: -10 }}
@@ -68,7 +64,7 @@ export const FormHeader = memo(function FormHeader({
               >
                 {formTitle}
               </h1>
-              <p 
+              <p
                 className="text-white/70"
                 aria-live="polite"
                 aria-atomic="true"
@@ -76,30 +72,6 @@ export const FormHeader = memo(function FormHeader({
                 Step {currentStep} of {totalSteps}: {currentStepLabel}
               </p>
             </motion.div>
-
-            {/* Progress Bar */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <span className="font-medium text-white">Overall Progress</span>
-                <span 
-                  className="text-white/70"
-                  aria-live="polite"
-                  aria-atomic="true"
-                >
-                  {completionPercentage}%
-                </span>
-              </div>
-              <Progress 
-                value={completionPercentage}
-                className="h-3"
-                role="progressbar"
-                aria-label={`Form completion progress: ${completionPercentage}%`}
-                aria-valuenow={completionPercentage}
-                aria-valuemin={0}
-                aria-valuemax={100}
-                aria-valuetext={`${completionPercentage}% complete`}
-              />
-            </div>
           </div>
 
           {/* Draft Save Button */}
@@ -144,7 +116,7 @@ export const FormHeader = memo(function FormHeader({
                     </span>
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent 
+                <TooltipContent
                   id="save-draft-tooltip"
                   className="bg-white/10 backdrop-blur-md border border-white/20 text-white"
                 >
