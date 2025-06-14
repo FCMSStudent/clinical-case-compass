@@ -1,10 +1,10 @@
+
 import React from "react";
 import { motion } from "framer-motion";
 import { LucideIcon, Info, AlertCircle, CheckCircle2, ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-// Card import is removed as we are not using <Card> component directly from shadcn/ui for the main wrapper
 import {
   Tooltip,
   TooltipContent,
@@ -63,20 +63,8 @@ export const FormFieldCard = React.memo(function FormFieldCard({
   isDisabled = false,
 }: FormFieldCardProps) {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
-  const [isHovered, setIsHovered] = React.useState(false); // This state might not be needed if onStatusChange logic is removed/rethought
 
   const cardId = React.useId();
-
-  // The onStatusChange effect based on hover might be less relevant with simplified styling.
-  // Consider removing if it's not a key interaction anymore.
-  // React.useEffect(() => {
-  //   if (onStatusChange && isHovered) {
-  //     const timeout = setTimeout(() => {
-  //       onStatusChange(status === "default" ? "success" : "default");
-  //     }, 500);
-  //     return () => clearTimeout(timeout);
-  //   }
-  // }, [isHovered, onStatusChange, status]);
 
   return (
     <motion.div
@@ -84,16 +72,12 @@ export const FormFieldCard = React.memo(function FormFieldCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
       className={className}
-      // onHoverStart and onHoverEnd might be removed if isHovered effect is removed
     >
       <div
         className={cn(
-          "p-4 border border-white/10 rounded-lg", // Simplified styling
-          isHighlighted && "ring-2 ring-blue-400/30", // Highlight remains useful
-          isDisabled && "opacity-50 cursor-not-allowed",
-          // Add status-based border colors if desired, e.g.:
-          // status === "error" && "border-red-400/50",
-          // status === "success" && "border-emerald-400/50",
+          "bg-slate-800/60 backdrop-blur-sm rounded-xl border border-slate-600/50 p-4 transition-all hover:bg-slate-700/60 hover:border-slate-500/70",
+          isHighlighted && "ring-2 ring-blue-400/30",
+          isDisabled && "opacity-50 cursor-not-allowed"
         )}
         role="group"
         aria-labelledby={`${cardId}-title`}
@@ -105,13 +89,13 @@ export const FormFieldCard = React.memo(function FormFieldCard({
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div
-                  className="p-3 rounded-xl bg-blue-500/20 text-white border border-blue-400/30 transition-all duration-300"
+                  className="h-8 w-8 rounded-lg bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-blue-300 transition-all duration-300"
                   aria-hidden="true"
                 >
-                  <Icon className="h-5 w-5 relative z-10" />
+                  <Icon className="h-4 w-4 relative z-10" />
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="text-lg font-semibold flex items-center gap-2 text-white">
+                  <div className="text-lg font-semibold flex items-center gap-2 text-slate-100">
                     <span id={`${cardId}-title`}>
                       {title}
                       {isRequired && (
@@ -131,12 +115,12 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                {status !== "default" && statusIcons[status] && ( // Ensure statusIcon exists
+                {status !== "default" && statusIcons[status] && (
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <div
-                          className="p-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20"
+                          className="p-1 rounded-full bg-slate-700/50 backdrop-blur-sm border border-slate-500/50"
                           role="img"
                           aria-label={statusMessages[status]}
                         >
@@ -145,7 +129,7 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                       </TooltipTrigger>
                       <TooltipContent
                         id={`${cardId}-status-tooltip`}
-                        className="bg-black/30 backdrop-blur-md border-white/20 text-white"
+                        className="bg-slate-800/90 backdrop-blur-md border-slate-600/50 text-slate-100"
                       >
                         <p className="text-sm">
                           {statusMessages[status]}
@@ -165,7 +149,7 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                           aria-label="More information"
                           aria-describedby={`${cardId}-tooltip`}
                         >
-                          <Info className="h-4 w-4 text-white/70 hover:text-white" aria-hidden="true" />
+                          <Info className="h-4 w-4 text-blue-300 hover:text-blue-200" aria-hidden="true" />
                         </div>
                       </TooltipTrigger>
                       <TooltipContent
@@ -173,7 +157,7 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                         align="start"
                         sideOffset={5}
                         id={`${cardId}-tooltip`}
-                        className="bg-black/30 backdrop-blur-md border-white/20 text-white"
+                        className="bg-slate-800/90 backdrop-blur-md border-slate-600/50 text-slate-100"
                       >
                         <p className="text-sm leading-relaxed">{tooltip}</p>
                       </TooltipContent>
@@ -186,7 +170,7 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-8 w-8 text-white/70 hover:text-white hover:bg-blue-500/20"
+                      className="h-8 w-8 text-slate-300 hover:text-slate-100 hover:bg-blue-500/20"
                       disabled={isDisabled}
                       aria-label={isCollapsed ? "Expand section" : "Collapse section"}
                       aria-expanded={!isCollapsed}
@@ -204,10 +188,10 @@ export const FormFieldCard = React.memo(function FormFieldCard({
           </div>
 
           <CollapsibleContent>
-            <div className="pt-2"> {/* Added small top padding for content */}
+            <div className="pt-2">
               {children}
               {footer && (
-                <div className="mt-4 pt-4 border-t border-white/20">
+                <div className="mt-4 pt-4 border-t border-slate-600/50">
                   {footer}
                 </div>
               )}

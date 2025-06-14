@@ -1,11 +1,12 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { Plus, X, Search } from "lucide-react";
+import { Plus, X, Search, Scan, Camera, Zap, Activity, Monitor } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 // Organized imaging studies by category
 const IMAGING_CATEGORIES = {
@@ -128,6 +129,16 @@ interface SimpleImagingProps {
   onImagingChange?: (studies: ImagingStudy[]) => void;
 }
 
+const categoryIcons: Record<string, React.ReactNode> = {
+  "Plain Radiography (X-Ray)": <Camera className="h-4 w-4" />,
+  "Computed Tomography (CT)": <Scan className="h-4 w-4" />,
+  "Magnetic Resonance Imaging (MRI)": <Monitor className="h-4 w-4" />,
+  "Ultrasound": <Activity className="h-4 w-4" />,
+  "Nuclear Medicine": <Zap className="h-4 w-4" />,
+  "Interventional & Fluoroscopy": <Scan className="h-4 w-4" />,
+  "Specialized Imaging": <Camera className="h-4 w-4" />,
+};
+
 export function SimpleImaging({ onImagingChange }: SimpleImagingProps) {
   const [studies, setStudies] = useState<ImagingStudy[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -170,107 +181,156 @@ export function SimpleImaging({ onImagingChange }: SimpleImagingProps) {
       : categoryStudies;
   };
 
+  const groupedStudies = studies.reduce((acc, study) => {
+    // Find which category this study belongs to
+    const category = Object.entries(IMAGING_CATEGORIES).find(([_, categoryStudies]) => 
+      categoryStudies.includes(study.type)
+    )?.[0] || "Other";
+    
+    if (!acc[category]) acc[category] = [];
+    acc[category].push(study);
+    return acc;
+  }, {} as Record<string, ImagingStudy[]>);
+
   return (
     <div className="space-y-4">
-      <div className="space-y-3">
-        <div>
-          <Label className="text-white/90 text-sm">Imaging Category</Label>
-          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-            <SelectTrigger className="bg-white/10 border-white/20 text-white mt-1">
-              <SelectValue placeholder="Select imaging category" />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.keys(IMAGING_CATEGORIES).map((category) => (
-                <SelectItem key={category} value={category}>
-                  {category}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+      {/* Add Study Section */}
+      <div className="bg-slate-800/60 backdrop-blur-sm rounded-xl border border-slate-600/50 p-4">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="h-8 w-8 rounded-lg bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-blue-300">
+            <Plus className="h-4 w-4" />
+          </div>
+          <h3 className="text-sm font-medium text-slate-200">Add Imaging Study</h3>
         </div>
 
-        {selectedCategory && (
-          <>
-            <div className="relative">
-              <Label className="text-white/90 text-sm">Search Studies</Label>
-              <div className="relative mt-1">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/50" />
-                <Input
-                  placeholder="Search imaging studies..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-9 bg-white/10 border-white/20 text-white placeholder:text-white/50"
-                />
-              </div>
-            </div>
+        <div className="space-y-3">
+          <div>
+            <Label className="text-slate-200 text-sm">Imaging Category</Label>
+            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <SelectTrigger className="bg-slate-700/50 border-slate-500/50 text-slate-100 mt-1">
+                <SelectValue placeholder="Select imaging category" />
+              </SelectTrigger>
+              <SelectContent className="bg-slate-800/90 border-slate-600/50">
+                {Object.keys(IMAGING_CATEGORIES).map((category) => (
+                  <SelectItem key={category} value={category} className="text-slate-100">
+                    {category}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-            <div>
-              <Label className="text-white/90 text-sm">Specific Study</Label>
-              <Select value={selectedType} onValueChange={setSelectedType}>
-                <SelectTrigger className="bg-white/10 border-white/20 text-white mt-1">
-                  <SelectValue placeholder="Select specific study" />
-                </SelectTrigger>
-                <SelectContent>
-                  {getFilteredStudies().map((study) => (
-                    <SelectItem key={study} value={study}>
-                      {study}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </>
-        )}
-        
-        <div>
-          <Label className="text-white/90 text-sm">Findings</Label>
-          <Textarea
-            placeholder="Enter study findings..."
-            value={findings}
-            onChange={(e) => setFindings(e.target.value)}
-            className="bg-white/10 border-white/20 text-white placeholder:text-white/50 mt-1"
-            rows={3}
-          />
+          {selectedCategory && (
+            <>
+              <div className="relative">
+                <Label className="text-slate-200 text-sm">Search Studies</Label>
+                <div className="relative mt-1">
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                  <Input
+                    placeholder="Search imaging studies..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-9 bg-slate-700/50 border-slate-500/50 text-slate-100 placeholder:text-slate-400"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label className="text-slate-200 text-sm">Specific Study</Label>
+                <Select value={selectedType} onValueChange={setSelectedType}>
+                  <SelectTrigger className="bg-slate-700/50 border-slate-500/50 text-slate-100 mt-1">
+                    <SelectValue placeholder="Select specific study" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-slate-800/90 border-slate-600/50">
+                    {getFilteredStudies().map((study) => (
+                      <SelectItem key={study} value={study} className="text-slate-100">
+                        {study}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </>
+          )}
+          
+          <div>
+            <Label className="text-slate-200 text-sm">Findings</Label>
+            <Textarea
+              placeholder="Enter study findings..."
+              value={findings}
+              onChange={(e) => setFindings(e.target.value)}
+              className="bg-slate-700/50 border-slate-500/50 text-slate-100 placeholder:text-slate-400 mt-1"
+              rows={3}
+            />
+          </div>
+          
+          <Button
+            type="button"
+            onClick={addStudy}
+            size="sm"
+            className="bg-blue-500/80 hover:bg-blue-600 text-white w-full"
+            disabled={!selectedType || !findings}
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Add Study
+          </Button>
         </div>
-        
-        <Button
-          type="button"
-          onClick={addStudy}
-          size="sm"
-          className="bg-blue-500/80 hover:bg-blue-600 text-white w-full"
-          disabled={!selectedType || !findings}
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          Add Study
-        </Button>
       </div>
 
-      <div className="space-y-2">
-        {studies.map((study) => (
-          <div key={study.id} className="p-3 bg-white/10 rounded-md">
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
-                <div className="font-medium text-white text-sm">{study.type}</div>
-                <div className="text-white/80 text-xs mt-1">{study.findings}</div>
+      {/* Studies Display - Bentogrid Layout */}
+      {Object.keys(groupedStudies).length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-min">
+          {Object.entries(groupedStudies).map(([category, categoryStudies]) => (
+            <div
+              key={category}
+              className={cn(
+                "bg-slate-800/60 backdrop-blur-sm rounded-xl border border-slate-600/50 p-4 transition-all hover:bg-slate-700/60 hover:border-slate-500/70",
+                categoryStudies.length > 2 && "md:col-span-2",
+                category === "Computed Tomography (CT)" && "lg:col-span-2"
+              )}
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <div className="h-8 w-8 rounded-lg bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-blue-300">
+                  {categoryIcons[category] || <Scan className="h-4 w-4" />}
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-medium text-slate-200 text-sm">{category}</span>
+                  <Badge variant="outline" className="bg-blue-500/20 border-blue-400/30 text-white text-xs">
+                    {categoryStudies.length}
+                  </Badge>
+                </div>
               </div>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => removeStudy(study.id)}
-                className="h-6 w-6 p-0 text-white/60 hover:text-white ml-2"
-              >
-                <X className="h-3 w-3" />
-              </Button>
+              
+              <div className="space-y-2 max-h-40 overflow-y-auto scrollbar-thin scrollbar-track-slate-700/50 scrollbar-thumb-slate-500/50">
+                {categoryStudies.map((study) => (
+                  <div key={study.id} className="p-3 bg-slate-700/50 rounded-md">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="font-medium text-slate-200 text-sm">{study.type}</div>
+                        <div className="text-slate-300 text-xs mt-1 line-clamp-2">{study.findings}</div>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removeStudy(study.id)}
+                        className="h-6 w-6 p-0 text-slate-400 hover:text-white hover:bg-slate-600/50 ml-2 flex-shrink-0"
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
-        {studies.length === 0 && (
-          <div className="text-sm text-white/60 text-center py-4">
-            No imaging studies added yet
-          </div>
-        )}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <div className="bg-slate-800/60 backdrop-blur-sm rounded-xl border border-slate-600/50 p-8 text-center">
+          <Scan className="h-8 w-8 text-slate-400 mx-auto mb-2" />
+          <p className="text-sm text-slate-400">No imaging studies added yet</p>
+        </div>
+      )}
     </div>
   );
 }
