@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { Camera, Upload, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -66,8 +65,7 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({
         className={cn(
           'relative rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center overflow-hidden border-4 border-white/20 transition-all duration-300',
           sizeClasses[size],
-          isDragging && 'scale-105 border-blue-400/50',
-          'group-hover:scale-105 group-hover:border-white/40'
+          isDragging && 'scale-105 border-blue-400/50'
         )}
         onDrop={handleDrop}
         onDragOver={(e) => e.preventDefault()}
@@ -88,7 +86,7 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({
         )}
         
         {/* Hover Overlay */}
-        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+        <div className="absolute inset-0 bg-black/50 opacity-0 transition-opacity duration-300 flex items-center justify-center">
           <Camera className="h-6 w-6 text-white" />
         </div>
       </div>
@@ -96,7 +94,7 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({
       {/* Upload Button */}
       <Button
         size="sm"
-        className="absolute -bottom-2 -right-2 rounded-full bg-blue-600 hover:bg-blue-700 w-8 h-8 p-0 shadow-lg"
+        className="absolute -bottom-2 -right-2 rounded-full bg-blue-600 w-8 h-8 p-0 shadow-lg"
         onClick={handleClick}
       >
         <Upload className="h-4 w-4" />
