@@ -127,7 +127,7 @@ const EnhancedNavbar: React.FC = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <NavLink to="/dashboard" className="text-2xl font-bold text-white hover:text-white/80 transition-colors">
+            <NavLink to="/dashboard" className="text-2xl font-bold text-white transition-colors">
               Medica
             </NavLink>
           </div>
@@ -142,10 +142,10 @@ const EnhancedNavbar: React.FC = () => {
                   to={item.to}
                   className={cn(
                     "flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200",
-                    "hover:bg-white/10 hover:scale-105",
+                    "text-white/80",
                     isActive 
                       ? "bg-white/20 text-white shadow-sm" 
-                      : "text-white/80 hover:text-white"
+                      : "text-white/80"
                   )}
                 >
                   <item.icon className="h-4 w-4" />
@@ -193,7 +193,7 @@ const EnhancedNavbar: React.FC = () => {
                         <button
                           key={result.id}
                           onClick={() => handleSearchResultClick(result)}
-                          className="w-full px-4 py-3 text-left hover:bg-white/10 transition-colors"
+                          className="w-full px-4 py-3 text-left transition-colors"
                         >
                           <div className="font-medium text-white text-sm">{result.title}</div>
                           <div className="text-white/70 text-xs mt-1">{result.subtitle}</div>
@@ -210,7 +210,7 @@ const EnhancedNavbar: React.FC = () => {
                           <button
                             key={suggestion}
                             onClick={() => setSearchQuery(suggestion)}
-                            className="block w-full text-left px-2 py-1 text-white/60 hover:text-white text-sm hover:bg-white/5 rounded"
+                            className="block w-full text-left px-2 py-1 text-white/60 text-sm rounded"
                           >
                             {suggestion}
                           </button>
@@ -228,7 +228,7 @@ const EnhancedNavbar: React.FC = () => {
             <div className="relative" ref={userMenuRef}>
               <button
                 onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                className="flex items-center space-x-2 px-3 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl hover:bg-white/20 transition-colors"
+                className="flex items-center space-x-2 px-3 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl transition-colors"
               >
                 <User className="h-4 w-4 text-white" />
                 <span className="text-white text-sm">{getUserDisplayName()}</span>
@@ -244,7 +244,7 @@ const EnhancedNavbar: React.FC = () => {
                     className="absolute right-0 mt-2 w-48 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 py-2"
                   >
                     <button
-                      className="w-full px-4 py-2 text-left text-white hover:bg-white/20 flex items-center space-x-2 transition-colors"
+                      className="w-full px-4 py-2 text-left text-white flex items-center space-x-2 transition-colors"
                       onClick={() => { navigate('/settings'); setIsUserMenuOpen(false); }}
                     >
                       <User className="h-4 w-4" />
@@ -252,7 +252,7 @@ const EnhancedNavbar: React.FC = () => {
                     </button>
                     <div className="h-px bg-white/20 my-2" />
                     <button
-                      className="w-full px-4 py-2 text-left text-red-300 hover:bg-white/20 flex items-center space-x-2 transition-colors"
+                      className="w-full px-4 py-2 text-left text-red-300 flex items-center space-x-2 transition-colors"
                       onClick={handleSignOut}
                     >
                       <LogOut className="h-4 w-4" />
@@ -268,7 +268,7 @@ const EnhancedNavbar: React.FC = () => {
           <div className="md:hidden">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="flex items-center justify-center p-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl hover:bg-white/20 transition-colors"
+              className="flex items-center justify-center p-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl transition-colors"
             >
               {isMobileMenuOpen ? (
                 <X className="h-5 w-5 text-white" />
@@ -316,7 +316,7 @@ const EnhancedNavbar: React.FC = () => {
                         "flex items-center space-x-3 px-4 py-3 rounded-xl transition-colors",
                         isActive 
                           ? "bg-white/20 text-white" 
-                          : "text-white/80 hover:bg-white/10 hover:text-white"
+                          : "text-white/80"
                       )}
                     >
                       <item.icon className="h-5 w-5" />
@@ -329,14 +329,14 @@ const EnhancedNavbar: React.FC = () => {
               {/* Mobile User Menu */}
               <div className="border-t border-white/20 mt-4 pt-4">
                 <button
-                  className="w-full flex items-center space-x-3 px-4 py-3 text-white/80 hover:bg-white/10 hover:text-white rounded-xl transition-colors"
+                  className="w-full flex items-center space-x-3 px-4 py-3 text-white/80 rounded-xl transition-colors"
                   onClick={() => { navigate('/settings'); setIsMobileMenuOpen(false); }}
                 >
                   <User className="h-5 w-5" />
                   <span>Settings</span>
                 </button>
                 <button
-                  className="w-full flex items-center space-x-3 px-4 py-3 text-red-300 hover:bg-white/10 rounded-xl transition-colors"
+                  className="w-full flex items-center space-x-3 px-4 py-3 text-red-300 rounded-xl transition-colors"
                   onClick={() => { handleSignOut(); setIsMobileMenuOpen(false); }}
                 >
                   <LogOut className="h-5 w-5" />

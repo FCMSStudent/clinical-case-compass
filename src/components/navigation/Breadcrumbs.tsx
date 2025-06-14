@@ -1,4 +1,3 @@
-
 import React from "react";
 import { ChevronRight, Home } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
@@ -86,7 +85,7 @@ const Breadcrumbs: React.FC = () => {
               <Link
                 to={item.path}
                 className={cn(
-                  "text-white/70 hover:text-white transition-colors",
+                  "text-white/70 transition-colors",
                   index === 0 && "flex items-center space-x-1"
                 )}
               >

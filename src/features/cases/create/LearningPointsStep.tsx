@@ -1,4 +1,3 @@
-
 import React, { memo } from "react";
 import { useFormContext, FieldValues, Path } from "react-hook-form";
 import {
@@ -172,7 +171,7 @@ export const LearningPointsStep = memo(function LearningPointsStep<
                     variant="ghost"
                     size="sm"
                     onClick={() => removeResourceLink(index)}
-                    className="h-6 w-6 p-0 text-slate-400 hover:text-white hover:bg-slate-600/50"
+                    className="h-6 w-6 p-0 text-slate-400"
                   >
                     <X className="h-3 w-3" />
                   </Button>
@@ -196,7 +195,7 @@ export const LearningPointsStep = memo(function LearningPointsStep<
               type="button"
               onClick={addResourceLink}
               size="sm"
-              className="bg-blue-500/80 hover:bg-blue-600 text-white w-full"
+              className="bg-blue-500/80 text-white w-full"
             >
               <Plus className="h-4 w-4 mr-2" />
               Add Resource Link

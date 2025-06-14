@@ -1,4 +1,3 @@
-
 import React from "react";
 import { motion } from "framer-motion";
 import { LucideIcon, Info, AlertCircle, CheckCircle2, ChevronDown, ChevronUp } from "lucide-react";
@@ -75,7 +74,7 @@ export const FormFieldCard = React.memo(function FormFieldCard({
     >
       <div
         className={cn(
-          "bg-slate-800/60 backdrop-blur-sm rounded-xl border border-slate-600/50 p-4 transition-all hover:bg-slate-700/60 hover:border-slate-500/70",
+          "bg-slate-800/60 backdrop-blur-sm rounded-xl border border-slate-600/50 p-4 transition-all",
           isHighlighted && "ring-2 ring-blue-400/30",
           isDisabled && "opacity-50 cursor-not-allowed"
         )}
@@ -143,13 +142,13 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <div
-                          className="flex items-center justify-center h-8 w-8 rounded-full hover:bg-blue-500/20 cursor-help transition-colors backdrop-blur-sm border border-blue-400/30"
+                          className="flex items-center justify-center h-8 w-8 rounded-full cursor-help transition-colors backdrop-blur-sm border border-blue-400/30"
                           role="button"
                           tabIndex={0}
                           aria-label="More information"
                           aria-describedby={`${cardId}-tooltip`}
                         >
-                          <Info className="h-4 w-4 text-blue-300 hover:text-blue-200" aria-hidden="true" />
+                          <Info className="h-4 w-4 text-blue-300" aria-hidden="true" />
                         </div>
                       </TooltipTrigger>
                       <TooltipContent
@@ -170,7 +169,7 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-8 w-8 text-slate-300 hover:text-slate-100 hover:bg-blue-500/20"
+                      className="h-8 w-8 text-slate-300"
                       disabled={isDisabled}
                       aria-label={isCollapsed ? "Expand section" : "Collapse section"}
                       aria-expanded={!isCollapsed}
