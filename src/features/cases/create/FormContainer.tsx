@@ -1,5 +1,5 @@
+
 import React, { memo, ReactNode } from "react";
-import { FormProgressIndicator } from "@/features/cases/FormProgressIndicator";
 import { cn } from "@/lib/utils";
 
 /**
@@ -31,12 +31,9 @@ export interface FormContainerProps {
 }
 
 /**
- * A generic, stylized wrapper that pairs a step-based progress indicator
- * with a clean card to house the active form section. It manages the layout
- * and progress visualization for a multi-step form.
+ * A generic, stylized wrapper that provides a clean card to house the active form section.
+ * The progress visualization has been removed for a cleaner interface.
  */
-// 1. MODERNIZED DEFINITION: Using a standard function with typed props is a more
-// modern and slightly less verbose pattern than `React.FC`.
 export const FormContainer = memo(
   ({
     currentStepIndex,
@@ -45,20 +42,8 @@ export const FormContainer = memo(
     children,
     className,
   }: FormContainerProps) => {
-    // 2. DERIVED STATE: totalSteps is derived directly from the `steps` array.
-    // This makes the component's API cleaner and removes the possibility of
-    // inconsistent props (e.g., passing totalSteps={5} but an array of 4 steps).
-    const totalSteps = steps.length;
-
     return (
       <section className={cn("space-y-6", className)}>
-        <FormProgressIndicator
-          currentStep={currentStepIndex}
-          totalSteps={totalSteps} // Derived, not passed in.
-          steps={steps}
-          onStepClick={onStepChange} // Renamed for clarity.
-        />
-
         <div className="relative">
           <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-2xl" />
           <div className="relative bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-6 group overflow-hidden transition-all duration-300 hover:bg-white/20 hover:border-white/30">

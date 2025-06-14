@@ -1,4 +1,3 @@
-
 import React, {
   useState,
   useCallback,
@@ -365,23 +364,9 @@ const CreateCaseFlow = () => {
               currentStepLabel={STEPS[currentStep].label}
               formTitle="Create New Clinical Case"
               isDraftSaving={autoSaveStatus === "saving"}
-              onSaveDraft={() => {
-                // Trigger auto-save manually
-                localStorage.setItem(
-                  "case-form-draft",
-                  JSON.stringify(formData),
-                );
-                setAutoSaveStatus("saved");
-
-                // Announce to screen readers
-                if (errorAnnouncementRef.current) {
-                  errorAnnouncementRef.current.textContent =
-                    "Draft saved successfully.";
-                }
-              }}
+              hideDraftButton={true}
             />
 
-            {/* Error Summary for Accessibility */}
             {Object.keys(errors).length > 0 && (
               <ErrorSummary
                 errors={errors}
