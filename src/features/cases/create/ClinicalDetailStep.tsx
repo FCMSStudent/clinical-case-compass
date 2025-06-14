@@ -149,59 +149,6 @@ HistoryAndExamTab.displayName = "HistoryAndExamTab";
 const SystemsReviewTab = memo(() => {
   const { setValue, control } = useFormContext<ClinicalDetailFormData>();
   
-  const selectedPartIdStringsFromForm: string[] = [];
-
-  const selectedBodyPartsForUI = useMemo(() => {
-    return selectedPartIdStringsFromForm.map(idString => {
-      const parts = idString.split('-');
-      if (parts.length < 2) {
-        console.warn(`Invalid idString format in form: ${idString}`);
-        return null;
-      }
-      const id = parts.slice(0, -1).join('-');
-      const view = parts[parts.length - 1];
-      
-      const partData = {};
-      if (partData && (view === "anterior" || view === "posterior" || view === "lateral")) {
-        return { ...partData, view: view };
-      }
-      console.warn(`Could not reconstruct BodyPartSelection for idString: ${idString}`);
-      return null;
-    }).filter(Boolean)
-  }, [selectedPartIdStringsFromForm]);
-
-  const handleBodyPartSelected = useCallback((newSelection) => {
-    const currentSelectedPartIdStrings: string[] = [];
-    
-    const newSelectionIdString = `${newSelection.id}-${newSelection.view}`;
-
-    const existingIndex = currentSelectedPartIdStrings.findIndex(idStr => idStr === newSelectionIdString);
-    
-    let updatedPartIdStringsArray: string[];
-    if (existingIndex > -1) {
-      updatedPartIdStringsArray = currentSelectedPartIdStrings.filter((_, index) => index !== existingIndex);
-    } else {
-      updatedPartIdStringsArray = [...currentSelectedPartIdStrings, newSelectionIdString];
-    }
-    setValue(FORM_FIELDS.SYSTEM_SYMPTOMS as Path<ClinicalDetailFormData>, updatedPartIdStringsArray, { shouldValidate: true }); 
-  }, [setValue]);
-
-  const PartBadges = useMemo(() => (
-    selectedBodyPartsForUI.length > 0 && (
-      <div className="mt-3 flex flex-wrap gap-1">
-        {selectedBodyPartsForUI.map((part) => ( 
-          <div 
-            key={`${part.id}-${part.view}`} 
-            variant="secondary" 
-            className="text-xs bg-blue-100 text-blue-800"
-          >
-            {part.name} <span className="text-blue-500/80 text-[10px]">({part.view.substring(0,3)})</span>
-          </div>
-        ))}
-      </div>
-    )
-  ), [selectedBodyPartsForUI]);
-
   return (
     <TabsContent value="systems" className="space-y-6">
       <SimpleSection icon={BrainIcon} title="Review of Systems">
