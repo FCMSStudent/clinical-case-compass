@@ -34,12 +34,25 @@ interface FormFieldCardProps {
 
 interface StatusFieldCardProps {
   title: string;
-  description: string;
+  description?: string;
   icon: LucideIcon;
-  status: string;
-  completedFields: number;
-  totalFields: number;
+  status?: string;
+  completedFields?: number;
+  totalFields?: number;
   children: React.ReactNode;
+  tooltip?: string;
+  isRequired?: boolean;
+  fieldValue?: any;
+  hasError?: boolean;
+  className?: string;
+  badge?: string;
+  isCollapsible?: boolean;
+  defaultCollapsed?: boolean;
+  footer?: React.ReactNode;
+  onStatusChange?: (status: string) => void;
+  actions?: React.ReactNode;
+  isHighlighted?: boolean;
+  isDisabled?: boolean;
 }
 
 interface ValidationFeedbackProps {
@@ -128,30 +141,52 @@ export const FormFieldCard: React.FC<FormFieldCardProps> = ({
   </Card>
 );
 
-// Status Field Card Component
+// Status Field Card Component - Enhanced version that supports all the props being used
 export const StatusFieldCard: React.FC<StatusFieldCardProps> = ({ 
   title, 
   description, 
   icon: Icon, 
-  status, 
-  completedFields, 
-  totalFields, 
-  children 
+  status = "default", 
+  completedFields = 0, 
+  totalFields = 1, 
+  children,
+  tooltip,
+  isRequired = false,
+  fieldValue,
+  hasError = false,
+  className = "",
+  ...rest
 }) => {
+  // Auto-determine status based on field state if not explicitly provided
+  const determinedStatus = React.useMemo(() => {
+    if (status !== "default") return status;
+    
+    if (hasError) return "error";
+    
+    if (fieldValue !== undefined && fieldValue !== null && fieldValue !== "") {
+      if (Array.isArray(fieldValue) && fieldValue.length > 0) return "success";
+      if (typeof fieldValue === "string" && fieldValue.trim().length > 0) return "success";
+      if (typeof fieldValue === "object" && Object.keys(fieldValue).length > 0) return "success";
+      if (typeof fieldValue === "number" && fieldValue > 0) return "success";
+    }
+    
+    return "default";
+  }, [status, hasError, fieldValue]);
+
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'complete': return 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800';
-      case 'in-progress': return 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800';
-      case 'pending': return 'bg-gray-50 dark:bg-gray-900/20 border-gray-200 dark:border-gray-800';
+      case 'success': return 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800';
+      case 'error': return 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800';
+      case 'warning': return 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800';
       default: return 'bg-gray-50 dark:bg-gray-900/20 border-gray-200 dark:border-gray-800';
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'complete': return <CheckCircle2 className="h-4 w-4 text-green-600" />;
-      case 'in-progress': return <Clock className="h-4 w-4 text-yellow-600" />;
-      case 'pending': return <Circle className="h-4 w-4 text-gray-400" />;
+      case 'success': return <CheckCircle2 className="h-4 w-4 text-green-600" />;
+      case 'error': return <AlertCircle className="h-4 w-4 text-red-600" />;
+      case 'warning': return <Clock className="h-4 w-4 text-yellow-600" />;
       default: return <Circle className="h-4 w-4 text-gray-400" />;
     }
   };
@@ -159,28 +194,24 @@ export const StatusFieldCard: React.FC<StatusFieldCardProps> = ({
   const progressPercentage = totalFields > 0 ? (completedFields / totalFields) * 100 : 0;
 
   return (
-    <Card className={`mb-6 border-2 ${getStatusColor(status)} transition-all duration-200 hover:shadow-md`}>
+    <Card className={`mb-6 border-l-4 border-l-blue-500 shadow-sm hover:shadow-md transition-shadow ${className}`}>
       <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="bg-white dark:bg-gray-800 p-2 rounded-lg shadow-sm">
-              <Icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                {title}
-                {getStatusIcon(status)}
-              </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-300">{description}</p>
-            </div>
+        <div className="flex items-center gap-3">
+          <div className="bg-blue-50 dark:bg-blue-900/20 p-2 rounded-lg">
+            <Icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
           </div>
-          <div className="text-right">
-            <div className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              {completedFields}/{totalFields} fields
-            </div>
-            <div className="w-16 mt-1">
-              <Progress value={progressPercentage} className="h-2" />
-            </div>
+          <div className="flex-1">
+            <h3 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+              {title}
+              {isRequired && <Badge variant="destructive" className="text-xs">Required</Badge>}
+              {getStatusIcon(determinedStatus)}
+            </h3>
+            {tooltip && (
+              <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">{tooltip}</p>
+            )}
+            {description && (
+              <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">{description}</p>
+            )}
           </div>
         </div>
       </CardHeader>
