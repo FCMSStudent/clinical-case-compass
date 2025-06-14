@@ -1,3 +1,4 @@
+
 import { z } from "zod";
 import {
   User as UserIcon,
@@ -11,18 +12,15 @@ export const clinicalDetailStepSchema = z.object({
   vitals: z.record(z.string()).optional(),
   physicalExam: z.string().optional(),
   labResults: z.array(z.object({
-    id: z.string().optional(),
-    name: z.string().optional(),
-    value: z.string().optional(),
-    unit: z.string().optional(),
+    id: z.string(),
+    name: z.string(),
+    value: z.string(),
+    unit: z.string(),
   })).optional(),
   radiologyStudies: z.array(z.object({
-    id: z.string().optional(),
-    name: z.string().optional(),
-    type: z.string().optional(),
-    findings: z.string().optional(),
-    date: z.string().optional(),
-    impression: z.string().optional(),
+    id: z.string(),
+    type: z.string(),
+    findings: z.string(),
   })).optional(),
 });
 export type ClinicalDetailFormData = z.infer<typeof clinicalDetailStepSchema>;

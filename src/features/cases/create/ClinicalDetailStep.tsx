@@ -1,3 +1,4 @@
+
 import React, { memo, useCallback, useMemo } from "react";
 import { useFormContext, Controller, Path, FieldValues } from "react-hook-form";
 import { z } from "zod";
@@ -16,19 +17,15 @@ import {
   Brain as BrainIcon,
   FileText as FileTextIcon,
   Heart as HeartIcon,
-  Microscope as MicroscopeIcon,
-  Scan as ScanIcon,
   Stethoscope as StethoscopeIcon,
   AlertCircle,
   Info,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { LabTest, RadiologyStudy } from "@/types/case";
 import { clinicalDetailStepSchema, type ClinicalDetailFormData, TAB_ITEMS, type TabValue } from "./ClinicalDetailConfig";
 import { SystemReviewChecklist } from "@/features/cases/SystemReviewChecklist";
 import { VitalsCard } from "@/features/cases/VitalsCard";
-import { LabResultsCard } from "@/features/cases/LabResultsCard";
-import { RadiologyCard } from "@/features/cases/RadiologyCard";
+import { DiagnosticsTab } from "./DiagnosticsTab";
 import { StepHeader, StatusFieldCard } from "./components";
 
 const FORM_FIELDS = {
@@ -36,8 +33,6 @@ const FORM_FIELDS = {
   PHYSICAL_EXAM: "physicalExam",
   SYSTEM_SYMPTOMS: "systemSymptoms",
   VITALS: "vitals",
-  LAB_RESULTS: "labResults",
-  RADIOLOGY_STUDIES: "radiologyStudies",
 } as const;
 
 const HistoryAndExamTab = memo(() => {
@@ -153,45 +148,6 @@ const SystemsReviewTab = memo(() => {
 });
 SystemsReviewTab.displayName = "SystemsReviewTab";
 
-const DiagnosticsTab = memo(() => {
-  const { setValue, control, watch, formState } = useFormContext<ClinicalDetailFormData>();
-
-  const labResultsValue = watch(FORM_FIELDS.LAB_RESULTS as Path<ClinicalDetailFormData>);
-  const radiologyStudiesValue = watch(FORM_FIELDS.RADIOLOGY_STUDIES as Path<ClinicalDetailFormData>);
-
-  const setLabResults = useCallback((labs: LabTest[]) =>
-    setValue(FORM_FIELDS.LAB_RESULTS as Path<ClinicalDetailFormData>, labs, { shouldValidate: true }), [setValue]);
-
-  const setRadiology = useCallback((studies: RadiologyStudy[]) =>
-    setValue(FORM_FIELDS.RADIOLOGY_STUDIES as Path<ClinicalDetailFormData>, studies, { shouldValidate: true }), [setValue]);
-
-  return (
-    <TabsContent value="diagnostics" className="space-y-6">
-      <div className="grid gap-6 lg:grid-cols-2">
-        <StatusFieldCard
-          icon={MicroscopeIcon}
-          title="Laboratory Studies"
-          fieldValue={labResultsValue}
-          hasError={!!formState.errors[FORM_FIELDS.LAB_RESULTS]}
-        >
-          <LabResultsCard onLabResultsChange={setLabResults} />
-           <Controller name={FORM_FIELDS.LAB_RESULTS as Path<ClinicalDetailFormData>} control={control} render={({ fieldState }) => fieldState.error ? <FormMessage className="mt-2">{fieldState.error.message}</FormMessage> : null} />
-        </StatusFieldCard>
-        <StatusFieldCard
-          icon={ScanIcon}
-          title="Imaging Studies"
-          fieldValue={radiologyStudiesValue}
-          hasError={!!formState.errors[FORM_FIELDS.RADIOLOGY_STUDIES]}
-        >
-          <RadiologyCard onRadiologyChange={setRadiology} />
-          <Controller name={FORM_FIELDS.RADIOLOGY_STUDIES as Path<ClinicalDetailFormData>} control={control} render={({ fieldState }) => fieldState.error ? <FormMessage className="mt-2">{fieldState.error.message}</FormMessage> : null} />
-        </StatusFieldCard>
-      </div>
-    </TabsContent>
-  );
-});
-DiagnosticsTab.displayName = "DiagnosticsTab";
-
 export const ClinicalDetailStep = memo(({ className }: { className?: string }) => {
   const { formState: { errors: RHFerrors } } = useFormContext<ClinicalDetailFormData>();
   const [currentTab, setCurrentTab] = React.useState<TabValue>(TAB_ITEMS[0].value); 
@@ -201,7 +157,6 @@ export const ClinicalDetailStep = memo(({ className }: { className?: string }) =
     // Store previous tab for animation direction
     prevTabRef.current = currentTab;
   }, [currentTab]);
-
 
   // Determine animation direction
   const prevTab = prevTabRef.current;
@@ -219,7 +174,6 @@ export const ClinicalDetailStep = memo(({ className }: { className?: string }) =
       exitX = 20;
     }
   }
-
 
   return (
     <TooltipProvider>
