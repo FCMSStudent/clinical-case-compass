@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -158,7 +159,7 @@ export function SimpleImaging({ onImagingChange }: SimpleImagingProps) {
     onImagingChange?.(updatedStudies);
   };
 
-  const getFilteredStudies = (): string[] => {
+  const getFilteredStudies = (): readonly string[] => {
     if (!selectedCategory) return [];
     const categoryKey = selectedCategory as keyof typeof IMAGING_CATEGORIES;
     const categoryStudies = IMAGING_CATEGORIES[categoryKey];

@@ -144,7 +144,7 @@ export function SimpleLabs({ onLabChange }: SimpleLabsProps) {
     onLabChange?.(updatedLabs);
   };
 
-  const getFilteredTests = (): Array<{ name: string; unit: string }> => {
+  const getFilteredTests = (): readonly Array<{ readonly name: string; readonly unit: string }> => {
     if (!selectedCategory) return [];
     const categoryKey = selectedCategory as keyof typeof LAB_TEST_CATEGORIES;
     const categoryTests = LAB_TEST_CATEGORIES[categoryKey];
