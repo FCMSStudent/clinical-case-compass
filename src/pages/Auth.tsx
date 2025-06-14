@@ -6,10 +6,7 @@ import { Input } from "@/components/ui/input";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import {
   Tabs,
@@ -20,7 +17,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -44,11 +40,11 @@ import {
   Mail,
   User,
   UserPlus,
-  AlertCircle,
   CheckCircle2,
-  Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import AnimatedMedicalIcons from "@/components/ui/animated-medical-icons";
+import ParallaxBackground from "@/components/ui/parallax-background";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -180,369 +176,419 @@ const Auth = () => {
         Skip to main content
       </a>
 
-      {/* Glassy background elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/3 rounded-full blur-3xl"></div>
-      </div>
+      {/* Enhanced background with parallax and animations */}
+      <ParallaxBackground />
+      <AnimatedMedicalIcons />
 
       {/* Main Content */}
       <div id="main-content" className="relative z-10 min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="w-full max-w-md sm:max-w-lg lg:max-w-xl"
+          initial={{ opacity: 0, y: 20, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
+          className="w-full max-w-sm sm:max-w-md lg:max-w-lg"
         >
-          <Card className="bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl">
-            <CardHeader className="text-center pb-6">
-              <div className="text-center mb-8">
+          <Card className="bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl transition-all duration-300 hover:bg-white/15 hover:border-white/30">
+            <CardHeader className="text-center pb-8">
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.5 }}
+                className="text-center mb-6"
+              >
                 <div className="flex items-center justify-center gap-3 mb-4">
-                  <h1 className="text-3xl font-bold text-white">Medica</h1>
+                  <h1 className="text-3xl font-thin text-white tracking-wide">Medica</h1>
                 </div>
-                <p className="text-white/80 text-lg">
+                <p className="text-white/70 text-base font-light">
                   Sign in to your account or create a new one
                 </p>
-              </div>
+              </motion.div>
             </CardHeader>
 
-            <CardContent className="px-6 pb-6">
-              {/* Tabs */}
+            <CardContent className="px-8 pb-8 space-y-8">
+              {/* Enhanced Tabs with smooth transitions */}
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-1 mb-6">
+                <TabsList className="grid w-full grid-cols-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-1 mb-8 relative overflow-hidden">
+                  <motion.div
+                    className="absolute inset-y-1 bg-white/20 rounded-xl shadow-sm"
+                    initial={false}
+                    animate={{
+                      x: activeTab === "login" ? "2px" : "calc(50% - 2px)",
+                      width: "calc(50% - 2px)",
+                    }}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  />
                   <TabsTrigger 
                     value="login" 
-                    className={cn(
-                      "rounded-xl text-sm font-medium transition-all",
-                      activeTab === "login" 
-                        ? "bg-white/20 text-white shadow-sm" 
-                        : "text-white/70 hover:text-white/90"
-                    )}
+                    className="relative z-10 rounded-xl text-sm font-medium transition-all text-white/90 data-[state=active]:text-white"
                     aria-label="Sign in to your account"
                   >
                     Sign In
                   </TabsTrigger>
                   <TabsTrigger 
                     value="signup" 
-                    className={cn(
-                      "rounded-xl text-sm font-medium transition-all",
-                      activeTab === "signup" 
-                        ? "bg-white/20 text-white shadow-sm" 
-                        : "text-white/70 hover:text-white/90"
-                    )}
+                    className="relative z-10 rounded-xl text-sm font-medium transition-all text-white/90 data-[state=active]:text-white"
                     aria-label="Create a new account"
                   >
                     Sign Up
                   </TabsTrigger>
                 </TabsList>
 
-                {/* Login Tab */}
-                <TabsContent value="login" className="space-y-6">
-                  <Form {...loginForm}>
-                    <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
-                      <FormField
-                        control={loginForm.control}
-                        name="email"
-                        render={({ field, fieldState }) => (
-                          <FormItem>
-                            <FormLabel 
-                              id="login-email-label"
-                              className="text-white/90 text-sm font-medium"
-                            >
-                              Email
-                            </FormLabel>
-                            <FormControl>
-                              <div className="relative">
-                                <span className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10">
-                                  <Mail className="h-5 w-5 text-white/70" aria-hidden="true" />
-                                </span>
-                                <Input
-                                  {...field}
-                                  type="email"
-                                  id="login-email"
-                                  aria-labelledby="login-email-label"
-                                  aria-describedby={fieldState.error ? "login-email-error" : undefined}
-                                  aria-invalid={fieldState.error ? "true" : "false"}
-                                  aria-required="true"
-                                  placeholder="Enter your email"
-                                  className="bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 pl-12"
-                                />
-                              </div>
-                            </FormControl>
-                            <FormMessage id="login-email-error" className="text-red-300" />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={loginForm.control}
-                        name="password"
-                        render={({ field, fieldState }) => (
-                          <FormItem>
-                            <FormLabel 
-                              id="login-password-label"
-                              className="text-white/90 text-sm font-medium"
-                            >
-                              Password
-                            </FormLabel>
-                            <FormControl>
-                              <div className="relative">
-                                <span className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10">
-                                  <Lock className="h-5 w-5 text-white/70" aria-hidden="true" />
-                                </span>
-                                <Input
-                                  {...field}
-                                  type={showPassword ? "text" : "password"}
-                                  id="login-password"
-                                  aria-labelledby="login-password-label"
-                                  aria-describedby={fieldState.error ? "login-password-error" : undefined}
-                                  aria-invalid={fieldState.error ? "true" : "false"}
-                                  aria-required="true"
-                                  placeholder="Enter your password"
-                                  className="bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 pl-12 pr-10"
-                                />
-                                <button
-                                  type="button"
-                                  aria-label={showPassword ? "Hide password" : "Show password"}
-                                  aria-pressed={showPassword}
-                                  onClick={() => setShowPassword(!showPassword)}
-                                  className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center h-10 w-10 text-white/70 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 rounded"
+                <AnimatePresence mode="wait">
+                  {/* Login Tab */}
+                  <TabsContent value="login" className="space-y-6">
+                    <motion.div
+                      key="login"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 20 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <Form {...loginForm}>
+                        <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-6">
+                          <FormField
+                            control={loginForm.control}
+                            name="email"
+                            render={({ field, fieldState }) => (
+                              <FormItem>
+                                <FormLabel 
+                                  id="login-email-label"
+                                  className="text-white/90 text-sm font-medium"
                                 >
-                                  <span className="sr-only">
-                                    {showPassword ? "Hide password" : "Show password"}
-                                  </span>
-                                  {showPassword ? <EyeOff className="h-5 w-5" aria-hidden="true" /> : <Eye className="h-5 w-5" aria-hidden="true" />}
-                                </button>
-                              </div>
-                            </FormControl>
-                            <FormMessage id="login-password-error" className="text-red-300" />
-                          </FormItem>
-                        )}
-                      />
+                                  Email
+                                </FormLabel>
+                                <FormControl>
+                                  <motion.div 
+                                    className="relative group"
+                                    whileFocus={{ scale: 1.02 }}
+                                    transition={{ duration: 0.2 }}
+                                  >
+                                    <span className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center justify-center w-12 h-12">
+                                      <Mail className="h-5 w-5 text-white/70 group-focus-within:text-white/90 transition-colors" aria-hidden="true" />
+                                    </span>
+                                    <Input
+                                      {...field}
+                                      type="email"
+                                      id="login-email"
+                                      aria-labelledby="login-email-label"
+                                      aria-describedby={fieldState.error ? "login-email-error" : undefined}
+                                      aria-invalid={fieldState.error ? "true" : "false"}
+                                      aria-required="true"
+                                      placeholder="Enter your email"
+                                      className="bg-white/5 border border-white/20 text-white placeholder:text-white/50 focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:border-blue-400/50 focus-visible:bg-white/10 pl-12 h-12 rounded-xl transition-all duration-300 hover:bg-white/10 hover:border-white/30"
+                                    />
+                                  </motion.div>
+                                </FormControl>
+                                <FormMessage id="login-email-error" className="text-red-300" />
+                              </FormItem>
+                            )}
+                          />
 
-                      <Button
-                        type="submit"
-                        disabled={isLoading}
-                        aria-describedby={isLoading ? "login-loading" : undefined}
-                        className="w-full bg-white/20 backdrop-blur-sm border border-white/20 text-white hover:bg-white/30 transition-all duration-300 rounded-xl h-12"
-                      >
-                        {isLoading ? (
-                          <>
-                            <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-                            <span id="login-loading" className="sr-only">Signing in...</span>
-                          </>
-                        ) : (
-                          "Sign In"
-                        )}
-                      </Button>
-                    </form>
-                  </Form>
-                </TabsContent>
-
-                {/* Signup Tab */}
-                <TabsContent value="signup" className="space-y-6">
-                  <Form {...signupForm}>
-                    <form onSubmit={signupForm.handleSubmit(onSignupSubmit)} className="space-y-4">
-                      <FormField
-                        control={signupForm.control}
-                        name="fullName"
-                        render={({ field, fieldState }) => (
-                          <FormItem>
-                            <FormLabel 
-                              id="signup-fullname-label"
-                              className="text-white/90 text-sm font-medium"
-                            >
-                              Full Name
-                            </FormLabel>
-                            <FormControl>
-                              <div className="relative">
-                                <span className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10">
-                                  <User className="h-5 w-5 text-white/70" aria-hidden="true" />
-                                </span>
-                                <Input
-                                  {...field}
-                                  type="text"
-                                  id="signup-fullname"
-                                  aria-labelledby="signup-fullname-label"
-                                  aria-describedby={fieldState.error ? "signup-fullname-error" : "signup-fullname-description"}
-                                  aria-invalid={fieldState.error ? "true" : "false"}
-                                  aria-required="true"
-                                  placeholder="Enter your full name"
-                                  className="bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 pl-12"
-                                />
-                              </div>
-                            </FormControl>
-                            <FormMessage id="signup-fullname-error" className="text-red-300" />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={signupForm.control}
-                        name="email"
-                        render={({ field, fieldState }) => (
-                          <FormItem>
-                            <FormLabel 
-                              id="signup-email-label"
-                              className="text-white/90 text-sm font-medium"
-                            >
-                              Email
-                            </FormLabel>
-                            <FormControl>
-                              <div className="relative">
-                                <span className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10">
-                                  <Mail className="h-5 w-5 text-white/70" aria-hidden="true" />
-                                </span>
-                                <Input
-                                  {...field}
-                                  type="email"
-                                  id="signup-email"
-                                  aria-labelledby="signup-email-label"
-                                  aria-describedby={fieldState.error ? "signup-email-error" : "signup-email-description"}
-                                  aria-invalid={fieldState.error ? "true" : "false"}
-                                  aria-required="true"
-                                  placeholder="Enter your email"
-                                  className="bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 pl-12"
-                                />
-                              </div>
-                            </FormControl>
-                            <FormMessage id="signup-email-error" className="text-red-300" />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={signupForm.control}
-                        name="password"
-                        render={({ field, fieldState }) => (
-                          <FormItem>
-                            <FormLabel 
-                              id="signup-password-label"
-                              className="text-white/90 text-sm font-medium"
-                            >
-                              Password
-                            </FormLabel>
-                            <FormControl>
-                              <div className="relative">
-                                <span className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10">
-                                  <Lock className="h-5 w-5 text-white/70" aria-hidden="true" />
-                                </span>
-                                <Input
-                                  {...field}
-                                  type={showPassword ? "text" : "password"}
-                                  id="signup-password"
-                                  aria-labelledby="signup-password-label"
-                                  aria-describedby={fieldState.error ? "signup-password-error" : "signup-password-description"}
-                                  aria-invalid={fieldState.error ? "true" : "false"}
-                                  aria-required="true"
-                                  placeholder="Create a password"
-                                  className="bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 pl-12 pr-10"
-                                />
-                                <button
-                                  type="button"
-                                  aria-label={showPassword ? "Hide password" : "Show password"}
-                                  aria-pressed={showPassword}
-                                  onClick={() => setShowPassword(!showPassword)}
-                                  className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center h-10 w-10 text-white/70 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 rounded"
+                          <FormField
+                            control={loginForm.control}
+                            name="password"
+                            render={({ field, fieldState }) => (
+                              <FormItem>
+                                <FormLabel 
+                                  id="login-password-label"
+                                  className="text-white/90 text-sm font-medium"
                                 >
-                                  <span className="sr-only">
-                                    {showPassword ? "Hide password" : "Show password"}
-                                  </span>
-                                  {showPassword ? <EyeOff className="h-5 w-5" aria-hidden="true" /> : <Eye className="h-5 w-5" aria-hidden="true" />}
-                                </button>
-                              </div>
-                            </FormControl>
-                            <FormMessage id="signup-password-error" className="text-red-300" />
-                          </FormItem>
-                        )}
-                      />
+                                  Password
+                                </FormLabel>
+                                <FormControl>
+                                  <motion.div 
+                                    className="relative group"
+                                    whileFocus={{ scale: 1.02 }}
+                                    transition={{ duration: 0.2 }}
+                                  >
+                                    <span className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center justify-center w-12 h-12">
+                                      <Lock className="h-5 w-5 text-white/70 group-focus-within:text-white/90 transition-colors" aria-hidden="true" />
+                                    </span>
+                                    <Input
+                                      {...field}
+                                      type={showPassword ? "text" : "password"}
+                                      id="login-password"
+                                      aria-labelledby="login-password-label"
+                                      aria-describedby={fieldState.error ? "login-password-error" : undefined}
+                                      aria-invalid={fieldState.error ? "true" : "false"}
+                                      aria-required="true"
+                                      placeholder="Enter your password"
+                                      className="bg-white/5 border border-white/20 text-white placeholder:text-white/50 focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:border-blue-400/50 focus-visible:bg-white/10 pl-12 pr-12 h-12 rounded-xl transition-all duration-300 hover:bg-white/10 hover:border-white/30"
+                                    />
+                                    <motion.button
+                                      type="button"
+                                      whileHover={{ scale: 1.1 }}
+                                      whileTap={{ scale: 0.9 }}
+                                      aria-label={showPassword ? "Hide password" : "Show password"}
+                                      aria-pressed={showPassword}
+                                      onClick={() => setShowPassword(!showPassword)}
+                                      className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center h-8 w-8 text-white/70 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 rounded"
+                                    >
+                                      {showPassword ? <EyeOff className="h-5 w-5" aria-hidden="true" /> : <Eye className="h-5 w-5" aria-hidden="true" />}
+                                    </motion.button>
+                                  </motion.div>
+                                </FormControl>
+                                <FormMessage id="login-password-error" className="text-red-300" />
+                              </FormItem>
+                            )}
+                          />
 
-                      <FormField
-                        control={signupForm.control}
-                        name="confirmPassword"
-                        render={({ field, fieldState }) => (
-                          <FormItem>
-                            <FormLabel 
-                              id="signup-confirm-password-label"
-                              className="text-white/90 text-sm font-medium"
+                          <motion.div
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                          >
+                            <Button
+                              type="submit"
+                              disabled={isLoading}
+                              className="w-full bg-white/15 backdrop-blur-sm border border-white/20 text-white hover:bg-white/25 transition-all duration-300 rounded-xl h-12 font-medium"
                             >
-                              Confirm Password
-                            </FormLabel>
-                            <FormControl>
-                              <div className="relative">
-                                <span className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10">
-                                  <Lock className="h-5 w-5 text-white/70" aria-hidden="true" />
-                                </span>
-                                <Input
-                                  {...field}
-                                  type={showConfirmPassword ? "text" : "password"}
-                                  id="signup-confirm-password"
-                                  aria-labelledby="signup-confirm-password-label"
-                                  aria-describedby={fieldState.error ? "signup-confirm-password-error" : "signup-confirm-password-description"}
-                                  aria-invalid={fieldState.error ? "true" : "false"}
-                                  aria-required="true"
-                                  placeholder="Confirm your password"
-                                  className="bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 pl-12 pr-10"
-                                />
-                                <button
-                                  type="button"
-                                  aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
-                                  aria-pressed={showConfirmPassword}
-                                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                  className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center h-10 w-10 text-white/70 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 rounded"
-                                >
-                                  <span className="sr-only">
-                                    {showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
-                                  </span>
-                                  {showConfirmPassword ? <EyeOff className="h-5 w-5" aria-hidden="true" /> : <Eye className="h-5 w-5" aria-hidden="true" />}
-                                </button>
-                              </div>
-                            </FormControl>
-                            <FormMessage id="signup-confirm-password-error" className="text-red-300" />
-                          </FormItem>
-                        )}
-                      />
+                              {isLoading ? (
+                                <>
+                                  <Loader2 className="h-4 w-4 animate-spin mr-2" aria-hidden="true" />
+                                  Signing in...
+                                </>
+                              ) : (
+                                "Sign In"
+                              )}
+                            </Button>
+                          </motion.div>
+                        </form>
+                      </Form>
+                    </motion.div>
+                  </TabsContent>
 
-                      <Button
-                        type="submit"
-                        disabled={isLoading}
-                        aria-describedby={isLoading ? "signup-loading" : undefined}
-                        className="w-full bg-white/20 backdrop-blur-sm border border-white/20 text-white hover:bg-white/30 transition-all duration-300 rounded-xl h-12"
-                      >
-                        {isLoading ? (
-                          <>
-                            <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-                            <span id="signup-loading" className="sr-only">Creating account...</span>
-                          </>
-                        ) : (
-                          <>
-                            <UserPlus className="h-4 w-4 mr-2" aria-hidden="true" />
-                            Create Account
-                          </>
-                        )}
-                      </Button>
-                    </form>
-                  </Form>
-                </TabsContent>
+                  {/* Signup Tab */}
+                  <TabsContent value="signup" className="space-y-6">
+                    <motion.div
+                      key="signup"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <Form {...signupForm}>
+                        <form onSubmit={signupForm.handleSubmit(onSignupSubmit)} className="space-y-6">
+                          <FormField
+                            control={signupForm.control}
+                            name="fullName"
+                            render={({ field, fieldState }) => (
+                              <FormItem>
+                                <FormLabel 
+                                  id="signup-fullname-label"
+                                  className="text-white/90 text-sm font-medium"
+                                >
+                                  Full Name
+                                </FormLabel>
+                                <FormControl>
+                                  <motion.div 
+                                    className="relative group"
+                                    whileFocus={{ scale: 1.02 }}
+                                    transition={{ duration: 0.2 }}
+                                  >
+                                    <span className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center justify-center w-12 h-12">
+                                      <User className="h-5 w-5 text-white/70 group-focus-within:text-white/90 transition-colors" aria-hidden="true" />
+                                    </span>
+                                    <Input
+                                      {...field}
+                                      type="text"
+                                      id="signup-fullname"
+                                      aria-labelledby="signup-fullname-label"
+                                      aria-describedby={fieldState.error ? "signup-fullname-error" : undefined}
+                                      aria-invalid={fieldState.error ? "true" : "false"}
+                                      aria-required="true"
+                                      placeholder="Enter your full name"
+                                      className="bg-white/5 border border-white/20 text-white placeholder:text-white/50 focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:border-blue-400/50 focus-visible:bg-white/10 pl-12 h-12 rounded-xl transition-all duration-300 hover:bg-white/10 hover:border-white/30"
+                                    />
+                                  </motion.div>
+                                </FormControl>
+                                <FormMessage id="signup-fullname-error" className="text-red-300" />
+                              </FormItem>
+                            )}
+                          />
+
+                          {/* Email field for signup - similar pattern */}
+                          <FormField
+                            control={signupForm.control}
+                            name="email"
+                            render={({ field, fieldState }) => (
+                              <FormItem>
+                                <FormLabel 
+                                  id="signup-email-label"
+                                  className="text-white/90 text-sm font-medium"
+                                >
+                                  Email
+                                </FormLabel>
+                                <FormControl>
+                                  <motion.div 
+                                    className="relative group"
+                                    whileFocus={{ scale: 1.02 }}
+                                    transition={{ duration: 0.2 }}
+                                  >
+                                    <span className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center justify-center w-12 h-12">
+                                      <Mail className="h-5 w-5 text-white/70 group-focus-within:text-white/90 transition-colors" aria-hidden="true" />
+                                    </span>
+                                    <Input
+                                      {...field}
+                                      type="email"
+                                      id="signup-email"
+                                      aria-labelledby="signup-email-label"
+                                      aria-describedby={fieldState.error ? "signup-email-error" : undefined}
+                                      aria-invalid={fieldState.error ? "true" : "false"}
+                                      aria-required="true"
+                                      placeholder="Enter your email"
+                                      className="bg-white/5 border border-white/20 text-white placeholder:text-white/50 focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:border-blue-400/50 focus-visible:bg-white/10 pl-12 h-12 rounded-xl transition-all duration-300 hover:bg-white/10 hover:border-white/30"
+                                    />
+                                  </motion.div>
+                                </FormControl>
+                                <FormMessage id="signup-email-error" className="text-red-300" />
+                              </FormItem>
+                            )}
+                          />
+
+                          {/* Password and confirm password fields - similar patterns with respective show/hide functionality */}
+                          <FormField
+                            control={signupForm.control}
+                            name="password"
+                            render={({ field, fieldState }) => (
+                              <FormItem>
+                                <FormLabel 
+                                  id="signup-password-label"
+                                  className="text-white/90 text-sm font-medium"
+                                >
+                                  Password
+                                </FormLabel>
+                                <FormControl>
+                                  <motion.div 
+                                    className="relative group"
+                                    whileFocus={{ scale: 1.02 }}
+                                    transition={{ duration: 0.2 }}
+                                  >
+                                    <span className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center justify-center w-12 h-12">
+                                      <Lock className="h-5 w-5 text-white/70 group-focus-within:text-white/90 transition-colors" aria-hidden="true" />
+                                    </span>
+                                    <Input
+                                      {...field}
+                                      type={showPassword ? "text" : "password"}
+                                      id="signup-password"
+                                      aria-labelledby="signup-password-label"
+                                      aria-describedby={fieldState.error ? "signup-password-error" : undefined}
+                                      aria-invalid={fieldState.error ? "true" : "false"}
+                                      aria-required="true"
+                                      placeholder="Create a password"
+                                      className="bg-white/5 border border-white/20 text-white placeholder:text-white/50 focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:border-blue-400/50 focus-visible:bg-white/10 pl-12 pr-12 h-12 rounded-xl transition-all duration-300 hover:bg-white/10 hover:border-white/30"
+                                    />
+                                    <motion.button
+                                      type="button"
+                                      whileHover={{ scale: 1.1 }}
+                                      whileTap={{ scale: 0.9 }}
+                                      aria-label={showPassword ? "Hide password" : "Show password"}
+                                      aria-pressed={showPassword}
+                                      onClick={() => setShowPassword(!showPassword)}
+                                      className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center h-8 w-8 text-white/70 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 rounded"
+                                    >
+                                      {showPassword ? <EyeOff className="h-5 w-5" aria-hidden="true" /> : <Eye className="h-5 w-5" aria-hidden="true" />}
+                                    </motion.button>
+                                  </motion.div>
+                                </FormControl>
+                                <FormMessage id="signup-password-error" className="text-red-300" />
+                              </FormItem>
+                            )}
+                          />
+
+                          <FormField
+                            control={signupForm.control}
+                            name="confirmPassword"
+                            render={({ field, fieldState }) => (
+                              <FormItem>
+                                <FormLabel 
+                                  id="signup-confirm-password-label"
+                                  className="text-white/90 text-sm font-medium"
+                                >
+                                  Confirm Password
+                                </FormLabel>
+                                <FormControl>
+                                  <motion.div 
+                                    className="relative group"
+                                    whileFocus={{ scale: 1.02 }}
+                                    transition={{ duration: 0.2 }}
+                                  >
+                                    <span className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center justify-center w-12 h-12">
+                                      <Lock className="h-5 w-5 text-white/70 group-focus-within:text-white/90 transition-colors" aria-hidden="true" />
+                                    </span>
+                                    <Input
+                                      {...field}
+                                      type={showConfirmPassword ? "text" : "password"}
+                                      id="signup-confirm-password"
+                                      aria-labelledby="signup-confirm-password-label"
+                                      aria-describedby={fieldState.error ? "signup-confirm-password-error" : undefined}
+                                      aria-invalid={fieldState.error ? "true" : "false"}
+                                      aria-required="true"
+                                      placeholder="Confirm your password"
+                                      className="bg-white/5 border border-white/20 text-white placeholder:text-white/50 focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:border-blue-400/50 focus-visible:bg-white/10 pl-12 pr-12 h-12 rounded-xl transition-all duration-300 hover:bg-white/10 hover:border-white/30"
+                                    />
+                                    <motion.button
+                                      type="button"
+                                      whileHover={{ scale: 1.1 }}
+                                      whileTap={{ scale: 0.9 }}
+                                      aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+                                      aria-pressed={showConfirmPassword}
+                                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                      className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center h-8 w-8 text-white/70 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 rounded"
+                                    >
+                                      {showConfirmPassword ? <EyeOff className="h-5 w-5" aria-hidden="true" /> : <Eye className="h-5 w-5" aria-hidden="true" />}
+                                    </motion.button>
+                                  </motion.div>
+                                </FormControl>
+                                <FormMessage id="signup-confirm-password-error" className="text-red-300" />
+                              </FormItem>
+                            )}
+                          />
+
+                          <motion.div
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                          >
+                            <Button
+                              type="submit"
+                              disabled={isLoading}
+                              className="w-full bg-white/15 backdrop-blur-sm border border-white/20 text-white hover:bg-white/25 transition-all duration-300 rounded-xl h-12 font-medium"
+                            >
+                              {isLoading ? (
+                                <>
+                                  <Loader2 className="h-4 w-4 animate-spin mr-2" aria-hidden="true" />
+                                  Creating account...
+                                </>
+                              ) : (
+                                <>
+                                  <UserPlus className="h-4 w-4 mr-2" aria-hidden="true" />
+                                  Create Account
+                                </>
+                              )}
+                            </Button>
+                          </motion.div>
+                        </form>
+                      </Form>
+                    </motion.div>
+                  </TabsContent>
+                </AnimatePresence>
               </Tabs>
 
-              {/* Verification Success Message */}
+              {/* Enhanced Verification Success Message */}
               <AnimatePresence>
                 {verificationSent && (
                   <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.3 }}
+                    initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                    transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
                     className="mt-6"
                     role="alert"
                     aria-live="polite"
                   >
-                    <Alert className="bg-green-500/10 backdrop-blur-sm border border-green-400/20">
+                    <Alert className="bg-green-500/10 backdrop-blur-sm border border-green-400/20 rounded-xl">
                       <CheckCircle2 className="h-4 w-4 text-green-400" aria-hidden="true" />
-                      <AlertTitle className="text-green-400">Verification Email Sent</AlertTitle>
-                      <AlertDescription className="text-green-300">
+                      <AlertTitle className="text-green-400 font-medium">Verification Email Sent</AlertTitle>
+                      <AlertDescription className="text-green-300 font-light">
                         Please check your email to verify your account before signing in.
                       </AlertDescription>
                     </Alert>
