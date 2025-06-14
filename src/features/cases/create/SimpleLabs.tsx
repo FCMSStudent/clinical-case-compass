@@ -294,7 +294,7 @@ export function SimpleLabs({ onLabChange }: SimpleLabsProps) {
             >
               <div className="flex items-center gap-3 mb-3">
                 <div className="h-8 w-8 rounded-lg bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-blue-300">
-                  {categoryIcons[category] || <Flask className="h-4 w-4" />}
+                  {categoryIcons[category] || <TestTube className="h-4 w-4" />}
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="font-medium text-slate-200 text-sm">{category}</span>
@@ -327,7 +327,7 @@ export function SimpleLabs({ onLabChange }: SimpleLabsProps) {
         </div>
       ) : (
         <div className="bg-slate-800/60 backdrop-blur-sm rounded-xl border border-slate-600/50 p-8 text-center">
-          <Flask className="h-8 w-8 text-slate-400 mx-auto mb-2" />
+          <TestTube className="h-8 w-8 text-slate-400 mx-auto mb-2" />
           <p className="text-sm text-slate-400">No lab results added yet</p>
         </div>
       )}
