@@ -3,7 +3,7 @@ import { forwardRef } from 'react';
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
 
-interface FormFieldProps extends React.HTMLAttributes<HTMLDivElement> {
+interface FormGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   label?: string;
   error?: string;
   description?: string;
@@ -11,7 +11,7 @@ interface FormFieldProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
 }
 
-const FormField = forwardRef<HTMLDivElement, FormFieldProps>(
+const FormGroup = forwardRef<HTMLDivElement, FormGroupProps>(
   ({ className, label, error, description, required, children, ...props }, ref) => {
     return (
       <div ref={ref} className={cn('space-y-2', className)} {...props}>
@@ -33,6 +33,6 @@ const FormField = forwardRef<HTMLDivElement, FormFieldProps>(
   }
 );
 
-FormField.displayName = 'FormField';
+FormGroup.displayName = 'FormGroup';
 
-export { FormField };
+export { FormGroup };

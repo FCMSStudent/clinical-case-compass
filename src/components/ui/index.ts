@@ -32,7 +32,7 @@ export * from "./input-otp";
 export * from "./drawer";
 export * from "./page-header";
 export * from "./settings-card";
-export * from "./form-field";
+export * from "./form-group";
 export * from "./form-progress";
 export * from "./loading-spinner";
 export * from "./dashboard-skeleton";
