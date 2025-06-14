@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useMemo } from "react";
-import { useFormContext, Controller, Path, FieldValues } from "react-hook-form"; // Added FieldValues
+import { useFormContext, Controller, Path, FieldValues } from "react-hook-form";
 import { z } from "zod";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -26,13 +26,13 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { LabTest, RadiologyStudy } from "@/types/case";
-import { clinicalDetailStepSchema, type ClinicalDetailFormData, TAB_ITEMS, type TabValue } from "./ClinicalDetailConfig"; // Imported TabValue
+import { clinicalDetailStepSchema, type ClinicalDetailFormData, TAB_ITEMS, type TabValue } from "./ClinicalDetailConfig";
 import { InteractiveBodyDiagram, BodyPartSelection } from "@/features/cases/InteractiveBodyDiagram";
 import { SystemReviewChecklist } from "@/features/cases/SystemReviewChecklist";
 import { VitalsCard } from "@/features/cases/VitalsCard";
 import { LabResultsCard } from "@/features/cases/LabResultsCard";
 import { RadiologyCard } from "@/features/cases/RadiologyCard";
-import { StepHeader, StatusFieldCard } from "./components"; // Added StatusFieldCard
+import { StepHeader, StatusFieldCard } from "./components";
 
 // FORM_FIELDS constant remains the same
 const FORM_FIELDS = {
@@ -83,14 +83,13 @@ SimpleSection.displayName = "SimpleSection";
 
 // Tab components using SimpleSection and StatusFieldCard or direct FormFields
 const HistoryAndExamTab = memo(() => {
-  const { control, formState, watch } = useFormContext<ClinicalDetailFormData>(); // Added watch
+  const { control, formState, watch } = useFormContext<ClinicalDetailFormData>();
   const patientHistoryError = formState.errors?.patientHistory;
   const physicalExamError = formState.errors?.physicalExam;
 
   // Watch values for StatusFieldCard
   const patientHistoryValue = watch("patientHistory");
   const physicalExamValue = watch("physicalExam");
-
 
   return (
     <TabsContent value="history" className="space-y-6">
@@ -104,14 +103,17 @@ const HistoryAndExamTab = memo(() => {
         <FormField
           control={control}
           name={"patientHistory" as Path<ClinicalDetailFormData>}
-          render={({ field }) => (
+          render={({ field: { onChange, onBlur, value, name, ref } }) => (
             <FormItem>
               <FormControl>
                 <Textarea
                   placeholder="Document the patient's presenting complaint, timeline, associated factors, and relevant history…"
                   rows={6}
-                  {...field}
-                  value={field.value || ""} // Ensure value is string
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  value={typeof value === 'string' ? value : ""}
+                  name={name}
+                  ref={ref}
                 />
               </FormControl>
               <FormMessage />
@@ -130,14 +132,17 @@ const HistoryAndExamTab = memo(() => {
         <FormField
           control={control}
           name={"physicalExam" as Path<ClinicalDetailFormData>}
-          render={({ field }) => (
+          render={({ field: { onChange, onBlur, value, name, ref } }) => (
             <FormItem>
               <FormControl>
                 <Textarea
                   placeholder="Systematic physical examination findings…"
                   rows={6}
-                  {...field}
-                  value={field.value || ""} // Ensure value is string
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  value={typeof value === 'string' ? value : ""}
+                  name={name}
+                  ref={ref}
                 />
               </FormControl>
               <FormMessage />
