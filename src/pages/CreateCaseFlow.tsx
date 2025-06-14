@@ -1,4 +1,3 @@
-
 import React, {
   useState,
   useCallback,
@@ -277,12 +276,7 @@ const CreateCaseFlow = () => {
               <div className="space-y-6">
                 {currentStep === 0 && <PatientStep />}
                 {currentStep === 1 && <CaseInfoStep />}
-                {currentStep === 2 && (
-                  <ClinicalDetailStep
-                    data={watchedValues.clinicalDetails}
-                    onChange={(data) => form.setValue("clinicalDetails", data)}
-                  />
-                )}
+                {currentStep === 2 && <ClinicalDetailStep />}
                 {currentStep === 3 && <LearningPointsStep />}
               </div>
 
