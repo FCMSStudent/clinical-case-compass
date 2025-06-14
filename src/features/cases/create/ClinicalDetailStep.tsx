@@ -63,16 +63,14 @@ const SimpleSection = memo(({ title, icon: Icon, children, tooltip, className }:
         <h3 className="text-lg font-semibold text-white">{title}</h3>
       </div>
       {tooltip && (
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Info className="h-4 w-4 text-white/60 hover:text-white" />
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{tooltip}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Info className="h-4 w-4 text-white/60 hover:text-white" />
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{tooltip}</p>
+          </TooltipContent>
+        </Tooltip>
       )}
     </div>
     {children}
@@ -266,60 +264,62 @@ export const ClinicalDetailStep = memo(({ className }: { className?: string }) =
 
 
   return (
-    <section className={cn("space-y-6", className)}>
-      <StepHeader
-        title="Clinical Assessment & Documentation"
-        description="Comprehensive clinical evaluation and diagnostic work-up"
-        icon={StethoscopeIcon}
-      />
+    <TooltipProvider>
+      <section className={cn("space-y-6", className)}>
+        <StepHeader
+          title="Clinical Assessment & Documentation"
+          description="Comprehensive clinical evaluation and diagnostic work-up"
+          icon={StethoscopeIcon}
+        />
 
-      {Object.keys(RHFerrors).length > 0 && (
-        <Alert variant="destructive" className="mb-6">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Validation Errors</AlertTitle>
-          <AlertDescription>
-            Please review and correct the highlighted fields within the tabs.
-          </AlertDescription>
-        </Alert>
-      )}
+        {Object.keys(RHFerrors).length > 0 && (
+          <Alert variant="destructive" className="mb-6">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Validation Errors</AlertTitle>
+            <AlertDescription>
+              Please review and correct the highlighted fields within the tabs.
+            </AlertDescription>
+          </Alert>
+        )}
 
-      <Tabs 
-        value={currentTab} 
-        className="w-full"
-        onValueChange={(value) => setCurrentTab(value as TabValue)} // Cast value to TabValue
-      >
-        <TabsList className="grid w-full grid-cols-3 mb-6 bg-transparent p-0">
-          {TAB_ITEMS.map(({ value, label, icon: Icon }) => (
-            <TabsTrigger
-              key={value}
-              value={value}
-              className={cn(
-                "flex items-center justify-center gap-2 py-2.5 text-sm font-medium rounded-md",
-                "data-[state=active]:bg-blue-500/20 data-[state=active]:text-white data-[state=active]:shadow-sm",
-                "text-white/70 hover:bg-white/10 hover:text-white" 
-              )}
+        <Tabs 
+          value={currentTab} 
+          className="w-full"
+          onValueChange={(value) => setCurrentTab(value as TabValue)} // Cast value to TabValue
+        >
+          <TabsList className="grid w-full grid-cols-3 mb-6 bg-transparent p-0">
+            {TAB_ITEMS.map(({ value, label, icon: Icon }) => (
+              <TabsTrigger
+                key={value}
+                value={value}
+                className={cn(
+                  "flex items-center justify-center gap-2 py-2.5 text-sm font-medium rounded-md",
+                  "data-[state=active]:bg-blue-500/20 data-[state=active]:text-white data-[state=active]:shadow-sm",
+                  "text-white/70 hover:bg-white/10 hover:text-white" 
+                )}
+              >
+                <Icon className="h-4 w-4" />
+                <span>{label}</span>
+              </TabsTrigger>
+            ))}
+          </TabsList>
+
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentTab}
+              initial={{ opacity: 0, x: initialX }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: exitX }}
+              transition={{ duration: 0.2 }}
             >
-              <Icon className="h-4 w-4" />
-              <span>{label}</span>
-            </TabsTrigger>
-          ))}
-        </TabsList>
-
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentTab}
-            initial={{ opacity: 0, x: initialX }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: exitX }}
-            transition={{ duration: 0.2 }}
-          >
-            {currentTab === "history" && <HistoryAndExamTab />}
-            {currentTab === "systems" && <SystemsReviewTab />}
-            {currentTab === "diagnostics" && <DiagnosticsTab />}
-          </motion.div>
-        </AnimatePresence>
-      </Tabs>
-    </section>
+              {currentTab === "history" && <HistoryAndExamTab />}
+              {currentTab === "systems" && <SystemsReviewTab />}
+              {currentTab === "diagnostics" && <DiagnosticsTab />}
+            </motion.div>
+          </AnimatePresence>
+        </Tabs>
+      </section>
+    </TooltipProvider>
   );
 });
 ClinicalDetailStep.displayName = "ClinicalDetailStep";
