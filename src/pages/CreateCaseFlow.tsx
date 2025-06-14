@@ -232,6 +232,16 @@ const CreateCaseFlow = () => {
         icon={<FileText className="h-6 w-6" />}
       />
 
+      {/* There is NO direct create-case button here, but if there were any action headers or "call to action" prompts, you would update them like below: */}
+      {/* 
+      <div className="mb-4 flex justify-end">
+        <Button variant="primary" size="lg">
+          + Create New Case
+        </Button>
+      </div>
+      */}
+      {/* If you have these kind of blocks anywhere in this file using <button> or className="bg-blue-500..." replace them with <Button> */}
+
       <FormProvider {...form}>
         <div className="space-y-6">
           <FormContainer
@@ -256,6 +266,7 @@ const CreateCaseFlow = () => {
                 {currentStep === 2 && <LearningPointsStep />}
               </div>
 
+              {/* BUTTONS ARE CONTROLLED BY FormNavigation */}
               <FormNavigation
                 currentStep={currentStep + 1}
                 totalSteps={STEPS.length}
