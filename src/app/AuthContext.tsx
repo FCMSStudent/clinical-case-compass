@@ -1,8 +1,10 @@
+
 import React, { createContext, useReducer, useEffect, useContext } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { authReducer, initialAuthState, type AuthState, type AuthAction } from "@/lib/reducers/authReducer";
+import type { UserMetadata } from "@/types/auth";
 
 type AuthContextType = {
   session: Session | null;
@@ -12,7 +14,7 @@ type AuthContextType = {
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string, fullName?: string) => Promise<void>;
   signOut: () => Promise<void>;
-  updateProfile: (data: { full_name?: string; specialty?: string; avatar_url?: string }) => Promise<void>;
+  updateProfile: (data: UserMetadata) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -153,7 +155,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const updateProfile = async (data: { full_name?: string; specialty?: string; avatar_url?: string }) => {
+  const updateProfile = async (data: UserMetadata) => {
     if (isOfflineMode) {
       toast({
         variant: "destructive",
@@ -166,10 +168,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       if (!user) throw new Error("No user logged in");
 
-      const { error: dbError } = await supabase.from("profiles").update(data).eq("id", user.id);
+      // Update the profiles table with the new data
+      const { error: dbError } = await supabase.from("profiles").update({
+        full_name: data.full_name,
+        specialty: data.specialty,
+        avatar_url: data.avatar_url,
+        bio: data.bio,
+        phone: data.phone,
+        location: data.location,
+      }).eq("id", user.id);
+      
       if (dbError) throw dbError;
 
-      const { data: authData, error: authError } = await supabase.auth.updateUser({ data });
+      // Update the auth user metadata
+      const { data: authData, error: authError } = await supabase.auth.updateUser({ 
+        data: {
+          full_name: data.full_name,
+          specialty: data.specialty,
+          avatar_url: data.avatar_url,
+          bio: data.bio,
+          phone: data.phone,
+          location: data.location,
+        }
+      });
+      
       if (authError) throw authError;
 
       if (authData?.user) {
