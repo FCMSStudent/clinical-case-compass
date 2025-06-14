@@ -44,11 +44,8 @@ export const FormContainer = memo(
   }: FormContainerProps) => {
     return (
       <section className={cn("space-y-6", className)}>
-        <div className="relative">
-          <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-2xl" />
-          <div className="relative bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-6 group overflow-hidden transition-all duration-300 hover:bg-white/20 hover:border-white/30">
-            {children}
-          </div>
+        <div className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-2xl p-6 group overflow-hidden transition-all duration-300 hover:bg-white/20 hover:border-white/30">
+          {children}
         </div>
       </section>
     );

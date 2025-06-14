@@ -1,4 +1,3 @@
-
 import React from "react";
 import { LucideIcon } from "lucide-react";
 import { FormFieldCard } from "./FormFieldCard";
@@ -12,7 +11,7 @@ interface StatusFieldCardProps {
   isRequired?: boolean;
   children: React.ReactNode;
   className?: string;
-  status?: StatusType;
+  status?: StatusType; // Explicit status prop
   badge?: string;
   isCollapsible?: boolean;
   defaultCollapsed?: boolean;
@@ -21,8 +20,8 @@ interface StatusFieldCardProps {
   actions?: React.ReactNode;
   isHighlighted?: boolean;
   isDisabled?: boolean;
-  fieldValue?: any;
-  hasError?: boolean;
+  fieldValue?: any; // Used for auto-status determination
+  hasError?: boolean; // Used for auto-status determination
 }
 
 export const StatusFieldCard: React.FC<StatusFieldCardProps> = ({
@@ -45,7 +44,6 @@ export const StatusFieldCard: React.FC<StatusFieldCardProps> = ({
   hasError,
   ...props
 }) => {
-  // Auto-determine status based on field state if not explicitly provided
   const determinedStatus = React.useMemo((): StatusType => {
     if (propStatus) return propStatus;
     
@@ -54,24 +52,28 @@ export const StatusFieldCard: React.FC<StatusFieldCardProps> = ({
     if (fieldValue !== undefined && fieldValue !== null && fieldValue !== "") {
       if (Array.isArray(fieldValue) && fieldValue.length > 0) return "success";
       if (typeof fieldValue === "string" && fieldValue.trim().length > 0) return "success";
-      if (typeof fieldValue === "object" && Object.keys(fieldValue).length > 0) return "success";
-      if (typeof fieldValue === "number" && fieldValue > 0) return "success";
+      if (typeof fieldValue === 'object' && !Array.isArray(fieldValue) && fieldValue !== null && Object.keys(fieldValue).length > 0) return "success";
+      if (typeof fieldValue === "number") return "success"; // Allow 0 for numbers unless specific validation says otherwise
     }
     
     return "default";
   }, [propStatus, hasError, fieldValue]);
 
-  // Map StatusType to FormFieldCard status type
-  const formFieldStatus = React.useMemo(() => {
+  const formFieldCardStatus = React.useMemo(() => {
     switch (determinedStatus) {
       case "loading":
-        return "default"; // FormFieldCard doesn't support loading, so use default
+        return "default"; // FormFieldCard might not have a distinct "loading" visual state other than default
+      case "success":
+        return "success";
+      case "error":
+        return "error";
+      case "warning":
+        return "warning";
       default:
-        return determinedStatus;
+        return "default";
     }
   }, [determinedStatus]);
 
-  // Enhanced actions with status indicator
   const enhancedActions = (
     <div className="flex items-center gap-2">
       <StatusIndicator status={determinedStatus} size="sm" />
@@ -87,17 +89,13 @@ export const StatusFieldCard: React.FC<StatusFieldCardProps> = ({
       isRequired={isRequired}
       className={cn(
         "transition-all duration-300",
-        determinedStatus === "success" && "ring-1 ring-emerald-400/20",
-        determinedStatus === "error" && "ring-1 ring-red-400/20",
-        determinedStatus === "warning" && "ring-1 ring-amber-400/20",
         className
       )}
-      status={formFieldStatus}
+      status={formFieldCardStatus}
       badge={badge}
       isCollapsible={isCollapsible}
       defaultCollapsed={defaultCollapsed}
       footer={footer}
-      onStatusChange={onStatusChange}
       actions={enhancedActions}
       isHighlighted={isHighlighted}
       isDisabled={isDisabled}

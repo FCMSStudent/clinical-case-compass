@@ -27,13 +27,13 @@ export const StepHeader = React.memo(function StepHeader({
       animate={{ opacity: 1, y: 0 }}
       className={cn("mb-8", className)}
     >
-      <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 group overflow-hidden transition-all duration-300 hover:bg-white/15 hover:border-white/30">
+      <div className="p-0"> {/* Removed card styling, adjust padding if needed */}
         <div className="flex items-center gap-4">
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="rounded-xl bg-white/20 text-white border border-white/20 p-3 relative transition-all duration-300 group-hover:scale-105"
+            className="rounded-xl bg-white/20 text-white border border-white/20 p-3 relative transition-all duration-300"
             aria-hidden="true"
           >
             <Icon className="h-6 w-6" />
@@ -52,6 +52,7 @@ export const StepHeader = React.memo(function StepHeader({
               {description}
             </p>
           </div>
+          {/* Potential place for SecondaryIcon if needed */}
         </div>
       </div>
     </motion.div>
