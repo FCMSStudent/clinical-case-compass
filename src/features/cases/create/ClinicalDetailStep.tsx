@@ -27,7 +27,8 @@ import {
 import { cn } from "@/lib/utils";
 import type { LabTest, RadiologyStudy } from "@/types/case";
 import { clinicalDetailStepSchema, type ClinicalDetailFormData, TAB_ITEMS, type TabValue } from "./ClinicalDetailConfig";
-import { InteractiveBodyDiagram, type BodyPartSelection } from "@/features/cases/InteractiveBodyDiagram";
+import { InteractiveBodyDiagram, type BodyPartSelection, type ViewType } from "@/features/cases/InteractiveBodyDiagram";
+import { BODY_PARTS as bodyPartsData, type BodyPartId } from "@/features/cases/bodyParts.data";
 import { SystemReviewChecklist } from "@/features/cases/SystemReviewChecklist";
 import { VitalsCard } from "@/features/cases/VitalsCard";
 import { LabResultsCard } from "@/features/cases/LabResultsCard";
@@ -156,34 +157,56 @@ HistoryAndExamTab.displayName = "HistoryAndExamTab";
 
 const SystemsReviewTab = memo(() => {
   const { setValue, watch, control } = useFormContext<ClinicalDetailFormData>();
-  // selectedBodyParts is now an array of BodyPartSelection objects
-  const selectedBodyParts: BodyPartSelection[] = watch(FORM_FIELDS.SELECTED_BODY_PARTS) || [];
+  
+  // Read selected part ID strings from the form (e.g., ["head-anterior", "chest-posterior"])
+  const selectedPartIdStringsFromForm: string[] = watch(FORM_FIELDS.SELECTED_BODY_PARTS as Path<ClinicalDetailFormData>) || [];
 
-  // Removed local state for systemSymptoms and vitals as they are handled by RHF setValue
+  // Convert ID strings to full BodyPartSelection objects for UI and InteractiveBodyDiagram
+  const selectedBodyPartsForUI: BodyPartSelection[] = useMemo(() => {
+    return selectedPartIdStringsFromForm.map(idString => {
+      const parts = idString.split('-');
+      if (parts.length < 2) {
+        console.warn(`Invalid idString format in form: ${idString}`);
+        return null;
+      }
+      // Handles IDs that might contain hyphens, e.g., "left-arm-anterior"
+      const id = parts.slice(0, -1).join('-');
+      const view = parts[parts.length - 1];
+      
+      const partData = bodyPartsData[id as BodyPartId];
+      if (partData && (view === "anterior" || view === "posterior" || view === "lateral")) {
+        return { ...partData, view: view as ViewType };
+      }
+      console.warn(`Could not reconstruct BodyPartSelection for idString: ${idString}`);
+      return null;
+    }).filter(Boolean) as BodyPartSelection[]; // Filter out any nulls from failed conversions
+  }, [selectedPartIdStringsFromForm]);
 
   const handleBodyPartSelected = useCallback((newSelection: BodyPartSelection) => {
-    // Get the current array of selected parts from the form state
-    const currentSelectedParts: BodyPartSelection[] = watch(FORM_FIELDS.SELECTED_BODY_PARTS) || [];
+    const currentSelectedPartIdStrings: string[] = watch(FORM_FIELDS.SELECTED_BODY_PARTS as Path<ClinicalDetailFormData>) || [];
     
-    const existingIndex = currentSelectedParts.findIndex(p => p.id === newSelection.id && p.view === newSelection.view);
+    const newSelectionIdString = `${newSelection.id}-${newSelection.view}`;
+
+    const existingIndex = currentSelectedPartIdStrings.findIndex(idStr => idStr === newSelectionIdString);
     
-    let updatedPartsArray: BodyPartSelection[];
+    let updatedPartIdStringsArray: string[];
     if (existingIndex > -1) {
-      // Part already exists, remove it
-      updatedPartsArray = currentSelectedParts.filter((_, index) => index !== existingIndex);
+      // Part ID string already exists, remove it
+      updatedPartIdStringsArray = currentSelectedPartIdStrings.filter((_, index) => index !== existingIndex);
     } else {
-      // Part is new, add it
-      updatedPartsArray = [...currentSelectedParts, newSelection];
+      // Part ID string is new, add it
+      updatedPartIdStringsArray = [...currentSelectedPartIdStrings, newSelectionIdString];
     }
-    setValue(FORM_FIELDS.SELECTED_BODY_PARTS, updatedPartsArray, { shouldValidate: true });
+    // Store the array of ID strings back into the form
+    setValue(FORM_FIELDS.SELECTED_BODY_PARTS as Path<ClinicalDetailFormData>, updatedPartIdStringsArray, { shouldValidate: true }); 
   }, [watch, setValue]);
 
   const PartBadges = useMemo(() => (
-    selectedBodyParts.length > 0 && (
+    selectedBodyPartsForUI.length > 0 && (
       <div className="mt-3 flex flex-wrap gap-1">
-        {selectedBodyParts.map((part: BodyPartSelection) => ( // part is BodyPartSelection
+        {selectedBodyPartsForUI.map((part: BodyPartSelection) => ( 
           <Badge 
-            key={`${part.id}-${part.view}`} // Use part.id and part.view for a unique key
+            key={`${part.id}-${part.view}`} 
             variant="secondary" 
             className="text-xs bg-blue-100 text-blue-800"
           >
@@ -192,20 +215,19 @@ const SystemsReviewTab = memo(() => {
         ))}
       </div>
     )
-  ), [selectedBodyParts]);
+  ), [selectedBodyPartsForUI]);
 
   return (
     <TabsContent value="systems" className="space-y-6">
       <div className="grid gap-6 lg:grid-cols-2">
         <SimpleSection icon={BrainIcon} title="Review of Systems">
-          <SystemReviewChecklist onSystemSymptomsChange={(symptoms) => setValue(FORM_FIELDS.SYSTEM_SYMPTOMS, symptoms, {shouldValidate: true})} />
+          <SystemReviewChecklist onSystemSymptomsChange={(symptoms) => setValue(FORM_FIELDS.SYSTEM_SYMPTOMS as Path<ClinicalDetailFormData>, symptoms, {shouldValidate: true})} />
            <Controller name={FORM_FIELDS.SYSTEM_SYMPTOMS as Path<ClinicalDetailFormData>} control={control} render={({ fieldState }) => fieldState.error ? <FormMessage className="mt-2">{fieldState.error.message}</FormMessage> : null} />
         </SimpleSection>
         <SimpleSection icon={UserIcon} title="Affected Body Areas">
-          {/* Pass initialSelectedParts to InteractiveBodyDiagram */}
           <InteractiveBodyDiagram 
             onBodyPartSelected={handleBodyPartSelected}
-            initialSelectedParts={selectedBodyParts} 
+            initialSelectedParts={selectedBodyPartsForUI} 
           />
           <p className="mt-3 text-sm text-white/70">Click on body parts to mark affected areas.</p>
           {PartBadges}
@@ -213,7 +235,7 @@ const SystemsReviewTab = memo(() => {
         </SimpleSection>
       </div>
       <SimpleSection icon={HeartIcon} title="Vital Signs & Physiological Parameters">
-        <VitalsCard onVitalsChange={(v) => setValue(FORM_FIELDS.VITALS, v, {shouldValidate: true})} />
+        <VitalsCard onVitalsChange={(v) => setValue(FORM_FIELDS.VITALS as Path<ClinicalDetailFormData>, v, {shouldValidate: true})} />
         <Controller name={FORM_FIELDS.VITALS as Path<ClinicalDetailFormData>} control={control} render={({ fieldState }) => fieldState.error ? <FormMessage className="mt-2">{fieldState.error.message}</FormMessage> : null} />
       </SimpleSection>
     </TabsContent>
