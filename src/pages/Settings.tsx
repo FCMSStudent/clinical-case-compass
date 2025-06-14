@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -36,6 +35,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFormValidation } from "@/hooks/use-form-validation";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import type { UserMetadata } from "@/types/auth";
 
 // Enhanced form schemas
 const profileSchema = z.object({
@@ -144,13 +144,15 @@ const Settings = () => {
   const onProfileSubmit = async (data: ProfileFormData) => {
     try {
       setAutosaveStatus('saving');
-      await updateProfile({
+      // Cast to UserMetadata type to ensure compatibility
+      const updateData: UserMetadata = {
         full_name: data.fullName,
         specialty: data.specialty,
         bio: data.bio,
         phone: data.phone,
         location: data.location,
-      });
+      };
+      await updateProfile(updateData);
       setAutosaveStatus('saved');
       setLastSaved(new Date());
       toast({
