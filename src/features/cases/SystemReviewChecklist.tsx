@@ -5,7 +5,6 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { motion, AnimatePresence } from "framer-motion";
@@ -14,7 +13,6 @@ import {
   ChevronDown, 
   ChevronRight, 
   Search, 
-  Filter,
   AlertCircle,
   Star,
   StarOff,
@@ -40,7 +38,6 @@ export function SystemReviewChecklist({
   const [selectedSymptoms, setSelectedSymptoms] = useState<Record<string, string[]>>(initialSystemSymptoms);
   const [expandedSystems, setExpandedSystems] = useState<Record<string, boolean>>({});
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeTab, setActiveTab] = useState("all");
   const [favoriteSymptoms, setFavoriteSymptoms] = useState<string[]>([]);
   const isMobile = useIsMobile();
 
@@ -109,27 +106,15 @@ export function SystemReviewChecklist({
   };
 
   const filteredSystems = useMemo(() => {
-    if (!searchTerm && activeTab === "all") return systemSymptoms;
+    if (!searchTerm) return systemSymptoms;
 
     return systemSymptoms.map(system => ({
       system: system.system,
-      symptoms: system.symptoms.filter(symptom => {
-        const matchesSearch = searchTerm 
-          ? symptom.toLowerCase().includes(searchTerm.toLowerCase())
-          : true;
-        
-        const matchesTab = activeTab === "all" 
-          ? true 
-          : activeTab === "favorites" 
-            ? favoriteSymptoms.includes(symptom)
-            : activeTab === "recent" 
-              ? recentSymptoms.includes(symptom)
-              : true;
-
-        return matchesSearch && matchesTab;
-      })
+      symptoms: system.symptoms.filter(symptom => 
+        symptom.toLowerCase().includes(searchTerm.toLowerCase())
+      )
     })).filter(system => system.symptoms.length > 0);
-  }, [searchTerm, activeTab, favoriteSymptoms, recentSymptoms]);
+  }, [searchTerm]);
 
   const totalSelected = useMemo(() => 
     Object.values(selectedSymptoms).reduce((acc, symptoms) => acc + symptoms.length, 0),
@@ -224,6 +209,8 @@ export function SystemReviewChecklist({
         )}
       </div>
 
+      {/* Tabs component removed */}
+      {/* 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-3 bg-white/5 border border-white/20 rounded-md p-1">
           <TabsTrigger value="all" className="flex items-center justify-center gap-2 py-1.5 text-sm text-white/70 data-[state=active]:bg-blue-500/30 data-[state=active]:text-white hover:bg-white/10 hover:text-white rounded-sm transition-colors">
@@ -239,7 +226,8 @@ export function SystemReviewChecklist({
             Recent
           </TabsTrigger>
         </TabsList>
-      </Tabs>
+      </Tabs> 
+      */}
 
       <AnimatePresence mode="wait">
         {filteredSystems.length === 0 ? (
@@ -252,7 +240,7 @@ export function SystemReviewChecklist({
             <Alert variant="default" className="bg-white/5 border border-white/10 text-white/70 p-4 rounded-md">
               <AlertCircle className="h-5 w-5 text-white/70" />
               <AlertDescription className="ml-2">
-                No symptoms found matching your search or filter criteria.
+                {searchTerm ? "No symptoms found matching your search." : "No symptoms available."}
               </AlertDescription>
             </Alert>
           </motion.div>
@@ -270,7 +258,7 @@ export function SystemReviewChecklist({
                     <span className="font-medium text-white">{system}</span>
                     {selectedSymptoms[system]?.length > 0 && (
                       <Badge variant="outline" className="bg-blue-500/20 border-blue-400/30 text-white text-xs font-normal py-0.5 px-1.5">
-                        {selectedSymptoms[system].length}/{symptoms.length}
+                        {selectedSymptoms[system].length}/{systemSymptoms.find(s => s.system === system)?.symptoms.length}
                       </Badge>
                     )}
                   </div>
