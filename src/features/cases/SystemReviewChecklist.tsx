@@ -136,9 +136,7 @@ export function SystemReviewChecklist({
     const isRecent = recentSymptoms.includes(symptom);
 
     return (
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
+      <div
         className={cn(
           "flex items-center space-x-2 p-2 rounded-md transition-colors hover:bg-white/5",
           isHighlighted && "bg-yellow-500/10 ring-1 ring-yellow-500/30",
@@ -194,7 +192,7 @@ export function SystemReviewChecklist({
             </Tooltip>
           </TooltipProvider>
         )}
-      </motion.div>
+      </div>
     );
   };
 
@@ -272,17 +270,23 @@ export function SystemReviewChecklist({
                   </div>
                   <div className="flex items-center space-x-2">
                     {selectedSymptoms[system]?.length > 0 && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-7 text-xs text-blue-300 hover:text-blue-100 hover:bg-white/10 px-2"
+                       <div
+                        role="button"
+                        tabIndex={0}
+                        className="h-7 px-2 inline-flex items-center justify-center rounded-md text-xs font-medium text-blue-300 hover:text-blue-100 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-blue-400/50 cursor-pointer"
                         onClick={(e) => {
-                          e.stopPropagation();
+                          e.stopPropagation(); // Prevent CollapsibleTrigger from toggling
                           handleClearAll(system);
+                        }}
+                        onKeyDown={(e) => { // Basic keyboard accessibility
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.stopPropagation();
+                            handleClearAll(system);
+                          }
                         }}
                       >
                         Clear
-                      </Button>
+                      </div>
                     )}
                     {expandedSystems[system] ? (
                       <ChevronDown className="h-4 w-4 text-blue-300" />
