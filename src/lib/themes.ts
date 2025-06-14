@@ -337,7 +337,7 @@ interface ThemeContextType {
 /**
  * Theme context
  */
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+const ThemeContext = React.createContext<ThemeContextType | undefined>(undefined);
 
 /**
  * Theme provider component
@@ -374,6 +374,9 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   // Apply theme to document
   useEffect(() => {
     const root = document.documentElement;
+
+    // Add .dark class for shadcn components compatibility since all our themes are dark
+    root.classList.add('dark');
     
     // Apply CSS custom properties
     root.style.setProperty("--theme-primary", currentTheme.colors.primary);
@@ -395,6 +398,11 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     
     // Apply background
     document.body.style.background = currentTheme.colors.background;
+
+    // Cleanup function to remove the class when the component unmounts or theme changes
+    return () => {
+      root.classList.remove('dark');
+    };
   }, [currentTheme]);
 
   return React.createElement(
@@ -529,4 +537,4 @@ export const ThemeSwitcher: React.FC = () => {
       )
     )
   );
-}; 
+};

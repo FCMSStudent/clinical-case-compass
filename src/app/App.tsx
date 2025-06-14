@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Toaster } from "sonner";
+import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider, useAuth } from "./AuthContext";
 import { ThemeProvider } from "@/lib/themes";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
@@ -85,17 +85,7 @@ const App = () => {
         <ThemeProvider>
           <AuthProvider>
             <AppContent />
-            <Toaster
-              position="top-right"
-              toastOptions={{
-                duration: 4000,
-                style: {
-                  background: 'rgba(255, 255, 255, 0.95)',
-                  backdropFilter: 'blur(10px)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                },
-              }}
-            />
+            <Toaster position="top-right" />
           </AuthProvider>
         </ThemeProvider>
       </QueryClientProvider>
