@@ -18,7 +18,12 @@ export const EnhancedAppLayout: React.FC<EnhancedAppLayoutProps> = ({
       <ParallaxBackground />
       
       <div className="relative z-10 flex flex-col min-h-screen">
-        <EnhancedNavbar />
+        {/* Floating Navbar */}
+        <div className="w-full flex justify-center pt-6 px-4">
+          <div className="w-full max-w-7xl">
+            <EnhancedNavbar />
+          </div>
+        </div>
         
         <main className={`flex-1 flex flex-col ${className}`} role="main">
           <div className="container mx-auto px-4 py-6 flex-1">

@@ -113,8 +113,8 @@ const EnhancedNavbar: React.FC = () => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 w-full bg-white/10 backdrop-blur-xl border-b border-white/20">
-      <div className="container mx-auto px-4">
+    <nav className="w-full bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-xl">
+      <div className="px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center">
