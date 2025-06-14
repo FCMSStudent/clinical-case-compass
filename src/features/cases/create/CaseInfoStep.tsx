@@ -1,9 +1,25 @@
+
 import React, { memo } from "react";
 import { useFormContext, Path, FieldValues } from "react-hook-form";
 import { FileText, Stethoscope, Tag } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { FormFieldCard, StepHeader } from "./components";
+import { StepHeader, StatusFieldCard } from "./components"; // Changed FormFieldCard to StatusFieldCard
 import { CaseInfoFormData } from "./schemas/case-info-schema";
+import { useFormValidation } from "@/hooks/use-form-validation"; // Added import for useFormValidation
+import {
+  FormField,
+  FormItem,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form"; // Added imports for form components
+import { Input } from "@/components/ui/input"; // Added import for Input
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"; // Added imports for select components
 
 /**
  * Constants
@@ -54,14 +70,21 @@ export interface CaseInfoStepProps<T extends FieldValues = CaseInfoFormData> {
 export const CaseInfoStep = memo(function CaseInfoStep<
   T extends FieldValues = CaseInfoFormData,
 >({ className }: CaseInfoStepProps<T>) {
-  const { control, formState, watch } = useFormContext<T>();
+  const { control, watch } = useFormContext<T>(); // Removed formState as errors come from useFormValidation
   
-  const { errors } = useFormValidation<T>({
+  const { errors: validationErrors, watchedFields: localWatchedValues } = useFormValidation<T>({ // Renamed to avoid conflict, and using localWatchedValues
     requiredFields: ["caseTitle", "chiefComplaint"],
     watchFields: ["caseTitle", "chiefComplaint", "specialty"],
   });
 
-  const watchedValues = watch();
+  // Use watch from useFormContext directly if needed for other purposes,
+  // or rely on watchedFields from useFormValidation if that's sufficient.
+  // For fieldValue prop, it's better to use the values from useFormValidation 
+  // as they are synchronized with the validation logic.
+  // If `localWatchedValues` is an object:
+  const caseTitleValue = (localWatchedValues as any)?.caseTitle;
+  const chiefComplaintValue = (localWatchedValues as any)?.chiefComplaint;
+  const specialtyValue = (localWatchedValues as any)?.specialty;
 
   return (
     <div className={cn("space-y-6", className)}>
@@ -72,23 +95,23 @@ export const CaseInfoStep = memo(function CaseInfoStep<
       />
 
       {/* Case Title */}
-      <FormFieldCard
+      <StatusFieldCard // Changed from FormFieldCard
         icon={FileText}
         title="Case Title"
         isRequired
         tooltip="A clear, descriptive title helps others quickly understand the case's focus. Include key details like condition, patient type, or unique aspects."
-        hasError={!!errors.caseTitle}
-        fieldValue={watchedValues.caseTitle}
+        hasError={!!validationErrors.caseTitle}
+        fieldValue={caseTitleValue}
       >
         <FormField
           control={control}
           name={"caseTitle" as Path<T>}
-          render={({ field, fieldState }) => (
+          render={({ field }) => ( // Removed fieldState as it's not used
             <FormItem>
               <FormControl>
                 <Input
                   placeholder="e.g., Complex Hypertension Management in Elderly Patient with Comorbidities"
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 transition-all duration-200"
+                  // Removed custom classes as they should be handled by the Input component itself or base styles
                   {...field}
                 />
               </FormControl>
@@ -96,26 +119,26 @@ export const CaseInfoStep = memo(function CaseInfoStep<
             </FormItem>
           )}
         />
-      </FormFieldCard>
+      </StatusFieldCard>
 
       {/* Chief Complaint */}
-      <FormFieldCard
+      <StatusFieldCard // Changed from FormFieldCard
         icon={Stethoscope}
         title="Chief Complaint"
         isRequired
         tooltip="The primary reason for the patient's visit or the main clinical problem being addressed."
-        hasError={!!errors.chiefComplaint}
-        fieldValue={watchedValues.chiefComplaint}
+        hasError={!!validationErrors.chiefComplaint}
+        fieldValue={chiefComplaintValue}
       >
         <FormField
           control={control}
           name={"chiefComplaint" as Path<T>}
-          render={({ field, fieldState }) => (
+          render={({ field }) => ( // Removed fieldState as it's not used
             <FormItem>
               <FormControl>
                 <Input
                   placeholder="e.g., Chest pain for 2 hours"
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 transition-all duration-200"
+                  // Removed custom classes
                   {...field}
                 />
               </FormControl>
@@ -123,35 +146,39 @@ export const CaseInfoStep = memo(function CaseInfoStep<
             </FormItem>
           )}
         />
-      </FormFieldCard>
+      </StatusFieldCard>
 
       {/* Medical Specialty */}
-      <FormFieldCard
+      <StatusFieldCard // Changed from FormFieldCard
         icon={Tag}
         title="Medical Specialty"
         tooltip="Select the primary medical specialty that best categorizes this case."
-        hasError={!!errors.specialty} // Assuming specialty can have errors
-        fieldValue={watchedValues.specialty}
+        hasError={!!validationErrors.specialty} 
+        fieldValue={specialtyValue}
       >
         <FormField
           control={control}
           name={"specialty" as Path<T>}
-          render={({ field, fieldState }) => (
+          render={({ field }) => ( // Removed fieldState as it's not used
             <FormItem>
               <FormControl>
-                <Select onValueChange={field.onChange} value={field.value}>
-                  <SelectTrigger className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 transition-all duration-200">
+                <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                  <SelectTrigger 
+                    // Removed custom classes
+                  >
                     <SelectValue 
                       placeholder="Select a specialty" 
-                      className="text-white placeholder:text-white/50"
+                      // Removed custom classes
                     />
                   </SelectTrigger>
-                  <SelectContent className="bg-white/90 backdrop-blur-xl border border-white/20 rounded-xl max-h-60 overflow-y-auto">
+                  <SelectContent 
+                    // Removed custom classes
+                  >
                     {MEDICAL_SPECIALTIES.map((specialty) => (
                       <SelectItem
                         key={specialty}
                         value={specialty}
-                        className="text-gray-900 hover:bg-white/20 focus:bg-white/20 cursor-pointer"
+                        // Removed custom classes
                       >
                         {specialty}
                       </SelectItem>
@@ -163,9 +190,10 @@ export const CaseInfoStep = memo(function CaseInfoStep<
             </FormItem>
           )}
         />
-      </FormFieldCard>
+      </StatusFieldCard>
     </div>
   );
 });
 
 CaseInfoStep.displayName = "CaseInfoStep";
+
