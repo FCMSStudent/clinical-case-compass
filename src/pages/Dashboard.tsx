@@ -67,29 +67,14 @@ const Dashboard = () => {
       )}
 
       {/* Personalized Greeting */}
-      <div className="text-center space-y-2">
-        <h1 className="text-5xl font-bold text-white">
+      <div className="text-left space-y-1">
+        <h1 className="text-2xl font-bold text-white">
           Hello, {getUserDisplayName()}
         </h1>
-        <p className="text-white/70 text-lg">
+        <p className="text-white/70 text-sm">
           Welcome back to your medical learning dashboard
         </p>
       </div>
-
-      {/* Medical Header */}
-      <header className="text-center space-y-3">
-        <div className="flex items-center justify-center gap-3 mb-4">
-          <div className="p-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20">
-            <Activity className="h-8 w-8 text-white" aria-hidden="true" />
-          </div>
-          <h2 id="dashboard-title" className="text-4xl font-bold text-white">
-            Medica Dashboard
-          </h2>
-        </div>
-        <p className="text-white/80 text-lg">
-          Medical Learning & Case Management
-        </p>
-      </header>
 
       {/* Medical Metrics */}
       <section id="metrics" aria-labelledby="metrics-heading">
