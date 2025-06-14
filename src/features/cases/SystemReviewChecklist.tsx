@@ -36,7 +36,15 @@ export function SystemReviewChecklist({
   recentSymptoms = []
 }: SystemReviewChecklistProps) {
   const [selectedSymptoms, setSelectedSymptoms] = useState<Record<string, string[]>>(initialSystemSymptoms);
-  const [expandedSystems, setExpandedSystems] = useState<Record<string, boolean>>({});
+  
+  // Initialize expandedSystems with the first system expanded, if systemSymptoms is not empty
+  const [expandedSystems, setExpandedSystems] = useState<Record<string, boolean>>(() => {
+    if (systemSymptoms.length > 0) {
+      return { [systemSymptoms[0].system]: true };
+    }
+    return {};
+  });
+
   const [searchTerm, setSearchTerm] = useState("");
   const [favoriteSymptoms, setFavoriteSymptoms] = useState<string[]>([]);
   const isMobile = useIsMobile();
