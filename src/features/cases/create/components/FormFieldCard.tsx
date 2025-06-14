@@ -1,3 +1,4 @@
+
 import React from "react";
 import { motion } from "framer-motion";
 import { LucideIcon, Info, AlertCircle, CheckCircle2, ChevronDown, ChevronUp } from "lucide-react";
@@ -74,7 +75,7 @@ export const FormFieldCard = React.memo(function FormFieldCard({
     >
       <div
         className={cn(
-          "bg-slate-800/60 backdrop-blur-sm rounded-xl border border-slate-600/50 p-4 transition-all",
+          "bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-4 transition-all",
           isHighlighted && "ring-2 ring-blue-400/30",
           isDisabled && "opacity-50 cursor-not-allowed"
         )}
@@ -88,13 +89,13 @@ export const FormFieldCard = React.memo(function FormFieldCard({
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div
-                  className="h-8 w-8 rounded-lg bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-blue-300 transition-all duration-300"
+                  className="h-8 w-8 rounded-lg bg-white/20 border border-white/20 flex items-center justify-center text-white transition-all duration-300"
                   aria-hidden="true"
                 >
                   <Icon className="h-4 w-4 relative z-10" />
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="text-lg font-semibold flex items-center gap-2 text-slate-100">
+                  <div className="text-lg font-semibold flex items-center gap-2 text-white">
                     <span id={`${cardId}-title`}>
                       {title}
                       {isRequired && (
@@ -104,9 +105,9 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                   </div>
                   {badge && (
                     <Badge
-                      variant="outline"
+                      variant="secondary"
                       aria-label={`Status: ${badge}`}
-                      className="ml-2 bg-blue-500/20 border-blue-400/30 text-white"
+                      className="ml-2"
                     >
                       {badge}
                     </Badge>
@@ -119,7 +120,7 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <div
-                          className="p-1 rounded-full bg-slate-700/50 backdrop-blur-sm border border-slate-500/50"
+                          className="p-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20"
                           role="img"
                           aria-label={statusMessages[status]}
                         >
@@ -128,7 +129,7 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                       </TooltipTrigger>
                       <TooltipContent
                         id={`${cardId}-status-tooltip`}
-                        className="bg-slate-800/90 backdrop-blur-md border-slate-600/50 text-slate-100"
+                        className="bg-white/10 backdrop-blur-md border border-white/20 text-white"
                       >
                         <p className="text-sm">
                           {statusMessages[status]}
@@ -142,13 +143,13 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <div
-                          className="flex items-center justify-center h-8 w-8 rounded-full cursor-help transition-colors backdrop-blur-sm border border-blue-400/30"
+                          className="flex items-center justify-center h-8 w-8 rounded-full cursor-help transition-colors backdrop-blur-sm border border-white/20"
                           role="button"
                           tabIndex={0}
                           aria-label="More information"
                           aria-describedby={`${cardId}-tooltip`}
                         >
-                          <Info className="h-4 w-4 text-blue-300" aria-hidden="true" />
+                          <Info className="h-4 w-4 text-white" aria-hidden="true" />
                         </div>
                       </TooltipTrigger>
                       <TooltipContent
@@ -156,7 +157,7 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                         align="start"
                         sideOffset={5}
                         id={`${cardId}-tooltip`}
-                        className="bg-slate-800/90 backdrop-blur-md border-slate-600/50 text-slate-100"
+                        className="bg-white/10 backdrop-blur-md border border-white/20 text-white"
                       >
                         <p className="text-sm leading-relaxed">{tooltip}</p>
                       </TooltipContent>
@@ -169,7 +170,7 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-8 w-8 text-slate-300"
+                      className="h-8 w-8 text-white/70"
                       disabled={isDisabled}
                       aria-label={isCollapsed ? "Expand section" : "Collapse section"}
                       aria-expanded={!isCollapsed}
@@ -177,7 +178,7 @@ export const FormFieldCard = React.memo(function FormFieldCard({
                       {isCollapsed ? (
                         <ChevronDown className="h-4 w-4" aria-hidden="true" />
                       ) : (
-                        <ChevronUp className="h-4 w-4" aria-hidden="true" />
+                        <ChevronUp className="h-4" aria-hidden="true" />
                       )}
                     </Button>
                   </CollapsibleTrigger>
@@ -190,7 +191,7 @@ export const FormFieldCard = React.memo(function FormFieldCard({
             <div className="pt-2">
               {children}
               {footer && (
-                <div className="mt-4 pt-4 border-t border-slate-600/50">
+                <div className="mt-4 pt-4 border-t border-white/20">
                   {footer}
                 </div>
               )}

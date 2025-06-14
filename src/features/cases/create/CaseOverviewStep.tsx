@@ -1,4 +1,3 @@
-
 import React, { memo } from "react";
 import { useFormContext, FieldValues, Path } from "react-hook-form";
 import {
@@ -134,7 +133,6 @@ export const CaseOverviewStep = memo(function CaseOverviewStep<
                 <FormControl>
                   <Input
                     placeholder="e.g., John Doe"
-                    className="bg-slate-700/50 border-slate-500/50 text-slate-100 placeholder:text-slate-400"
                     {...field}
                   />
                 </FormControl>
@@ -162,7 +160,6 @@ export const CaseOverviewStep = memo(function CaseOverviewStep<
                   <Input
                     type="number"
                     placeholder="e.g., 42"
-                    className="bg-slate-700/50 border-slate-500/50 text-slate-100 placeholder:text-slate-400"
                     {...field}
                     onChange={e => field.onChange(parseInt(e.target.value, 10) || undefined)}
                   />
@@ -189,14 +186,14 @@ export const CaseOverviewStep = memo(function CaseOverviewStep<
               <FormItem>
                 <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
                   <FormControl>
-                    <SelectTrigger className="bg-slate-700/50 border-slate-500/50 text-slate-100">
+                    <SelectTrigger>
                       <SelectValue placeholder="Select sex" />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent className="bg-slate-800/90 border-slate-600/50">
-                    <SelectItem value="male" className="text-slate-100">Male</SelectItem>
-                    <SelectItem value="female" className="text-slate-100">Female</SelectItem>
-                    <SelectItem value="other" className="text-slate-100">Other</SelectItem>
+                  <SelectContent>
+                    <SelectItem value="male">Male</SelectItem>
+                    <SelectItem value="female">Female</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -221,7 +218,6 @@ export const CaseOverviewStep = memo(function CaseOverviewStep<
                 <FormControl>
                   <Input
                     placeholder="e.g., 1234567"
-                    className="bg-slate-700/50 border-slate-500/50 text-slate-100 placeholder:text-slate-400"
                     {...field}
                   />
                 </FormControl>
@@ -249,7 +245,6 @@ export const CaseOverviewStep = memo(function CaseOverviewStep<
                 <FormControl>
                   <Input
                     placeholder="e.g., Complex Hypertension Management in Elderly Patient with Comorbidities"
-                    className="bg-slate-700/50 border-slate-500/50 text-slate-100 placeholder:text-slate-400"
                     {...field}
                   />
                 </FormControl>
@@ -277,7 +272,6 @@ export const CaseOverviewStep = memo(function CaseOverviewStep<
                 <FormControl>
                   <Input
                     placeholder="e.g., Chest pain for 2 hours"
-                    className="bg-slate-700/50 border-slate-500/50 text-slate-100 placeholder:text-slate-400"
                     {...field}
                   />
                 </FormControl>
@@ -302,15 +296,14 @@ export const CaseOverviewStep = memo(function CaseOverviewStep<
               <FormItem>
                 <FormControl>
                   <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
-                    <SelectTrigger className="bg-slate-700/50 border-slate-500/50 text-slate-100">
+                    <SelectTrigger>
                       <SelectValue placeholder="Select a specialty" />
                     </SelectTrigger>
-                    <SelectContent className="bg-slate-800/90 border-slate-600/50">
+                    <SelectContent>
                       {MEDICAL_SPECIALTIES.map((specialty) => (
                         <SelectItem
                           key={specialty}
                           value={specialty}
-                          className="text-slate-100"
                         >
                           {specialty}
                         </SelectItem>
@@ -342,7 +335,7 @@ export const CaseOverviewStep = memo(function CaseOverviewStep<
                   <Textarea
                     placeholder="e.g., Hypertension, Type 2 Diabetes, Previous appendectomy in 2010..."
                     rows={3}
-                    className="bg-slate-700/50 border-slate-500/50 text-slate-100 placeholder:text-slate-400 resize-none"
+                    className="resize-none"
                     {...field}
                   />
                 </FormControl>
