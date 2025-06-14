@@ -18,6 +18,7 @@ import { useErrorHandler } from "@/hooks/use-error-handler";
 import { useToast } from "@/hooks/use-toast";
 import { FileText, Heart, TestTube } from "lucide-react";
 import { z } from "zod";
+import { Button } from "@/components/ui/button";
 
 // Define form data types
 interface FormData {
@@ -232,15 +233,12 @@ const CreateCaseFlow = () => {
         icon={<FileText className="h-6 w-6" />}
       />
 
-      {/* There is NO direct create-case button here, but if there were any action headers or "call to action" prompts, you would update them like below: */}
-      {/* 
+      {/* If you want to forcefully show a call-to-action at the top, use this block (ensure you remove any other similar blocks elsewhere): */}
       <div className="mb-4 flex justify-end">
         <Button variant="primary" size="lg">
           + Create New Case
         </Button>
       </div>
-      */}
-      {/* If you have these kind of blocks anywhere in this file using <button> or className="bg-blue-500..." replace them with <Button> */}
 
       <FormProvider {...form}>
         <div className="space-y-6">
@@ -259,13 +257,24 @@ const CreateCaseFlow = () => {
                 isDraftSaving={autoSaveStatus === "saving"}
                 hideDraftButton={true}
               />
-
               <div className="space-y-6">
+                {/* Conditional rendering for "Create First Case" CTA if there are no cases */}
+                {/* Replace any previous raw <button> logic with: */}
+                {watchedValues && watchedValues.patientName === "" && (
+                  <div className="flex flex-col items-center py-6">
+                    <p className="text-white/80 text-lg mb-4">
+                      No cases yet! Get started by creating your first case:
+                    </p>
+                    <Button variant="primary" size="lg">
+                      Create First Case
+                    </Button>
+                  </div>
+                )}
+                {/* ...or just keep the normal flow... */}
                 {currentStep === 0 && <CaseOverviewStep />}
                 {currentStep === 1 && <ClinicalDetailStep />}
                 {currentStep === 2 && <LearningPointsStep />}
               </div>
-
               {/* BUTTONS ARE CONTROLLED BY FormNavigation */}
               <FormNavigation
                 currentStep={currentStep + 1}
