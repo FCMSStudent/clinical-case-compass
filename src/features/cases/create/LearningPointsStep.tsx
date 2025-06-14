@@ -114,7 +114,7 @@ export const LearningPointsStep = memo(function LearningPointsStep<
                   <Textarea
                     placeholder="e.g., Understanding the differential diagnosis of chest pain, recognition of cardiac risk factors, interpretation of ECG changes..."
                     rows={6}
-                    className="bg-slate-700/50 border-slate-500/50 text-slate-100 placeholder:text-slate-400 resize-none"
+                    className="resize-none"
                     {...field}
                   />
                 </FormControl>
@@ -142,7 +142,7 @@ export const LearningPointsStep = memo(function LearningPointsStep<
                   <Textarea
                     placeholder="e.g., This case is particularly relevant for emergency medicine residents, consider discussing the importance of early recognition..."
                     rows={4}
-                    className="bg-slate-700/50 border-slate-500/50 text-slate-100 placeholder:text-slate-400 resize-none"
+                    className="resize-none"
                     {...field}
                   />
                 </FormControl>
@@ -163,15 +163,15 @@ export const LearningPointsStep = memo(function LearningPointsStep<
         >
           <div className="space-y-3">
             {resourceLinksValue.map((link: ResourceLink, index: number) => (
-              <div key={index} className="space-y-2 p-3 bg-slate-700/30 rounded-lg border border-slate-600/30">
+              <div key={index} className="space-y-2 p-3 bg-white/5 rounded-lg border border-white/20">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-medium text-slate-300">Resource {index + 1}</span>
+                  <span className="text-xs font-medium text-white/90">Resource {index + 1}</span>
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
                     onClick={() => removeResourceLink(index)}
-                    className="h-6 w-6 p-0 text-slate-400"
+                    className="h-6 w-6 p-0 text-white/70 hover:text-white"
                   >
                     <X className="h-3 w-3" />
                   </Button>
@@ -180,13 +180,11 @@ export const LearningPointsStep = memo(function LearningPointsStep<
                   placeholder="Description (e.g., AHA Guidelines for Chest Pain)"
                   value={link.description}
                   onChange={(e) => updateResourceLink(index, 'description', e.target.value)}
-                  className="bg-slate-700/50 border-slate-500/50 text-slate-100 placeholder:text-slate-400 text-sm"
                 />
                 <Input
                   placeholder="URL (e.g., https://www.ahajournals.org/...)"
                   value={link.url}
                   onChange={(e) => updateResourceLink(index, 'url', e.target.value)}
-                  className="bg-slate-700/50 border-slate-500/50 text-slate-100 placeholder:text-slate-400 text-sm"
                 />
               </div>
             ))}
