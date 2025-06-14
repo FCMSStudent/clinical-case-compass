@@ -197,7 +197,7 @@ const Auth = () => {
                 className="text-center mb-6"
               >
                 <div className="flex items-center justify-center gap-3 mb-4">
-                  <h1 className="text-3xl font-thin text-white tracking-wide">Medica</h1>
+                  <h1 className="text-3xl font-bold text-white tracking-wide">Medica</h1>
                 </div>
                 <p className="text-white/70 text-base font-light">
                   Sign in to your account or create a new one
