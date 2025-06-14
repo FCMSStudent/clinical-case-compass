@@ -5,16 +5,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   FormField,
   FormItem,
-  FormLabel,
   FormControl,
-  FormDescription,
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-// Card imports removed
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-// Progress import removed as it's part of useFormValidation now
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import {
@@ -26,18 +22,16 @@ import {
   Stethoscope as StethoscopeIcon,
   User as UserIcon,
   AlertCircle,
-  CheckCircle2, // Keep for potential simple feedback icons if needed
   Info,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { LabTest, RadiologyStudy } from "@/types/case";
-import { clinicalDetailStepSchema, type ClinicalDetailFormData, TAB_ITEMS } from "./ClinicalDetailConfig";
+import { clinicalDetailStepSchema, type ClinicalDetailFormData, TAB_ITEMS, type TabValue } from "./ClinicalDetailConfig"; // Imported TabValue
 import { InteractiveBodyDiagram, BodyPartSelection } from "@/features/cases/InteractiveBodyDiagram";
 import { SystemReviewChecklist } from "@/features/cases/SystemReviewChecklist";
 import { VitalsCard } from "@/features/cases/VitalsCard";
 import { LabResultsCard } from "@/features/cases/LabResultsCard";
 import { RadiologyCard } from "@/features/cases/RadiologyCard";
-import { useFormValidation } from "@/hooks/use-form-validation";
 import { StepHeader, StatusFieldCard } from "./components"; // Added StatusFieldCard
 
 // FORM_FIELDS constant remains the same
@@ -89,13 +83,13 @@ SimpleSection.displayName = "SimpleSection";
 
 // Tab components using SimpleSection and StatusFieldCard or direct FormFields
 const HistoryAndExamTab = memo(() => {
-  const { control, formState } = useFormContext<ClinicalDetailFormData>();
+  const { control, formState, watch } = useFormContext<ClinicalDetailFormData>(); // Added watch
   const patientHistoryError = formState.errors?.patientHistory;
   const physicalExamError = formState.errors?.physicalExam;
 
   // Watch values for StatusFieldCard
-  const patientHistoryValue = useFormContext<ClinicalDetailFormData>().watch("patientHistory");
-  const physicalExamValue = useFormContext<ClinicalDetailFormData>().watch("physicalExam");
+  const patientHistoryValue = watch("patientHistory");
+  const physicalExamValue = watch("physicalExam");
 
 
   return (
@@ -117,6 +111,7 @@ const HistoryAndExamTab = memo(() => {
                   placeholder="Document the patient's presenting complaint, timeline, associated factors, and relevant history…"
                   rows={6}
                   {...field}
+                  value={field.value || ""} // Ensure value is string
                 />
               </FormControl>
               <FormMessage />
@@ -142,6 +137,7 @@ const HistoryAndExamTab = memo(() => {
                   placeholder="Systematic physical examination findings…"
                   rows={6}
                   {...field}
+                  value={field.value || ""} // Ensure value is string
                 />
               </FormControl>
               <FormMessage />
@@ -193,7 +189,7 @@ const SystemsReviewTab = memo(() => {
         </SimpleSection>
         <SimpleSection icon={UserIcon} title="Affected Body Areas">
           <InteractiveBodyDiagram onBodyPartSelected={handleBodyPartSelected} />
-          <FormDescription className="mt-3 text-white/70">Click on body parts to mark affected areas.</FormDescription>
+          <p className="mt-3 text-sm text-white/70">Click on body parts to mark affected areas.</p>
           {PartBadges}
           <Controller name={FORM_FIELDS.SELECTED_BODY_PARTS as Path<ClinicalDetailFormData>} control={control} render={({ fieldState }) => fieldState.error ? <FormMessage className="mt-2">{fieldState.error.message}</FormMessage> : null} />
         </SimpleSection>
@@ -236,13 +232,33 @@ DiagnosticsTab.displayName = "DiagnosticsTab";
 
 // Main component
 export const ClinicalDetailStep = memo(({ className }: { className?: string }) => {
-  const { formState: { errors: RHFerrors } } = useFormContext<ClinicalDetailFormData>(); // Use RHF errors directly
-  const [currentTab, setCurrentTab] = React.useState(TAB_ITEMS[0].value);
+  const { formState: { errors: RHFerrors } } = useFormContext<ClinicalDetailFormData>();
+  const [currentTab, setCurrentTab] = React.useState<TabValue>(TAB_ITEMS[0].value); // Explicitly type currentTab
+  const prevTabRef = React.useRef<TabValue>();
 
-  // useFormValidation hook provides errors based on watched fields,
-  // RHFerrors contains errors from Zod schema validation triggered by RHF.
-  // We display a general alert based on RHFerrors.
-  // Individual field errors will be shown by FormMessage.
+  React.useEffect(() => {
+    // Store previous tab for animation direction
+    prevTabRef.current = currentTab;
+  }, [currentTab]);
+
+
+  // Determine animation direction
+  const prevTab = prevTabRef.current;
+  let initialX = 0;
+  let exitX = 0;
+
+  if (prevTab && prevTab !== currentTab) {
+    const currentTabIndex = TAB_ITEMS.findIndex(t => t.value === currentTab);
+    const prevTabIndex = TAB_ITEMS.findIndex(t => t.value === prevTab);
+    if (currentTabIndex > prevTabIndex) { // Moving right
+      initialX = 20;
+      exitX = -20;
+    } else if (currentTabIndex < prevTabIndex) { // Moving left
+      initialX = -20;
+      exitX = 20;
+    }
+  }
+
 
   return (
     <section className={cn("space-y-6", className)}>
@@ -263,11 +279,11 @@ export const ClinicalDetailStep = memo(({ className }: { className?: string }) =
       )}
 
       <Tabs 
-        value={currentTab} // Control the current tab
+        value={currentTab} 
         className="w-full"
-        onValueChange={setCurrentTab}
+        onValueChange={(value) => setCurrentTab(value as TabValue)} // Cast value to TabValue
       >
-        <TabsList className="grid w-full grid-cols-3 mb-6 bg-transparent p-0"> {/* Simplified TabsList */}
+        <TabsList className="grid w-full grid-cols-3 mb-6 bg-transparent p-0">
           {TAB_ITEMS.map(({ value, label, icon: Icon }) => (
             <TabsTrigger
               key={value}
@@ -280,21 +296,18 @@ export const ClinicalDetailStep = memo(({ className }: { className?: string }) =
             >
               <Icon className="h-4 w-4" />
               <span>{label}</span>
-              {/* Animated underline removed for simplicity, active state handled by className */}
             </TabsTrigger>
           ))}
         </TabsList>
 
-        {/* AnimatePresence and motion.div for tab content transition can be kept if desired */}
         <AnimatePresence mode="wait">
           <motion.div
             key={currentTab}
-            initial={{ opacity: 0, x: currentTab === TAB_ITEMS[0].value ? 0 : (TAB_ITEMS.findIndex(t => t.value === currentTab) > TAB_ITEMS.findIndex(t => t.value === (useFormContext<ClinicalDetailFormData>().watch("currentTab" as any) || TAB_ITEMS[0].value)) ? 20 : -20) }}
+            initial={{ opacity: 0, x: initialX }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: currentTab === TAB_ITEMS[0].value ? 0 : (TAB_ITEMS.findIndex(t => t.value === currentTab) > TAB_ITEMS.findIndex(t => t.value === (useFormContext<ClinicalDetailFormData>().watch("currentTab" as any) || TAB_ITEMS[0].value)) ? -20 : 20) }}
+            exit={{ opacity: 0, x: exitX }}
             transition={{ duration: 0.2 }}
           >
-            {/* Render only the active tab's content for cleaner DOM and better performance */}
             {currentTab === "history" && <HistoryAndExamTab />}
             {currentTab === "systems" && <SystemsReviewTab />}
             {currentTab === "diagnostics" && <DiagnosticsTab />}
