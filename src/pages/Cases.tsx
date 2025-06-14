@@ -1,44 +1,22 @@
 
-import React, { useState, useMemo, useCallback } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
-import { Plus, Search, Filter, Grid, List, Target, ChevronDown, Eye, Edit, Trash2, BookOpen, Users, Calendar, Activity, TrendingUp, Brain, Heart, Microscope } from "lucide-react";
+import React, { useState, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Plus, Search, Grid, List, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Link } from "react-router-dom";
-import { getCases, deleteCase } from "@/lib/api/cases";
+import { getCases } from "@/lib/api/cases";
 import type { MedicalCase } from "@/types/case";
 import { CaseCard } from "@/features/cases/CaseCard";
 import { CaseListItem } from "@/features/cases/CaseListItem";
 import { PageHeader } from "@/components/ui/page-header";
-import { useErrorHandler } from "@/hooks/use-error-handler";
 import { CaseGridSkeleton, CaseListSkeleton } from "@/features/cases/CaseCardSkeleton";
 
 const Cases = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [selectedCases, setSelectedCases] = useState<Set<string>>(new Set());
-  const [isMultiSelectMode, setIsMultiSelectMode] = useState(false);
-
-  const queryClient = useQueryClient();
-  const { handleError } = useErrorHandler();
-
-  const deleteMutation = useMutation({
-    mutationFn: deleteCase,
-    onSuccess: (_, caseId: string) => {
-      queryClient.setQueriesData<MedicalCase[]>(
-        { queryKey: ["cases"] },
-        (old = []) => old.filter((c) => c.id !== caseId)
-      );
-    },
-    onError: (err) => {
-      handleError(err, "deleting case");
-    },
-  });
 
   const { data: cases, isLoading, isError } = useQuery({
     queryKey: ["cases", searchQuery],
@@ -55,34 +33,6 @@ const Cases = () => {
     );
   }, [cases, searchQuery]);
 
-  const handleDelete = useCallback((caseId: string) => {
-    deleteMutation.mutate(caseId);
-  }, [deleteMutation]);
-
-  const handleCaseSelect = useCallback((caseId: string) => {
-    if (isMultiSelectMode) {
-      setSelectedCases(prev => {
-        const newSet = new Set(prev);
-        if (newSet.has(caseId)) {
-          newSet.delete(caseId);
-        } else {
-          newSet.add(caseId);
-        }
-        return newSet;
-      });
-    }
-  }, [isMultiSelectMode]);
-
-  const handleBulkDelete = useCallback(() => {
-    if (selectedCases.size === 0) return;
-    
-    selectedCases.forEach(caseId => {
-      deleteMutation.mutate(caseId);
-    });
-    setSelectedCases(new Set());
-    setIsMultiSelectMode(false);
-  }, [selectedCases, deleteMutation]);
-
   if (isLoading) {
     return (
       <div className="space-y-6">
@@ -90,7 +40,7 @@ const Cases = () => {
           title="Clinical Cases"
           description="Manage and review your medical cases"
           actions={
-            <Button disabled>
+            <Button disabled className="bg-white/20 border-white/30 text-white">
               <Plus className="h-4 w-4 mr-2" />
               New Case
             </Button>
@@ -108,8 +58,8 @@ const Cases = () => {
           title="Clinical Cases"
           description="Manage and review your medical cases"
         />
-        <Alert>
-          <AlertDescription>
+        <Alert className="bg-red-500/20 border-red-400/30">
+          <AlertDescription className="text-white">
             Failed to load cases. Please try again.
           </AlertDescription>
         </Alert>
@@ -128,6 +78,7 @@ const Cases = () => {
               variant={viewMode === "grid" ? "default" : "outline"}
               size="sm"
               onClick={() => setViewMode("grid")}
+              className="bg-white/20 border-white/30 text-white hover:bg-white/30"
             >
               <Grid className="h-4 w-4" />
             </Button>
@@ -135,10 +86,11 @@ const Cases = () => {
               variant={viewMode === "list" ? "default" : "outline"}
               size="sm"
               onClick={() => setViewMode("list")}
+              className="bg-white/20 border-white/30 text-white hover:bg-white/30"
             >
               <List className="h-4 w-4" />
             </Button>
-            <Button asChild>
+            <Button asChild className="bg-white/20 border-white/30 text-white hover:bg-white/30">
               <Link to="/cases/new">
                 <Plus className="h-4 w-4 mr-2" />
                 New Case
@@ -148,74 +100,31 @@ const Cases = () => {
         }
       />
 
-      {/* Search and Filters */}
+      {/* Search Bar */}
       <Card className="bg-white/10 backdrop-blur-sm border-white/20">
         <CardContent className="p-6">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  placeholder="Search cases by title, patient name, or chief complaint..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-gray-400"
-                />
-              </div>
-            </div>
-            <Button variant="outline" className="border-white/20 text-white hover:bg-white/10">
-              <Filter className="h-4 w-4 mr-2" />
-              Filters
-            </Button>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/70" />
+            <Input
+              placeholder="Search cases by title, patient name, or chief complaint..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 bg-white/20 border-white/30 text-white placeholder:text-white/60 focus:bg-white/30 focus:border-white/50"
+            />
           </div>
         </CardContent>
       </Card>
-
-      {/* Multi-select Actions */}
-      {isMultiSelectMode && (
-        <Card className="bg-yellow-500/10 backdrop-blur-sm border-yellow-500/20">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <span className="text-sm font-medium text-yellow-400">
-                  {selectedCases.size} case(s) selected
-                </span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    setSelectedCases(new Set());
-                    setIsMultiSelectMode(false);
-                  }}
-                  className="border-yellow-500/20 text-yellow-400 hover:bg-yellow-500/10"
-                >
-                  Cancel
-                </Button>
-              </div>
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={handleBulkDelete}
-                disabled={selectedCases.size === 0}
-              >
-                <Trash2 className="h-4 w-4 mr-2" />
-                Delete Selected
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      )}
 
       {/* Cases Display */}
       {filteredCases.length === 0 ? (
         <Card className="bg-white/10 backdrop-blur-sm border-white/20">
           <CardContent className="p-12 text-center">
-            <BookOpen className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <BookOpen className="h-12 w-12 text-white/60 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-white mb-2">No cases found</h3>
-            <p className="text-gray-400 mb-4">
+            <p className="text-white/70 mb-4">
               {searchQuery ? "Try adjusting your search terms" : "Get started by creating your first case"}
             </p>
-            <Button asChild>
+            <Button asChild className="bg-white/20 border-white/30 text-white hover:bg-white/30">
               <Link to="/cases/new">
                 <Plus className="h-4 w-4 mr-2" />
                 Create New Case
@@ -228,15 +137,9 @@ const Cases = () => {
           {filteredCases.map((caseItem) => (
             <div key={caseItem.id}>
               {viewMode === "grid" ? (
-                <CaseCard
-                  medicalCase={caseItem}
-                  onDelete={handleDelete}
-                />
+                <CaseCard medicalCase={caseItem} />
               ) : (
-                <CaseListItem
-                  medicalCase={caseItem}
-                  onDelete={handleDelete}
-                />
+                <CaseListItem medicalCase={caseItem} onDelete={() => {}} />
               )}
             </div>
           ))}
