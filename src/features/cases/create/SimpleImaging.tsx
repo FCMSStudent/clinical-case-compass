@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -159,13 +158,15 @@ export function SimpleImaging({ onImagingChange }: SimpleImagingProps) {
     onImagingChange?.(updatedStudies);
   };
 
-  const getFilteredStudies = () => {
+  const getFilteredStudies = (): string[] => {
     if (!selectedCategory) return [];
     const categoryKey = selectedCategory as keyof typeof IMAGING_CATEGORIES;
-    const studies = IMAGING_CATEGORIES[categoryKey] || [];
+    const categoryStudies = IMAGING_CATEGORIES[categoryKey];
+    if (!categoryStudies) return [];
+    
     return searchTerm
-      ? studies.filter(study => study.toLowerCase().includes(searchTerm.toLowerCase()))
-      : studies;
+      ? categoryStudies.filter((study: string) => study.toLowerCase().includes(searchTerm.toLowerCase()))
+      : categoryStudies;
   };
 
   return (

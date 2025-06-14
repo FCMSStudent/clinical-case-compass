@@ -144,13 +144,15 @@ export function SimpleLabs({ onLabChange }: SimpleLabsProps) {
     onLabChange?.(updatedLabs);
   };
 
-  const getFilteredTests = () => {
+  const getFilteredTests = (): Array<{ name: string; unit: string }> => {
     if (!selectedCategory) return [];
     const categoryKey = selectedCategory as keyof typeof LAB_TEST_CATEGORIES;
-    const tests = LAB_TEST_CATEGORIES[categoryKey] || [];
+    const categoryTests = LAB_TEST_CATEGORIES[categoryKey];
+    if (!categoryTests) return [];
+    
     return searchTerm
-      ? tests.filter(test => test.name.toLowerCase().includes(searchTerm.toLowerCase()))
-      : tests;
+      ? categoryTests.filter((test: { name: string; unit: string }) => test.name.toLowerCase().includes(searchTerm.toLowerCase()))
+      : categoryTests;
   };
 
   const selectedTestUnit = () => {
