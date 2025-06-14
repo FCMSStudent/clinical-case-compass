@@ -1,4 +1,3 @@
-
 import React from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -95,18 +94,22 @@ interface FieldGroupProps {
 // Step Header Component
 export const StepHeader: React.FC<StepHeaderProps> = ({ title, description, icon: Icon }) => (
   <motion.div 
-    className="text-center mb-8"
+    className="mb-8"
     initial={{ opacity: 0, y: -20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.5 }}
   >
-    <div className="flex items-center justify-center mb-4">
-      <div className="bg-blue-100 dark:bg-blue-900 p-3 rounded-full">
-        <Icon className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+    <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 group overflow-hidden transition-all duration-300 hover:bg-white/15 hover:border-white/30">
+      <div className="flex items-center gap-4">
+        <div className="bg-white/20 text-white border border-white/20 p-3 rounded-xl">
+          <Icon className="h-6 w-6" />
+        </div>
+        <div>
+          <h2 className="text-xl font-bold text-white mb-2">{title}</h2>
+          <p className="text-white/70 leading-relaxed">{description}</p>
+        </div>
       </div>
     </div>
-    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{title}</h2>
-    <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">{description}</p>
   </motion.div>
 );
 
@@ -118,19 +121,19 @@ export const FormFieldCard: React.FC<FormFieldCardProps> = ({
   isRequired = false, 
   children 
 }) => (
-  <Card className="mb-6 border-l-4 border-l-blue-500 shadow-sm hover:shadow-md transition-shadow">
+  <Card className="mb-6 bg-white/10 backdrop-blur-md border-white/20 shadow-lg hover:shadow-xl transition-shadow">
     <CardHeader className="pb-3">
       <div className="flex items-center gap-3">
-        <div className="bg-blue-50 dark:bg-blue-900/20 p-2 rounded-lg">
-          <Icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+        <div className="bg-white/20 text-white border border-white/20 p-2 rounded-lg">
+          <Icon className="h-5 w-5" />
         </div>
         <div className="flex-1">
-          <h3 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+          <h3 className="font-semibold text-white flex items-center gap-2">
             {title}
             {isRequired && <Badge variant="destructive" className="text-xs">Required</Badge>}
           </h3>
           {tooltip && (
-            <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">{tooltip}</p>
+            <p className="text-sm text-white/70 mt-1">{tooltip}</p>
           )}
         </div>
       </div>
@@ -173,44 +176,33 @@ export const StatusFieldCard: React.FC<StatusFieldCardProps> = ({
     return "default";
   }, [status, hasError, fieldValue]);
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'success': return 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800';
-      case 'error': return 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800';
-      case 'warning': return 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800';
-      default: return 'bg-gray-50 dark:bg-gray-900/20 border-gray-200 dark:border-gray-800';
-    }
-  };
-
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'success': return <CheckCircle2 className="h-4 w-4 text-green-600" />;
-      case 'error': return <AlertCircle className="h-4 w-4 text-red-600" />;
-      case 'warning': return <Clock className="h-4 w-4 text-yellow-600" />;
-      default: return <Circle className="h-4 w-4 text-gray-400" />;
+      case 'success': return <CheckCircle2 className="h-4 w-4 text-green-400" />;
+      case 'error': return <AlertCircle className="h-4 w-4 text-red-400" />;
+      case 'warning': return <Clock className="h-4 w-4 text-yellow-400" />;
+      default: return <Circle className="h-4 w-4 text-white/60" />;
     }
   };
 
-  const progressPercentage = totalFields > 0 ? (completedFields / totalFields) * 100 : 0;
-
   return (
-    <Card className={`mb-6 border-l-4 border-l-blue-500 shadow-sm hover:shadow-md transition-shadow ${className}`}>
+    <Card className={`mb-6 bg-white/10 backdrop-blur-md border-white/20 shadow-lg hover:shadow-xl transition-shadow ${className}`}>
       <CardHeader className="pb-3">
         <div className="flex items-center gap-3">
-          <div className="bg-blue-50 dark:bg-blue-900/20 p-2 rounded-lg">
-            <Icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+          <div className="bg-white/20 text-white border border-white/20 p-2 rounded-lg">
+            <Icon className="h-5 w-5" />
           </div>
           <div className="flex-1">
-            <h3 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+            <h3 className="font-semibold text-white flex items-center gap-2">
               {title}
               {isRequired && <Badge variant="destructive" className="text-xs">Required</Badge>}
               {getStatusIcon(determinedStatus)}
             </h3>
             {tooltip && (
-              <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">{tooltip}</p>
+              <p className="text-sm text-white/70 mt-1">{tooltip}</p>
             )}
             {description && (
-              <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">{description}</p>
+              <p className="text-sm text-white/70 mt-1">{description}</p>
             )}
           </div>
         </div>
@@ -232,44 +224,35 @@ export const FieldGroup: React.FC<FieldGroupProps> = ({
   totalFields, 
   children 
 }) => {
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'success': return 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800';
-      case 'error': return 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800';
-      case 'warning': return 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800';
-      default: return 'bg-gray-50 dark:bg-gray-900/20 border-gray-200 dark:border-gray-800';
-    }
-  };
-
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'success': return <CheckCircle2 className="h-4 w-4 text-green-600" />;
-      case 'error': return <AlertCircle className="h-4 w-4 text-red-600" />;
-      case 'warning': return <Clock className="h-4 w-4 text-yellow-600" />;
-      default: return <Circle className="h-4 w-4 text-gray-400" />;
+      case 'success': return <CheckCircle2 className="h-4 w-4 text-green-400" />;
+      case 'error': return <AlertCircle className="h-4 w-4 text-red-400" />;
+      case 'warning': return <Clock className="h-4 w-4 text-yellow-400" />;
+      default: return <Circle className="h-4 w-4 text-white/60" />;
     }
   };
 
   const progressPercentage = totalFields > 0 ? (completedFields / totalFields) * 100 : 0;
 
   return (
-    <Card className={`mb-6 border-2 ${getStatusColor(status)} transition-all duration-200 hover:shadow-md`}>
+    <Card className="mb-6 bg-white/10 backdrop-blur-md border-white/20 shadow-lg hover:shadow-xl transition-all duration-200">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="bg-white dark:bg-gray-800 p-2 rounded-lg shadow-sm">
-              <Icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+            <div className="bg-white/20 text-white border border-white/20 p-2 rounded-lg">
+              <Icon className="h-5 w-5" />
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+              <h3 className="font-semibold text-white flex items-center gap-2">
                 {title}
                 {getStatusIcon(status)}
               </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-300">{description}</p>
+              <p className="text-sm text-white/70">{description}</p>
             </div>
           </div>
           <div className="text-right">
-            <div className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <div className="text-sm font-medium text-white/80">
               {completedFields}/{totalFields} fields
             </div>
             <div className="w-16 mt-1">
@@ -294,7 +277,7 @@ export const ValidationFeedback: React.FC<ValidationFeedbackProps> = ({ isValid,
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       className={`flex items-center gap-2 mt-2 text-sm ${
-        isValid ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
+        isValid ? 'text-green-400' : 'text-red-400'
       }`}
       id={id}
     >
@@ -308,116 +291,14 @@ export const ValidationFeedback: React.FC<ValidationFeedbackProps> = ({ isValid,
   );
 };
 
-// Form Header Component
-export const FormHeader: React.FC<FormHeaderProps> = ({
-  currentStep,
-  totalSteps,
-  completionPercentage,
-  isDraftSaving,
-  onSaveDraft,
-  currentStepLabel,
-  formTitle
-}) => (
-  <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
-    <div className="max-w-4xl mx-auto">
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{formTitle}</h1>
-          <p className="text-gray-600 dark:text-gray-300">
-            Step {currentStep} of {totalSteps}: {currentStepLabel}
-          </p>
-        </div>
-        <Button 
-          variant="outline" 
-          onClick={onSaveDraft}
-          disabled={isDraftSaving}
-          className="flex items-center gap-2"
-        >
-          <Save className="h-4 w-4" />
-          {isDraftSaving ? 'Saving...' : 'Save Draft'}
-        </Button>
-      </div>
-      
-      <div className="space-y-2">
-        <div className="flex justify-between text-sm text-gray-600 dark:text-gray-300">
-          <span>Progress</span>
-          <span>{Math.round(completionPercentage)}% complete</span>
-        </div>
-        <Progress value={completionPercentage} className="h-2" />
-      </div>
-    </div>
-  </div>
-);
+// Form Header Component - Import from separate file
+export { FormHeader } from "../FormHeader";
+
+// Form Navigation Component - Import from separate file  
+export { FormNavigation } from "../FormNavigation";
 
 // Enhanced Form Header Component (alias for compatibility)
 export const EnhancedFormHeader = FormHeader;
-
-// Form Navigation Component
-export const FormNavigation: React.FC<FormNavigationProps> = ({
-  currentStep,
-  totalSteps,
-  currentStepLabel,
-  isSubmitting,
-  onPrevious,
-  onNext,
-  onSaveAndExit,
-  submitLabel = "Submit Case"
-}) => (
-  <div className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 px-6 py-4">
-    <div className="max-w-4xl mx-auto">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          {currentStep > 1 && (
-            <Button
-              variant="outline"
-              onClick={onPrevious}
-              disabled={isSubmitting}
-              className="flex items-center gap-2"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Previous
-            </Button>
-          )}
-          
-          <Button
-            variant="ghost"
-            onClick={onSaveAndExit}
-            disabled={isSubmitting}
-            className="text-gray-600 dark:text-gray-300"
-          >
-            Save & Exit
-          </Button>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <span className="text-sm text-gray-600 dark:text-gray-300">
-            Step {currentStep} of {totalSteps}
-          </span>
-          
-          <Button
-            onClick={onNext}
-            disabled={isSubmitting}
-            className="flex items-center gap-2"
-          >
-            {isSubmitting ? (
-              <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                Processing...
-              </>
-            ) : currentStep === totalSteps ? (
-              submitLabel
-            ) : (
-              <>
-                Next
-                <ArrowRight className="h-4 w-4" />
-              </>
-            )}
-          </Button>
-        </div>
-      </div>
-    </div>
-  </div>
-);
 
 // Enhanced Form Navigation Component (alias for compatibility)
 export const EnhancedFormNavigation = FormNavigation;

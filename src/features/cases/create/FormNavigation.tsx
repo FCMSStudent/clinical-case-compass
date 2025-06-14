@@ -1,6 +1,6 @@
+
 import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Save, Loader2, Keyboard } from "lucide-react";
@@ -35,7 +35,7 @@ export interface FormNavigationProps {
 
 const KeyboardShortcut = ({ keys }: { keys: string[] }) => (
   <kbd 
-    className="px-2 py-1 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg shadow-sm"
+    className="px-2 py-1 text-xs font-semibold text-white/80 bg-white/20 border border-white/30 rounded-lg shadow-sm"
     aria-label={`Keyboard shortcut: ${keys.join(" + ")}`}
   >
     {keys.join(" + ")}
@@ -97,17 +97,17 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
   }, [onPrevious, onNext, onSaveAndExit, isFirst, isLast]);
 
   return (
-    <Card 
-      className={cn("sticky bottom-0 z-50 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60", className)}
+    <div 
+      className={cn("sticky bottom-0 z-50", className)}
       role="navigation"
       aria-label="Form navigation"
     >
-      <div className="container max-w-5xl mx-auto px-4 py-4">
+      <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-xl p-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           {/* Progress and Step Label */}
           <div className="flex-1 space-y-2">
             <div className="flex items-center justify-between text-sm">
-              <span className="font-medium" aria-live="polite">
+              <span className="font-medium text-white" aria-live="polite">
                 Step {currentStep} of {totalSteps}
               </span>
               <span className="text-white/70" aria-live="polite">
@@ -134,16 +134,19 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
                     variant="outline"
                     onClick={onPrevious}
                     disabled={isFirst || isSubmitting}
-                    className="gap-2"
+                    className="gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20 hover:border-white/30 disabled:opacity-50"
                     aria-label={isFirst ? "Cannot go back - this is the first step" : "Go to previous step"}
                     aria-describedby={!isFirst ? "previous-button-tooltip" : undefined}
                   >
                     <ChevronLeft className="h-4 w-4" aria-hidden="true" />
                     <span className="hidden sm:inline">Previous</span>
-                    <KeyboardShortcut keys={["Alt", "←"]} />
+                    {!isFirst && <KeyboardShortcut keys={["Alt", "←"]} />}
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent id="previous-button-tooltip">
+                <TooltipContent 
+                  id="previous-button-tooltip"
+                  className="bg-white/10 backdrop-blur-md border border-white/20 text-white"
+                >
                   <p>Go to previous step</p>
                 </TooltipContent>
               </Tooltip>
@@ -158,7 +161,7 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
                       variant="outline"
                       onClick={onSaveAndExit}
                       disabled={isSubmitting}
-                      className="gap-2"
+                      className="gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20 hover:border-white/30"
                       aria-label="Save your progress and return later"
                       aria-describedby="save-exit-button-tooltip"
                     >
@@ -167,7 +170,10 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
                       <KeyboardShortcut keys={["Alt", "S"]} />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent id="save-exit-button-tooltip">
+                  <TooltipContent 
+                    id="save-exit-button-tooltip"
+                    className="bg-white/10 backdrop-blur-md border border-white/20 text-white"
+                  >
                     <p>Save your progress and return later</p>
                   </TooltipContent>
                 </Tooltip>
@@ -181,8 +187,7 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
                   <Button
                     onClick={onNext}
                     disabled={isSubmitting}
-                    className="gap-2"
-                    variant={isLast ? "success" : "default"}
+                    className="gap-2 bg-white/20 border-white/30 text-white hover:bg-white/30 hover:border-white/40"
                     aria-label={isLast ? "Submit the case" : "Go to next step"}
                     aria-describedby="next-submit-button-tooltip"
                     aria-busy={isSubmitting}
@@ -220,7 +225,10 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
                     {!isLast && <KeyboardShortcut keys={["Alt", "→"]} />}
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent id="next-submit-button-tooltip">
+                <TooltipContent 
+                  id="next-submit-button-tooltip"
+                  className="bg-white/10 backdrop-blur-md border border-white/20 text-white"
+                >
                   <p>{isLast ? "Submit the case" : "Go to next step"}</p>
                 </TooltipContent>
               </Tooltip>
@@ -229,12 +237,12 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
         </div>
 
         {/* Keyboard Shortcuts Help */}
-        <div className="mt-2 text-xs text-white/70 flex items-center gap-2">
+        <div className="mt-4 pt-4 border-t border-white/20 text-xs text-white/70 flex items-center gap-2">
           <Keyboard className="h-3 w-3" aria-hidden="true" />
           <span>Keyboard shortcuts: Alt + ←/→ to navigate, Alt + S to save</span>
         </div>
       </div>
-    </Card>
+    </div>
   );
 };
 

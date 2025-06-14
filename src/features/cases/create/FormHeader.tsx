@@ -1,7 +1,7 @@
+
 import React, { memo } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Loader2, Save, CheckCircle, AlertCircle } from "lucide-react";
+import { Loader2, Save } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { Progress } from "@/components/ui/progress";
@@ -30,7 +30,7 @@ export interface FormHeaderProps {
   /** Extra class names for the wrapper. */
   className?: string;
   /** Title for the form, e.g., "Create New Clinical Case". */
-  formTitle?: string; // Added prop for flexibility
+  formTitle?: string;
 }
 
 /**
@@ -48,16 +48,11 @@ export const FormHeader = memo(function FormHeader({
   formTitle = "Create New Clinical Case",
 }: FormHeaderProps) {
   return (
-    <div
-      className={cn(
-        "mb-6 flex flex-col gap-1 md:flex-row md:items-center md:justify-between",
-        className
-      )}
-    >
+    <div className={cn("mb-6", className)}>
       {/* Main Header Card */}
       <div className="relative">
         <div
-          className="relative bg-black/20 backdrop-blur-md rounded-2xl border border-white/20 shadow-xl p-6"
+          className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-xl p-6"
           role="banner"
           aria-labelledby="form-title"
         >
@@ -80,7 +75,7 @@ export const FormHeader = memo(function FormHeader({
                   aria-live="polite"
                   aria-atomic="true"
                 >
-                  {currentStepLabel}
+                  Step {currentStep} of {totalSteps}: {currentStepLabel}
                 </p>
               </motion.div>
 
@@ -96,21 +91,16 @@ export const FormHeader = memo(function FormHeader({
                     {completionPercentage}%
                   </span>
                 </div>
-                <div className="relative">
-                  <div className="absolute inset-0 bg-white/20 rounded-full" aria-hidden="true"></div>
-                  <div 
-                    className="relative h-2 bg-white/30 rounded-full overflow-hidden"
-                    style={{ width: `${completionPercentage}%` }}
-                    role="progressbar"
-                    aria-label={`Form completion progress: ${completionPercentage}%`}
-                    aria-valuenow={completionPercentage}
-                    aria-valuemin={0}
-                    aria-valuemax={100}
-                    aria-valuetext={`${completionPercentage}% complete`}
-                  >
-                    <div className="absolute inset-0 bg-white/60 rounded-full" aria-hidden="true"></div>
-                  </div>
-                </div>
+                <Progress 
+                  value={completionPercentage}
+                  className="h-3"
+                  role="progressbar"
+                  aria-label={`Form completion progress: ${completionPercentage}%`}
+                  aria-valuenow={completionPercentage}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-valuetext={`${completionPercentage}% complete`}
+                />
               </div>
             </div>
 
@@ -123,7 +113,7 @@ export const FormHeader = memo(function FormHeader({
                       variant="outline"
                       onClick={onSaveDraft}
                       disabled={isDraftSaving}
-                      className="gap-2 whitespace-nowrap"
+                      className="gap-2 whitespace-nowrap bg-white/10 border-white/20 text-white hover:bg-white/20 hover:border-white/30"
                       aria-label={isDraftSaving ? "Saving draft..." : "Save draft"}
                       aria-describedby="save-draft-tooltip"
                       aria-busy={isDraftSaving}

@@ -1,3 +1,4 @@
+
 import React, {
   useState,
   useCallback,
@@ -12,25 +13,17 @@ import { z } from "zod";
 import { toast } from "sonner";
 import {
   ChevronLeft,
-  ChevronRight,
-  Save,
   FileText,
   User,
   Stethoscope,
   BookOpen,
-  SkipForward,
   AlertCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FormContainer, StepMeta } from "@/features/cases/create/FormContainer";
 import { 
-  EnhancedFormHeader, 
-  EnhancedFormNavigation,
-  StepHeader,
-  FormFieldCard,
-  StatusFieldCard,
-  FieldGroup,
-  ValidationFeedback
+  FormHeader,
+  FormNavigation,
 } from "@/features/cases/create/components/EnhancedFormComponents";
 import {
   CaseInfoStep,
@@ -44,9 +37,9 @@ import {
 } from "@/features/cases";
 import { cn } from "@/lib/utils";
 import { useAutoSave } from "@/hooks/use-autosave";
-import { AutosaveIndicator } from "@/features/cases/AutosaveIndicator";
 import { useCaseOperations } from "@/hooks/use-case-operations";
 import { ErrorSummary } from "@/components/ui/ErrorSummary";
+import { PageHeader } from "@/components/ui/page-header";
 
 // Combine all schemas into one
 const createCaseSchema = z.object({
@@ -97,7 +90,6 @@ const CreateCaseFlow = () => {
   const [autoSaveStatus, setAutoSaveStatus] = useState<
     "idle" | "saving" | "saved" | "error"
   >("idle");
-  const [showSkipNav, setShowSkipNav] = useState(false);
 
   // Accessibility refs
   const mainContentRef = useRef<HTMLDivElement>(null);
@@ -263,13 +255,6 @@ const CreateCaseFlow = () => {
   // Handle keyboard shortcuts for accessibility
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      // Skip navigation (Alt + S)
-      if (event.altKey && event.key === "s") {
-        event.preventDefault();
-        setShowSkipNav(true);
-        setTimeout(() => setShowSkipNav(false), 3000);
-      }
-
       // Focus first error (Alt + E)
       if (event.altKey && event.key === "e" && Object.keys(errors).length > 0) {
         event.preventDefault();
@@ -323,25 +308,7 @@ const CreateCaseFlow = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900 relative">
-      {/* Glassy background elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/3 rounded-full blur-3xl"></div>
-      </div>
-      {/* Skip Navigation for Accessibility */}
-      {showSkipNav && (
-        <div className="fixed top-4 left-4 z-50 bg-white/10 backdrop-blur-md rounded-lg border border-white/20 p-2">
-          <div className="text-white text-sm">
-            <p>Keyboard shortcuts:</p>
-            <p>Alt + S: Skip navigation</p>
-            <p>Alt + E: Focus first error</p>
-            <p>Alt + ←/→: Navigate steps</p>
-          </div>
-        </div>
-      )}
-
+    <div className="space-y-6">
       {/* Screen Reader Announcements */}
       <div
         ref={errorAnnouncementRef}
@@ -358,27 +325,29 @@ const CreateCaseFlow = () => {
         Skip to main content
       </a>
 
+      <PageHeader
+        title="Create New Clinical Case"
+        description="Build a comprehensive case study for medical education"
+        actions={
+          <Button
+            variant="ghost"
+            onClick={() => navigate("/dashboard")}
+            className="gap-2 text-white/70 hover:text-white hover:bg-white/10"
+            aria-label="Return to dashboard"
+          >
+            <ChevronLeft className="h-4 w-4" />
+            Back to Dashboard
+          </Button>
+        }
+      />
+
       <div
         ref={mainContentRef}
         id="main-content"
-        className="relative z-10 w-full max-w-6xl mx-auto space-y-6 p-4 md:p-6"
+        className="space-y-6"
         role="main"
         aria-labelledby="form-title"
       >
-        <header role="banner">
-          <div className="mb-6">
-            <Button
-              variant="ghost"
-              onClick={() => navigate("/dashboard")}
-              className="gap-2 text-white/70 hover:text-white"
-              aria-label="Return to dashboard"
-            >
-              <ChevronLeft className="h-4 w-4" />
-              Back to Dashboard
-            </Button>
-          </div>
-        </header>
-
         <FormProvider {...methods}>
           <form
             ref={formRef}
@@ -387,7 +356,7 @@ const CreateCaseFlow = () => {
             aria-label="Create new clinical case form"
             noValidate
           >
-            <EnhancedFormHeader
+            <FormHeader
               currentStep={currentStep + 1}
               totalSteps={STEPS.length}
               completionPercentage={Math.round(
@@ -432,21 +401,21 @@ const CreateCaseFlow = () => {
               >
                 <CurrentStepComponent />
               </div>
-
-              <EnhancedFormNavigation
-                currentStep={currentStep + 1}
-                totalSteps={STEPS.length}
-                currentStepLabel={STEPS[currentStep].label}
-                onNext={handleNext}
-                onPrevious={handlePrevious}
-                isSubmitting={isSaving}
-                onSaveAndExit={() => {
-                  // Save draft and navigate away
-                  localStorage.setItem("case-form-draft", JSON.stringify(formData));
-                  navigate("/dashboard");
-                }}
-              />
             </FormContainer>
+
+            <FormNavigation
+              currentStep={currentStep + 1}
+              totalSteps={STEPS.length}
+              currentStepLabel={STEPS[currentStep].label}
+              onNext={handleNext}
+              onPrevious={handlePrevious}
+              isSubmitting={isSaving}
+              onSaveAndExit={() => {
+                // Save draft and navigate away
+                localStorage.setItem("case-form-draft", JSON.stringify(formData));
+                navigate("/dashboard");
+              }}
+            />
           </form>
         </FormProvider>
       </div>
