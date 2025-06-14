@@ -27,7 +27,7 @@ import {
 import { cn } from "@/lib/utils";
 import type { LabTest, RadiologyStudy } from "@/types/case";
 import { clinicalDetailStepSchema, type ClinicalDetailFormData, TAB_ITEMS, type TabValue } from "./ClinicalDetailConfig";
-import { InteractiveBodyDiagram, BodyPartSelection } from "@/features/cases/InteractiveBodyDiagram";
+import { InteractiveBodyDiagram, type BodyPartSelection } from "@/features/cases/InteractiveBodyDiagram";
 import { SystemReviewChecklist } from "@/features/cases/SystemReviewChecklist";
 import { VitalsCard } from "@/features/cases/VitalsCard";
 import { LabResultsCard } from "@/features/cases/LabResultsCard";
@@ -156,32 +156,43 @@ HistoryAndExamTab.displayName = "HistoryAndExamTab";
 
 const SystemsReviewTab = memo(() => {
   const { setValue, watch, control } = useFormContext<ClinicalDetailFormData>();
-  const selectedBodyParts = watch(FORM_FIELDS.SELECTED_BODY_PARTS) || [];
-  const [systemSymptoms, setSystemSymptoms] = React.useState<Record<string, string[]>>({}); // This state might need to be lifted or integrated with RHF
-  const [vitals, setVitals] = React.useState<Record<string, string>>({}); // Same as above
+  // selectedBodyParts is now an array of BodyPartSelection objects
+  const selectedBodyParts: BodyPartSelection[] = watch(FORM_FIELDS.SELECTED_BODY_PARTS) || [];
 
-  // Memoize selectedBodyParts to prevent unnecessary re-renders
-  const memoizedSelectedBodyParts = useMemo(() => selectedBodyParts, [selectedBodyParts]);
+  // Removed local state for systemSymptoms and vitals as they are handled by RHF setValue
 
-  const handleBodyPartSelected = useCallback((selection: BodyPartSelection) => {
-    const partName = selection.name || selection.id;
-    if (!partName) return;
+  const handleBodyPartSelected = useCallback((newSelection: BodyPartSelection) => {
+    // Get the current array of selected parts from the form state
+    const currentSelectedParts: BodyPartSelection[] = watch(FORM_FIELDS.SELECTED_BODY_PARTS) || [];
     
-    const updatedParts = memoizedSelectedBodyParts.includes(partName)
-      ? memoizedSelectedBodyParts.filter((p) => p !== partName)
-      : [...memoizedSelectedBodyParts, partName];
-    setValue(FORM_FIELDS.SELECTED_BODY_PARTS, updatedParts, { shouldValidate: true });
-  }, [memoizedSelectedBodyParts, setValue]);
+    const existingIndex = currentSelectedParts.findIndex(p => p.id === newSelection.id && p.view === newSelection.view);
+    
+    let updatedPartsArray: BodyPartSelection[];
+    if (existingIndex > -1) {
+      // Part already exists, remove it
+      updatedPartsArray = currentSelectedParts.filter((_, index) => index !== existingIndex);
+    } else {
+      // Part is new, add it
+      updatedPartsArray = [...currentSelectedParts, newSelection];
+    }
+    setValue(FORM_FIELDS.SELECTED_BODY_PARTS, updatedPartsArray, { shouldValidate: true });
+  }, [watch, setValue]);
 
   const PartBadges = useMemo(() => (
-    memoizedSelectedBodyParts.length > 0 && (
+    selectedBodyParts.length > 0 && (
       <div className="mt-3 flex flex-wrap gap-1">
-        {memoizedSelectedBodyParts.map((p) => (
-          <Badge key={p} variant="secondary" className="text-xs bg-blue-100 text-blue-800">{p}</Badge>
+        {selectedBodyParts.map((part: BodyPartSelection) => ( // part is BodyPartSelection
+          <Badge 
+            key={`${part.id}-${part.view}`} // Use part.id and part.view for a unique key
+            variant="secondary" 
+            className="text-xs bg-blue-100 text-blue-800"
+          >
+            {part.name} <span className="text-blue-500/80 text-[10px]">({part.view.substring(0,3)})</span>
+          </Badge>
         ))}
       </div>
     )
-  ), [memoizedSelectedBodyParts]);
+  ), [selectedBodyParts]);
 
   return (
     <TabsContent value="systems" className="space-y-6">
@@ -191,7 +202,11 @@ const SystemsReviewTab = memo(() => {
            <Controller name={FORM_FIELDS.SYSTEM_SYMPTOMS as Path<ClinicalDetailFormData>} control={control} render={({ fieldState }) => fieldState.error ? <FormMessage className="mt-2">{fieldState.error.message}</FormMessage> : null} />
         </SimpleSection>
         <SimpleSection icon={UserIcon} title="Affected Body Areas">
-          <InteractiveBodyDiagram onBodyPartSelected={handleBodyPartSelected} />
+          {/* Pass initialSelectedParts to InteractiveBodyDiagram */}
+          <InteractiveBodyDiagram 
+            onBodyPartSelected={handleBodyPartSelected}
+            initialSelectedParts={selectedBodyParts} 
+          />
           <p className="mt-3 text-sm text-white/70">Click on body parts to mark affected areas.</p>
           {PartBadges}
           <Controller name={FORM_FIELDS.SELECTED_BODY_PARTS as Path<ClinicalDetailFormData>} control={control} render={({ fieldState }) => fieldState.error ? <FormMessage className="mt-2">{fieldState.error.message}</FormMessage> : null} />
@@ -236,7 +251,7 @@ DiagnosticsTab.displayName = "DiagnosticsTab";
 // Main component
 export const ClinicalDetailStep = memo(({ className }: { className?: string }) => {
   const { formState: { errors: RHFerrors } } = useFormContext<ClinicalDetailFormData>();
-  const [currentTab, setCurrentTab] = React.useState<TabValue>(TAB_ITEMS[0].value); // Explicitly type currentTab
+  const [currentTab, setCurrentTab] = React.useState<TabValue>(TAB_ITEMS[0].value); 
   const prevTabRef = React.useRef<TabValue>();
 
   React.useEffect(() => {
@@ -285,7 +300,7 @@ export const ClinicalDetailStep = memo(({ className }: { className?: string }) =
         <Tabs 
           value={currentTab} 
           className="w-full"
-          onValueChange={(value) => setCurrentTab(value as TabValue)} // Cast value to TabValue
+          onValueChange={(value) => setCurrentTab(value as TabValue)} 
         >
           <TabsList className="grid w-full grid-cols-3 mb-6 bg-transparent p-0">
             {TAB_ITEMS.map(({ value, label, icon: Icon }) => (

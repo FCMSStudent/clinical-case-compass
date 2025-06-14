@@ -1,24 +1,27 @@
-
 import React, { useState, useCallback, useMemo, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"; // Removed TooltipProvider import
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
 import { Info, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { bodyPartsData, type BodyPart } from "./bodyParts.data";
+import { 
+  BODY_PARTS as bodyPartsData, 
+  type BodyPartDefinition, 
+  type SeverityLevel 
+} from "./bodyParts.data";
 import BodySvgView from "./BodySvgView";
 
 export type ViewType = "anterior" | "posterior" | "lateral";
-export type SeverityFilter = "all" | "critical" | "high" | "medium" | "low";
+export type SeverityFilter = "all" | SeverityLevel;
 
-export interface BodyPartSelection extends BodyPart {
+export type BodyPartId = keyof typeof bodyPartsData;
+
+export interface BodyPartSelection extends BodyPartDefinition {
   view: ViewType;
 }
-
-export type BodyPartId = keyof typeof bodyPartsData.anterior | keyof typeof bodyPartsData.posterior | keyof typeof bodyPartsData.lateral;
-
 
 interface InteractiveBodyDiagramProps {
   onBodyPartSelected?: (selection: BodyPartSelection) => void;
@@ -37,18 +40,17 @@ export const InteractiveBodyDiagram: React.FC<InteractiveBodyDiagramProps> = ({
   const [severityFilter, setSeverityFilter] = useState<SeverityFilter>("all");
   const svgRef = useRef<SVGSVGElement>(null);
 
-  const currentBodyParts = useMemo(() => bodyPartsData[view], [view]);
-
   const handlePartClick = useCallback(
     (partId: BodyPartId) => {
-      const partData = currentBodyParts[partId as keyof typeof currentBodyParts] || 
-                       bodyPartsData.anterior[partId as keyof typeof bodyPartsData.anterior] || // Fallback for shared parts
-                       bodyPartsData.posterior[partId as keyof typeof bodyPartsData.posterior] ||
-                       bodyPartsData.lateral[partId as keyof typeof bodyPartsData.lateral];
+      const partData = bodyPartsData[partId];
 
-      if (!partData) return;
+      if (!partData) {
+        console.warn(`Data not found for partId: ${partId}`);
+        return;
+      }
 
-      const selection: BodyPartSelection = { ...partData, id: partId, view };
+      const selection: BodyPartSelection = { ...partData, view };
+      
       const existingIndex = selectedParts.findIndex(p => p.id === partId && p.view === view);
 
       let newSelectedParts;
@@ -58,39 +60,36 @@ export const InteractiveBodyDiagram: React.FC<InteractiveBodyDiagramProps> = ({
         newSelectedParts = [...selectedParts, selection];
       }
       setSelectedParts(newSelectedParts);
-      onBodyPartSelected?.(selection); // Pass the clicked part, not the whole array
+      if (onBodyPartSelected) {
+        onBodyPartSelected(existingIndex > -1 ? selection : newSelectedParts[newSelectedParts.length-1]);
+      }
     },
-    [currentBodyParts, selectedParts, view, onBodyPartSelected]
+    [selectedParts, view, onBodyPartSelected]
   );
   
-  const getPartFill = useCallback((partId: BodyPartId, partData: BodyPart) => {
+  const getPartFill = useCallback((partId: BodyPartId, partDataFromDiagram: BodyPartDefinition) => {
     const isSelected = selectedParts.some(p => p.id === partId);
     const isHovered = hoveredPart === partId;
 
-    if (severityFilter !== "all" && partData.priority !== severityFilter) {
-      return "hsl(var(--muted) / 0.2)"; // Muted and desaturated for filtered out parts
+    if (severityFilter !== "all" && partDataFromDiagram.priority !== severityFilter) {
+      return "hsl(var(--muted) / 0.2)";
     }
     
-    if (isSelected) return "hsl(var(--primary))"; // Blue for selected
-    if (isHovered) return "hsl(var(--primary) / 0.5)"; // Lighter blue for hover
+    if (isSelected) return "hsl(var(--primary))";
+    if (isHovered) return "hsl(var(--primary) / 0.5)";
 
-    // Default fill based on priority, only if not filtered out
-    switch(partData.priority) {
-        case "critical": return "hsl(0 72% 51% / 0.7)"; // Red
-        case "high": return "hsl(39 100% 50% / 0.7)"; // Orange
-        case "medium": return "hsl(48 95% 52% / 0.7)"; // Yellow
-        case "low": return "hsl(142 71% 45% / 0.7)"; // Green
-        default: return "hsl(var(--muted-foreground) / 0.3)"; // Default muted grey
+    switch(partDataFromDiagram.priority) {
+        case "critical": return "hsl(0 72% 51% / 0.7)";
+        case "high": return "hsl(39 100% 50% / 0.7)";
+        case "medium": return "hsl(48 95% 52% / 0.7)";
+        case "low": return "hsl(142 71% 45% / 0.7)";
+        default: return "hsl(var(--muted-foreground) / 0.3)";
     }
   }, [selectedParts, hoveredPart, severityFilter]);
 
-
   const renderBodyShape = useCallback(
     (partId: BodyPartId, shape: JSX.Element): React.ReactNode => {
-      const partData = currentBodyParts[partId as keyof typeof currentBodyParts] || 
-                       bodyPartsData.anterior[partId as keyof typeof bodyPartsData.anterior] ||
-                       bodyPartsData.posterior[partId as keyof typeof bodyPartsData.posterior] ||
-                       bodyPartsData.lateral[partId as keyof typeof bodyPartsData.lateral];
+      const partData = bodyPartsData[partId];
 
       if (!partData) {
         console.warn(`No data for partId: ${partId} in view: ${view}`);
@@ -124,16 +123,15 @@ export const InteractiveBodyDiagram: React.FC<InteractiveBodyDiagramProps> = ({
         fill: fill,
         stroke: "hsl(var(--border) / 0.5)",
         strokeWidth: 1,
-        "data-part-id": partId,
+        "data-part-id": String(partId),
         ...interactiveProps,
       });
 
-      if (isFilteredOut || !partData.name) { // Don't render tooltip if filtered out or no name
+      if (isFilteredOut || !partData.name) {
         return pathElement;
       }
 
       return (
-        // Removed TooltipProvider from here, individual Tooltips will use the parent provider
         <Tooltip delayDuration={100}>
           <TooltipTrigger asChild>{pathElement}</TooltipTrigger>
           <TooltipContent side="top" className="bg-background/80 backdrop-blur-md text-foreground border-border shadow-lg rounded-md px-3 py-1.5 text-xs">
@@ -143,11 +141,10 @@ export const InteractiveBodyDiagram: React.FC<InteractiveBodyDiagramProps> = ({
         </Tooltip>
       );
     },
-    [currentBodyParts, handlePartClick, getPartFill, setHoveredPart, view, severityFilter]
+    [handlePartClick, getPartFill, setHoveredPart, view, severityFilter]
   );
 
   return (
-    // Removed TooltipProvider wrapper from here
     <div className={cn("p-4 bg-background/30 backdrop-blur-lg rounded-xl border border-white/10 shadow-2xl space-y-4", className)}>
       <div className="flex items-center justify-between gap-2 flex-wrap">
         <div className="flex items-center gap-3">
@@ -156,7 +153,7 @@ export const InteractiveBodyDiagram: React.FC<InteractiveBodyDiagramProps> = ({
           </Label>
           <Switch
             id="view-switch"
-            checked={view === "posterior"} // Example: posterior is "on"
+            checked={view === "posterior"}
             onCheckedChange={(checked) => {
               if (view === "anterior") setView("posterior");
               else if (view === "posterior") setView("lateral");
@@ -236,21 +233,3 @@ export const InteractiveBodyDiagram: React.FC<InteractiveBodyDiagramProps> = ({
     </div>
   );
 };
-
-// Dummy Button component for TooltipTrigger asChild prop to work if no real Button is imported.
-// This is often needed if @/components/ui/button is not directly used but Radix expects a button child.
-// If you have a Button component from shadcn/ui already imported and used, this might not be necessary.
-// For safety, let's define a minimal one if not already present.
-// Check if this can be removed if you use your Button component from "@/components/ui/button" for the RotateCcw
-const Button = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttributes<HTMLButtonElement>>(
-  ({ className, variant, size, ...props }, ref) => {
-    return (
-      <button
-        className={cn("inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background", className)}
-        ref={ref}
-        {...props}
-      />
-    );
-  }
-);
-Button.displayName = "Button";
