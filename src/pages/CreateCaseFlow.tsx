@@ -23,8 +23,15 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FormContainer, StepMeta } from "@/features/cases/create/FormContainer";
-import { FormHeader } from "@/features/cases/create/FormHeader";
-import { FormNavigation } from "@/features/cases/create/FormNavigation";
+import { 
+  EnhancedFormHeader, 
+  EnhancedFormNavigation,
+  StepHeader,
+  FormFieldCard,
+  StatusFieldCard,
+  FieldGroup,
+  ValidationFeedback
+} from "@/features/cases/create/components/EnhancedFormComponents";
 import {
   CaseInfoStep,
   caseInfoSchema,
@@ -267,7 +274,7 @@ const CreateCaseFlow = () => {
       if (event.altKey && event.key === "e" && Object.keys(errors).length > 0) {
         event.preventDefault();
         const firstErrorField = Object.keys(errors)[0];
-        setFocus(firstErrorField as any);
+        setFocus(firstErrorField as keyof CreateCaseFormData);
       }
     };
 
@@ -316,7 +323,7 @@ const CreateCaseFlow = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-blue-700 dark:from-blue-900 dark:via-blue-800 dark:to-blue-900 relative">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900 relative">
       {/* Glassy background elements */}
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
@@ -380,7 +387,7 @@ const CreateCaseFlow = () => {
             aria-label="Create new clinical case form"
             noValidate
           >
-            <FormHeader
+            <EnhancedFormHeader
               currentStep={currentStep + 1}
               totalSteps={STEPS.length}
               completionPercentage={Math.round(
@@ -426,13 +433,18 @@ const CreateCaseFlow = () => {
                 <CurrentStepComponent />
               </div>
 
-              <FormNavigation
+              <EnhancedFormNavigation
                 currentStep={currentStep + 1}
                 totalSteps={STEPS.length}
                 currentStepLabel={STEPS[currentStep].label}
                 onNext={handleNext}
                 onPrevious={handlePrevious}
                 isSubmitting={isSaving}
+                onSaveAndExit={() => {
+                  // Save draft and navigate away
+                  localStorage.setItem("case-form-draft", JSON.stringify(formData));
+                  navigate("/dashboard");
+                }}
               />
             </FormContainer>
           </form>

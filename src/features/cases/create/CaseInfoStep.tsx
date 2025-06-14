@@ -2,9 +2,13 @@ import React, { memo } from "react";
 import { useFormContext, Path, FieldValues } from "react-hook-form";
 import { FileText, Stethoscope, Tag, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { StepHeader } from "./components/StepHeader";
-import { FormFieldCard } from "./components/FormFieldCard";
-import { ValidationFeedback } from "./components/ValidationFeedback";
+import { 
+  StepHeader,
+  FormFieldCard,
+  StatusFieldCard,
+  FieldGroup,
+  ValidationFeedback
+} from "./components/EnhancedFormComponents";
 import {
   FormField,
   FormItem,
@@ -74,7 +78,7 @@ export interface CaseInfoStepProps<T extends FieldValues = CaseInfoFormData> {
 export const CaseInfoStep = memo(function CaseInfoStep<
   T extends FieldValues = CaseInfoFormData,
 >({ className }: CaseInfoStepProps<T>) {
-  const { control, formState } = useFormContext<T>();
+  const { control, formState, watch } = useFormContext<T>();
   
   // Use shared validation utilities
   const { completedFields, totalFields, completionPercentage, errors } = useFormValidation<T>({
@@ -82,213 +86,124 @@ export const CaseInfoStep = memo(function CaseInfoStep<
     watchFields: ["caseTitle", "chiefComplaint", "specialty"],
   });
 
+  const watchedValues = watch();
+
   return (
-    <section 
-      className={cn("space-y-8", className)}
-      role="region"
-      aria-labelledby="case-info-step-title"
-      aria-describedby="case-info-step-description"
-    >
+    <div className={cn("space-y-8", className)}>
       <StepHeader
         title="Case Information"
-        description="Create a comprehensive clinical case by providing essential information about the patient presentation and medical context."
+        description="Provide essential details about the clinical case, including a descriptive title, chief complaint, and medical specialty to help categorize and organize the case effectively."
         icon={FileText}
       />
 
-      {/* Validation summary alert */}
-      {Object.keys(errors).length > 0 && (
-        <div 
-          className="relative" 
-          role="alert" 
-          aria-live="polite"
-          aria-labelledby="validation-errors-heading"
-        >
-          <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4">
-            <div className="flex items-start gap-3">
-              <AlertCircle className="h-5 w-5 text-destructive mt-0.5" aria-hidden="true" />
-              <div>
-                <h3 id="validation-errors-heading" className="font-semibold text-destructive">
-                  Validation Errors
-                </h3>
-                <p className="text-destructive/80 text-sm mt-1">
-                  Please review and correct the highlighted fields below.
-                </p>
-              </div>
-            </div>
-          </div>
+      <FieldGroup
+        title="Case Details"
+        description="Basic case identification and categorization"
+        icon={FileText}
+        status={completedFields === totalFields ? 'success' : 'default'}
+        completedFields={completedFields}
+        totalFields={totalFields}
+      >
+        <div className="space-y-6">
+          <StatusFieldCard
+            icon={FileText}
+            title="Case Title"
+            tooltip="A clear, descriptive title helps others quickly understand the case's focus. Include key details like condition, patient type, or unique aspects."
+            isRequired
+            fieldValue={watchedValues.caseTitle}
+            hasError={!!errors.caseTitle}
+          >
+            <FormField
+              control={control}
+              name={"caseTitle" as Path<T>}
+              render={({ field, fieldState }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      placeholder="e.g., Complex Hypertension Management in Elderly Patient with Comorbidities"
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 transition-all duration-200"
+                      {...field}
+                    />
+                  </FormControl>
+                  <ValidationFeedback
+                    isValid={!fieldState.error}
+                    message={fieldState.error?.message || "Title looks good!"}
+                  />
+                </FormItem>
+              )}
+            />
+          </StatusFieldCard>
+
+          <StatusFieldCard
+            icon={Stethoscope}
+            title="Chief Complaint"
+            tooltip="The primary reason for the patient's visit or the main clinical problem being addressed."
+            isRequired
+            fieldValue={watchedValues.chiefComplaint}
+            hasError={!!errors.chiefComplaint}
+          >
+            <FormField
+              control={control}
+              name={"chiefComplaint" as Path<T>}
+              render={({ field, fieldState }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      placeholder="e.g., Chest pain for 2 hours"
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 transition-all duration-200"
+                      {...field}
+                    />
+                  </FormControl>
+                  <ValidationFeedback
+                    isValid={!fieldState.error}
+                    message={fieldState.error?.message || "Chief complaint looks good!"}
+                  />
+                </FormItem>
+              )}
+            />
+          </StatusFieldCard>
+
+          <StatusFieldCard
+            icon={Tag}
+            title="Medical Specialty"
+            tooltip="Select the primary medical specialty that best categorizes this case."
+            fieldValue={watchedValues.specialty}
+            hasError={!!errors.specialty}
+          >
+            <FormField
+              control={control}
+              name={"specialty" as Path<T>}
+              render={({ field, fieldState }) => (
+                <FormItem>
+                  <FormControl>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 transition-all duration-200">
+                        <SelectValue placeholder="Select a specialty" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl">
+                        {MEDICAL_SPECIALTIES.map((specialty) => (
+                          <SelectItem
+                            key={specialty}
+                            value={specialty}
+                            className="text-white hover:bg-white/20 focus:bg-white/20"
+                          >
+                            {specialty}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <ValidationFeedback
+                    isValid={!fieldState.error}
+                    message={fieldState.error?.message || "Specialty selected!"}
+                  />
+                </FormItem>
+              )}
+            />
+          </StatusFieldCard>
         </div>
-      )}
-
-      <FormFieldCard 
-        icon={FileText} 
-        title="Case Title" 
-        tooltip="A clear, descriptive title helps others quickly understand the case's focus. Include key details like condition, patient type, or unique aspects."
-        isRequired
-      >
-        <FormField
-          control={control}
-          name={"caseTitle" as Path<T>}
-          render={({ field, fieldState }) => (
-            <FormItem>
-              <FormLabel 
-                htmlFor="case-title-input"
-                className="sr-only"
-              >
-                Case Title
-              </FormLabel>
-              <FormControl>
-                <Input
-                  id="case-title-input"
-                  placeholder="e.g., Complex Hypertension Management in Elderly Patient with Comorbidities"
-                  className={cn(
-                    undefined,
-                    fieldState.error && "border-red-400/50 focus-visible:ring-red-400/30"
-                  )}
-                  aria-describedby={fieldState.error ? "case-title-error" : "case-title-help"}
-                  aria-invalid={fieldState.error ? "true" : "false"}
-                  aria-required="true"
-                  {...field}
-                />
-              </FormControl>
-              <ValidationFeedback
-                isValid={!fieldState.error}
-                message={fieldState.error?.message || "Title looks good!"}
-                id={fieldState.error ? "case-title-error" : "case-title-help"}
-              />
-              <FormDescription
-                className="mt-3 flex items-start gap-2 text-white/70"
-                id="case-title-help"
-              >
-                <div className={cn(
-                  "w-2 h-2 rounded-full mt-2 flex-shrink-0",
-                  fieldState.error ? "bg-red-400" : "bg-emerald-400"
-                )} aria-hidden="true"></div>
-                Create a descriptive and engaging title that captures the essence of this clinical case
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </FormFieldCard>
-
-      <FormFieldCard 
-        icon={Stethoscope} 
-        title="Chief Complaint" 
-        tooltip="Describe the patient's primary symptoms and concerns in detail. Include onset, duration, and any relevant context."
-        isRequired
-      >
-        <FormField
-          control={control}
-          name={"chiefComplaint" as Path<T>}
-          render={({ field, fieldState }) => (
-            <FormItem>
-              <FormLabel 
-                htmlFor="chief-complaint-textarea"
-                className="sr-only"
-              >
-                Chief Complaint
-              </FormLabel>
-              <FormControl>
-                <Textarea
-                  id="chief-complaint-textarea"
-                  placeholder="e.g., 65-year-old patient presents with acute onset chest pain radiating to left arm, accompanied by shortness of breath and diaphoresis. Symptoms began 2 hours ago during mild physical activity..."
-                  className={cn(
-                    undefined,
-                    fieldState.error && "border-red-400/50 focus-visible:ring-red-400/30"
-                  )}
-                  aria-describedby={fieldState.error ? "chief-complaint-error" : "chief-complaint-help"}
-                  aria-invalid={fieldState.error ? "true" : "false"}
-                  aria-required="true"
-                  {...field}
-                />
-              </FormControl>
-              <ValidationFeedback
-                isValid={!fieldState.error}
-                message={fieldState.error?.message}
-                id={fieldState.error ? "chief-complaint-error" : "chief-complaint-help"}
-              />
-              <FormDescription
-                className="mt-3 flex items-start gap-2 text-white/70"
-                id="chief-complaint-help"
-              >
-                <div className={cn(
-                  "w-2 h-2 rounded-full mt-2 flex-shrink-0",
-                  fieldState.error ? "bg-red-400" : "bg-rose-400"
-                )} aria-hidden="true"></div>
-                Describe the patient's primary symptoms, timeline, and presenting concerns in detail
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </FormFieldCard>
-
-      <FormFieldCard 
-        icon={Tag} 
-        title="Medical Specialty" 
-        tooltip="Select the primary medical specialty most relevant to this clinical presentation."
-      >
-        <FormField
-          control={control}
-          name={"specialty" as Path<T>}
-          render={({ field, fieldState }) => (
-            <FormItem>
-              <FormLabel 
-                htmlFor="specialty-select"
-                className="sr-only"
-              >
-                Medical Specialty
-              </FormLabel>
-              <FormControl>
-                <Select 
-                  onValueChange={field.onChange} 
-                  defaultValue={field.value}
-                  aria-describedby="specialty-help"
-                >
-                  <SelectTrigger
-                    id="specialty-select"
-                    className={cn(
-                      "rounded-xl shadow-xl py-3 px-4",
-                      fieldState.error && "border-red-400/50 focus-visible:ring-red-400/30"
-                    )}
-                    aria-invalid={fieldState.error ? "true" : "false"}
-                  >
-                    <SelectValue placeholder="Select the most relevant medical specialty" />
-                  </SelectTrigger>
-                  <SelectContent
-                    className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 shadow-xl p-1"
-                    aria-label="Medical specialty options"
-                  >
-                    {MEDICAL_SPECIALTIES.map((specialty) => (
-                      <SelectItem 
-                        key={specialty} 
-                        value={specialty}
-                        className="py-3 px-4 text-base text-white hover:bg-white/20 focus:bg-white/20 rounded-lg mx-1"
-                      >
-                        {specialty}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <ValidationFeedback
-                isValid={!fieldState.error}
-                message={fieldState.error?.message}
-                id={fieldState.error ? "specialty-error" : "specialty-help"}
-              />
-              <FormDescription
-                className="mt-3 flex items-start gap-2 text-white/70"
-                id="specialty-help"
-              >
-                <div className="w-2 h-2 rounded-full bg-violet-400 mt-2 flex-shrink-0" aria-hidden="true"></div>
-                Choose the primary medical specialty most relevant to this clinical presentation
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </FormFieldCard>
-    </section>
+      </FieldGroup>
+    </div>
   );
 });
 
