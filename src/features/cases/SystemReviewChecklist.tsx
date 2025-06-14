@@ -1,24 +1,21 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Check, 
-  X, 
   ChevronDown, 
   ChevronRight, 
   Search, 
   Filter,
   AlertCircle,
-  Info,
   Star,
   StarOff,
   History
@@ -150,9 +147,9 @@ export function SystemReviewChecklist({
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         className={cn(
-          "flex items-center space-x-2 p-2 rounded-md transition-colors",
-          isHighlighted && "bg-yellow-50",
-          isSelected && "bg-medical-50"
+          "flex items-center space-x-2 p-2 rounded-md transition-colors hover:bg-white/5",
+          isHighlighted && "bg-yellow-500/10 ring-1 ring-yellow-500/30",
+          isSelected && "bg-blue-500/10"
         )}
       >
         <Checkbox
@@ -160,15 +157,15 @@ export function SystemReviewChecklist({
           checked={isSelected}
           onCheckedChange={(checked) => handleSymptomChange(system, symptom, checked as boolean)}
           className={cn(
-            "data-[state=checked]:bg-medical-600 data-[state=checked]:border-medical-600",
+            "border-white/30 data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600 focus-visible:ring-blue-500 focus-visible:ring-offset-slate-900",
             isHighlighted && "border-yellow-500"
           )}
         />
         <Label
           htmlFor={`${system}-${symptom}`}
           className={cn(
-            "text-sm cursor-pointer flex-1",
-            isHighlighted && "text-yellow-800 font-medium"
+            "text-sm cursor-pointer flex-1 text-white/80",
+            isHighlighted && "text-yellow-200 font-medium"
           )}
         >
           {symptom}
@@ -179,17 +176,17 @@ export function SystemReviewChecklist({
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-6 w-6 p-0 hover:bg-transparent"
+                className="h-6 w-6 p-0 text-white/60 hover:text-white hover:bg-transparent"
                 onClick={() => toggleFavorite(symptom)}
               >
                 {isFavorite ? (
-                  <Star className="h-4 w-4 text-yellow-500" />
+                  <Star className="h-4 w-4 text-yellow-400" />
                 ) : (
-                  <StarOff className="h-4 w-4 text-muted-foreground" />
+                  <StarOff className="h-4 w-4" />
                 )}
               </Button>
             </TooltipTrigger>
-            <TooltipContent>
+            <TooltipContent className="bg-slate-800 border-slate-700 text-white">
               {isFavorite ? "Remove from favorites" : "Add to favorites"}
             </TooltipContent>
           </Tooltip>
@@ -198,9 +195,9 @@ export function SystemReviewChecklist({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <History className="h-4 w-4 text-blue-500" />
+                <History className="h-4 w-4 text-blue-400" />
               </TooltipTrigger>
-              <TooltipContent>Recently used</TooltipContent>
+              <TooltipContent className="bg-slate-800 border-slate-700 text-white">Recently used</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         )}
@@ -209,133 +206,126 @@ export function SystemReviewChecklist({
   };
 
   return (
-    <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-4">
-      <Card className="border-medical-200 shadow-sm">
-          <CardHeader className="space-y-4 pb-4">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-lg font-semibold">System Review & Symptoms</CardTitle>
-              {totalSelected > 0 && (
-                <Badge variant="secondary" className="bg-medical-100 text-medical-800">
-                  {totalSelected} selected
-                </Badge>
-              )}
-            </div>
-            
-            <div className="flex flex-col space-y-3">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  placeholder="Search symptoms..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-9"
-                />
-              </div>
+    <div className="space-y-4">
+      <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:justify-between sm:space-y-0 sm:space-x-4">
+        <div className="relative flex-grow">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/50" />
+          <Input
+            placeholder="Search symptoms..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-9 w-full bg-white/5 border-white/20 placeholder:text-white/50 text-white rounded-md focus:border-blue-400/50 focus:ring-blue-400/50"
+          />
+        </div>
+        {totalSelected > 0 && (
+          <Badge variant="outline" className="bg-blue-500/20 border-blue-400/30 text-white self-start sm:self-center py-1 px-2.5">
+            {totalSelected} selected
+          </Badge>
+        )}
+      </div>
 
-              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-3">
-                  <TabsTrigger value="all" className="flex items-center gap-2">
-                    <Filter className="h-4 w-4" />
-                    All
-                  </TabsTrigger>
-                  <TabsTrigger value="favorites" className="flex items-center gap-2">
-                    <Star className="h-4 w-4" />
-                    Favorites
-                  </TabsTrigger>
-                  <TabsTrigger value="recent" className="flex items-center gap-2">
-                    <History className="h-4 w-4" />
-                    Recent
-                  </TabsTrigger>
-                </TabsList>
-              </Tabs>
-            </div>
-          </CardHeader>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="grid w-full grid-cols-3 bg-white/5 border border-white/20 rounded-md p-1">
+          <TabsTrigger value="all" className="flex items-center justify-center gap-2 py-1.5 text-sm text-white/70 data-[state=active]:bg-blue-500/30 data-[state=active]:text-white hover:bg-white/10 hover:text-white rounded-sm transition-colors">
+            <Filter className="h-3.5 w-3.5" />
+            All
+          </TabsTrigger>
+          <TabsTrigger value="favorites" className="flex items-center justify-center gap-2 py-1.5 text-sm text-white/70 data-[state=active]:bg-blue-500/30 data-[state=active]:text-white hover:bg-white/10 hover:text-white rounded-sm transition-colors">
+            <Star className="h-3.5 w-3.5" />
+            Favorites
+          </TabsTrigger>
+          <TabsTrigger value="recent" className="flex items-center justify-center gap-2 py-1.5 text-sm text-white/70 data-[state=active]:bg-blue-500/30 data-[state=active]:text-white hover:bg-white/10 hover:text-white rounded-sm transition-colors">
+            <History className="h-3.5 w-3.5" />
+            Recent
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
 
-          <CardContent className="space-y-4">
-            <AnimatePresence mode="wait">
-              {filteredSystems.length === 0 ? (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                >
-                  <Alert variant="default" className="bg-medical-50">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>
-                      No symptoms found matching your search criteria.
-                    </AlertDescription>
-                  </Alert>
-                </motion.div>
-              ) : (
-                <div className="space-y-3">
-                  {filteredSystems.map(({ system, symptoms }) => (
-                    <Collapsible
-                      key={system}
-                      open={expandedSystems[system]}
-                      onOpenChange={() => toggleSystem(system)}
-                      className="border rounded-lg overflow-hidden"
-                    >
-                      <CollapsibleTrigger className="flex items-center justify-between w-full p-3 bg-medical-50 hover:bg-medical-100 transition-colors">
-                        <div className="flex items-center space-x-2">
-                          <span className="font-medium text-medical-800">{system}</span>
-                          {selectedSymptoms[system]?.length > 0 && (
-                            <Badge variant="outline" className="bg-medical-100 text-xs font-normal">
-                              {selectedSymptoms[system].length}/{symptoms.length}
-                            </Badge>
-                          )}
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          {selectedSymptoms[system]?.length > 0 && (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-7 text-xs text-medical-600 hover:text-medical-800"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleClearAll(system);
-                              }}
-                            >
-                              Clear
-                            </Button>
-                          )}
-                          {expandedSystems[system] ? (
-                            <ChevronDown className="h-4 w-4 text-medical-600" />
-                          ) : (
-                            <ChevronRight className="h-4 w-4 text-medical-600" />
-                          )}
-                        </div>
-                      </CollapsibleTrigger>
-                      <CollapsibleContent>
-                        <div className="p-3 space-y-2">
-                          <div className="flex justify-end">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="h-7 text-xs"
-                              onClick={() => handleSelectAll(system)}
-                            >
-                              <Check className="h-3 w-3 mr-1" />
-                              Select All
-                            </Button>
-                          </div>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                            {symptoms.map((symptom) => (
-                              <SymptomItem
-                                key={symptom}
-                                system={system}
-                                symptom={symptom}
-                              />
-                            ))}
-                          </div>
-                        </div>
-                      </CollapsibleContent>
-                    </Collapsible>
-                  ))}
-                </div>
-              )}
-            </AnimatePresence>
-          </CardContent>
-          </Card>
+      <AnimatePresence mode="wait">
+        {filteredSystems.length === 0 ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="mt-4"
+          >
+            <Alert variant="default" className="bg-white/5 border border-white/10 text-white/70 p-4 rounded-md">
+              <AlertCircle className="h-5 w-5 text-white/70" />
+              <AlertDescription className="ml-2">
+                No symptoms found matching your search or filter criteria.
+              </AlertDescription>
+            </Alert>
+          </motion.div>
+        ) : (
+          <div className="space-y-3">
+            {filteredSystems.map(({ system, symptoms }) => (
+              <Collapsible
+                key={system}
+                open={!!expandedSystems[system]}
+                onOpenChange={() => toggleSystem(system)}
+                className="border border-white/20 rounded-lg overflow-hidden bg-transparent"
+              >
+                <CollapsibleTrigger className="flex items-center justify-between w-full p-3 bg-white/[.03] hover:bg-white/[.06] transition-colors">
+                  <div className="flex items-center space-x-2">
+                    <span className="font-medium text-white">{system}</span>
+                    {selectedSymptoms[system]?.length > 0 && (
+                      <Badge variant="outline" className="bg-blue-500/20 border-blue-400/30 text-white text-xs font-normal py-0.5 px-1.5">
+                        {selectedSymptoms[system].length}/{symptoms.length}
+                      </Badge>
+                    )}
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    {selectedSymptoms[system]?.length > 0 && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-7 text-xs text-blue-300 hover:text-blue-100 hover:bg-white/10 px-2"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleClearAll(system);
+                        }}
+                      >
+                        Clear
+                      </Button>
+                    )}
+                    {expandedSystems[system] ? (
+                      <ChevronDown className="h-4 w-4 text-blue-300" />
+                    ) : (
+                      <ChevronRight className="h-4 w-4 text-blue-300" />
+                    )}
+                  </div>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="bg-white/[.01]">
+                  <div className="p-3 space-y-2">
+                    {symptoms.length > 0 && (
+                      <div className="flex justify-end">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-7 text-xs border-white/20 text-white/80 hover:bg-white/10 hover:text-white"
+                          onClick={() => handleSelectAll(system)}
+                        >
+                          <Check className="h-3 w-3 mr-1" />
+                          Select All
+                        </Button>
+                      </div>
+                    )}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                      {symptoms.map((symptom) => (
+                        <SymptomItem
+                          key={symptom}
+                          system={system}
+                          symptom={symptom}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+            ))}
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
