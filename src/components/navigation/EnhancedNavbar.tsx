@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { Search, Menu, X, Home, BookOpen, ChevronDown, User, LogOut } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -106,9 +105,16 @@ const EnhancedNavbar: React.FC = () => {
     setSearchQuery("");
   };
 
-  const handleSignOut = () => {
-    signOut();
-    setIsUserMenuOpen(false);
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      setIsUserMenuOpen(false);
+      navigate('/auth');
+    } catch (error) {
+      console.error('Error signing out:', error);
+      // Still redirect to auth page even if signOut fails
+      navigate('/auth');
+    }
   };
 
   const getUserDisplayName = () => {
