@@ -1,45 +1,101 @@
 
-import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  StatCards,
-  RecentActivityList,
-  SearchPanel,
-  QuickStartPanel,
-  ProgressChart,
-  SpecialtyProgress
-} from "@/features/dashboard";
-import { UserRound, TrendingUp, Activity, Sparkles, Target, Zap, Plus, BookOpen, Users, Settings } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { UserRound, TrendingUp, Activity, BookOpen, Users, Target, Plus, Eye } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDashboardData } from "@/features/dashboard/hooks/use-dashboard-data";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
-import { useTheme } from "@/app/ThemeContext";
 import { useAuth } from "@/app/AuthContext";
+import { motion, AnimatePresence } from "framer-motion";
+import { MetricCardSkeleton } from "@/components/ui/dashboard-skeleton";
+import { DynamicRecentActivity } from "@/features/dashboard/components/DynamicRecentActivity";
+import { RecentCasesCarousel } from "@/components/ui/recent-cases-carousel";
 
 const Dashboard = () => {
-  const { isLoading, getStatistics, getSpecialtyProgress } = useDashboardData();
+  const { isLoading, getStatistics, getRecentCases } = useDashboardData();
   const baseStats = getStatistics();
-  const specialtyProgress = getSpecialtyProgress();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const recentCases = getRecentCases(6);
 
-  // Enhanced stats with the missing properties
+  // Enhanced stats with completion rate calculation
   const stats = {
     ...baseStats,
-    activeCases: Math.floor(baseStats.totalCases * 0.6), // 60% of total cases are active
-    completionRate: baseStats.totalCases > 0 ? Math.floor((baseStats.casesWithLearningPoints / baseStats.totalCases) * 100) : 0,
-    studyTime: Math.floor(baseStats.totalCases * 2.5) // Estimate 2.5 hours per case
+    activeCases: Math.floor(baseStats.totalCases * 0.6),
+    completionRate: baseStats.totalCases > 0 ? Math.floor((baseStats.casesWithLearningPoints / baseStats.totalCases) * 100) : 0
   };
-
-  // Theme management
-  const { currentTheme } = useTheme();
 
   const getUserDisplayName = () => {
     return user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'User';
   };
+
+  // Metric card component with animations
+  const MetricCard = ({ title, value, icon, description, progress, trend, onClick }: {
+    title: string;
+    value: number | string;
+    icon: React.ReactNode;
+    description: string;
+    progress?: number;
+    trend?: { value: number; isPositive: boolean };
+    onClick?: () => void;
+  }) => (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      whileHover={{ scale: 1.02, y: -2 }}
+      className="group"
+    >
+      <Card 
+        className={`bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300 ${onClick ? 'cursor-pointer' : ''}`}
+        onClick={onClick}
+      >
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <p className="text-sm font-medium text-white/70">{title}</p>
+              <div className="flex items-center gap-2 mt-1">
+                <p className="text-2xl font-bold text-white">{value}</p>
+                {trend && (
+                  <div className="flex items-center gap-1">
+                    <TrendingUp 
+                      className={`h-4 w-4 ${trend.isPositive ? 'text-green-400' : 'text-red-400 rotate-180'}`}
+                    />
+                    <span className={`text-sm font-medium ${trend.isPositive ? 'text-green-400' : 'text-red-400'}`}>
+                      {trend.value}%
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="p-3 bg-blue-500/20 rounded-lg group-hover:bg-blue-500/30 transition-colors">
+              {icon}
+            </div>
+          </div>
+          
+          {progress !== undefined && (
+            <div className="space-y-2">
+              <div className="flex justify-between text-xs">
+                <span className="text-white/70">Progress</span>
+                <span className="font-medium text-white">{Math.round(progress)}%</span>
+              </div>
+              <div className="w-full bg-white/10 rounded-full h-2">
+                <motion.div
+                  className="bg-blue-400 h-2 rounded-full"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${progress}%` }}
+                  transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
+                />
+              </div>
+            </div>
+          )}
+          
+          <p className="text-sm text-white/70 mt-2">{description}</p>
+        </CardContent>
+      </Card>
+    </motion.div>
+  );
 
   return (
     <main role="main" aria-labelledby="dashboard-title" className="w-full space-y-6">
@@ -59,7 +115,7 @@ const Dashboard = () => {
         </a>
       </nav>
 
-      {/* Loading and Error States */}
+      {/* Loading state */}
       {isLoading && (
         <div role="status" aria-live="polite" className="sr-only">
           Loading dashboard data...
@@ -67,154 +123,124 @@ const Dashboard = () => {
       )}
 
       {/* Personalized Greeting */}
-      <div className="text-left space-y-1">
+      <motion.div 
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="text-left space-y-1"
+      >
         <h1 className="text-2xl font-bold text-white">
           Hello, {getUserDisplayName()}
         </h1>
         <p className="text-white/70 text-sm">
           Welcome back to your medical learning dashboard
         </p>
-      </div>
+      </motion.div>
 
-      {/* Medical Metrics */}
+      {/* Medical Metrics - Now 3 cards in responsive grid */}
       <section id="metrics" aria-labelledby="metrics-heading">
         <h2 id="metrics-heading" className="sr-only">Key Metrics</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-colors">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-white/70">Total Cases</p>
-                  <p className="text-2xl font-bold text-white" aria-label={`${stats.totalCases} total cases`}>
-                    {stats.totalCases}
-                  </p>
-                </div>
-                <div className="p-2 bg-blue-500/20 rounded-lg" aria-hidden="true">
-                  <BookOpen className="h-6 w-6 text-blue-400" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-colors">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-white/70">Active Cases</p>
-                  <p className="text-2xl font-bold text-white" aria-label={`${stats.activeCases} active cases`}>
-                    {stats.activeCases}
-                  </p>
-                </div>
-                <div className="p-2 bg-green-500/20 rounded-lg" aria-hidden="true">
-                  <Activity className="h-6 w-6 text-green-400" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-colors">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-white/70">Completion Rate</p>
-                  <p className="text-2xl font-bold text-white" aria-label={`${stats.completionRate}% completion rate`}>
-                    {stats.completionRate}%
-                  </p>
-                </div>
-                <div className="p-2 bg-purple-500/20 rounded-lg" aria-hidden="true">
-                  <TrendingUp className="h-6 w-6 text-purple-400" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-colors">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-white/70">Study Time</p>
-                  <p className="text-2xl font-bold text-white" aria-label={`${stats.studyTime} hours of study time`}>
-                    {stats.studyTime}h
-                  </p>
-                </div>
-                <div className="p-2 bg-orange-500/20 rounded-lg" aria-hidden="true">
-                  <Target className="h-6 w-6 text-orange-400" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        <AnimatePresence>
+          {isLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+              {[...Array(3)].map((_, i) => (
+                <MetricCardSkeleton key={i} />
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+              <MetricCard
+                title="Total Cases"
+                value={stats.totalCases}
+                icon={<BookOpen className="h-6 w-6 text-blue-400" />}
+                description="All documented cases"
+                progress={Math.min((stats.totalCases / 20) * 100, 100)}
+                onClick={() => navigate("/cases")}
+              />
+              
+              <MetricCard
+                title="Active Cases"
+                value={stats.activeCases}
+                icon={<Activity className="h-6 w-6 text-green-400" />}
+                description="Cases in progress"
+                trend={{ 
+                  value: stats.thisWeekCases || 0, 
+                  isPositive: (stats.thisWeekCases || 0) > 0 
+                }}
+                onClick={() => navigate("/cases")}
+              />
+              
+              <MetricCard
+                title="Completion Rate"
+                value={`${stats.completionRate}%`}
+                icon={<Target className="h-6 w-6 text-purple-400" />}
+                description="Cases with learning points"
+                progress={stats.completionRate}
+                trend={{ 
+                  value: stats.completionRate, 
+                  isPositive: stats.completionRate > 50 
+                }}
+              />
+            </div>
+          )}
+        </AnimatePresence>
       </section>
 
-      {/* Quick Actions */}
+      {/* Recent Cases Carousel */}
+      <motion.section
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.2 }}
+      >
+        <RecentCasesCarousel cases={recentCases} isLoading={isLoading} />
+      </motion.section>
+
+      {/* Quick Actions and Recent Activity */}
       <section id="actions" aria-labelledby="actions-heading">
         <h2 id="actions-heading" className="sr-only">Quick Actions</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-white">Quick Actions</h3>
-                <Zap className="h-5 w-5 text-yellow-400" aria-hidden="true" />
-              </div>
-              <div className="space-y-3">
-                <Button 
-                  onClick={() => navigate("/cases/new")}
-                  aria-label="Create a new clinical case"
-                  aria-describedby="create-case-description"
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                >
-                  <Plus className="h-4 w-4 mr-2" aria-hidden="true" />
-                  Create New Case
-                </Button>
-                <div id="create-case-description" className="sr-only">
-                  Start documenting a new clinical case with AI assistance
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Quick Actions */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.4, delay: 0.3 }}
+          >
+            <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-white">Quick Actions</h3>
+                  <Target className="h-5 w-5 text-yellow-400" />
                 </div>
-                
-                <Button 
-                  onClick={() => navigate("/cases")}
-                  aria-label="View all clinical cases"
-                  aria-describedby="view-cases-description"
-                  variant="outline"
-                  className="w-full border-white/20 text-white hover:bg-white/10"
-                >
-                  <BookOpen className="h-4 w-4 mr-2" aria-hidden="true" />
-                  View All Cases
-                </Button>
-                <div id="view-cases-description" className="sr-only">
-                  Browse and review all your documented clinical cases
+                <div className="space-y-3">
+                  <Button 
+                    onClick={() => navigate("/cases/new")}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white group"
+                  >
+                    <Plus className="h-4 w-4 mr-2 group-hover:rotate-90 transition-transform duration-200" />
+                    Create New Case
+                  </Button>
+                  
+                  <Button 
+                    onClick={() => navigate("/cases")}
+                    variant="outline"
+                    className="w-full border-white/20 text-white hover:bg-white/10"
+                  >
+                    <BookOpen className="h-4 w-4 mr-2" />
+                    View All Cases
+                  </Button>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </motion.div>
 
-          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-white">Recent Activity</h3>
-                <Activity className="h-5 w-5 text-green-400" aria-hidden="true" />
-              </div>
-              <div className="space-y-2" role="list" aria-label="Recent activity">
-                <div className="flex items-center justify-between text-sm" role="listitem">
-                  <span className="text-white/70">Case #1234 updated</span>
-                  <Badge variant="secondary" className="bg-green-500/20 text-green-400">
-                    2h ago
-                  </Badge>
-                </div>
-                <div className="flex items-center justify-between text-sm" role="listitem">
-                  <span className="text-white/70">New case created</span>
-                  <Badge variant="secondary" className="bg-blue-500/20 text-blue-400">
-                    4h ago
-                  </Badge>
-                </div>
-                <div className="flex items-center justify-between text-sm" role="listitem">
-                  <span className="text-white/70">Study session completed</span>
-                  <Badge variant="secondary" className="bg-purple-500/20 text-purple-400">
-                    6h ago
-                  </Badge>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          {/* Dynamic Recent Activity */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.4, delay: 0.4 }}
+          >
+            <DynamicRecentActivity />
+          </motion.div>
         </div>
       </section>
     </main>
