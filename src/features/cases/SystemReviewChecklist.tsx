@@ -1,5 +1,4 @@
 
-
 import React, { useState, useEffect, useMemo } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -113,9 +112,9 @@ export function SystemReviewChecklist({
     return (
       <div
         className={cn(
-          "flex items-center space-x-2 p-2 rounded-md transition-colors hover:bg-white/5",
-          isHighlighted && "bg-yellow-500/10 ring-1 ring-yellow-500/30",
-          isSelected && "bg-blue-500/10"
+          "flex items-center space-x-2 p-2 rounded-md transition-colors hover:bg-slate-100",
+          isHighlighted && "bg-yellow-50 ring-1 ring-yellow-200",
+          isSelected && "bg-blue-50"
         )}
       >
         <Checkbox
@@ -123,15 +122,15 @@ export function SystemReviewChecklist({
           checked={isSelected}
           onCheckedChange={(checked) => handleSymptomChange(system, symptom, checked as boolean)}
           className={cn(
-            "border-white/30 data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600 focus-visible:ring-blue-500 focus-visible:ring-offset-slate-900",
+            "border-slate-300 data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600",
             isHighlighted && "border-yellow-500"
           )}
         />
         <Label
           htmlFor={`${system}-${symptom}`}
           className={cn(
-            "text-sm cursor-pointer flex-1 text-white/80",
-            isHighlighted && "text-yellow-200 font-medium"
+            "text-sm cursor-pointer flex-1 text-slate-700",
+            isHighlighted && "text-yellow-800 font-medium"
           )}
         >
           {symptom}
@@ -140,7 +139,7 @@ export function SystemReviewChecklist({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <History className="h-4 w-4 text-blue-400" />
+                <History className="h-4 w-4 text-blue-500" />
               </TooltipTrigger>
               <TooltipContent className="bg-slate-800 border-slate-700 text-white">Recently used</TooltipContent>
             </Tooltip>
@@ -154,16 +153,16 @@ export function SystemReviewChecklist({
     <div className="space-y-4">
       <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:justify-between sm:space-y-0 sm:space-x-4">
         <div className="relative flex-grow">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/50" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
           <Input
             placeholder="Search symptoms..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9 w-full bg-white/5 border-white/20 placeholder:text-white/50 text-white rounded-md focus:border-blue-400/50 focus:ring-blue-400/50"
+            className="pl-9 w-full bg-white border-slate-200 placeholder:text-slate-400"
           />
         </div>
         {totalSelected > 0 && (
-          <Badge variant="outline" className="bg-blue-500/20 border-blue-400/30 text-white self-start sm:self-center py-1 px-2.5">
+          <Badge variant="outline" className="bg-blue-50 border-blue-200 text-blue-700 self-start sm:self-center">
             {totalSelected} selected
           </Badge>
         )}
@@ -177,9 +176,9 @@ export function SystemReviewChecklist({
             exit={{ opacity: 0 }}
             className="mt-4"
           >
-            <Alert variant="default" className="bg-white/5 border border-white/10 text-white/70 p-4 rounded-md">
-              <AlertCircle className="h-5 w-5 text-white/70" />
-              <AlertDescription className="ml-2">
+            <Alert variant="default" className="bg-slate-50 border-slate-200">
+              <AlertCircle className="h-5 w-5 text-slate-500" />
+              <AlertDescription className="ml-2 text-slate-600">
                 {searchTerm ? "No symptoms found matching your search." : "No symptoms available."}
               </AlertDescription>
             </Alert>
@@ -195,26 +194,26 @@ export function SystemReviewChecklist({
               <AccordionItem
                 key={system}
                 value={system}
-                className="border border-white/20 rounded-lg overflow-hidden bg-transparent"
+                className="border border-slate-200 rounded-lg overflow-hidden bg-white"
               >
-                <AccordionTrigger className="flex items-center justify-between w-full p-3 bg-white/[.03] hover:bg-white/[.06] transition-colors hover:no-underline text-white">
+                <AccordionTrigger className="flex items-center justify-between w-full p-3 bg-slate-50 hover:bg-slate-100 transition-colors hover:no-underline">
                   <div className="flex items-center space-x-2">
-                    <span className="font-medium">{system}</span>
+                    <span className="font-medium text-slate-800">{system}</span>
                     {selectedSymptoms[system]?.length > 0 && (
-                      <Badge variant="outline" className="bg-blue-500/20 border-blue-400/30 text-white text-xs font-normal py-0.5 px-1.5">
+                      <Badge variant="outline" className="bg-blue-50 border-blue-200 text-blue-700 text-xs">
                         {selectedSymptoms[system].length}/{systemSymptoms.find(s => s.system === system)?.symptoms.length}
                       </Badge>
                     )}
                   </div>
                 </AccordionTrigger>
-                <AccordionContent className="bg-white/[.01]">
+                <AccordionContent className="bg-white">
                   <div className="p-3 space-y-2">
                     <div className="flex justify-between items-center">
                       <div className="flex space-x-2">
                         <Button
                           variant="outline"
                           size="sm"
-                          className="h-7 text-xs border-white/20 text-white/80 hover:bg-white/10 hover:text-white"
+                          className="h-7 text-xs border-slate-200 hover:bg-slate-50"
                           onClick={() => handleSelectAll(system)}
                         >
                           <Check className="h-3 w-3 mr-1" />
@@ -224,7 +223,7 @@ export function SystemReviewChecklist({
                           <Button
                             variant="outline"
                             size="sm"
-                            className="h-7 text-xs border-white/20 text-blue-300 hover:text-blue-100 hover:bg-white/10"
+                            className="h-7 text-xs border-slate-200 text-blue-600 hover:bg-blue-50"
                             onClick={() => handleClearAll(system)}
                           >
                             Clear
@@ -251,4 +250,3 @@ export function SystemReviewChecklist({
     </div>
   );
 }
-

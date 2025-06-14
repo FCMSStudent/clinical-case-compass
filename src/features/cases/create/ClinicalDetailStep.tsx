@@ -107,12 +107,25 @@ const HistoryAndExamTab = memo(() => {
 });
 HistoryAndExamTab.displayName = "HistoryAndExamTab";
 
-
 const SystemsReviewTab = memo(() => {
   const { setValue, control, watch, formState } = useFormContext<ClinicalDetailFormData>();
   
   const systemSymptomsValue = watch(FORM_FIELDS.SYSTEM_SYMPTOMS as Path<ClinicalDetailFormData>);
   const vitalsValue = watch(FORM_FIELDS.VITALS as Path<ClinicalDetailFormData>);
+
+  const handleSystemSymptomsChange = useCallback((symptoms: Record<string, string[]>) => {
+    setValue(FORM_FIELDS.SYSTEM_SYMPTOMS as Path<ClinicalDetailFormData>, symptoms, {
+      shouldValidate: true,
+      shouldDirty: true
+    });
+  }, [setValue]);
+
+  const handleVitalsChange = useCallback((vitals: any) => {
+    setValue(FORM_FIELDS.VITALS as Path<ClinicalDetailFormData>, vitals, {
+      shouldValidate: true,
+      shouldDirty: true
+    });
+  }, [setValue]);
 
   return (
     <TabsContent value="systems" className="space-y-6">
@@ -122,7 +135,10 @@ const SystemsReviewTab = memo(() => {
         fieldValue={systemSymptomsValue}
         hasError={!!formState.errors[FORM_FIELDS.SYSTEM_SYMPTOMS]}
       >
-        <SystemReviewChecklist onSystemSymptomsChange={(symptoms) => setValue(FORM_FIELDS.SYSTEM_SYMPTOMS as Path<ClinicalDetailFormData>, symptoms, {shouldValidate: true})} />
+        <SystemReviewChecklist 
+          onSystemSymptomsChange={handleSystemSymptomsChange}
+          initialSystemSymptoms={systemSymptomsValue || {}}
+        />
         <Controller 
           name={FORM_FIELDS.SYSTEM_SYMPTOMS as Path<ClinicalDetailFormData>} 
           control={control} 
@@ -136,7 +152,7 @@ const SystemsReviewTab = memo(() => {
         fieldValue={vitalsValue}
         hasError={!!formState.errors[FORM_FIELDS.VITALS]}
       >
-        <VitalsCard onVitalsChange={(v) => setValue(FORM_FIELDS.VITALS as Path<ClinicalDetailFormData>, v, {shouldValidate: true})} />
+        <VitalsCard onVitalsChange={handleVitalsChange} />
         <Controller 
           name={FORM_FIELDS.VITALS as Path<ClinicalDetailFormData>} 
           control={control} 
