@@ -119,16 +119,13 @@ const SystemsReviewTab = memo(() => {
   const systemSymptomsValue = watch(FORM_FIELDS.SYSTEM_SYMPTOMS as Path<ClinicalDetailFormData>);
   const vitalsValue = watch(FORM_FIELDS.VITALS as Path<ClinicalDetailFormData>);
 
-  const systemSymptomsError = formState.errors[FORM_FIELDS.SYSTEM_SYMPTOMS as keyof ClinicalDetailFormData['errors']];
-  const vitalsError = formState.errors[FORM_FIELDS.VITALS as keyof ClinicalDetailFormData['errors']];
-
   return (
     <TabsContent value="systems" className="space-y-6">
       <StatusFieldCard
         icon={BrainIcon}
         title="Review of Systems"
         fieldValue={systemSymptomsValue}
-        hasError={!!systemSymptomsError}
+        hasError={!!formState.errors[FORM_FIELDS.SYSTEM_SYMPTOMS]}
       >
         <SystemReviewChecklist onSystemSymptomsChange={(symptoms) => setValue(FORM_FIELDS.SYSTEM_SYMPTOMS as Path<ClinicalDetailFormData>, symptoms, {shouldValidate: true})} />
         <Controller 
@@ -142,7 +139,7 @@ const SystemsReviewTab = memo(() => {
         icon={HeartIcon}
         title="Vital Signs & Physiological Parameters"
         fieldValue={vitalsValue}
-        hasError={!!vitalsError}
+        hasError={!!formState.errors[FORM_FIELDS.VITALS]}
       >
         <VitalsCard onVitalsChange={(v) => setValue(FORM_FIELDS.VITALS as Path<ClinicalDetailFormData>, v, {shouldValidate: true})} />
         <Controller 
@@ -162,9 +159,6 @@ const DiagnosticsTab = memo(() => {
   const labResultsValue = watch(FORM_FIELDS.LAB_RESULTS as Path<ClinicalDetailFormData>);
   const radiologyStudiesValue = watch(FORM_FIELDS.RADIOLOGY_STUDIES as Path<ClinicalDetailFormData>);
 
-  const labResultsError = formState.errors[FORM_FIELDS.LAB_RESULTS as keyof ClinicalDetailFormData['errors']];
-  const radiologyStudiesError = formState.errors[FORM_FIELDS.RADIOLOGY_STUDIES as keyof ClinicalDetailFormData['errors']];
-
   const setLabResults = useCallback((labs: LabTest[]) =>
     setValue(FORM_FIELDS.LAB_RESULTS as Path<ClinicalDetailFormData>, labs, { shouldValidate: true }), [setValue]);
 
@@ -178,7 +172,7 @@ const DiagnosticsTab = memo(() => {
           icon={MicroscopeIcon}
           title="Laboratory Studies"
           fieldValue={labResultsValue}
-          hasError={!!labResultsError}
+          hasError={!!formState.errors[FORM_FIELDS.LAB_RESULTS]}
         >
           <LabResultsCard onLabResultsChange={setLabResults} />
            <Controller name={FORM_FIELDS.LAB_RESULTS as Path<ClinicalDetailFormData>} control={control} render={({ fieldState }) => fieldState.error ? <FormMessage className="mt-2">{fieldState.error.message}</FormMessage> : null} />
@@ -187,7 +181,7 @@ const DiagnosticsTab = memo(() => {
           icon={ScanIcon}
           title="Imaging Studies"
           fieldValue={radiologyStudiesValue}
-          hasError={!!radiologyStudiesError}
+          hasError={!!formState.errors[FORM_FIELDS.RADIOLOGY_STUDIES]}
         >
           <RadiologyCard onRadiologyChange={setRadiology} />
           <Controller name={FORM_FIELDS.RADIOLOGY_STUDIES as Path<ClinicalDetailFormData>} control={control} render={({ fieldState }) => fieldState.error ? <FormMessage className="mt-2">{fieldState.error.message}</FormMessage> : null} />
