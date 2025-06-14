@@ -78,19 +78,6 @@ export interface CaseOverviewStepProps<T extends FieldValues = CaseOverviewFormD
   className?: string;
 }
 
-// Simple component for section titles
-const SectionTitle: React.FC<{ title: string; description: string; icon: React.ElementType }> = ({ title, description, icon: Icon }) => (
-  <div className="flex items-center gap-3 mb-6 pt-6 border-t border-white/10 first:border-t-0 first:pt-0">
-    <div className="p-2 rounded-lg bg-blue-500/20 text-white border border-blue-400/30">
-      <Icon className="h-5 w-5" />
-    </div>
-    <div>
-      <h3 className="text-lg font-semibold text-white">{title}</h3>
-      <p className="text-sm text-white/70">{description}</p>
-    </div>
-  </div>
-);
-
 export const CaseOverviewStep = memo(function CaseOverviewStep<
   T extends FieldValues = CaseOverviewFormData,
 >({ className }: CaseOverviewStepProps<T>) {
@@ -127,14 +114,9 @@ export const CaseOverviewStep = memo(function CaseOverviewStep<
         icon={FileText}
       />
 
-      {/* Patient Information Section */}
-      <SectionTitle 
-        title="Patient Information"
-        description="Basic patient demographics and medical background."
-        icon={UserCheck}
-      />
-      
-      <div className="space-y-6">
+      {/* Bentogrid Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-min">
+        {/* Patient Name - Large prominent card */}
         <StatusFieldCard
           icon={User}
           title="Patient Name"
@@ -142,6 +124,7 @@ export const CaseOverviewStep = memo(function CaseOverviewStep<
           isRequired
           fieldValue={patientNameValue}
           hasError={!!errors.patientName}
+          className="md:col-span-2"
         >
           <FormField
             control={control}
@@ -151,6 +134,7 @@ export const CaseOverviewStep = memo(function CaseOverviewStep<
                 <FormControl>
                   <Input
                     placeholder="e.g., John Doe"
+                    className="bg-slate-700/50 border-slate-500/50 text-slate-100 placeholder:text-slate-400"
                     {...field}
                   />
                 </FormControl>
@@ -160,9 +144,71 @@ export const CaseOverviewStep = memo(function CaseOverviewStep<
           />
         </StatusFieldCard>
 
+        {/* Patient Age - Small card */}
+        <StatusFieldCard
+          icon={Calendar}
+          title="Patient Age"
+          tooltip="Enter the patient's age in years."
+          isRequired
+          fieldValue={patientAgeValue}
+          hasError={!!errors.patientAge}
+        >
+          <FormField
+            control={control}
+            name={"patientAge" as Path<T>}
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    type="number"
+                    placeholder="e.g., 42"
+                    className="bg-slate-700/50 border-slate-500/50 text-slate-100 placeholder:text-slate-400"
+                    {...field}
+                    onChange={e => field.onChange(parseInt(e.target.value, 10) || undefined)}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </StatusFieldCard>
+
+        {/* Patient Sex - Small card */}
+        <StatusFieldCard
+          icon={UserCheck}
+          title="Patient Sex"
+          tooltip="Select the patient's sex as recorded in their medical records."
+          isRequired
+          fieldValue={patientSexValue}
+          hasError={!!errors.patientSex}
+        >
+          <FormField
+            control={control}
+            name={"patientSex" as Path<T>}
+            render={({ field }) => (
+              <FormItem>
+                <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger className="bg-slate-700/50 border-slate-500/50 text-slate-100">
+                      <SelectValue placeholder="Select sex" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent className="bg-slate-800/90 border-slate-600/50">
+                    <SelectItem value="male" className="text-slate-100">Male</SelectItem>
+                    <SelectItem value="female" className="text-slate-100">Female</SelectItem>
+                    <SelectItem value="other" className="text-slate-100">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </StatusFieldCard>
+
+        {/* Medical Record Number - Medium card */}
         <StatusFieldCard
           icon={FileText}
-          title="Medical Record Number (MRN)"
+          title="Medical Record Number"
           tooltip="If available, enter the patient's unique medical record number for easy identification."
           fieldValue={medicalRecordNumberValue}
           hasError={!!errors.medicalRecordNumber}
@@ -175,6 +221,7 @@ export const CaseOverviewStep = memo(function CaseOverviewStep<
                 <FormControl>
                   <Input
                     placeholder="e.g., 1234567"
+                    className="bg-slate-700/50 border-slate-500/50 text-slate-100 placeholder:text-slate-400"
                     {...field}
                   />
                 </FormControl>
@@ -184,100 +231,7 @@ export const CaseOverviewStep = memo(function CaseOverviewStep<
           />
         </StatusFieldCard>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <StatusFieldCard
-            icon={Calendar}
-            title="Patient Age"
-            tooltip="Enter the patient's age in years."
-            isRequired
-            fieldValue={patientAgeValue}
-            hasError={!!errors.patientAge}
-          >
-            <FormField
-              control={control}
-              name={"patientAge" as Path<T>}
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      placeholder="e.g., 42"
-                      {...field}
-                      onChange={e => field.onChange(parseInt(e.target.value, 10) || undefined)}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </StatusFieldCard>
-
-          <StatusFieldCard
-            icon={User}
-            title="Patient Sex"
-            tooltip="Select the patient's sex as recorded in their medical records."
-            isRequired
-            fieldValue={patientSexValue}
-            hasError={!!errors.patientSex}
-          >
-            <FormField
-              control={control}
-              name={"patientSex" as Path<T>}
-              render={({ field }) => (
-                <FormItem>
-                  <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select sex" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="male">Male</SelectItem>
-                      <SelectItem value="female">Female</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </StatusFieldCard>
-        </div>
-
-        <StatusFieldCard
-          icon={FileText}
-          title="Medical History"
-          tooltip="Summarize the patient's relevant past medical history, chronic conditions, and previous interventions."
-          fieldValue={medicalHistoryValue}
-          hasError={!!errors.medicalHistory}
-        >
-          <FormField
-            control={control}
-            name={"medicalHistory" as Path<T>}
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Textarea
-                    placeholder="e.g., Hypertension, Type 2 Diabetes, Previous appendectomy in 2010..."
-                    rows={3}
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </StatusFieldCard>
-      </div>
-
-      {/* Case Information Section */}
-      <SectionTitle 
-        title="Case Information"
-        description="Essential details about the clinical case and presenting complaint."
-        icon={Stethoscope}
-      />
-
-      <div className="space-y-6">
+        {/* Case Title - Large prominent card */}
         <StatusFieldCard
           icon={FileText}
           title="Case Title"
@@ -285,6 +239,7 @@ export const CaseOverviewStep = memo(function CaseOverviewStep<
           tooltip="A clear, descriptive title helps others quickly understand the case's focus. Include key details like condition, patient type, or unique aspects."
           hasError={!!errors.caseTitle}
           fieldValue={caseTitleValue}
+          className="md:col-span-2"
         >
           <FormField
             control={control}
@@ -294,6 +249,7 @@ export const CaseOverviewStep = memo(function CaseOverviewStep<
                 <FormControl>
                   <Input
                     placeholder="e.g., Complex Hypertension Management in Elderly Patient with Comorbidities"
+                    className="bg-slate-700/50 border-slate-500/50 text-slate-100 placeholder:text-slate-400"
                     {...field}
                   />
                 </FormControl>
@@ -303,6 +259,7 @@ export const CaseOverviewStep = memo(function CaseOverviewStep<
           />
         </StatusFieldCard>
 
+        {/* Chief Complaint - Medium-large card */}
         <StatusFieldCard
           icon={Stethoscope}
           title="Chief Complaint"
@@ -310,6 +267,7 @@ export const CaseOverviewStep = memo(function CaseOverviewStep<
           tooltip="The primary reason for the patient's visit or the main clinical problem being addressed."
           hasError={!!errors.chiefComplaint}
           fieldValue={chiefComplaintValue}
+          className="lg:col-span-2"
         >
           <FormField
             control={control}
@@ -319,6 +277,7 @@ export const CaseOverviewStep = memo(function CaseOverviewStep<
                 <FormControl>
                   <Input
                     placeholder="e.g., Chest pain for 2 hours"
+                    className="bg-slate-700/50 border-slate-500/50 text-slate-100 placeholder:text-slate-400"
                     {...field}
                   />
                 </FormControl>
@@ -328,6 +287,7 @@ export const CaseOverviewStep = memo(function CaseOverviewStep<
           />
         </StatusFieldCard>
 
+        {/* Medical Specialty - Medium card */}
         <StatusFieldCard
           icon={Tag}
           title="Medical Specialty"
@@ -342,20 +302,49 @@ export const CaseOverviewStep = memo(function CaseOverviewStep<
               <FormItem>
                 <FormControl>
                   <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-slate-700/50 border-slate-500/50 text-slate-100">
                       <SelectValue placeholder="Select a specialty" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-slate-800/90 border-slate-600/50">
                       {MEDICAL_SPECIALTIES.map((specialty) => (
                         <SelectItem
                           key={specialty}
                           value={specialty}
+                          className="text-slate-100"
                         >
                           {specialty}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </StatusFieldCard>
+
+        {/* Medical History - Wide spanning card */}
+        <StatusFieldCard
+          icon={FileText}
+          title="Medical History"
+          tooltip="Summarize the patient's relevant past medical history, chronic conditions, and previous interventions."
+          fieldValue={medicalHistoryValue}
+          hasError={!!errors.medicalHistory}
+          className="md:col-span-2 lg:col-span-3"
+        >
+          <FormField
+            control={control}
+            name={"medicalHistory" as Path<T>}
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Textarea
+                    placeholder="e.g., Hypertension, Type 2 Diabetes, Previous appendectomy in 2010..."
+                    rows={3}
+                    className="bg-slate-700/50 border-slate-500/50 text-slate-100 placeholder:text-slate-400 resize-none"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
