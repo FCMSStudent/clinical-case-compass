@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -144,14 +143,14 @@ export function SimpleLabs({ onLabChange }: SimpleLabsProps) {
     onLabChange?.(updatedLabs);
   };
 
-  const getFilteredTests = (): readonly Array<{ readonly name: string; readonly unit: string }> => {
+  const getFilteredTests = () => {
     if (!selectedCategory) return [];
     const categoryKey = selectedCategory as keyof typeof LAB_TEST_CATEGORIES;
     const categoryTests = LAB_TEST_CATEGORIES[categoryKey];
     if (!categoryTests) return [];
     
     return searchTerm
-      ? categoryTests.filter((test: { name: string; unit: string }) => test.name.toLowerCase().includes(searchTerm.toLowerCase()))
+      ? categoryTests.filter((test) => test.name.toLowerCase().includes(searchTerm.toLowerCase()))
       : categoryTests;
   };
 
