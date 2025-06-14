@@ -17,12 +17,14 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@/app/ThemeContext";
+import { useAuth } from "@/app/AuthContext";
 
 const Dashboard = () => {
   const { isLoading, getStatistics, getSpecialtyProgress } = useDashboardData();
   const baseStats = getStatistics();
   const specialtyProgress = getSpecialtyProgress();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   // Enhanced stats with the missing properties
   const stats = {
@@ -34,6 +36,10 @@ const Dashboard = () => {
 
   // Theme management
   const { currentTheme } = useTheme();
+
+  const getUserDisplayName = () => {
+    return user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'User';
+  };
 
   return (
     <main role="main" aria-labelledby="dashboard-title" className="w-full space-y-6">
@@ -60,15 +66,25 @@ const Dashboard = () => {
         </div>
       )}
 
+      {/* Personalized Greeting */}
+      <div className="text-center space-y-2">
+        <h1 className="text-5xl font-bold text-white">
+          Hello, {getUserDisplayName()}
+        </h1>
+        <p className="text-white/70 text-lg">
+          Welcome back to your medical learning dashboard
+        </p>
+      </div>
+
       {/* Medical Header */}
       <header className="text-center space-y-3">
         <div className="flex items-center justify-center gap-3 mb-4">
           <div className="p-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20">
             <Activity className="h-8 w-8 text-white" aria-hidden="true" />
           </div>
-          <h1 id="dashboard-title" className="text-4xl font-bold text-white">
+          <h2 id="dashboard-title" className="text-4xl font-bold text-white">
             Medica Dashboard
-          </h1>
+          </h2>
         </div>
         <p className="text-white/80 text-lg">
           Medical Learning & Case Management
