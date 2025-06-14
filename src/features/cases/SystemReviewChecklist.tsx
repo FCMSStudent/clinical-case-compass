@@ -36,15 +36,7 @@ export function SystemReviewChecklist({
   recentSymptoms = []
 }: SystemReviewChecklistProps) {
   const [selectedSymptoms, setSelectedSymptoms] = useState<Record<string, string[]>>(initialSystemSymptoms);
-  
-  // Initialize expandedSystems with the first system expanded, if systemSymptoms is not empty
-  const [expandedSystems, setExpandedSystems] = useState<Record<string, boolean>>(() => {
-    if (systemSymptoms.length > 0) {
-      return { [systemSymptoms[0].system]: true };
-    }
-    return {};
-  });
-
+  const [expandedSystems, setExpandedSystems] = useState<Record<string, boolean>>({}); // Initialize as empty
   const [searchTerm, setSearchTerm] = useState("");
   const [favoriteSymptoms, setFavoriteSymptoms] = useState<string[]>([]);
   const isMobile = useIsMobile();
@@ -52,6 +44,13 @@ export function SystemReviewChecklist({
   useEffect(() => {
     setSelectedSymptoms(initialSystemSymptoms);
   }, [initialSystemSymptoms]);
+
+  useEffect(() => {
+    // Set the first system as expanded on initial mount
+    if (systemSymptoms.length > 0 && Object.keys(expandedSystems).length === 0) {
+      setExpandedSystems({ [systemSymptoms[0].system]: true });
+    }
+  }, [systemSymptoms, expandedSystems]); // Depend on systemSymptoms in case it could change, and expandedSystems to prevent loop if already set by other means
 
   const handleSymptomChange = (system: string, symptom: string, checked: boolean) => {
     const updatedSymptoms = { ...selectedSymptoms };
@@ -215,26 +214,6 @@ export function SystemReviewChecklist({
         )}
       </div>
 
-      {/* Tabs component removed */}
-      {/* 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3 bg-white/5 border border-white/20 rounded-md p-1">
-          <TabsTrigger value="all" className="flex items-center justify-center gap-2 py-1.5 text-sm text-white/70 data-[state=active]:bg-blue-500/30 data-[state=active]:text-white hover:bg-white/10 hover:text-white rounded-sm transition-colors">
-            <Filter className="h-3.5 w-3.5" />
-            All
-          </TabsTrigger>
-          <TabsTrigger value="favorites" className="flex items-center justify-center gap-2 py-1.5 text-sm text-white/70 data-[state=active]:bg-blue-500/30 data-[state=active]:text-white hover:bg-white/10 hover:text-white rounded-sm transition-colors">
-            <Star className="h-3.5 w-3.5" />
-            Favorites
-          </TabsTrigger>
-          <TabsTrigger value="recent" className="flex items-center justify-center gap-2 py-1.5 text-sm text-white/70 data-[state=active]:bg-blue-500/30 data-[state=active]:text-white hover:bg-white/10 hover:text-white rounded-sm transition-colors">
-            <History className="h-3.5 w-3.5" />
-            Recent
-          </TabsTrigger>
-        </TabsList>
-      </Tabs> 
-      */}
-
       <AnimatePresence mode="wait">
         {filteredSystems.length === 0 ? (
           <motion.div
@@ -275,10 +254,10 @@ export function SystemReviewChecklist({
                         tabIndex={0}
                         className="h-7 px-2 inline-flex items-center justify-center rounded-md text-xs font-medium text-blue-300 hover:text-blue-100 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-blue-400/50 cursor-pointer"
                         onClick={(e) => {
-                          e.stopPropagation(); // Prevent CollapsibleTrigger from toggling
+                          e.stopPropagation(); 
                           handleClearAll(system);
                         }}
-                        onKeyDown={(e) => { // Basic keyboard accessibility
+                        onKeyDown={(e) => { 
                           if (e.key === 'Enter' || e.key === ' ') {
                             e.stopPropagation();
                             handleClearAll(system);
