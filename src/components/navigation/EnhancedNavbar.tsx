@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from "react";
-import { Search, Menu, X, Home, BookOpen, Settings, ChevronDown, User, LogOut } from "lucide-react";
+import { Search, Menu, X, Home, BookOpen, ChevronDown, User, LogOut } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate, NavLink, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -13,7 +13,6 @@ import type { MedicalCase } from "@/types/case";
 const NAV_ITEMS = [
   { label: "Dashboard", to: "/dashboard", icon: Home },
   { label: "Cases", to: "/cases", icon: BookOpen },
-  { label: "Settings", to: "/settings", icon: Settings },
 ];
 
 interface SearchResult {
@@ -110,6 +109,10 @@ const EnhancedNavbar: React.FC = () => {
   const handleSignOut = () => {
     signOut();
     setIsUserMenuOpen(false);
+  };
+
+  const getUserDisplayName = () => {
+    return user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'User';
   };
 
   return (
@@ -222,7 +225,7 @@ const EnhancedNavbar: React.FC = () => {
                 className="flex items-center space-x-2 px-3 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl hover:bg-white/20 transition-colors"
               >
                 <User className="h-4 w-4 text-white" />
-                <span className="text-white text-sm">{user?.email?.split('@')[0] || 'User'}</span>
+                <span className="text-white text-sm">{getUserDisplayName()}</span>
                 <ChevronDown className="h-3 w-3 text-white/70" />
               </button>
 
@@ -238,7 +241,7 @@ const EnhancedNavbar: React.FC = () => {
                       className="w-full px-4 py-2 text-left text-white hover:bg-white/20 flex items-center space-x-2 transition-colors"
                       onClick={() => { navigate('/settings'); setIsUserMenuOpen(false); }}
                     >
-                      <Settings className="h-4 w-4" />
+                      <User className="h-4 w-4" />
                       <span>Settings</span>
                     </button>
                     <div className="h-px bg-white/20 my-2" />
@@ -323,7 +326,7 @@ const EnhancedNavbar: React.FC = () => {
                   className="w-full flex items-center space-x-3 px-4 py-3 text-white/80 hover:bg-white/10 hover:text-white rounded-xl transition-colors"
                   onClick={() => { navigate('/settings'); setIsMobileMenuOpen(false); }}
                 >
-                  <Settings className="h-5 w-5" />
+                  <User className="h-5 w-5" />
                   <span>Settings</span>
                 </button>
                 <button
