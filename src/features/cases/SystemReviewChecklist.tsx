@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect, useMemo } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -197,42 +198,19 @@ export function SystemReviewChecklist({
                 className="border border-white/20 rounded-lg overflow-hidden bg-transparent"
               >
                 <AccordionTrigger className="flex items-center justify-between w-full p-3 bg-white/[.03] hover:bg-white/[.06] transition-colors hover:no-underline text-white">
-                  <div className="flex items-center justify-between flex-1">
-                    <div className="flex items-center space-x-2">
-                      <span className="font-medium">{system}</span>
-                      {selectedSymptoms[system]?.length > 0 && (
-                        <Badge variant="outline" className="bg-blue-500/20 border-blue-400/30 text-white text-xs font-normal py-0.5 px-1.5">
-                          {selectedSymptoms[system].length}/{systemSymptoms.find(s => s.system === system)?.symptoms.length}
-                        </Badge>
-                      )}
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      {selectedSymptoms[system]?.length > 0 && (
-                        <div
-                          role="button"
-                          tabIndex={0}
-                          className="h-7 px-2 inline-flex items-center justify-center rounded-md text-xs font-medium text-blue-300 hover:text-blue-100 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-blue-400/50 cursor-pointer"
-                          onClick={(e) => {
-                            e.stopPropagation(); 
-                            handleClearAll(system);
-                          }}
-                          onKeyDown={(e) => { 
-                            if (e.key === 'Enter' || e.key === ' ') {
-                              e.stopPropagation();
-                              handleClearAll(system);
-                            }
-                          }}
-                        >
-                          Clear
-                        </div>
-                      )}
-                    </div>
+                  <div className="flex items-center space-x-2">
+                    <span className="font-medium">{system}</span>
+                    {selectedSymptoms[system]?.length > 0 && (
+                      <Badge variant="outline" className="bg-blue-500/20 border-blue-400/30 text-white text-xs font-normal py-0.5 px-1.5">
+                        {selectedSymptoms[system].length}/{systemSymptoms.find(s => s.system === system)?.symptoms.length}
+                      </Badge>
+                    )}
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="bg-white/[.01]">
                   <div className="p-3 space-y-2">
-                    {symptoms.length > 0 && (
-                      <div className="flex justify-end">
+                    <div className="flex justify-between items-center">
+                      <div className="flex space-x-2">
                         <Button
                           variant="outline"
                           size="sm"
@@ -242,8 +220,18 @@ export function SystemReviewChecklist({
                           <Check className="h-3 w-3 mr-1" />
                           Select All
                         </Button>
+                        {selectedSymptoms[system]?.length > 0 && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="h-7 text-xs border-white/20 text-blue-300 hover:text-blue-100 hover:bg-white/10"
+                            onClick={() => handleClearAll(system)}
+                          >
+                            Clear
+                          </Button>
+                        )}
                       </div>
-                    )}
+                    </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                       {symptoms.map((symptom) => (
                         <SymptomItem
@@ -263,3 +251,4 @@ export function SystemReviewChecklist({
     </div>
   );
 }
+
