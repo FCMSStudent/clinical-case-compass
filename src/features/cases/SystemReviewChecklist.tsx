@@ -14,8 +14,6 @@ import {
   ChevronRight, 
   Search, 
   AlertCircle,
-  Star,
-  StarOff,
   History
 } from "lucide-react";
 import { systemSymptoms } from "./systemSymptoms";
@@ -38,7 +36,6 @@ export function SystemReviewChecklist({
   const [selectedSymptoms, setSelectedSymptoms] = useState<Record<string, string[]>>(initialSystemSymptoms);
   const [expandedSystems, setExpandedSystems] = useState<Record<string, boolean>>({}); // Initialize as empty
   const [searchTerm, setSearchTerm] = useState("");
-  const [favoriteSymptoms, setFavoriteSymptoms] = useState<string[]>([]);
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -104,14 +101,6 @@ export function SystemReviewChecklist({
     }));
   };
 
-  const toggleFavorite = (symptom: string) => {
-    setFavoriteSymptoms(prev => 
-      prev.includes(symptom) 
-        ? prev.filter(s => s !== symptom)
-        : [...prev, symptom]
-    );
-  };
-
   const filteredSystems = useMemo(() => {
     if (!searchTerm) return systemSymptoms;
 
@@ -131,7 +120,6 @@ export function SystemReviewChecklist({
   const SymptomItem = ({ system, symptom }: { system: string; symptom: string }) => {
     const isSelected = selectedSymptoms[system]?.includes(symptom) || false;
     const isHighlighted = highlightedSymptoms[system]?.includes(symptom) || false;
-    const isFavorite = favoriteSymptoms.includes(symptom);
     const isRecent = recentSymptoms.includes(symptom);
 
     return (
@@ -160,27 +148,6 @@ export function SystemReviewChecklist({
         >
           {symptom}
         </Label>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-6 w-6 p-0 text-white/60 hover:text-white hover:bg-transparent"
-                onClick={() => toggleFavorite(symptom)}
-              >
-                {isFavorite ? (
-                  <Star className="h-4 w-4 text-yellow-400" />
-                ) : (
-                  <StarOff className="h-4 w-4" />
-                )}
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent className="bg-slate-800 border-slate-700 text-white">
-              {isFavorite ? "Remove from favorites" : "Add to favorites"}
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
         {isRecent && (
           <TooltipProvider>
             <Tooltip>
