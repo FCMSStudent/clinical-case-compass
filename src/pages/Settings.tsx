@@ -1,59 +1,76 @@
+
 import React, { useState, useRef, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PageHeader } from "@/components/ui/page-header";
+import { AvatarUpload } from "@/components/ui/avatar-upload";
+import { FormProgress } from "@/components/ui/form-progress";
+import { SettingsCard } from "@/components/ui/settings-card";
+import { AutosaveIndicator } from "@/components/ui/autosave-indicator";
 import { useAuth } from "@/app/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { useErrorHandler } from "@/hooks/use-error-handler";
 import { 
   User, 
   Settings as SettingsIcon, 
-  Palette, 
   Shield, 
-  Bell, 
-  Monitor,
+  Palette,
   Sun,
   Moon,
-  Monitor as MonitorIcon,
-  Palette as PaletteIcon,
+  Monitor,
   AlertTriangle,
   Eye,
-  EyeOff
+  EyeOff,
+  Bell,
+  Lock,
+  Globe,
+  Smartphone,
+  Mail
 } from "lucide-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useTheme } from "@/app/ThemeContext";
+import { useFormValidation } from "@/hooks/use-form-validation";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
-// Form schemas
+// Enhanced form schemas
 const profileSchema = z.object({
-  fullName: z.string().min(1, "Full name is required"),
+  fullName: z.string().min(1, "Full name is required").max(100, "Name too long"),
   specialty: z.string().optional(),
   email: z.string().email("Invalid email address"),
+  bio: z.string().max(500, "Bio must be less than 500 characters").optional(),
+  phone: z.string().optional(),
+  location: z.string().optional(),
 });
 
-const accountSchema = z.object({
+const securitySchema = z.object({
   currentPassword: z.string().min(6, "Password must be at least 6 characters"),
   newPassword: z.string().min(6, "Password must be at least 6 characters"),
   confirmPassword: z.string(),
+  twoFactorEnabled: z.boolean(),
+  sessionTimeout: z.enum(["15", "30", "60", "never"]),
 }).refine((data) => data.newPassword === data.confirmPassword, {
   message: "Passwords don't match",
   path: ["confirmPassword"],
 });
 
-const appearanceSchema = z.object({
+const preferencesSchema = z.object({
   theme: z.enum(["light", "dark", "system"]),
-  fontSize: z.enum(["small", "medium", "large"]),
-  reducedMotion: z.boolean(),
-  highContrast: z.boolean(),
+  language: z.enum(["en", "es", "fr", "de"]),
+  timezone: z.string(),
+  emailNotifications: z.boolean(),
+  pushNotifications: z.boolean(),
+  marketingEmails: z.boolean(),
+  dataSharing: z.boolean(),
 });
 
 type ProfileFormData = z.infer<typeof profileSchema>;
-type AccountFormData = z.infer<typeof accountSchema>;
-type AppearanceFormData = z.infer<typeof appearanceSchema>;
+type SecurityFormData = z.infer<typeof securitySchema>;
+type PreferencesFormData = z.infer<typeof preferencesSchema>;
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState("profile");
@@ -61,13 +78,12 @@ const Settings = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [autosaveStatus, setAutosaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const [lastSaved, setLastSaved] = useState<Date>();
   const { user, updateProfile } = useAuth();
   const { toast } = useToast();
   const { handleError } = useErrorHandler();
   const deleteConfirmRef = useRef<HTMLDialogElement>(null);
-
-  // Theme management
-  const { currentTheme, setTheme, availableThemes, getThemeNames } = useTheme();
 
   const profileForm = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
@@ -75,72 +91,100 @@ const Settings = () => {
       fullName: user?.user_metadata?.full_name || "",
       specialty: user?.user_metadata?.specialty || "",
       email: user?.email || "",
+      bio: user?.user_metadata?.bio || "",
+      phone: user?.user_metadata?.phone || "",
+      location: user?.user_metadata?.location || "",
     },
   });
 
-  const accountForm = useForm<AccountFormData>({
-    resolver: zodResolver(accountSchema),
+  const securityForm = useForm<SecurityFormData>({
+    resolver: zodResolver(securitySchema),
+    defaultValues: {
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+      twoFactorEnabled: false,
+      sessionTimeout: "30",
+    },
   });
 
-  const appearanceForm = useForm<AppearanceFormData>({
-    resolver: zodResolver(appearanceSchema),
+  const preferencesForm = useForm<PreferencesFormData>({
+    resolver: zodResolver(preferencesSchema),
     defaultValues: {
       theme: "system",
-      fontSize: "medium",
-      reducedMotion: false,
-      highContrast: false,
+      language: "en",
+      timezone: "UTC",
+      emailNotifications: true,
+      pushNotifications: true,
+      marketingEmails: false,
+      dataSharing: false,
     },
   });
 
-  // Focus management for tabs
+  // Form validation hooks
+  const profileValidation = useFormValidation<ProfileFormData>({
+    requiredFields: ['fullName', 'email'],
+  });
+
+  // Auto-save functionality
   useEffect(() => {
-    const activeTabContent = document.querySelector(`[data-state="active"][role="tabpanel"]`);
-    if (activeTabContent) {
-      const firstFocusable = activeTabContent.querySelector('input, button, [tabindex]:not([tabindex="-1"])') as HTMLElement;
-      if (firstFocusable) {
-        firstFocusable.focus();
+    const subscription = profileForm.watch((data) => {
+      if (profileValidation.isValid) {
+        setAutosaveStatus('saving');
+        const timeoutId = setTimeout(() => {
+          setAutosaveStatus('saved');
+          setLastSaved(new Date());
+        }, 1000);
+        return () => clearTimeout(timeoutId);
       }
-    }
-  }, [activeTab]);
+    });
+    return () => subscription.unsubscribe();
+  }, [profileForm, profileValidation.isValid]);
 
   const onProfileSubmit = async (data: ProfileFormData) => {
     try {
+      setAutosaveStatus('saving');
       await updateProfile({
         full_name: data.fullName,
         specialty: data.specialty,
+        bio: data.bio,
+        phone: data.phone,
+        location: data.location,
       });
+      setAutosaveStatus('saved');
+      setLastSaved(new Date());
       toast({
         title: "Profile updated",
         description: "Your profile has been updated successfully.",
       });
     } catch (error) {
+      setAutosaveStatus('error');
       handleError(error, "updating profile");
     }
   };
 
-  const onAccountSubmit = async (data: AccountFormData) => {
+  const onSecuritySubmit = async (data: SecurityFormData) => {
     try {
-      // Handle password change logic here
+      // Handle password change and security settings
       toast({
-        title: "Password updated",
-        description: "Your password has been updated successfully.",
+        title: "Security updated",
+        description: "Your security settings have been updated successfully.",
       });
-      accountForm.reset();
+      securityForm.reset();
     } catch (error) {
-      handleError(error, "updating password");
+      handleError(error, "updating security settings");
     }
   };
 
-  const onAppearanceSubmit = async (data: AppearanceFormData) => {
+  const onPreferencesSubmit = async (data: PreferencesFormData) => {
     try {
-      setTheme(data.theme);
-      // Update other appearance settings
+      // Handle preferences update
       toast({
-        title: "Appearance updated",
-        description: "Your appearance settings have been updated.",
+        title: "Preferences updated",
+        description: "Your preferences have been updated successfully.",
       });
     } catch (error) {
-      handleError(error, "updating appearance");
+      handleError(error, "updating preferences");
     }
   };
 
@@ -160,12 +204,9 @@ const Settings = () => {
     }
   };
 
-  const openDeleteConfirm = () => {
-    deleteConfirmRef.current?.showModal();
-  };
-
-  const closeDeleteConfirm = () => {
-    deleteConfirmRef.current?.close();
+  const handleAvatarChange = (file: File) => {
+    // Handle avatar upload
+    console.log('Avatar changed:', file);
   };
 
   const getInitials = (name: string) => {
@@ -177,444 +218,440 @@ const Settings = () => {
   };
 
   return (
-    <main role="main" aria-labelledby="settings-title" className="space-y-6">
-      {/* Skip Navigation */}
-      <nav aria-label="Settings navigation" className="sr-only">
-        <a 
-          href="#profile-tab" 
-          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded-lg z-50 focus:outline-none focus:ring-2 focus:ring-white/30"
-        >
-          Skip to profile settings
-        </a>
-        <a 
-          href="#account-tab" 
-          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-32 bg-blue-600 text-white px-4 py-2 rounded-lg z-50 focus:outline-none focus:ring-2 focus:ring-white/30"
-        >
-          Skip to account settings
-        </a>
-      </nav>
-
+    <main className="space-y-6 max-w-6xl mx-auto">
       <PageHeader
         title="Settings"
         description="Manage your account preferences and settings"
-        icon={<SettingsIcon className="h-6 w-6" aria-hidden="true" />}
+        icon={<SettingsIcon className="h-6 w-6" />}
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Profile Card */}
-        <section aria-labelledby="profile-card-title">
-          <Card className="lg:col-span-1 bg-white/10 backdrop-blur-sm border-white/20">
-            <CardContent className="p-6">
-              <div className="text-center space-y-4">
-                <div 
-                  className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center mx-auto"
-                  role="img"
-                  aria-label={`Profile avatar for ${user?.user_metadata?.full_name || user?.email || "User"}`}
-                >
-                  <span className="text-white text-xl font-bold">
-                    {getInitials(user?.user_metadata?.full_name || user?.email || "U")}
-                  </span>
-                </div>
-                <div>
-                  <h3 id="profile-card-title" className="text-lg font-semibold text-white">
-                    {user?.user_metadata?.full_name || "User"}
-                  </h3>
-                  <p className="text-gray-400 text-sm">
-                    {user?.user_metadata?.specialty || "Medical Professional"}
-                  </p>
-                </div>
+        {/* Enhanced Profile Card */}
+        <div className="lg:col-span-1">
+          <SettingsCard
+            title="Profile"
+            description="Your profile information"
+            className="h-fit"
+          >
+            <div className="text-center space-y-4">
+              <AvatarUpload
+                currentAvatar={user?.user_metadata?.avatar_url}
+                onAvatarChange={handleAvatarChange}
+                className="mx-auto"
+              />
+              <div>
+                <h3 className="text-lg font-semibold text-white">
+                  {user?.user_metadata?.full_name || "User"}
+                </h3>
+                <p className="text-white/70 text-sm">
+                  {user?.user_metadata?.specialty || "Medical Professional"}
+                </p>
               </div>
-            </CardContent>
-          </Card>
-        </section>
+              <FormProgress
+                totalFields={6}
+                completedFields={profileValidation.completedFields}
+              />
+            </div>
+          </SettingsCard>
+        </div>
 
-        {/* Settings Tabs */}
-        <section aria-labelledby="settings-tabs-title" className="lg:col-span-3">
-          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+        {/* Enhanced Settings Tabs */}
+        <div className="lg:col-span-3">
+          <Card className="bg-white/5 backdrop-blur-sm border-white/20">
             <CardContent className="p-6">
-              <h2 id="settings-tabs-title" className="sr-only">Settings Options</h2>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-semibold text-white">Account Settings</h2>
+                <AutosaveIndicator status={autosaveStatus} lastSaved={lastSaved} />
+              </div>
+
               <Tabs value={activeTab} onValueChange={setActiveTab}>
-                <TabsList 
-                  className="grid w-full grid-cols-5 bg-white/10"
-                  role="tablist"
-                  aria-label="Settings categories"
-                >
-                  <TabsTrigger 
-                    value="profile" 
-                    className="text-white data-[state=active]:bg-white/20"
-                    role="tab"
-                    aria-selected={activeTab === "profile"}
-                    aria-controls="profile-tab"
-                    id="profile-tab-trigger"
-                  >
-                    <User className="h-4 w-4 mr-2" aria-hidden="true" />
+                <TabsList className="grid w-full grid-cols-3 bg-white/10">
+                  <TabsTrigger value="profile" className="text-white data-[state=active]:bg-white/20">
+                    <User className="h-4 w-4 mr-2" />
                     Profile
                   </TabsTrigger>
-                  <TabsTrigger 
-                    value="account" 
-                    className="text-white data-[state=active]:bg-white/20"
-                    role="tab"
-                    aria-selected={activeTab === "account"}
-                    aria-controls="account-tab"
-                    id="account-tab-trigger"
-                  >
-                    <Shield className="h-4 w-4 mr-2" aria-hidden="true" />
-                    Account
+                  <TabsTrigger value="security" className="text-white data-[state=active]:bg-white/20">
+                    <Shield className="h-4 w-4 mr-2" />
+                    Security
                   </TabsTrigger>
-                  <TabsTrigger 
-                    value="appearance" 
-                    className="text-white data-[state=active]:bg-white/20"
-                    role="tab"
-                    aria-selected={activeTab === "appearance"}
-                    aria-controls="appearance-tab"
-                    id="appearance-tab-trigger"
-                  >
-                    <Palette className="h-4 w-4 mr-2" aria-hidden="true" />
-                    Appearance
-                  </TabsTrigger>
-                  <TabsTrigger 
-                    value="notifications" 
-                    className="text-white data-[state=active]:bg-white/20"
-                    role="tab"
-                    aria-selected={activeTab === "notifications"}
-                    aria-controls="notifications-tab"
-                    id="notifications-tab-trigger"
-                  >
-                    <Bell className="h-4 w-4 mr-2" aria-hidden="true" />
-                    Notifications
-                  </TabsTrigger>
-                  <TabsTrigger 
-                    value="privacy" 
-                    className="text-white data-[state=active]:bg-white/20"
-                    role="tab"
-                    aria-selected={activeTab === "privacy"}
-                    aria-controls="privacy-tab"
-                    id="privacy-tab-trigger"
-                  >
-                    <Shield className="h-4 w-4 mr-2" aria-hidden="true" />
-                    Privacy
+                  <TabsTrigger value="preferences" className="text-white data-[state=active]:bg-white/20">
+                    <Palette className="h-4 w-4 mr-2" />
+                    Preferences
                   </TabsTrigger>
                 </TabsList>
 
                 {/* Profile Tab */}
-                <TabsContent 
-                  value="profile" 
-                  className="space-y-4"
-                  role="tabpanel"
-                  id="profile-tab"
-                  aria-labelledby="profile-tab-trigger"
-                >
-                  <h3 className="text-lg font-semibold text-white">Profile Information</h3>
-                  <form onSubmit={profileForm.handleSubmit(onProfileSubmit)} className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="fullName" className="text-white">Full Name</Label>
-                        <Input
-                          id="fullName"
-                          {...profileForm.register("fullName")}
-                          className="bg-white/10 border-white/20 text-white focus:ring-2 focus:ring-white/30"
-                          aria-describedby={profileForm.formState.errors.fullName ? "fullName-error" : "fullName-help"}
-                          aria-invalid={!!profileForm.formState.errors.fullName}
+                <TabsContent value="profile" className="space-y-6 mt-6">
+                  <Form {...profileForm}>
+                    <form onSubmit={profileForm.handleSubmit(onProfileSubmit)} className="space-y-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <FormField
+                          control={profileForm.control}
+                          name="fullName"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Full Name *</FormLabel>
+                              <FormControl>
+                                <Input {...field} className="bg-white/10 border-white/20 text-white" />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
                         />
-                        {profileForm.formState.errors.fullName && (
-                          <p id="fullName-error" className="text-red-400 text-sm" role="alert">
-                            {profileForm.formState.errors.fullName.message}
-                          </p>
+                        <FormField
+                          control={profileForm.control}
+                          name="email"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Email *</FormLabel>
+                              <FormControl>
+                                <Input {...field} type="email" className="bg-white/10 border-white/20 text-white" />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <FormField
+                          control={profileForm.control}
+                          name="specialty"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Specialty</FormLabel>
+                              <FormControl>
+                                <Input {...field} className="bg-white/10 border-white/20 text-white" />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={profileForm.control}
+                          name="phone"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Phone</FormLabel>
+                              <FormControl>
+                                <Input {...field} className="bg-white/10 border-white/20 text-white" />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+
+                      <FormField
+                        control={profileForm.control}
+                        name="location"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Location</FormLabel>
+                            <FormControl>
+                              <Input {...field} className="bg-white/10 border-white/20 text-white" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
                         )}
-                        <p id="fullName-help" className="sr-only">Enter your full name as it should appear on your profile</p>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="specialty" className="text-white">Specialty</Label>
-                        <Input
-                          id="specialty"
-                          {...profileForm.register("specialty")}
-                          className="bg-white/10 border-white/20 text-white focus:ring-2 focus:ring-white/30"
-                          aria-describedby="specialty-help"
-                        />
-                        <p id="specialty-help" className="sr-only">Enter your medical specialty or area of practice</p>
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="email" className="text-white">Email</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        {...profileForm.register("email")}
-                        className="bg-white/10 border-white/20 text-white focus:ring-2 focus:ring-white/30"
-                        aria-describedby={profileForm.formState.errors.email ? "email-error" : "email-help"}
-                        aria-invalid={!!profileForm.formState.errors.email}
                       />
-                      {profileForm.formState.errors.email && (
-                        <p id="email-error" className="text-red-400 text-sm" role="alert">
-                          {profileForm.formState.errors.email.message}
-                        </p>
-                      )}
-                      <p id="email-help" className="sr-only">Your email address for account notifications</p>
-                    </div>
-                    <Button 
-                      type="submit" 
-                      className="bg-blue-600 hover:bg-blue-700 text-white focus:ring-2 focus:ring-white/30"
-                      aria-describedby="profile-submit-help"
-                    >
-                      Save Profile
-                    </Button>
-                    <p id="profile-submit-help" className="sr-only">Click to save your profile changes</p>
-                  </form>
+
+                      <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white">
+                        Save Profile
+                      </Button>
+                    </form>
+                  </Form>
                 </TabsContent>
 
-                {/* Account Tab */}
-                <TabsContent 
-                  value="account" 
-                  className="space-y-4"
-                  role="tabpanel"
-                  id="account-tab"
-                  aria-labelledby="account-tab-trigger"
-                >
-                  <h3 className="text-lg font-semibold text-white">Account Security</h3>
-                  <form onSubmit={accountForm.handleSubmit(onAccountSubmit)} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="currentPassword" className="text-white">Current Password</Label>
-                      <div className="relative">
-                        <Input
-                          id="currentPassword"
-                          type={showCurrentPassword ? "text" : "password"}
-                          {...accountForm.register("currentPassword")}
-                          className="bg-white/10 border-white/20 text-white focus:ring-2 focus:ring-white/30 pr-10"
-                          aria-describedby={accountForm.formState.errors.currentPassword ? "currentPassword-error" : "currentPassword-help"}
-                          aria-invalid={!!accountForm.formState.errors.currentPassword}
-                        />
+                {/* Security Tab */}
+                <TabsContent value="security" className="space-y-6 mt-6">
+                  <div className="space-y-6">
+                    {/* Password Section */}
+                    <SettingsCard
+                      title="Change Password"
+                      description="Update your password to keep your account secure"
+                      icon={<Lock className="h-5 w-5 text-white" />}
+                    >
+                      <Form {...securityForm}>
+                        <form onSubmit={securityForm.handleSubmit(onSecuritySubmit)} className="space-y-4">
+                          <FormField
+                            control={securityForm.control}
+                            name="currentPassword"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Current Password</FormLabel>
+                                <FormControl>
+                                  <div className="relative">
+                                    <Input
+                                      {...field}
+                                      type={showCurrentPassword ? "text" : "password"}
+                                      className="bg-white/10 border-white/20 text-white pr-10"
+                                    />
+                                    <Button
+                                      type="button"
+                                      variant="ghost"
+                                      size="sm"
+                                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-white/10"
+                                      onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                                    >
+                                      {showCurrentPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                    </Button>
+                                  </div>
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <FormField
+                              control={securityForm.control}
+                              name="newPassword"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>New Password</FormLabel>
+                                  <FormControl>
+                                    <div className="relative">
+                                      <Input
+                                        {...field}
+                                        type={showNewPassword ? "text" : "password"}
+                                        className="bg-white/10 border-white/20 text-white pr-10"
+                                      />
+                                      <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="sm"
+                                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-white/10"
+                                        onClick={() => setShowNewPassword(!showNewPassword)}
+                                      >
+                                        {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                      </Button>
+                                    </div>
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+
+                            <FormField
+                              control={securityForm.control}
+                              name="confirmPassword"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Confirm Password</FormLabel>
+                                  <FormControl>
+                                    <div className="relative">
+                                      <Input
+                                        {...field}
+                                        type={showConfirmPassword ? "text" : "password"}
+                                        className="bg-white/10 border-white/20 text-white pr-10"
+                                      />
+                                      <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="sm"
+                                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-white/10"
+                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                      >
+                                        {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                      </Button>
+                                    </div>
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
+
+                          <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white">
+                            Update Password
+                          </Button>
+                        </form>
+                      </Form>
+                    </SettingsCard>
+
+                    {/* Two-Factor Authentication */}
+                    <SettingsCard
+                      title="Two-Factor Authentication"
+                      description="Add an extra layer of security to your account"
+                      icon={<Smartphone className="h-5 w-5 text-white" />}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-white text-sm">Secure your account with 2FA</p>
+                          <p className="text-white/60 text-xs mt-1">Recommended for enhanced security</p>
+                        </div>
+                        <Switch />
+                      </div>
+                    </SettingsCard>
+
+                    {/* Danger Zone */}
+                    <SettingsCard
+                      title="Danger Zone"
+                      description="Irreversible and destructive actions"
+                      icon={<AlertTriangle className="h-5 w-5 text-red-400" />}
+                      className="border-red-500/20"
+                    >
+                      <div className="space-y-4">
+                        <p className="text-white/70 text-sm">
+                          Permanently delete your account and all associated data.
+                        </p>
                         <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-white/10"
-                          onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                          aria-label={showCurrentPassword ? "Hide current password" : "Show current password"}
+                          variant="destructive"
+                          onClick={() => deleteConfirmRef.current?.showModal()}
+                          className="bg-red-600 hover:bg-red-700"
                         >
-                          {showCurrentPassword ? (
-                            <EyeOff className="h-4 w-4 text-white" aria-hidden="true" />
-                          ) : (
-                            <Eye className="h-4 w-4 text-white" aria-hidden="true" />
-                          )}
+                          Delete Account
                         </Button>
                       </div>
-                      {accountForm.formState.errors.currentPassword && (
-                        <p id="currentPassword-error" className="text-red-400 text-sm" role="alert">
-                          {accountForm.formState.errors.currentPassword.message}
-                        </p>
-                      )}
-                      <p id="currentPassword-help" className="sr-only">Enter your current password to verify your identity</p>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="newPassword" className="text-white">New Password</Label>
-                        <div className="relative">
-                          <Input
-                            id="newPassword"
-                            type={showNewPassword ? "text" : "password"}
-                            {...accountForm.register("newPassword")}
-                            className="bg-white/10 border-white/20 text-white focus:ring-2 focus:ring-white/30 pr-10"
-                            aria-describedby={accountForm.formState.errors.newPassword ? "newPassword-error" : "newPassword-help"}
-                            aria-invalid={!!accountForm.formState.errors.newPassword}
-                          />
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-white/10"
-                            onClick={() => setShowNewPassword(!showNewPassword)}
-                            aria-label={showNewPassword ? "Hide new password" : "Show new password"}
-                          >
-                            {showNewPassword ? (
-                              <EyeOff className="h-4 w-4 text-white" aria-hidden="true" />
-                            ) : (
-                              <Eye className="h-4 w-4 text-white" aria-hidden="true" />
+                    </SettingsCard>
+                  </div>
+                </TabsContent>
+
+                {/* Preferences Tab */}
+                <TabsContent value="preferences" className="space-y-6 mt-6">
+                  <Form {...preferencesForm}>
+                    <form onSubmit={preferencesForm.handleSubmit(onPreferencesSubmit)} className="space-y-6">
+                      {/* Theme Settings */}
+                      <SettingsCard
+                        title="Appearance"
+                        description="Customize how the app looks and feels"
+                        icon={<Palette className="h-5 w-5 text-white" />}
+                      >
+                        <div className="space-y-4">
+                          <FormField
+                            control={preferencesForm.control}
+                            name="theme"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Theme</FormLabel>
+                                <div className="grid grid-cols-3 gap-2 mt-2">
+                                  {[
+                                    { value: "light", icon: Sun, label: "Light" },
+                                    { value: "dark", icon: Moon, label: "Dark" },
+                                    { value: "system", icon: Monitor, label: "System" }
+                                  ].map(({ value, icon: Icon, label }) => (
+                                    <Button
+                                      key={value}
+                                      type="button"
+                                      variant={field.value === value ? "default" : "outline"}
+                                      onClick={() => field.onChange(value)}
+                                      className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                                    >
+                                      <Icon className="h-4 w-4 mr-2" />
+                                      {label}
+                                    </Button>
+                                  ))}
+                                </div>
+                              </FormItem>
                             )}
-                          </Button>
-                        </div>
-                        {accountForm.formState.errors.newPassword && (
-                          <p id="newPassword-error" className="text-red-400 text-sm" role="alert">
-                            {accountForm.formState.errors.newPassword.message}
-                          </p>
-                        )}
-                        <p id="newPassword-help" className="sr-only">Enter your new password (minimum 6 characters)</p>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="confirmPassword" className="text-white">Confirm Password</Label>
-                        <div className="relative">
-                          <Input
-                            id="confirmPassword"
-                            type={showConfirmPassword ? "text" : "password"}
-                            {...accountForm.register("confirmPassword")}
-                            className="bg-white/10 border-white/20 text-white focus:ring-2 focus:ring-white/30 pr-10"
-                            aria-describedby={accountForm.formState.errors.confirmPassword ? "confirmPassword-error" : "confirmPassword-help"}
-                            aria-invalid={!!accountForm.formState.errors.confirmPassword}
                           />
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-white/10"
-                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                            aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
-                          >
-                            {showConfirmPassword ? (
-                              <EyeOff className="h-4 w-4 text-white" aria-hidden="true" />
-                            ) : (
-                              <Eye className="h-4 w-4 text-white" aria-hidden="true" />
-                            )}
-                          </Button>
                         </div>
-                        {accountForm.formState.errors.confirmPassword && (
-                          <p id="confirmPassword-error" className="text-red-400 text-sm" role="alert">
-                            {accountForm.formState.errors.confirmPassword.message}
-                          </p>
-                        )}
-                        <p id="confirmPassword-help" className="sr-only">Re-enter your new password to confirm</p>
-                      </div>
-                    </div>
-                    <Button 
-                      type="submit" 
-                      className="bg-blue-600 hover:bg-blue-700 text-white focus:ring-2 focus:ring-white/30"
-                      aria-describedby="password-submit-help"
-                    >
-                      Update Password
-                    </Button>
-                    <p id="password-submit-help" className="sr-only">Click to update your password</p>
-                  </form>
+                      </SettingsCard>
 
-                  <section aria-labelledby="danger-zone-title" className="pt-6 border-t border-white/20">
-                    <h4 id="danger-zone-title" className="text-lg font-semibold text-white mb-4 flex items-center">
-                      <AlertTriangle className="h-5 w-5 mr-2 text-red-400" aria-hidden="true" />
-                      Danger Zone
-                    </h4>
-                    <p className="text-white/70 mb-4">Permanently delete your account and all associated data.</p>
-                    <Button
-                      variant="destructive"
-                      onClick={openDeleteConfirm}
-                      className="bg-red-600 hover:bg-red-700 focus:ring-2 focus:ring-red-300"
-                      aria-describedby="delete-account-help"
-                    >
-                      Delete Account
-                    </Button>
-                    <p id="delete-account-help" className="sr-only">Click to permanently delete your account. This action cannot be undone.</p>
-                  </section>
-                </TabsContent>
+                      {/* Notification Settings */}
+                      <SettingsCard
+                        title="Notifications"
+                        description="Choose what notifications you receive"
+                        icon={<Bell className="h-5 w-5 text-white" />}
+                      >
+                        <div className="space-y-4">
+                          <FormField
+                            control={preferencesForm.control}
+                            name="emailNotifications"
+                            render={({ field }) => (
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <Label>Email Notifications</Label>
+                                  <p className="text-white/60 text-xs">Receive notifications via email</p>
+                                </div>
+                                <Switch checked={field.value} onCheckedChange={field.onChange} />
+                              </div>
+                            )}
+                          />
 
-                {/* Appearance Tab */}
-                <TabsContent 
-                  value="appearance" 
-                  className="space-y-4"
-                  role="tabpanel"
-                  id="appearance-tab"
-                  aria-labelledby="appearance-tab-trigger"
-                >
-                  <h3 className="text-lg font-semibold text-white">Appearance Settings</h3>
-                  <form onSubmit={appearanceForm.handleSubmit(onAppearanceSubmit)} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label className="text-white">Theme</Label>
-                      <div className="grid grid-cols-3 gap-2" role="radiogroup" aria-label="Theme selection">
-                        {["light", "dark", "system"].map((theme) => (
-                          <Button
-                            key={theme}
-                            type="button"
-                            variant={appearanceForm.watch("theme") === theme ? "default" : "outline"}
-                            onClick={() => appearanceForm.setValue("theme", theme as any)}
-                            className="bg-white/10 border-white/20 text-white hover:bg-white/20 focus:ring-2 focus:ring-white/30"
-                            role="radio"
-                            aria-checked={appearanceForm.watch("theme") === theme}
-                            aria-describedby={`theme-${theme}-description`}
-                          >
-                            {theme === "light" && <Sun className="h-4 w-4 mr-2" aria-hidden="true" />}
-                            {theme === "dark" && <Moon className="h-4 w-4 mr-2" aria-hidden="true" />}
-                            {theme === "system" && <Monitor className="h-4 w-4 mr-2" aria-hidden="true" />}
-                            {theme.charAt(0).toUpperCase() + theme.slice(1)}
-                          </Button>
-                        ))}
-                      </div>
-                      <div className="sr-only">
-                        <p id="theme-light-description">Light theme with bright colors</p>
-                        <p id="theme-dark-description">Dark theme with dark colors</p>
-                        <p id="theme-system-description">Follow system theme preference</p>
-                      </div>
-                    </div>
-                    <Button 
-                      type="submit" 
-                      className="bg-blue-600 hover:bg-blue-700 text-white focus:ring-2 focus:ring-white/30"
-                      aria-describedby="appearance-submit-help"
-                    >
-                      Save Appearance
-                    </Button>
-                    <p id="appearance-submit-help" className="sr-only">Click to save your appearance settings</p>
-                  </form>
-                </TabsContent>
+                          <FormField
+                            control={preferencesForm.control}
+                            name="pushNotifications"
+                            render={({ field }) => (
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <Label>Push Notifications</Label>
+                                  <p className="text-white/60 text-xs">Receive push notifications in your browser</p>
+                                </div>
+                                <Switch checked={field.value} onCheckedChange={field.onChange} />
+                              </div>
+                            )}
+                          />
 
-                {/* Notifications Tab */}
-                <TabsContent 
-                  value="notifications" 
-                  className="space-y-4"
-                  role="tabpanel"
-                  id="notifications-tab"
-                  aria-labelledby="notifications-tab-trigger"
-                >
-                  <h3 className="text-lg font-semibold text-white">Notification Preferences</h3>
-                  <p className="text-gray-400">Configure your notification settings here.</p>
-                  <Button 
-                    disabled 
-                    className="bg-gray-600 text-gray-400"
-                    aria-describedby="notifications-coming-soon"
-                  >
-                    Coming Soon
-                  </Button>
-                  <p id="notifications-coming-soon" className="sr-only">Notification settings will be available in a future update</p>
-                </TabsContent>
+                          <FormField
+                            control={preferencesForm.control}
+                            name="marketingEmails"
+                            render={({ field }) => (
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <Label>Marketing Emails</Label>
+                                  <p className="text-white/60 text-xs">Receive updates about new features</p>
+                                </div>
+                                <Switch checked={field.value} onCheckedChange={field.onChange} />
+                              </div>
+                            )}
+                          />
+                        </div>
+                      </SettingsCard>
 
-                {/* Privacy Tab */}
-                <TabsContent 
-                  value="privacy" 
-                  className="space-y-4"
-                  role="tabpanel"
-                  id="privacy-tab"
-                  aria-labelledby="privacy-tab-trigger"
-                >
-                  <h3 className="text-lg font-semibold text-white">Privacy Settings</h3>
-                  <p className="text-gray-400">Manage your privacy and data settings here.</p>
-                  <Button 
-                    disabled 
-                    className="bg-gray-600 text-gray-400"
-                    aria-describedby="privacy-coming-soon"
-                  >
-                    Coming Soon
-                  </Button>
-                  <p id="privacy-coming-soon" className="sr-only">Privacy settings will be available in a future update</p>
+                      {/* Privacy Settings */}
+                      <SettingsCard
+                        title="Privacy"
+                        description="Control your data and privacy settings"
+                        icon={<Globe className="h-5 w-5 text-white" />}
+                      >
+                        <div className="space-y-4">
+                          <FormField
+                            control={preferencesForm.control}
+                            name="dataSharing"
+                            render={({ field }) => (
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <Label>Data Sharing</Label>
+                                  <p className="text-white/60 text-xs">Allow anonymous usage data collection</p>
+                                </div>
+                                <Switch checked={field.value} onCheckedChange={field.onChange} />
+                              </div>
+                            )}
+                          />
+                        </div>
+                      </SettingsCard>
+
+                      <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white">
+                        Save Preferences
+                      </Button>
+                    </form>
+                  </Form>
                 </TabsContent>
               </Tabs>
             </CardContent>
           </Card>
-        </section>
+        </div>
       </div>
 
       {/* Delete Account Confirmation Dialog */}
       <dialog
         ref={deleteConfirmRef}
-        className="backdrop:bg-black/50 backdrop:backdrop-blur-sm p-6 rounded-xl border border-white/20 bg-white/10 backdrop-blur-md"
-        aria-labelledby="delete-dialog-title"
-        aria-describedby="delete-dialog-description"
+        className="backdrop:bg-black/50 backdrop:backdrop-blur-sm p-6 rounded-xl border border-white/20 bg-white/10 backdrop-blur-md max-w-md"
       >
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <AlertTriangle className="h-6 w-6 text-red-400" aria-hidden="true" />
-            <h3 id="delete-dialog-title" className="text-lg font-semibold text-white">
-              Delete Account
-            </h3>
+            <AlertTriangle className="h-6 w-6 text-red-400" />
+            <h3 className="text-lg font-semibold text-white">Delete Account</h3>
           </div>
-          <p id="delete-dialog-description" className="text-white/70">
+          <p className="text-white/70">
             Are you sure you want to delete your account? This action cannot be undone and will permanently remove all your data.
           </p>
           <div className="flex gap-3 justify-end">
             <Button
               variant="outline"
-              onClick={closeDeleteConfirm}
+              onClick={() => deleteConfirmRef.current?.close()}
               className="bg-white/10 border-white/20 text-white hover:bg-white/20"
             >
               Cancel
@@ -624,13 +661,9 @@ const Settings = () => {
               onClick={handleDeleteAccount}
               disabled={isDeleting}
               className="bg-red-600 hover:bg-red-700"
-              aria-describedby={isDeleting ? "deleting-account" : undefined}
             >
               {isDeleting ? "Deleting..." : "Delete Account"}
             </Button>
-            {isDeleting && (
-              <p id="deleting-account" className="sr-only">Account deletion in progress</p>
-            )}
           </div>
         </div>
       </dialog>
