@@ -40,44 +40,11 @@ const FORM_FIELDS = {
   RADIOLOGY_STUDIES: "radiologyStudies",
 } as const;
 
-interface SimpleSectionProps {
-  title: string;
-  icon: React.ElementType;
-  children: React.ReactNode;
-  tooltip?: string;
-  className?: string;
-}
-const SimpleSection = memo(({ title, icon: Icon, children, tooltip, className }: SimpleSectionProps) => (
-  <div className={cn("p-4 border border-white/10 rounded-lg space-y-4", className)}>
-    <div className="flex items-center justify-between mb-3">
-      <div className="flex items-center gap-3">
-        <div className="p-2 rounded-lg bg-blue-500/20 text-white border border-blue-400/30">
-          <Icon className="h-5 w-5" />
-        </div>
-        <h3 className="text-lg font-semibold text-white">{title}</h3>
-      </div>
-      {tooltip && (
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Info className="h-4 w-4 text-white/60 hover:text-white" />
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>{tooltip}</p>
-          </TooltipContent>
-        </Tooltip>
-      )}
-    </div>
-    {children}
-  </div>
-));
-SimpleSection.displayName = "SimpleSection";
-
 const HistoryAndExamTab = memo(() => {
   const { control, formState, watch } = useFormContext<ClinicalDetailFormData>();
   const patientHistoryError = formState.errors?.patientHistory;
   const physicalExamError = formState.errors?.physicalExam;
 
-  // Watch values for StatusFieldCard
   const patientHistoryValue = watch("patientHistory");
   const physicalExamValue = watch("physicalExam");
 
@@ -92,7 +59,7 @@ const HistoryAndExamTab = memo(() => {
       >
         <FormField
           control={control}
-          name={"patientHistory" as Path<ClinicalDetailFormData>}
+          name={FORM_FIELDS.PATIENT_HISTORY as Path<ClinicalDetailFormData>}
           render={({ field: { onChange, onBlur, value, name, ref } }) => (
             <FormItem>
               <FormControl>
@@ -121,7 +88,7 @@ const HistoryAndExamTab = memo(() => {
       >
         <FormField
           control={control}
-          name={"physicalExam" as Path<ClinicalDetailFormData>}
+          name={FORM_FIELDS.PHYSICAL_EXAM as Path<ClinicalDetailFormData>}
           render={({ field: { onChange, onBlur, value, name, ref } }) => (
             <FormItem>
               <FormControl>
@@ -147,52 +114,84 @@ HistoryAndExamTab.displayName = "HistoryAndExamTab";
 
 
 const SystemsReviewTab = memo(() => {
-  const { setValue, control } = useFormContext<ClinicalDetailFormData>();
+  const { setValue, control, watch, formState } = useFormContext<ClinicalDetailFormData>();
   
+  const systemSymptomsValue = watch(FORM_FIELDS.SYSTEM_SYMPTOMS as Path<ClinicalDetailFormData>);
+  const vitalsValue = watch(FORM_FIELDS.VITALS as Path<ClinicalDetailFormData>);
+
+  const systemSymptomsError = formState.errors[FORM_FIELDS.SYSTEM_SYMPTOMS as keyof ClinicalDetailFormData['errors']];
+  const vitalsError = formState.errors[FORM_FIELDS.VITALS as keyof ClinicalDetailFormData['errors']];
+
   return (
     <TabsContent value="systems" className="space-y-6">
-      <SimpleSection icon={BrainIcon} title="Review of Systems">
+      <StatusFieldCard
+        icon={BrainIcon}
+        title="Review of Systems"
+        fieldValue={systemSymptomsValue}
+        hasError={!!systemSymptomsError}
+      >
         <SystemReviewChecklist onSystemSymptomsChange={(symptoms) => setValue(FORM_FIELDS.SYSTEM_SYMPTOMS as Path<ClinicalDetailFormData>, symptoms, {shouldValidate: true})} />
         <Controller 
           name={FORM_FIELDS.SYSTEM_SYMPTOMS as Path<ClinicalDetailFormData>} 
           control={control} 
           render={({ fieldState }) => fieldState.error ? <FormMessage className="mt-2">{fieldState.error.message}</FormMessage> : null} 
         />
-      </SimpleSection>
+      </StatusFieldCard>
       
-      <SimpleSection icon={HeartIcon} title="Vital Signs & Physiological Parameters">
+      <StatusFieldCard
+        icon={HeartIcon}
+        title="Vital Signs & Physiological Parameters"
+        fieldValue={vitalsValue}
+        hasError={!!vitalsError}
+      >
         <VitalsCard onVitalsChange={(v) => setValue(FORM_FIELDS.VITALS as Path<ClinicalDetailFormData>, v, {shouldValidate: true})} />
         <Controller 
           name={FORM_FIELDS.VITALS as Path<ClinicalDetailFormData>} 
           control={control} 
           render={({ fieldState }) => fieldState.error ? <FormMessage className="mt-2">{fieldState.error.message}</FormMessage> : null} 
         />
-      </SimpleSection>
+      </StatusFieldCard>
     </TabsContent>
   );
 });
 SystemsReviewTab.displayName = "SystemsReviewTab";
 
 const DiagnosticsTab = memo(() => {
-  const { setValue, control } = useFormContext<ClinicalDetailFormData>();
+  const { setValue, control, watch, formState } = useFormContext<ClinicalDetailFormData>();
+
+  const labResultsValue = watch(FORM_FIELDS.LAB_RESULTS as Path<ClinicalDetailFormData>);
+  const radiologyStudiesValue = watch(FORM_FIELDS.RADIOLOGY_STUDIES as Path<ClinicalDetailFormData>);
+
+  const labResultsError = formState.errors[FORM_FIELDS.LAB_RESULTS as keyof ClinicalDetailFormData['errors']];
+  const radiologyStudiesError = formState.errors[FORM_FIELDS.RADIOLOGY_STUDIES as keyof ClinicalDetailFormData['errors']];
 
   const setLabResults = useCallback((labs: LabTest[]) =>
-    setValue(FORM_FIELDS.LAB_RESULTS, labs, { shouldValidate: true }), [setValue]);
+    setValue(FORM_FIELDS.LAB_RESULTS as Path<ClinicalDetailFormData>, labs, { shouldValidate: true }), [setValue]);
 
   const setRadiology = useCallback((studies: RadiologyStudy[]) =>
-    setValue(FORM_FIELDS.RADIOLOGY_STUDIES, studies, { shouldValidate: true }), [setValue]);
+    setValue(FORM_FIELDS.RADIOLOGY_STUDIES as Path<ClinicalDetailFormData>, studies, { shouldValidate: true }), [setValue]);
 
   return (
     <TabsContent value="diagnostics" className="space-y-6">
       <div className="grid gap-6 lg:grid-cols-2">
-        <SimpleSection icon={MicroscopeIcon} title="Laboratory Studies">
+        <StatusFieldCard
+          icon={MicroscopeIcon}
+          title="Laboratory Studies"
+          fieldValue={labResultsValue}
+          hasError={!!labResultsError}
+        >
           <LabResultsCard onLabResultsChange={setLabResults} />
            <Controller name={FORM_FIELDS.LAB_RESULTS as Path<ClinicalDetailFormData>} control={control} render={({ fieldState }) => fieldState.error ? <FormMessage className="mt-2">{fieldState.error.message}</FormMessage> : null} />
-        </SimpleSection>
-        <SimpleSection icon={ScanIcon} title="Imaging Studies">
+        </StatusFieldCard>
+        <StatusFieldCard
+          icon={ScanIcon}
+          title="Imaging Studies"
+          fieldValue={radiologyStudiesValue}
+          hasError={!!radiologyStudiesError}
+        >
           <RadiologyCard onRadiologyChange={setRadiology} />
           <Controller name={FORM_FIELDS.RADIOLOGY_STUDIES as Path<ClinicalDetailFormData>} control={control} render={({ fieldState }) => fieldState.error ? <FormMessage className="mt-2">{fieldState.error.message}</FormMessage> : null} />
-        </SimpleSection>
+        </StatusFieldCard>
       </div>
     </TabsContent>
   );
