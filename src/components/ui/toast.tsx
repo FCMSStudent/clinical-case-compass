@@ -1,9 +1,12 @@
+
 import * as React from "react"
 import * as ToastPrimitives from "@radix-ui/react-toast"
 import { cva, type VariantProps } from "class-variance-authority"
 import { X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { glassmorphicOverlay } from "@/lib/ui-styles"
+import { focusRing } from "@/lib/ui-styles"
 
 const ToastProvider = ToastPrimitives.Provider
 
@@ -60,7 +63,8 @@ const ToastAction = React.forwardRef<
   <ToastPrimitives.Action
     ref={ref}
     className={cn(
-      "inline-flex h-8 shrink-0 items-center justify-center rounded-xl border border-white/20 bg-white/10 px-3 text-sm font-medium text-white ring-offset-background transition-colors hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 backdrop-blur-sm",
+      "inline-flex h-8 shrink-0 items-center justify-center rounded-xl border border-white/20 bg-white/10 px-3 text-sm font-medium text-white ring-offset-background transition-colors hover:bg-white/20 focus:outline-none disabled:pointer-events-none disabled:opacity-50 backdrop-blur-sm",
+      focusRing,
       className
     )}
     {...props}

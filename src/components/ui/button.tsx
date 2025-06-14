@@ -5,20 +5,20 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { Loader2 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { buttonBase, glassmorphicBg, glassmorphicBgElevated } from "@/lib/ui-styles"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  buttonBase,
   {
     variants: {
       variant: {
-        primary: "bg-white/20 text-white backdrop-blur-sm border border-white/20",
-        default: "bg-white/20 text-white backdrop-blur-sm border border-white/20",
+        primary: `${glassmorphicBgElevated} text-white`,
+        default: `${glassmorphicBgElevated} text-white`,
         destructive:
           "bg-red-500/20 text-red-300 backdrop-blur-sm border border-red-400/30",
-        outline:
-          "border border-white/20 bg-white/10 text-white backdrop-blur-sm",
+        outline: `${glassmorphicBg} text-white`,
         secondary:
-          "bg-white/10 text-white/90 backdrop-blur-sm border border-white/20",
+          `${glassmorphicBg} text-white/90`,
         ghost: "text-white/90 backdrop-blur-sm",
         success: "bg-emerald-600 text-white",
         link: "text-white underline-offset-4",
