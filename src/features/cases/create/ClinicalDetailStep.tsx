@@ -127,17 +127,25 @@ const SystemsReviewTab = memo(() => {
     });
   }, [setValue]);
 
+  // Ensure systemSymptomsValue is properly typed
+  const typedSystemSymptomsValue = useMemo(() => {
+    if (systemSymptomsValue && typeof systemSymptomsValue === 'object' && !Array.isArray(systemSymptomsValue)) {
+      return systemSymptomsValue as Record<string, string[]>;
+    }
+    return {};
+  }, [systemSymptomsValue]);
+
   return (
     <TabsContent value="systems" className="space-y-6">
       <StatusFieldCard
         icon={BrainIcon}
         title="Review of Systems"
-        fieldValue={systemSymptomsValue}
+        fieldValue={typedSystemSymptomsValue}
         hasError={!!formState.errors[FORM_FIELDS.SYSTEM_SYMPTOMS]}
       >
         <SystemReviewChecklist 
           onSystemSymptomsChange={handleSystemSymptomsChange}
-          initialSystemSymptoms={systemSymptomsValue || {}}
+          initialSystemSymptoms={typedSystemSymptomsValue}
         />
         <Controller 
           name={FORM_FIELDS.SYSTEM_SYMPTOMS as Path<ClinicalDetailFormData>} 

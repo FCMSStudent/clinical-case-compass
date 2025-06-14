@@ -24,7 +24,7 @@ import { toast } from "sonner";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { InteractiveVitalsCard } from "@/features/cases/InteractiveVitalsCard";
 import { UrinaryReviewCard } from "@/features/cases/UrinaryReviewCard";
-import { SymptomChecklist } from "@/features/cases/SymptomChecklist";
+import { SystemReviewChecklist } from "@/features/cases/SystemReviewChecklist";
 import { LabResultsCard } from "@/features/cases/LabResultsCard";
 import { RadiologyCard } from "@/features/cases/RadiologyCard";
 import { getCaseById } from "@/data/mock-data";
@@ -459,9 +459,9 @@ const CaseEdit = () => {
                       <h3 className="font-medium text-sm mb-2 text-white">
                         Other Symptoms
                       </h3>
-                      <SymptomChecklist
-                        onSelectionChange={handleSymptomSelectionChange}
-                        initialSelections={systemSymptoms}
+                      <SystemReviewChecklist
+                        onSystemSymptomsChange={handleSymptomSelectionChange}
+                        initialSystemSymptoms={systemSymptoms}
                       />
                     </div>
                   </div>
