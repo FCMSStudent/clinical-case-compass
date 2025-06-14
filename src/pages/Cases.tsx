@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -16,16 +17,12 @@ import { CaseListItem } from "@/features/cases/CaseListItem";
 import { PageHeader } from "@/components/ui/page-header";
 import { useErrorHandler } from "@/hooks/use-error-handler";
 import { CaseGridSkeleton, CaseListSkeleton } from "@/features/cases/CaseCardSkeleton";
-import { useTheme } from "@/app/ThemeContext";
 
 const Cases = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [selectedCases, setSelectedCases] = useState<Set<string>>(new Set());
   const [isMultiSelectMode, setIsMultiSelectMode] = useState(false);
-
-  // Theme management
-  const { currentTheme } = useTheme();
 
   const queryClient = useQueryClient();
   const { handleError } = useErrorHandler();

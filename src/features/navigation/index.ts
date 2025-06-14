@@ -1,4 +1,4 @@
 
-export { default as Sidebar, SidebarProvider, SidebarTrigger } from './components/Sidebar';
-export { useSidebar } from './components/SidebarContext';
-export { AppLayout } from './components/AppLayout';
+export { EnhancedAppLayout } from './components/EnhancedAppLayout';
+export { default as EnhancedNavbar } from '../components/navigation/EnhancedNavbar';
+export { default as Breadcrumbs } from '../components/navigation/Breadcrumbs';
