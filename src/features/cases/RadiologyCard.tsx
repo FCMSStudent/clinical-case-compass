@@ -184,6 +184,7 @@ export const RadiologyCard: React.FC<RadiologyCardProps> = ({
             </div>
           </div>
           <Button
+            type="button"
             variant="ghost"
             size="sm"
             className="h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive"
@@ -220,6 +221,7 @@ export const RadiologyCard: React.FC<RadiologyCardProps> = ({
             Radiology Exams
           </h3>
           <Button
+            type="button"
             variant="outline"
             size="sm"
             className="h-8 bg-white/10 border-white/20 hover:bg-white/20 text-white"
@@ -338,6 +340,7 @@ export const RadiologyCard: React.FC<RadiologyCardProps> = ({
 
                 <div className="flex gap-2 justify-end">
                   <Button
+                    type="button"
                     variant="outline"
                     size="sm"
                     className="bg-white/10 border-white/20 hover:bg-white/20 text-white"
@@ -346,6 +349,7 @@ export const RadiologyCard: React.FC<RadiologyCardProps> = ({
                     Cancel
                   </Button>
                   <Button
+                    type="button"
                     variant="default"
                     size="sm"
                     className="bg-blue-500/80 hover:bg-blue-600 text-white"

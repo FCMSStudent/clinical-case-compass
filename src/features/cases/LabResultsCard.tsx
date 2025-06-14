@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -154,6 +155,7 @@ export function LabResultsCard({ onLabResultsChange, initialResults = [] }: LabR
           </div>
         </div>
         <Button
+          type="button" // Added type="button"
           variant="ghost"
           size="sm"
           className="h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive"
@@ -175,6 +177,7 @@ export function LabResultsCard({ onLabResultsChange, initialResults = [] }: LabR
             Laboratory Studies
           </h3>
           <Button
+            type="button" // Added type="button"
             variant="outline"
             size="sm"
             className="h-8 bg-white/10 border-white/20 hover:bg-white/20 text-white"
@@ -244,6 +247,7 @@ export function LabResultsCard({ onLabResultsChange, initialResults = [] }: LabR
                 </div>
                 <div className="flex gap-2 justify-end">
                   <Button
+                    type="button" // Added type="button"
                     variant="outline"
                     size="sm"
                     className="bg-white/10 border-white/20 hover:bg-white/20 text-white"
@@ -252,6 +256,7 @@ export function LabResultsCard({ onLabResultsChange, initialResults = [] }: LabR
                     Cancel
                   </Button>
                   <Button
+                    type="button" // Added type="button"
                     variant="default"
                     size="sm"
                     className="bg-blue-500/80 hover:bg-blue-600 text-white"
