@@ -122,7 +122,7 @@ const EnhancedNavbar: React.FC = () => {
   };
 
   return (
-    <nav className="w-full bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-xl">
+    <nav className="w-full bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl">
       <div className="px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -185,7 +185,7 @@ const EnhancedNavbar: React.FC = () => {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="absolute top-full left-0 right-0 mt-2 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 shadow-xl z-50"
+                  className="absolute top-full left-0 right-0 mt-2 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 z-50"
                 >
                   {searchResults.length > 0 ? (
                     <div className="py-2">
@@ -241,7 +241,7 @@ const EnhancedNavbar: React.FC = () => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
-                    className="absolute right-0 mt-2 w-48 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 shadow-xl py-2"
+                    className="absolute right-0 mt-2 w-48 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 py-2"
                   >
                     <button
                       className="w-full px-4 py-2 text-left text-white hover:bg-white/20 flex items-center space-x-2 transition-colors"
