@@ -9,7 +9,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -20,33 +19,27 @@ import {
   Microscope as MicroscopeIcon,
   Scan as ScanIcon,
   Stethoscope as StethoscopeIcon,
-  User as UserIcon,
   AlertCircle,
   Info,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { LabTest, RadiologyStudy } from "@/types/case";
 import { clinicalDetailStepSchema, type ClinicalDetailFormData, TAB_ITEMS, type TabValue } from "./ClinicalDetailConfig";
-import { InteractiveBodyDiagram, type BodyPartSelection, type ViewType } from "@/features/cases/InteractiveBodyDiagram";
-import { BODY_PARTS as bodyPartsData, type BodyPartId } from "@/features/cases/bodyParts.data";
 import { SystemReviewChecklist } from "@/features/cases/SystemReviewChecklist";
 import { VitalsCard } from "@/features/cases/VitalsCard";
 import { LabResultsCard } from "@/features/cases/LabResultsCard";
 import { RadiologyCard } from "@/features/cases/RadiologyCard";
 import { StepHeader, StatusFieldCard } from "./components";
 
-// FORM_FIELDS constant remains the same
 const FORM_FIELDS = {
   PATIENT_HISTORY: "patientHistory",
   PHYSICAL_EXAM: "physicalExam",
-  SELECTED_BODY_PARTS: "selectedBodyParts",
   SYSTEM_SYMPTOMS: "systemSymptoms",
   VITALS: "vitals",
   LAB_RESULTS: "labResults",
   RADIOLOGY_STUDIES: "radiologyStudies",
 } as const;
 
-// Simplified Section Wrapper
 interface SimpleSectionProps {
   title: string;
   icon: React.ElementType;
@@ -79,8 +72,6 @@ const SimpleSection = memo(({ title, icon: Icon, children, tooltip, className }:
 ));
 SimpleSection.displayName = "SimpleSection";
 
-
-// Tab components using SimpleSection and StatusFieldCard or direct FormFields
 const HistoryAndExamTab = memo(() => {
   const { control, formState, watch } = useFormContext<ClinicalDetailFormData>();
   const patientHistoryError = formState.errors?.patientHistory;
@@ -156,34 +147,31 @@ HistoryAndExamTab.displayName = "HistoryAndExamTab";
 
 
 const SystemsReviewTab = memo(() => {
-  const { setValue, watch, control } = useFormContext<ClinicalDetailFormData>();
+  const { setValue, control } = useFormContext<ClinicalDetailFormData>();
   
-  // Read selected part ID strings from the form (e.g., ["head-anterior", "chest-posterior"])
-  const selectedPartIdStringsFromForm: string[] = watch(FORM_FIELDS.SELECTED_BODY_PARTS as Path<ClinicalDetailFormData>) || [];
+  const selectedPartIdStringsFromForm: string[] = [];
 
-  // Convert ID strings to full BodyPartSelection objects for UI and InteractiveBodyDiagram
-  const selectedBodyPartsForUI: BodyPartSelection[] = useMemo(() => {
+  const selectedBodyPartsForUI = useMemo(() => {
     return selectedPartIdStringsFromForm.map(idString => {
       const parts = idString.split('-');
       if (parts.length < 2) {
         console.warn(`Invalid idString format in form: ${idString}`);
         return null;
       }
-      // Handles IDs that might contain hyphens, e.g., "left-arm-anterior"
       const id = parts.slice(0, -1).join('-');
       const view = parts[parts.length - 1];
       
-      const partData = bodyPartsData[id as BodyPartId];
+      const partData = {};
       if (partData && (view === "anterior" || view === "posterior" || view === "lateral")) {
-        return { ...partData, view: view as ViewType };
+        return { ...partData, view: view };
       }
       console.warn(`Could not reconstruct BodyPartSelection for idString: ${idString}`);
       return null;
-    }).filter(Boolean) as BodyPartSelection[]; // Filter out any nulls from failed conversions
+    }).filter(Boolean)
   }, [selectedPartIdStringsFromForm]);
 
-  const handleBodyPartSelected = useCallback((newSelection: BodyPartSelection) => {
-    const currentSelectedPartIdStrings: string[] = watch(FORM_FIELDS.SELECTED_BODY_PARTS as Path<ClinicalDetailFormData>) || [];
+  const handleBodyPartSelected = useCallback((newSelection) => {
+    const currentSelectedPartIdStrings: string[] = [];
     
     const newSelectionIdString = `${newSelection.id}-${newSelection.view}`;
 
@@ -191,27 +179,24 @@ const SystemsReviewTab = memo(() => {
     
     let updatedPartIdStringsArray: string[];
     if (existingIndex > -1) {
-      // Part ID string already exists, remove it
       updatedPartIdStringsArray = currentSelectedPartIdStrings.filter((_, index) => index !== existingIndex);
     } else {
-      // Part ID string is new, add it
       updatedPartIdStringsArray = [...currentSelectedPartIdStrings, newSelectionIdString];
     }
-    // Store the array of ID strings back into the form
-    setValue(FORM_FIELDS.SELECTED_BODY_PARTS as Path<ClinicalDetailFormData>, updatedPartIdStringsArray, { shouldValidate: true }); 
-  }, [watch, setValue]);
+    setValue(FORM_FIELDS.SYSTEM_SYMPTOMS as Path<ClinicalDetailFormData>, updatedPartIdStringsArray, { shouldValidate: true }); 
+  }, [setValue]);
 
   const PartBadges = useMemo(() => (
     selectedBodyPartsForUI.length > 0 && (
       <div className="mt-3 flex flex-wrap gap-1">
-        {selectedBodyPartsForUI.map((part: BodyPartSelection) => ( 
-          <Badge 
+        {selectedBodyPartsForUI.map((part) => ( 
+          <div 
             key={`${part.id}-${part.view}`} 
             variant="secondary" 
             className="text-xs bg-blue-100 text-blue-800"
           >
             {part.name} <span className="text-blue-500/80 text-[10px]">({part.view.substring(0,3)})</span>
-          </Badge>
+          </div>
         ))}
       </div>
     )
@@ -219,30 +204,27 @@ const SystemsReviewTab = memo(() => {
 
   return (
     <TabsContent value="systems" className="space-y-6">
-      <div className="grid gap-6 lg:grid-cols-2">
-        <SimpleSection icon={BrainIcon} title="Review of Systems">
-          <SystemReviewChecklist onSystemSymptomsChange={(symptoms) => setValue(FORM_FIELDS.SYSTEM_SYMPTOMS as Path<ClinicalDetailFormData>, symptoms, {shouldValidate: true})} />
-           <Controller name={FORM_FIELDS.SYSTEM_SYMPTOMS as Path<ClinicalDetailFormData>} control={control} render={({ fieldState }) => fieldState.error ? <FormMessage className="mt-2">{fieldState.error.message}</FormMessage> : null} />
-        </SimpleSection>
-        <SimpleSection icon={UserIcon} title="Affected Body Areas">
-          <InteractiveBodyDiagram 
-            onBodyPartSelected={handleBodyPartSelected}
-            initialSelectedParts={selectedBodyPartsForUI} 
-          />
-          <p className="mt-3 text-sm text-white/70">Click on body parts to mark affected areas.</p>
-          {PartBadges}
-          <Controller name={FORM_FIELDS.SELECTED_BODY_PARTS as Path<ClinicalDetailFormData>} control={control} render={({ fieldState }) => fieldState.error ? <FormMessage className="mt-2">{fieldState.error.message}</FormMessage> : null} />
-        </SimpleSection>
-      </div>
+      <SimpleSection icon={BrainIcon} title="Review of Systems">
+        <SystemReviewChecklist onSystemSymptomsChange={(symptoms) => setValue(FORM_FIELDS.SYSTEM_SYMPTOMS as Path<ClinicalDetailFormData>, symptoms, {shouldValidate: true})} />
+        <Controller 
+          name={FORM_FIELDS.SYSTEM_SYMPTOMS as Path<ClinicalDetailFormData>} 
+          control={control} 
+          render={({ fieldState }) => fieldState.error ? <FormMessage className="mt-2">{fieldState.error.message}</FormMessage> : null} 
+        />
+      </SimpleSection>
+      
       <SimpleSection icon={HeartIcon} title="Vital Signs & Physiological Parameters">
         <VitalsCard onVitalsChange={(v) => setValue(FORM_FIELDS.VITALS as Path<ClinicalDetailFormData>, v, {shouldValidate: true})} />
-        <Controller name={FORM_FIELDS.VITALS as Path<ClinicalDetailFormData>} control={control} render={({ fieldState }) => fieldState.error ? <FormMessage className="mt-2">{fieldState.error.message}</FormMessage> : null} />
+        <Controller 
+          name={FORM_FIELDS.VITALS as Path<ClinicalDetailFormData>} 
+          control={control} 
+          render={({ fieldState }) => fieldState.error ? <FormMessage className="mt-2">{fieldState.error.message}</FormMessage> : null} 
+        />
       </SimpleSection>
     </TabsContent>
   );
 });
 SystemsReviewTab.displayName = "SystemsReviewTab";
-
 
 const DiagnosticsTab = memo(() => {
   const { setValue, control } = useFormContext<ClinicalDetailFormData>();
@@ -270,7 +252,6 @@ const DiagnosticsTab = memo(() => {
 });
 DiagnosticsTab.displayName = "DiagnosticsTab";
 
-// Main component
 export const ClinicalDetailStep = memo(({ className }: { className?: string }) => {
   const { formState: { errors: RHFerrors } } = useFormContext<ClinicalDetailFormData>();
   const [currentTab, setCurrentTab] = React.useState<TabValue>(TAB_ITEMS[0].value); 

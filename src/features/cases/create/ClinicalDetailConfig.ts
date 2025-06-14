@@ -7,7 +7,6 @@ import {
 
 export const clinicalDetailStepSchema = z.object({
   patientHistory: z.string().optional(),
-  selectedBodyParts: z.array(z.string()).optional(),
   systemSymptoms: z.record(z.array(z.string())).optional(),
   vitals: z.record(z.string()).optional(),
   physicalExam: z.string().optional(),
@@ -46,4 +45,3 @@ export const TAB_ITEMS = [
   },
 ] as const;
 export type TabValue = (typeof TAB_ITEMS)[number]["value"];
-
