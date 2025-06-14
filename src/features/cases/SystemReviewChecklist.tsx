@@ -15,7 +15,7 @@ import {
   History,
   X,
   Heart,
-  Lungs,
+  Activity,
   Brain,
   Eye,
   Ear,
@@ -36,7 +36,7 @@ interface SystemReviewChecklistProps {
 
 const systemIcons: Record<string, React.ReactNode> = {
   "Cardiovascular": <Heart className="h-4 w-4" />,
-  "Respiratory": <Lungs className="h-4 w-4" />,
+  "Respiratory": <Activity className="h-4 w-4" />,
   "Neurological": <Brain className="h-4 w-4" />,
   "Gastrointestinal": <Thermometer className="h-4 w-4" />,
   "Genitourinary": <Droplet className="h-4 w-4" />,

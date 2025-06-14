@@ -1,9 +1,10 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, X, Search, Flask, Microscope, Activity, Zap } from "lucide-react";
+import { Plus, X, Search, TestTube, Microscope, Activity, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 
@@ -111,13 +112,13 @@ interface SimpleLabsProps {
 
 const categoryIcons: Record<string, React.ReactNode> = {
   "Complete Blood Count (CBC)": <Activity className="h-4 w-4" />,
-  "Comprehensive Metabolic Panel (CMP)": <Flask className="h-4 w-4" />,
+  "Comprehensive Metabolic Panel (CMP)": <TestTube className="h-4 w-4" />,
   "Cardiac Markers": <Activity className="h-4 w-4" />,
   "Coagulation Studies": <Microscope className="h-4 w-4" />,
   "Inflammatory Markers": <Zap className="h-4 w-4" />,
-  "Thyroid Function": <Flask className="h-4 w-4" />,
+  "Thyroid Function": <TestTube className="h-4 w-4" />,
   "Lipid Panel": <Activity className="h-4 w-4" />,
-  "Diabetes Markers": <Flask className="h-4 w-4" />,
+  "Diabetes Markers": <TestTube className="h-4 w-4" />,
   "Tumor Markers": <Microscope className="h-4 w-4" />,
   "Urinalysis": <Activity className="h-4 w-4" />,
 };

@@ -177,14 +177,14 @@ export function SimpleImaging({ onImagingChange }: SimpleImagingProps) {
     if (!categoryStudies) return [];
     
     return searchTerm
-      ? categoryStudies.filter((study: string) => study.toLowerCase().includes(searchTerm.toLowerCase()))
+      ? categoryStudies.filter((study) => study.toLowerCase().includes(searchTerm.toLowerCase()))
       : categoryStudies;
   };
 
   const groupedStudies = studies.reduce((acc, study) => {
     // Find which category this study belongs to
     const category = Object.entries(IMAGING_CATEGORIES).find(([_, categoryStudies]) => 
-      categoryStudies.includes(study.type)
+      (categoryStudies as readonly string[]).includes(study.type)
     )?.[0] || "Other";
     
     if (!acc[category]) acc[category] = [];
