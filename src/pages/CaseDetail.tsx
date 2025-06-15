@@ -1,3 +1,4 @@
+
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import { getCaseById } from "@/data/mock-data";
@@ -35,40 +36,39 @@ import { toast } from "sonner";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { MedicalCase } from "@/types/case";
 import { InteractiveVitalsCard } from "@/features/cases/InteractiveVitalsCard";
+import { useSupabaseCases } from "@/hooks/use-supabase-cases";
 
 const CaseDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [storedCases, setStoredCases] = useLocalStorage<MedicalCase[]>("medical-cases", []);
-  const [medicalCase, setMedicalCase] = useState<MedicalCase | undefined>(undefined);
   
-  // Effect to find the case from both localStorage and mock data
-  useEffect(() => {
-    if (!id) return;
-    
-    // First check localStorage
-    const storedCase = storedCases?.find(c => c.id === id);
-    if (storedCase) {
-      console.log("Found case in localStorage:", storedCase);
-      setMedicalCase(storedCase);
-      return;
-    }
-    
-    // If not found in localStorage, check mock data
-    const mockCase = getCaseById(id);
-    if (mockCase) {
-      console.log("Found case in mock data:", mockCase);
-      setMedicalCase(mockCase);
-      return;
-    }
-    
-    // Case not found in either source
-    console.log("Case not found with ID:", id);
-    setMedicalCase(undefined);
-  }, [id, storedCases]);
+  // Use Supabase hook to fetch case data
+  const { useGetCaseQuery } = useSupabaseCases();
+  const { data: supabaseCase, isLoading, error } = useGetCaseQuery(id || "");
+  
+  // Determine which case to display (Supabase first, then localStorage, then mock data)
+  const medicalCase = supabaseCase || 
+    storedCases?.find(c => c.id === id) || 
+    (id ? getCaseById(id) : undefined);
 
-  if (!medicalCase) {
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-blue-700 dark:from-blue-900 dark:via-blue-800 dark:to-blue-900 relative flex flex-col items-center justify-center">
+        <div className="absolute inset-0">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/3 rounded-full blur-3xl"></div>
+        </div>
+        <div className="relative z-10 flex flex-col items-center justify-center min-h-[50vh]">
+          <h2 className="text-2xl font-semibold mb-4 text-white">Loading case...</h2>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !medicalCase) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-blue-700 dark:from-blue-900 dark:via-blue-800 dark:to-blue-900 relative flex flex-col items-center justify-center">
         <div className="absolute inset-0">
