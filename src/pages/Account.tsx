@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useAuth } from "@/app/AuthContext";
 import { useLocalStorage } from "@/hooks/use-local-storage";
@@ -102,7 +103,7 @@ const Account = () => {
   if (!user) return null;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <PageHeader
         title="Account"
         description="Manage your profile, settings, and preferences"
@@ -111,92 +112,151 @@ const Account = () => {
 
       <BentoContainer>
         <BentoCard layout="hero" className="col-span-full lg:col-span-4" size="large" title="Profile" icon={<User />}>
-          <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
-            <Avatar className="h-24 w-24">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6">
+            <Avatar className="h-20 w-20 lg:h-24 lg:w-24 flex-shrink-0">
               <AvatarImage src={user.user_metadata?.avatar_url} alt={displayName || "User avatar"} />
-              <AvatarFallback className="bg-blue-500/20 text-2xl">{displayName ? getInitials(displayName) : "U"}</AvatarFallback>
+              <AvatarFallback className="bg-blue-500/20 text-xl">{displayName ? getInitials(displayName) : "U"}</AvatarFallback>
             </Avatar>
-            <div className="space-y-3 flex-1 text-center sm:text-left">
+            
+            <div className="flex-1 w-full space-y-4">
               {isEditing ? (
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full max-w-md">
-                   <Label htmlFor="displayName" className="sr-only">Display Name</Label>
-                   <Input id="displayName" value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder="Enter your full name" className="flex-grow" />
-                   <div className="flex items-center gap-2 self-end sm:self-center">
-                     <Button size="sm" onClick={handleSaveProfile} loading={isLoading} variant="success">
-                       {!isLoading && <Save className="h-4 w-4" />}
-                       <span>Save</span>
-                     </Button>
-                     <Button size="sm" variant="ghost" onClick={handleCancelEdit} disabled={isLoading}>
-                       <X className="h-4 w-4" />
-                       <span>Cancel</span>
-                     </Button>
-                   </div>
+                <div className="space-y-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="displayName">Display Name</Label>
+                    <Input 
+                      id="displayName" 
+                      value={displayName} 
+                      onChange={(e) => setDisplayName(e.target.value)} 
+                      placeholder="Enter your full name" 
+                      className="w-full"
+                    />
+                  </div>
+                  <div className="flex gap-2">
+                    <Button size="sm" onClick={handleSaveProfile} loading={isLoading} variant="success">
+                      {!isLoading && <Save className="h-4 w-4" />}
+                      Save
+                    </Button>
+                    <Button size="sm" variant="ghost" onClick={handleCancelEdit} disabled={isLoading}>
+                      <X className="h-4 w-4" />
+                      Cancel
+                    </Button>
+                  </div>
                 </div>
               ) : (
-                <div className="flex items-center justify-center sm:justify-start gap-2">
-                  <h2 className="text-2xl font-semibold">{displayName || "No name set"}</h2>
-                  <Button size="icon" variant="ghost" onClick={() => setIsEditing(true)}><Edit3 className="h-4 w-4" /></Button>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <h2 className="text-2xl font-semibold text-white">{displayName || "No name set"}</h2>
+                    <Button size="icon" variant="ghost" onClick={() => setIsEditing(true)}>
+                      <Edit3 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <div className="flex items-center gap-2 text-white/70">
+                    <Mail className="h-4 w-4" />
+                    <span>{user.email}</span>
+                  </div>
                 </div>
               )}
-              <div className="flex items-center justify-center sm:justify-start gap-2 text-white/70">
-                <Mail className="h-4 w-4" />
-                <span>{user.email}</span>
-              </div>
             </div>
           </div>
         </BentoCard>
 
         <BentoCard layout="tall" className="col-span-full lg:col-span-2" size="large" title="Account Details" icon={<Shield />}>
-            <div className="space-y-4 text-sm">
-                <div className="space-y-1">
-                    <Label className="text-white/70">User ID</Label>
-                    <p className="font-mono bg-white/5 p-2 rounded-lg break-all text-xs">{user.id}</p>
-                </div>
-                 <div className="space-y-1">
-                    <Label className="text-white/70">Account Created</Label>
-                    <p>{formatDate(user.created_at)}</p>
-                </div>
-                 <div className="space-y-1">
-                    <Label className="text-white/70">Email Status</Label>
-                    <Badge variant={user.email_confirmed_at ? "success" : "secondary"}>{user.email_confirmed_at ? "Verified" : "Unverified"}</Badge>
-                </div>
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <Label className="text-white/70 text-xs uppercase tracking-wide">User ID</Label>
+              <p className="font-mono bg-white/5 p-3 rounded-lg text-xs break-all border border-white/10">{user.id}</p>
             </div>
+            
+            <div className="space-y-2">
+              <Label className="text-white/70 text-xs uppercase tracking-wide">Account Created</Label>
+              <div className="flex items-center gap-2">
+                <Calendar className="h-4 w-4 text-white/50" />
+                <p className="text-sm">{formatDate(user.created_at)}</p>
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <Label className="text-white/70 text-xs uppercase tracking-wide">Email Status</Label>
+              <Badge variant={user.email_confirmed_at ? "success" : "secondary"}>
+                {user.email_confirmed_at ? "Verified" : "Unverified"}
+              </Badge>
+            </div>
+          </div>
         </BentoCard>
 
         <BentoCard layout="medium" className="col-span-full lg:col-span-3" title="Preferences" icon={<SettingsIcon />}>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between"><Label htmlFor="notifications">Push Notifications</Label><Switch id="notifications" checked={notifications} onCheckedChange={setNotifications} /></div>
-            <div className="flex items-center justify-between"><Label htmlFor="dark-mode">Dark Mode</Label><Switch id="dark-mode" checked={darkMode} onCheckedChange={setDarkMode} /></div>
-            <div className="flex items-center justify-between"><Label htmlFor="data-sync">Data Synchronization</Label><Switch id="data-sync" checked={dataSync} onCheckedChange={setDataSync} /></div>
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div className="space-y-1">
+                <Label htmlFor="notifications" className="text-white">Push Notifications</Label>
+                <p className="text-sm text-white/60">Receive updates about your cases</p>
+              </div>
+              <Switch id="notifications" checked={notifications} onCheckedChange={setNotifications} />
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <div className="space-y-1">
+                <Label htmlFor="dark-mode" className="text-white">Dark Mode</Label>
+                <p className="text-sm text-white/60">Toggle dark theme appearance</p>
+              </div>
+              <Switch id="dark-mode" checked={darkMode} onCheckedChange={setDarkMode} />
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <div className="space-y-1">
+                <Label htmlFor="data-sync" className="text-white">Data Synchronization</Label>
+                <p className="text-sm text-white/60">Sync data across devices</p>
+              </div>
+              <Switch id="data-sync" checked={dataSync} onCheckedChange={setDataSync} />
+            </div>
           </div>
         </BentoCard>
         
         <BentoCard layout="medium" className="col-span-full lg:col-span-3" title="Data Management" icon={<Database />}>
-           <div className="space-y-4">
-             <div className="flex items-center justify-between">
-                <p className="text-sm text-white/80">Export all your data to a JSON file.</p>
-                <Button variant="outline" size="sm" onClick={handleExportData}><Download className="h-4 w-4" />Export</Button>
-              </div>
-              <div className="border-t border-white/10 pt-4">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm text-white/80">Permanently delete all local data.</p>
-                  <Button variant="destructive" size="sm" onClick={handleClearData}><Trash2 className="h-4 w-4" />{showDeleteConfirm ? "Confirm" : "Clear Data"}</Button>
+          <div className="space-y-6">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="space-y-1">
+                  <h4 className="font-medium text-white">Export Data</h4>
+                  <p className="text-sm text-white/70">Download all your data as JSON</p>
                 </div>
-                 {showDeleteConfirm && (
-                  <Alert variant="destructive" className="mt-3"><AlertTriangle className="h-4 w-4" /><AlertDescription>This is irreversible. Click again to confirm.</AlertDescription></Alert>
-                )}
+                <Button variant="outline" size="sm" onClick={handleExportData}>
+                  <Download className="h-4 w-4" />
+                  Export
+                </Button>
               </div>
-           </div>
+            </div>
+            
+            <div className="border-t border-white/10 pt-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="space-y-1">
+                  <h4 className="font-medium text-white">Clear All Data</h4>
+                  <p className="text-sm text-white/70">Permanently delete all local data</p>
+                </div>
+                <Button variant="destructive" size="sm" onClick={handleClearData}>
+                  <Trash2 className="h-4 w-4" />
+                  {showDeleteConfirm ? "Confirm" : "Clear Data"}
+                </Button>
+              </div>
+              
+              {showDeleteConfirm && (
+                <Alert variant="destructive" className="mt-3">
+                  <AlertTriangle className="h-4 w-4" />
+                  <AlertDescription>This action is irreversible. Click "Confirm" again to proceed.</AlertDescription>
+                </Alert>
+              )}
+            </div>
+          </div>
         </BentoCard>
         
         <BentoCard variant="interactive" className="col-span-full" onClick={handleSignOut}>
-            <div className="flex items-center justify-between">
-                <div className="space-y-1">
-                    <h3 className="font-semibold text-white">Sign Out</h3>
-                    <p className="text-sm text-white/70">Sign out of your account on this device.</p>
-                </div>
-                <LogOut className="h-5 w-5 text-red-400" />
+          <div className="flex items-center justify-between p-2">
+            <div className="space-y-1">
+              <h3 className="font-semibold text-white">Sign Out</h3>
+              <p className="text-sm text-white/70">Sign out of your account on this device</p>
             </div>
+            <LogOut className="h-5 w-5 text-red-400 flex-shrink-0" />
+          </div>
         </BentoCard>
       </BentoContainer>
     </div>
