@@ -17,13 +17,13 @@ export const DiagnosticsCard: React.FC<DiagnosticsCardProps> = ({
 }) => {
   return (
     <BentoCard
-      layout="large"
+      layout="wide"
       variant="elevated"
       icon={<TestTube />}
       title="Diagnostic Studies"
     >
       <Tabs defaultValue="labs" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-2 mb-4">
           <TabsTrigger value="labs" className="flex items-center gap-2">
             <TestTube className="h-4 w-4" />
             Labs
@@ -34,11 +34,11 @@ export const DiagnosticsCard: React.FC<DiagnosticsCardProps> = ({
           </TabsTrigger>
         </TabsList>
         
-        <TabsContent value="labs" className="mt-4">
+        <TabsContent value="labs" className="mt-0">
           <SimpleLabs onLabChange={onLabChange} />
         </TabsContent>
         
-        <TabsContent value="imaging" className="mt-4">
+        <TabsContent value="imaging" className="mt-0">
           <SimpleImaging onImagingChange={onImagingChange} />
         </TabsContent>
       </Tabs>

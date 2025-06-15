@@ -14,13 +14,13 @@ interface PatientInfoCardProps {
 export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ medicalCase }) => {
   return (
     <BentoCard
-      layout="featured"
+      layout="hero"
       variant="featured"
       icon={<User />}
       title={medicalCase.patient.name}
       subtitle={`${medicalCase.patient.age} years old • ${medicalCase.patient.gender}`}
     >
-      <div className={spacing.section.sm}>
+      <div className="space-y-4">
         {/* Patient Details */}
         <div className="grid grid-cols-2 gap-4">
           <div>
@@ -38,7 +38,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ medicalCase })
         </div>
 
         {/* Case Information */}
-        <div className="flex items-center gap-4 pt-4 border-t border-white/10">
+        <div className="flex flex-wrap items-center gap-4 pt-3 border-t border-white/10">
           <div className="flex items-center gap-2 text-white/70">
             <Calendar className="h-4 w-4" />
             <span className="text-sm">
@@ -55,7 +55,7 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ medicalCase })
 
         {/* Tags */}
         {medicalCase.tags && medicalCase.tags.length > 0 && (
-          <div className="pt-4 border-t border-white/10">
+          <div className="pt-3 border-t border-white/10">
             <div className="text-white/60 text-xs uppercase tracking-wide mb-2">Tags</div>
             <div className="flex flex-wrap gap-2">
               {medicalCase.tags.map((tag) => (

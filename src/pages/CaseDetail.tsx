@@ -110,21 +110,17 @@ const CaseDetail = () => {
       {/* Page Header */}
       <PageHeader title={medicalCase.title} className="text-white mb-8" />
 
-      {/* Bento Grid Layout */}
+      {/* Enhanced Bento Grid Layout with 6-column system */}
       <BentoContainer layout="default">
-        {/* Patient Information - Featured card (spans multiple columns) */}
+        {/* Row 1: Patient Info (hero) + Actions (small utility card) */}
         <PatientInfoCard medicalCase={medicalCase} />
-
-        {/* Diagnosis Card - Medium card */}
-        <DiagnosisCard medicalCase={medicalCase} />
-
-        {/* Actions Card - Small card */}
         <ActionsCard 
           onEdit={handleEdit}
           onDelete={() => setShowDeleteDialog(true)}
         />
 
-        {/* History Card - Medium card */}
+        {/* Row 2: Diagnosis + History */}
+        <DiagnosisCard medicalCase={medicalCase} />
         <ClinicalTextCard
           icon={<FileText />}
           title="History"
@@ -133,7 +129,7 @@ const CaseDetail = () => {
           placeholder="No medical history recorded"
         />
 
-        {/* Physical Exam Card - Medium card */}
+        {/* Row 3: Physical Exam + Vitals */}
         <ClinicalTextCard
           icon={<Activity />}
           title="Physical Examination"
@@ -141,20 +137,18 @@ const CaseDetail = () => {
           layout="medium"
           placeholder="No physical examination findings recorded"
         />
-
-        {/* Vital Signs Card - Large card */}
         <VitalsCard 
           medicalCase={medicalCase}
           onVitalsChange={handleVitalsChange}
         />
 
-        {/* Diagnostics Card - Large card with tabs */}
+        {/* Row 4: Diagnostics (large card spanning more columns) */}
         <DiagnosticsCard
           onLabChange={handleLabsChange}
           onImagingChange={handleImagingChange}
         />
 
-        {/* Learning Points Card - Featured card (full width) */}
+        {/* Row 5: Learning Points (wide card for full content) */}
         <LearningPointsCard medicalCase={medicalCase} />
       </BentoContainer>
 
