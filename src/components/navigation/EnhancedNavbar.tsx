@@ -1,10 +1,9 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { Search, Menu, X, Home, BookOpen, ChevronDown, User, LogOut } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate, NavLink, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { getCases } from "@/lib/api/cases";
+import { useSupabaseCases } from "@/hooks/use-supabase-cases";
 import { useAuth } from "@/app/AuthContext";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -37,10 +36,7 @@ const EnhancedNavbar: React.FC = () => {
   const userMenuRef = useRef<HTMLDivElement>(null);
 
   // Fetch cases for search
-  const { data: cases } = useQuery({
-    queryKey: ["cases"],
-    queryFn: () => getCases(),
-  });
+  const { cases } = useSupabaseCases();
 
   // Debounced search effect
   useEffect(() => {
@@ -53,15 +49,15 @@ const EnhancedNavbar: React.FC = () => {
       const filtered = cases
         .filter(caseItem => 
           caseItem.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          caseItem.patient.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          caseItem.chiefComplaint.toLowerCase().includes(searchQuery.toLowerCase())
+          caseItem.patient?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          caseItem.chiefComplaint?.toLowerCase().includes(searchQuery.toLowerCase())
         )
         .slice(0, 5)
         .map(caseItem => ({
           id: caseItem.id,
           title: caseItem.title,
           type: 'case' as const,
-          subtitle: `${caseItem.patient.name} - ${caseItem.chiefComplaint}`,
+          subtitle: `${caseItem.patient?.name ?? ""} - ${caseItem.chiefComplaint ?? ""}`,
           path: `/cases/${caseItem.id}`
         }));
 
