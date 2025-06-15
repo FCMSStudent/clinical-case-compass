@@ -1,3 +1,5 @@
+
+// Remove: import { getCaseById } from "@/data/mock-data";
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { z } from "zod";
@@ -8,7 +10,6 @@ import { toast } from "sonner";
 
 import { PageHeader } from "@/components/ui/page-header";
 import { useLocalStorage } from "@/hooks/use-local-storage";
-import { getCaseById } from "@/data/mock-data";
 import { MedicalCase } from "@/types/case";
 import { useSupabaseCases } from "@/hooks/use-supabase-cases";
 import { CaseEditForm } from "@/features/cases/edit/CaseEditForm";

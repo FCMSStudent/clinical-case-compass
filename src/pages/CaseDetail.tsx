@@ -1,5 +1,6 @@
+
+// Remove: import { getCaseById } from "@/data/mock-data";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { getCaseById } from "@/data/mock-data";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/page-header";
 import { BentoContainer } from "@/components/ui/bento-container";
