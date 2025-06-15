@@ -7,7 +7,7 @@ interface ClinicalTextCardProps {
   icon: React.ReactNode;
   title: string;
   content?: string;
-  layout?: "small" | "medium" | "large" | "hero" | "featured" | "tall";
+  layout?: "small" | "medium" | "large" | "hero" | "wide" | "tall";
   placeholder?: string;
 }
 

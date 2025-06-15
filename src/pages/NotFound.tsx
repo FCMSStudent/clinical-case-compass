@@ -32,7 +32,7 @@ const NotFound = () => {
               <FileQuestion className="h-12 w-12 text-white/70" />
             </div>
             <h1 className={cn(responsiveType.display, "text-white mb-2")}>404</h1>
-            <h2 className={cn(responsiveType.h2, "text-white mb-2")}>Page Not Found</h2>
+            <h2 className={cn(typo.h2, "text-white mb-2")}>Page Not Found</h2>
             <p className={cn(typo.body, "text-white/70 leading-relaxed")}>
               The page you're looking for doesn't exist or has been moved.
             </p>

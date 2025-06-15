@@ -13,7 +13,7 @@ import { useLocalStorage } from "@/hooks/use-local-storage";
 import { MedicalCase } from "@/types/case";
 import { useSupabaseCases } from "@/hooks/use-supabase-cases";
 import { CaseEditForm } from "@/features/cases/edit/CaseEditForm";
-import { layouts, typography } from "@/lib/design-system";
+import { layouts, typography } from "@/lib/ui-styles";
 import { colors } from "@/lib/design-tokens";
 
 // Define the form schema with optional fields
