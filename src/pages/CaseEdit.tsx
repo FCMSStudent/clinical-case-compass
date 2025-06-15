@@ -10,7 +10,7 @@ import { toast } from "sonner";
 
 import { PageHeader } from "@/components/ui/page-header";
 import { useLocalStorage } from "@/hooks/use-local-storage";
-import { MedicalCase } from "@/types/case";
+import { MedicalCase, RadiologyStudy } from "@/types/case";
 import { useSupabaseCases } from "@/hooks/use-supabase-cases";
 import { CaseEditForm } from "@/features/cases/edit/CaseEditForm";
 import { typography, layouts } from "@/lib/ui-styles";
@@ -50,8 +50,8 @@ const CaseEdit = () => {
 
   // State for specialized inputs
   const [vitals, setVitals] = useState<Record<string, string>>({});
-  const [labResults, setLabResults] = useState<any[]>([]);
-  const [radiologyStudies, setRadiologyStudies] = useState<any[]>([]);
+  const [labResults, setLabResults] = useState<any[]>([]); // Consider typing this if structure is known
+  const [radiologyStudies, setRadiologyStudies] = useState<RadiologyStudy[]>([]);
 
   // Set up form with existing case data
   const form = useForm<FormValues>({
@@ -109,16 +109,42 @@ const CaseEdit = () => {
 
     if (medicalCase.radiologyStudies) {
       setRadiologyStudies(medicalCase.radiologyStudies);
-    } else if (medicalCase.radiologyExams) {
-      // Handle backward compatibility
-      setRadiologyStudies(medicalCase.radiologyExams.map(exam => ({
-        id: exam.id,
-        type: exam.modality,
-        findings: exam.findings,
-        impression: ""
-      })));
     }
+    // Removed backward compatibility for radiologyExams as it's handled by the hook
   }, [medicalCase, id, navigate, form, isLoading, error]);
+
+  // Helper to map SimpleImaging's output to RadiologyStudy[]
+  // This is a placeholder and might need more sophisticated logic
+  // to determine 'type' (modality) and 'date'.
+  const mapSimpleImagingToRadiologyStudy = (simpleStudies: {id: string, type: string, findings: string}[]): RadiologyStudy[] => {
+    return simpleStudies.map(ss => ({
+      id: ss.id,
+      name: ss.type, // SimpleImaging's 'type' is more like a 'name' (e.g., "Chest X-Ray")
+      type: extractModalityFromName(ss.type), // Needs a helper to get "X-Ray" from "Chest X-Ray"
+      findings: ss.findings,
+      date: new Date().toISOString().split('T')[0], // Default to today
+      impression: "", // SimpleImaging doesn't have impression
+    }));
+  };
+
+  // This function would try to extract modality like "CT", "MRI", "X-Ray"
+  // from a study name like "CT Head" or "Chest X-Ray".
+  // This is a simplistic implementation.
+  const extractModalityFromName = (studyName: string): string => {
+    const lowerName = studyName.toLowerCase();
+    if (lowerName.includes("ct") || lowerName.includes("computed tomography")) return "CT";
+    if (lowerName.includes("mri") || lowerName.includes("magnetic resonance")) return "MRI";
+    if (lowerName.includes("x-ray") || lowerName.includes("radiography")) return "X-Ray";
+    if (lowerName.includes("ultrasound")) return "Ultrasound";
+    if (lowerName.includes("pet")) return "PET";
+    // Add more rules as needed
+    return "Other"; // Default modality
+  };
+
+
+  const handleImagingChange = (studiesFromSimpleImaging: {id: string, type: string, findings: string}[]) => {
+    setRadiologyStudies(mapSimpleImagingToRadiologyStudy(studiesFromSimpleImaging));
+  };
 
   const onSubmit = (values: FormValues) => {
     if (!medicalCase) return;
@@ -218,8 +244,8 @@ const CaseEdit = () => {
         onSubmit={onSubmit}
         isSaving={isSaving}
         onVitalsChange={setVitals}
-        onLabChange={setLabResults}
-        onImagingChange={setRadiologyStudies}
+        onLabChange={setLabResults} // Consider mapping this if SimpleLabs output is different
+        onImagingChange={handleImagingChange}
         initialVitals={initialVitals}
         patientAge={form.watch("patientAge")}
       />

@@ -1,9 +1,9 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T | ((val: T) => T)) => void] {
   // Get from local storage then parse stored json or return initialValue
-  const readValue = (): T => {
+  const readValue = useCallback((): T => {
     if (typeof window === "undefined") {
       return initialValue;
     }
@@ -15,7 +15,7 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T 
       console.warn(`Error reading localStorage key "${key}":`, error);
       return initialValue;
     }
-  };
+  }, [initialValue, key]);
 
   // State to store our value
   // Pass initial state function to useState so logic is only executed once
@@ -73,8 +73,7 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T 
   // Also re-read from localStorage when the component mounts
   useEffect(() => {
     setStoredValue(readValue());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [readValue]);
 
   return [storedValue, setValue];
 }

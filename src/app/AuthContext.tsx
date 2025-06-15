@@ -24,8 +24,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { session, user, loading, isOfflineMode } = state;
   const { toast } = useToast();
 
-  console.log("[AuthContext] Initial state:", { user, loading, session, isOfflineMode });
-
   useEffect(() => {
     // Check if we're in offline mode (missing Supabase credentials)
     const isCredentialsMissing = 
@@ -43,10 +41,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Set up auth state listener first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, currentSession) => {
-        console.log("[AuthContext] onAuthStateChange event:", event, "session:", currentSession);
         dispatch({ type: 'SET_SESSION', payload: currentSession });
-        // It's useful to log the user derived from the session here as well
-        console.log("[AuthContext] onAuthStateChange, new user:", currentSession?.user, "loading should be false");
         
         if (event === 'SIGNED_IN') {
           toast({
@@ -67,7 +62,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Then check for existing session
     supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
       const initializedUser = currentSession?.user ?? null;
-      console.log("[AuthContext] getSession, user:", initializedUser, "session:", currentSession);
       dispatch({ 
         type: 'INITIALIZE_AUTH', 
         payload: { 
@@ -76,19 +70,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           isOfflineMode: false 
         } 
       });
-      console.log("[AuthContext] getSession, dispatched INITIALIZE_AUTH, loading should be false");
     }).catch((error) => {
       console.error("Error getting session:", error);
       dispatch({ type: 'SET_LOADING', payload: false });
-      console.log("[AuthContext] getSession error, loading set to false");
     });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, [toast]); // `dispatch` is stable, `toast` might not be if it's not memoized by `useToast`
-  // If useToast itself isn't memoizing its returned `toast` function, then this useEffect might run more than intended.
-  // For now, assuming `toast` from `useToast` is stable or changes rarely.
+  }, [toast]); // `dispatch` is stable
 
   const signIn = useCallback(async (email: string, password: string) => {
     if (isOfflineMode) {
@@ -207,7 +197,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (authData?.user) {
         dispatch({ type: 'SET_USER', payload: authData.user });
-        console.log("[AuthContext] updateProfile, user updated:", authData.user);
       }
 
       toast({
@@ -236,7 +225,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     updateProfile,
   }), [session, user, loading, isOfflineMode, signIn, signUp, signOut, updateProfile]);
 
-  console.log("[AuthContext] Provider rendering with value:", { user, loading, session, isOfflineMode });
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
