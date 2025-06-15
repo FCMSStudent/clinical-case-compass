@@ -1,3 +1,4 @@
+
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -21,20 +22,31 @@ import Auth from "@/pages/Auth";
 import NotFound from "@/pages/NotFound";
 import LandingPage from "@/pages/Landing";
 
-// Create a client
+// Create a client with better error handling
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 1000 * 60 * 5, // 5 minutes
       gcTime: 1000 * 60 * 10, // 10 minutes
-      retry: 1,
+      retry: (failureCount, error) => {
+        // Don't retry on authentication errors
+        if (error?.message?.includes('not authenticated')) {
+          return false;
+        }
+        return failureCount < 2;
+      },
       refetchOnWindowFocus: false,
     },
+    mutations: {
+      retry: 1,
+    }
   },
 });
 
 const AppContent = () => {
   const { session, loading, isOfflineMode } = useAuth();
+
+  console.log("[App] Auth state:", { session: !!session, loading, isOfflineMode });
 
   if (loading) {
     return <LoadingScreen />;
@@ -73,7 +85,14 @@ const AppContent = () => {
                     <OfflineBanner />
                   </div>
                 )}
-                <Cases />
+                <ErrorBoundary fallback={
+                  <div className="p-8 text-center">
+                    <h2 className="text-xl font-semibold text-white mb-2">Cases Page Error</h2>
+                    <p className="text-white/70">There was an error loading the cases page.</p>
+                  </div>
+                }>
+                  <Cases />
+                </ErrorBoundary>
               </EnhancedAppLayout>
             </PrivateRoute>
           }

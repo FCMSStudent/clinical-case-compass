@@ -1,3 +1,4 @@
+
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/app/AuthContext';
@@ -13,7 +14,6 @@ type DbDiagnosis = Database['public']['Tables']['diagnoses']['Row'];
 type DbResource = Database['public']['Tables']['resources']['Row'];
 type DbCaseTag = Database['public']['Tables']['case_tags']['Row'];
 
-// Use the more flexible DB types for incoming data
 interface DbLabTest {
   id?: string;
   name?: string | null;
@@ -25,7 +25,7 @@ interface DbLabTest {
 interface DbRadiologyExam {
   id?: string;
   modality?: string | null;
-  type?: string | null; // Keep type as it exists in both
+  type?: string | null;
   findings?: string | null;
   impression?: string | null;
 }
@@ -33,13 +33,13 @@ interface DbRadiologyExam {
 type DiagnosisStatus = 'pending' | 'confirmed' | 'ruled_out';
 
 export function useSupabaseCases() {
-  const { user } = useAuth();
+  const { user, isOfflineMode } = useAuth();
   const { handleError } = useErrorHandler();
   const queryClient = useQueryClient();
 
-  console.log("[useSupabaseCases] Hook initialized, user:", user);
+  console.log("[useSupabaseCases] Hook initialized, user:", user, "isOfflineMode:", isOfflineMode);
 
-  // Fetch all cases
+  // Fetch all cases with simplified query
   const {
     data: cases = [],
     isLoading,
@@ -47,36 +47,106 @@ export function useSupabaseCases() {
   } = useQuery({
     queryKey: ['cases', user?.id],
     queryFn: async (): Promise<MedicalCase[]> => {
-      console.log("[useSupabaseCases] queryFn for fetching all cases, user:", user);
-      if (!user) throw new Error('User not authenticated');
+      console.log("[useSupabaseCases] Starting query for cases, user:", user);
+      
+      if (!user) {
+        console.log("[useSupabaseCases] No user found, throwing error");
+        throw new Error('User not authenticated');
+      }
 
-      const { data, error } = await supabase
-        .from('medical_cases')
-        .select(`
-          *,
-          patient:patients(*),
-          diagnoses(*),
-          resources(*),
-          case_tag_assignments(
-            case_tags(*)
-          )
-        `)
-        .eq('user_id', user.id)
-        .order('updated_at', { ascending: false });
+      if (isOfflineMode) {
+        console.log("[useSupabaseCases] Offline mode, returning empty array");
+        return [];
+      }
 
-      if (error) throw error;
+      try {
+        // First, get basic case data with patient info
+        console.log("[useSupabaseCases] Fetching basic case data");
+        const { data: casesData, error: casesError } = await supabase
+          .from('medical_cases')
+          .select(`
+            *,
+            patient:patients(*)
+          `)
+          .eq('user_id', user.id)
+          .order('updated_at', { ascending: false });
 
-      return data.map(transformDbCaseToMedicalCase);
+        if (casesError) {
+          console.error("[useSupabaseCases] Error fetching cases:", casesError);
+          throw casesError;
+        }
+
+        if (!casesData || casesData.length === 0) {
+          console.log("[useSupabaseCases] No cases found, returning empty array");
+          return [];
+        }
+
+        console.log("[useSupabaseCases] Found", casesData.length, "cases");
+
+        // Transform the data with better error handling
+        const transformedCases = casesData.map(caseData => {
+          try {
+            return transformDbCaseToMedicalCase(caseData);
+          } catch (transformError) {
+            console.error("[useSupabaseCases] Error transforming case:", caseData.id, transformError);
+            // Return a minimal case object instead of failing completely
+            return {
+              id: caseData.id,
+              title: caseData.title || 'Untitled Case',
+              priority: "medium" as const,
+              patient: caseData.patient ? {
+                id: caseData.patient.id,
+                name: caseData.patient.name || 'Unknown Patient',
+                age: caseData.patient.age || 0,
+                gender: caseData.patient.gender || 'unknown',
+                medicalRecordNumber: caseData.patient.medical_record_number || ''
+              } : {
+                id: 'unknown',
+                name: 'Unknown Patient',
+                age: 0,
+                gender: 'unknown',
+                medicalRecordNumber: ''
+              },
+              createdAt: caseData.created_at,
+              updatedAt: caseData.updated_at,
+              chiefComplaint: caseData.chief_complaint || 'No complaint recorded',
+              chiefComplaintAnalysis: caseData.chief_complaint_analysis || undefined,
+              history: caseData.history || undefined,
+              physicalExam: caseData.physical_exam || undefined,
+              learningPoints: caseData.learning_points || undefined,
+              vitals: (caseData.vitals as Record<string, string>) || {},
+              symptoms: (caseData.symptoms as Record<string, boolean>) || {},
+              urinarySymptoms: (caseData.urinary_symptoms as string[]) || [],
+              labTests: [],
+              radiologyExams: [],
+              diagnoses: [],
+              resources: [],
+              tags: [],
+              status: "draft" as const
+            };
+          }
+        });
+
+        console.log("[useSupabaseCases] Successfully transformed", transformedCases.length, "cases");
+        return transformedCases;
+
+      } catch (error) {
+        console.error("[useSupabaseCases] Query failed:", error);
+        throw error;
+      }
     },
-    enabled: !!user
+    enabled: !!user && !isOfflineMode,
+    retry: 1,
+    staleTime: 1000 * 60 * 5 // 5 minutes
   });
 
   // Fetch single case
   const useGetCaseQuery = (id: string) => useQuery({
     queryKey: ['case', id],
     queryFn: async (): Promise<MedicalCase | null> => {
-      console.log("[useSupabaseCases] queryFn for useGetCaseQuery, user:", user, "caseId:", id);
+      console.log("[useSupabaseCases] Fetching single case:", id);
       if (!user) throw new Error('User not authenticated');
+      if (isOfflineMode) return null;
 
       const { data, error } = await supabase
         .from('medical_cases')
@@ -98,7 +168,7 @@ export function useSupabaseCases() {
 
       return transformDbCaseToMedicalCase(data);
     },
-    enabled: !!user && !!id
+    enabled: !!user && !!id && !isOfflineMode
   });
 
   // Create case mutation
@@ -110,8 +180,9 @@ export function useSupabaseCases() {
       resources?: Omit<Resource, 'id'>[];
       tagIds?: string[];
     }) => {
-      console.log("[useSupabaseCases] mutationFn for createCaseMutation, user:", user);
+      console.log("[useSupabaseCases] Creating new case");
       if (!user) throw new Error('User not authenticated');
+      if (isOfflineMode) throw new Error('Cannot create cases in offline mode');
 
       // Create patient first
       const { data: patientData, error: patientError } = await supabase
@@ -128,7 +199,7 @@ export function useSupabaseCases() {
 
       if (patientError) throw patientError;
 
-      // Create case - explicitly type the insert object and cast arrays to Json
+      // Create case
       const caseInsertData: DbCaseInsert = {
         title: caseData.case.title,
         chief_complaint: caseData.case.chiefComplaint,
@@ -210,7 +281,6 @@ export function useSupabaseCases() {
     }
   });
 
-  // Custom createCase function that accepts callbacks
   const createCase = (
     caseData: Parameters<typeof createCaseMutation.mutate>[0],
     options?: {
@@ -235,6 +305,8 @@ export function useSupabaseCases() {
   } = useQuery({
     queryKey: ['case-tags'],
     queryFn: async (): Promise<CaseTag[]> => {
+      if (isOfflineMode) return [];
+      
       const { data, error } = await supabase
         .from('case_tags')
         .select('*')
@@ -247,7 +319,8 @@ export function useSupabaseCases() {
         name: tag.name,
         color: tag.color
       }));
-    }
+    },
+    enabled: !isOfflineMode
   });
 
   return {
@@ -262,62 +335,87 @@ export function useSupabaseCases() {
   };
 }
 
-// Transform database case to MedicalCase type
+// Improved transform function with better error handling
 function transformDbCaseToMedicalCase(dbCase: Record<string, unknown>): MedicalCase {
-  return {
-    id: dbCase.id as string,
-    title: dbCase.title as string,
-    priority: "medium", // Default priority since it's not stored in database yet
-    patient: {
-      id: (dbCase.patient as DbPatient).id,
-      name: (dbCase.patient as DbPatient).name,
-      age: (dbCase.patient as DbPatient).age,
-      gender: (dbCase.patient as DbPatient).gender,
-      medicalRecordNumber: (dbCase.patient as DbPatient).medical_record_number
-    },
-    createdAt: dbCase.created_at as string,
-    updatedAt: dbCase.updated_at as string,
-    chiefComplaint: dbCase.chief_complaint as string,
-    chiefComplaintAnalysis: dbCase.chief_complaint_analysis as string | undefined,
-    history: dbCase.history as string | undefined,
-    physicalExam: dbCase.physical_exam as string | undefined,
-    learningPoints: dbCase.learning_points as string | undefined,
-    vitals: (dbCase.vitals || {}) as Record<string, string>,
-    symptoms: (dbCase.symptoms || {}) as Record<string, boolean>,
-    urinarySymptoms: (dbCase.urinary_symptoms || []) as string[],
-    // Use DbLabTest interface and ensure properties are handled for ComponentLabTest
-    labTests: ((dbCase.lab_tests || []) as DbLabTest[]).map((test) => ({
-      id: test.id ?? `lab-${Date.now()}-${Math.random()}`,
-      name: test.name ?? '',
-      value: test.value ?? '',
-      unit: test.unit ?? '',
-      normalRange: test.normalRange ?? undefined // Ensure normalRange is handled
-    })) as ComponentLabTest[],
-    // Use DbRadiologyExam interface and ensure properties are handled for ComponentRadiologyExam
-    radiologyExams: ((dbCase.radiology_exams || []) as DbRadiologyExam[]).map((exam) => ({
-      id: exam.id ?? `rad-${Date.now()}-${Math.random()}`,
-      modality: exam.modality ?? exam.type ?? '', // Prioritize modality, fallback to type
-      findings: exam.findings ?? '',
-      impression: exam.impression ?? undefined // Ensure impression is handled
-    })) as ComponentRadiologyExam[],
-    diagnoses: ((dbCase.diagnoses as DbDiagnosis[]) || []).map((d: DbDiagnosis) => ({
-      id: d.id,
-      name: d.name,
-      status: d.status as ComponentDiagnosisStatus,
-      notes: d.notes
-    })),
-    resources: ((dbCase.resources as DbResource[]) || []).map((r: DbResource) => ({
-      id: r.id,
-      title: r.title,
-      type: r.type as Resource['type'],
-      url: r.url,
-      notes: r.notes
-    })),
-    tags: ((dbCase.case_tag_assignments as { case_tags: DbCaseTag }[]) || []).map((assignment: { case_tags: Pick<DbCaseTag, 'id' | 'name' | 'color'> }) => ({
-      id: assignment.case_tags.id,
-      name: assignment.case_tags.name,
-      color: assignment.case_tags.color
-    })),
-    status: "draft" // Add missing status field
-  };
+  try {
+    // Defensive checks for required fields
+    if (!dbCase.id || !dbCase.title || !dbCase.chief_complaint) {
+      throw new Error(`Missing required case fields: ${JSON.stringify({
+        id: !!dbCase.id,
+        title: !!dbCase.title,
+        chief_complaint: !!dbCase.chief_complaint
+      })}`);
+    }
+
+    // Ensure patient exists
+    if (!dbCase.patient) {
+      throw new Error('Patient data is missing');
+    }
+
+    const patient = dbCase.patient as DbPatient;
+    if (!patient.id || !patient.name) {
+      throw new Error(`Invalid patient data: ${JSON.stringify({
+        id: !!patient.id,
+        name: !!patient.name
+      })}`);
+    }
+
+    return {
+      id: dbCase.id as string,
+      title: dbCase.title as string,
+      priority: "medium",
+      patient: {
+        id: patient.id,
+        name: patient.name,
+        age: patient.age || 0,
+        gender: patient.gender || 'unknown',
+        medicalRecordNumber: patient.medical_record_number || ''
+      },
+      createdAt: dbCase.created_at as string,
+      updatedAt: dbCase.updated_at as string,
+      chiefComplaint: dbCase.chief_complaint as string,
+      chiefComplaintAnalysis: dbCase.chief_complaint_analysis as string | undefined,
+      history: dbCase.history as string | undefined,
+      physicalExam: dbCase.physical_exam as string | undefined,
+      learningPoints: dbCase.learning_points as string | undefined,
+      vitals: (dbCase.vitals as Record<string, string>) || {},
+      symptoms: (dbCase.symptoms as Record<string, boolean>) || {},
+      urinarySymptoms: (dbCase.urinary_symptoms as string[]) || [],
+      labTests: ((dbCase.lab_tests as DbLabTest[]) || []).map((test) => ({
+        id: test.id ?? `lab-${Date.now()}-${Math.random()}`,
+        name: test.name ?? '',
+        value: test.value ?? '',
+        unit: test.unit ?? '',
+        normalRange: test.normalRange ?? undefined
+      })) as ComponentLabTest[],
+      radiologyExams: ((dbCase.radiology_exams as DbRadiologyExam[]) || []).map((exam) => ({
+        id: exam.id ?? `rad-${Date.now()}-${Math.random()}`,
+        modality: exam.modality ?? exam.type ?? '',
+        findings: exam.findings ?? '',
+        impression: exam.impression ?? undefined
+      })) as ComponentRadiologyExam[],
+      diagnoses: ((dbCase.diagnoses as DbDiagnosis[]) || []).map((d: DbDiagnosis) => ({
+        id: d.id,
+        name: d.name,
+        status: d.status as ComponentDiagnosisStatus,
+        notes: d.notes
+      })),
+      resources: ((dbCase.resources as DbResource[]) || []).map((r: DbResource) => ({
+        id: r.id,
+        title: r.title,
+        type: r.type as Resource['type'],
+        url: r.url,
+        notes: r.notes
+      })),
+      tags: ((dbCase.case_tag_assignments as { case_tags: DbCaseTag }[]) || []).map((assignment: { case_tags: Pick<DbCaseTag, 'id' | 'name' | 'color'> }) => ({
+        id: assignment.case_tags.id,
+        name: assignment.case_tags.name,
+        color: assignment.case_tags.color
+      })),
+      status: "draft"
+    };
+  } catch (error) {
+    console.error('[transformDbCaseToMedicalCase] Error transforming case:', error);
+    throw new Error(`Failed to transform case data: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
 }
