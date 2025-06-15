@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { signupSchema, type SignupFormData } from "@/features/auth/authSchemas";
-import { useTheme } from "@/lib/themes";
+import { useTheme } from "@/lib/design-system";
 
 interface SignupFormProps {
   onSignupSubmit: (data: SignupFormData) => Promise<void>;

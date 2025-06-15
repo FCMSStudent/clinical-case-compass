@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/app/AuthContext";
@@ -22,7 +21,7 @@ import {
 } from "@/components/ui/alert";
 import { CheckCircle2 } from "lucide-react";
 import UnifiedBackground from "@/components/backgrounds/UnifiedBackground";
-import { useTheme } from "@/lib/themes";
+import { useTheme } from "@/lib/design-system";
 
 import type { LoginFormData, SignupFormData } from "@/features/auth/authSchemas";
 import LoginForm from "@/features/auth/components/LoginForm";
