@@ -14,7 +14,6 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -27,7 +26,6 @@ import { SimpleLabs } from "@/features/cases/create/SimpleLabs";
 import { SimpleImaging } from "@/features/cases/create/SimpleImaging";
 import { getCaseById } from "@/data/mock-data";
 import { MedicalCase } from "@/types/case";
-import { ErrorSummary } from "@/components/ui/ErrorSummary";
 import {
   Select,
   SelectContent,
@@ -38,14 +36,14 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSupabaseCases } from "@/hooks/use-supabase-cases";
 
-// Define the form schema
+// Define the form schema with optional fields to remove validation restrictions
 const formSchema = z.object({
-  title: z.string().min(1, { message: "Title is required" }),
-  patientName: z.string().min(1, { message: "Patient name is required" }),
-  patientAge: z.coerce.number().min(0).max(120),
-  patientGender: z.enum(["male", "female", "other"]),
+  title: z.string().optional(),
+  patientName: z.string().optional(),
+  patientAge: z.coerce.number().min(0).max(120).optional(),
+  patientGender: z.enum(["male", "female", "other"]).optional(),
   patientMRN: z.string().optional(),
-  chiefComplaint: z.string().min(1, { message: "Chief complaint is required" }),
+  chiefComplaint: z.string().optional(),
   history: z.string().optional(),
   physicalExam: z.string().optional(),
   learningPoints: z.string().optional(),
@@ -152,17 +150,17 @@ const CaseEdit = () => {
       // Create updated case object
       const updatedCase: MedicalCase = {
         ...medicalCase,
-        title: values.title,
+        title: values.title || medicalCase.title,
         updatedAt: new Date().toISOString(),
-        chiefComplaint: values.chiefComplaint,
+        chiefComplaint: values.chiefComplaint || medicalCase.chiefComplaint,
         history: values.history || undefined,
         physicalExam: values.physicalExam || undefined,
         learningPoints: values.learningPoints || undefined,
         patient: {
           ...medicalCase.patient,
-          name: values.patientName,
-          age: values.patientAge,
-          gender: values.patientGender,
+          name: values.patientName || medicalCase.patient.name,
+          age: values.patientAge || medicalCase.patient.age,
+          gender: values.patientGender || medicalCase.patient.gender,
           medicalRecordNumber: values.patientMRN || undefined,
         },
         vitals: vitals,
@@ -233,17 +231,6 @@ const CaseEdit = () => {
         className="text-white"
       />
 
-      {/* Error Summary */}
-      {form.formState.isSubmitted &&
-        !form.formState.isValid &&
-        Object.keys(form.formState.errors).length > 0 && (
-          <ErrorSummary
-            errors={form.formState.errors}
-            setFocus={form.setFocus as (name: string) => void}
-            formId="case-edit-form"
-          />
-        )}
-
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -271,7 +258,6 @@ const CaseEdit = () => {
                           className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
                         />
                       </FormControl>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -290,7 +276,6 @@ const CaseEdit = () => {
                           className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
                         />
                       </FormControl>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -309,7 +294,6 @@ const CaseEdit = () => {
                           className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
                         />
                       </FormControl>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -330,7 +314,6 @@ const CaseEdit = () => {
                             className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
                           />
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -371,7 +354,6 @@ const CaseEdit = () => {
                             </SelectContent>
                           </Select>
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -394,7 +376,6 @@ const CaseEdit = () => {
                       <FormDescription className="text-white/70">
                         If applicable
                       </FormDescription>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -419,85 +400,81 @@ const CaseEdit = () => {
             </CardContent>
           </Card>
 
-          {/* History & Physical Exam Section */}
-          <div className="grid gap-6 md:grid-cols-2">
-            <Card className="bg-white/10 border-white/20 backdrop-blur-xl">
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold text-white">History</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <FormField
-                  control={form.control}
-                  name="history"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Relevant medical history"
-                          className="bg-white/10 border-white/20 text-white placeholder:text-white/60 min-h-32"
-                          {...field}
-                          value={field.value || ""}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
-            </Card>
+          {/* History Section */}
+          <Card className="bg-white/10 border-white/20 backdrop-blur-xl">
+            <CardHeader>
+              <CardTitle className="text-lg font-semibold text-white">History</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <FormField
+                control={form.control}
+                name="history"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Relevant medical history"
+                        className="bg-white/10 border-white/20 text-white placeholder:text-white/60 min-h-32"
+                        {...field}
+                        value={field.value || ""}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+          </Card>
 
-            <Card className="bg-white/10 border-white/20 backdrop-blur-xl">
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold text-white">Physical Examination</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <FormField
-                  control={form.control}
-                  name="physicalExam"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Physical examination findings"
-                          className="bg-white/10 border-white/20 text-white placeholder:text-white/60 min-h-32"
-                          {...field}
-                          value={field.value || ""}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
-            </Card>
-          </div>
+          {/* Physical Examination Section */}
+          <Card className="bg-white/10 border-white/20 backdrop-blur-xl">
+            <CardHeader>
+              <CardTitle className="text-lg font-semibold text-white">Physical Examination</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <FormField
+                control={form.control}
+                name="physicalExam"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Physical examination findings"
+                        className="bg-white/10 border-white/20 text-white placeholder:text-white/60 min-h-32"
+                        {...field}
+                        value={field.value || ""}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+          </Card>
 
-          {/* Lab Results & Radiology Section */}
-          <div className="grid gap-6 md:grid-cols-2">
-            <Card className="bg-white/10 border-white/20 backdrop-blur-xl">
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold text-white flex items-center">
-                  <TestTube className="mr-2 h-6 w-6" />
-                  Laboratory Results
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <SimpleLabs onLabChange={setLabResults} />
-              </CardContent>
-            </Card>
+          {/* Laboratory Results Section */}
+          <Card className="bg-white/10 border-white/20 backdrop-blur-xl">
+            <CardHeader>
+              <CardTitle className="text-lg font-semibold text-white flex items-center">
+                <TestTube className="mr-2 h-6 w-6" />
+                Laboratory Results
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <SimpleLabs onLabChange={setLabResults} />
+            </CardContent>
+          </Card>
 
-            <Card className="bg-white/10 border-white/20 backdrop-blur-xl">
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold text-white flex items-center">
-                  <Scan className="mr-2 h-6 w-6" />
-                  Radiology Studies
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <SimpleImaging onImagingChange={setRadiologyStudies} />
-              </CardContent>
-            </Card>
-          </div>
+          {/* Radiology Studies Section */}
+          <Card className="bg-white/10 border-white/20 backdrop-blur-xl">
+            <CardHeader>
+              <CardTitle className="text-lg font-semibold text-white flex items-center">
+                <Scan className="mr-2 h-6 w-6" />
+                Radiology Studies
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <SimpleImaging onImagingChange={setRadiologyStudies} />
+            </CardContent>
+          </Card>
 
           {/* Learning Points Section */}
           <Card className="bg-white/10 border-white/20 backdrop-blur-xl">
@@ -518,7 +495,6 @@ const CaseEdit = () => {
                         value={field.value || ""}
                       />
                     </FormControl>
-                    <FormMessage />
                   </FormItem>
                 )}
               />
