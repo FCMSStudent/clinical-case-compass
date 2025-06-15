@@ -11,7 +11,7 @@ const LandingNavbar = () => {
         <NavLink to="/" className="text-2xl font-bold text-white transition-colors">
           Medica
         </NavLink>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center gap-2">
           <NavLink to="/auth" className={cn(buttonVariants.ghost, "text-white/80 hover:bg-white/10 hover:text-white")}>
             Sign In
           </NavLink>
