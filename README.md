@@ -42,7 +42,7 @@ Follow these steps to get a local copy of the project up and running.
 
 ```bash
 git clone <repository_url>
-cd clinical-case-compass # Or your chosen directory name
+cd medica # Or your chosen directory name
 ```
 
 ### 2. Install Dependencies
@@ -133,7 +133,7 @@ npm audit fix
 
 If you deploy this project under a subpath (for example on GitHub Pages),
 Vite needs to know the base URL so that asset links resolve correctly. The
-`vite.config.ts` file includes a `base` option set to `/clinical-case-compass/`.
+`vite.config.ts` file includes a `base` option set to `/medica/`.
 Adjust this value if your deployment path differs, then rebuild the project:
 
 ```bash
@@ -146,7 +146,7 @@ load without the blank 404-style page.
 ## Project Structure
 
 ```
-clinical-case-compass/
+medica/
 ├── .github/                            # GitHub Actions workflows (e.g., CI, summary.yml)
 ├── public/                             # Static assets (favicon, placeholder images, robots.txt)
 ├── src/                                # Source code

@@ -12,7 +12,7 @@ export default defineConfig(({ mode }) => {
   
   return {
     // Set base path only for GitHub Pages, use root for all other deployments
-    base: isGitHubPages ? "/clinical-case-compass/" : "/",
+    base: isGitHubPages ? "/medica/" : "/",
     envPrefix: "VITE_",
     server: {
       host: "::",
