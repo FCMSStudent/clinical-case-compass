@@ -5,8 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { glassmorphicOverlay } from "@/lib/ui-styles"
-import { focusRing } from "@/lib/ui-styles"
+import { glass, focusRing } from "@/lib/ui-styles"
 
 const ToastProvider = ToastPrimitives.Provider
 

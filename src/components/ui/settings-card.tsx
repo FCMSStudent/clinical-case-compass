@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { glassmorphicBg } from '@/lib/ui-styles';
+import { glass } from '@/lib/ui-styles';
 
 interface SettingsCardProps {
   title: string;
@@ -22,7 +22,7 @@ const SettingsCard: React.FC<SettingsCardProps> = ({
   badge
 }) => {
   return (
-    <Card className={cn(glassmorphicBg, 'hover:bg-white/10', className)}>
+    <Card className={cn(glass.elevated, 'hover:bg-white/10', className)}>
       <CardHeader className="space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
