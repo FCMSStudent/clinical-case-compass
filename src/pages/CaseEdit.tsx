@@ -4,39 +4,18 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
-
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { PageHeader } from "@/components/ui/page-header";
-import { ChevronLeft, Save, HeartPulse, TestTube, Scan } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { toast } from "sonner";
+
+import { PageHeader } from "@/components/ui/page-header";
 import { useLocalStorage } from "@/hooks/use-local-storage";
-import { InteractiveVitalsCard } from "@/features/cases/InteractiveVitalsCard";
-import { SimpleLabs } from "@/features/cases/create/SimpleLabs";
-import { SimpleImaging } from "@/features/cases/create/SimpleImaging";
 import { getCaseById } from "@/data/mock-data";
 import { MedicalCase } from "@/types/case";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSupabaseCases } from "@/hooks/use-supabase-cases";
+import { CaseEditForm } from "@/features/cases/edit/CaseEditForm";
+import { spacing, layouts, colors, typography } from "@/lib/ui-styles";
 
-// Define the form schema with optional fields to remove validation restrictions
+// Define the form schema with optional fields
 const formSchema = z.object({
   title: z.string().optional(),
   patientName: z.string().optional(),
@@ -186,19 +165,22 @@ const CaseEdit = () => {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[50vh]">
-        <h2 className="text-2xl font-semibold mb-4 text-white">Loading case...</h2>
+      <div className={`${layouts.flex.center} min-h-[50vh]`}>
+        <h2 className={`${typography.h3} mb-4`}>Loading case...</h2>
       </div>
     );
   }
 
   if (error || !medicalCase) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[50vh]">
-        <h2 className="text-2xl font-semibold mb-4 text-white">Case not found</h2>
-        <Button asChild className="bg-white/10 border border-white/20 text-white hover:bg-white/20">
-          <Link to="/cases">Return to all cases</Link>
-        </Button>
+      <div className={`${layouts.flex.center} min-h-[50vh] ${layouts.flex.col}`}>
+        <h2 className={`${typography.h3} mb-4`}>Case not found</h2>
+        <Link
+          to="/cases"
+          className="bg-white/10 border border-white/20 text-white hover:bg-white/20 px-4 py-2 rounded-xl transition-all duration-200"
+        >
+          Return to all cases
+        </Link>
       </div>
     );
   }
@@ -214,11 +196,11 @@ const CaseEdit = () => {
   } : undefined;
 
   return (
-    <div className="w-full max-w-6xl mx-auto space-y-6">
+    <div className={layouts.container}>
       <div className="mb-6">
         <Link
           to={`/cases/${id}`}
-          className="inline-flex items-center text-sm text-white/70 hover:text-white"
+          className={`inline-flex items-center text-sm ${colors.secondary} hover:${colors.primary}`}
         >
           <ChevronLeft className="mr-1 h-4 w-4" />
           Back to case
@@ -228,292 +210,19 @@ const CaseEdit = () => {
       <PageHeader
         title="Edit Case"
         description="Update an existing medical case"
-        className="text-white"
+        className={colors.primary}
       />
 
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          id="case-edit-form"
-          className="space-y-8"
-        >
-          {/* Basic Information Section */}
-          <Card className="bg-white/10 border-white/20 backdrop-blur-xl">
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold text-white">
-                Basic Information
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid gap-6 md:grid-cols-2">
-                <FormField
-                  control={form.control}
-                  name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-white">Case Title</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="chiefComplaint"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-white">
-                        Chief Complaint
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="patientName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-white">
-                        Patient Name
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-
-                <div className="grid grid-cols-3 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="patientAge"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-white">Age</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            type="number"
-                            min={0}
-                            max={120}
-                            className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="patientGender"
-                    render={({ field }) => (
-                      <FormItem className="col-span-2">
-                        <FormLabel className="text-white">Gender</FormLabel>
-                        <FormControl>
-                          <Select
-                            onValueChange={field.onChange}
-                            value={field.value}
-                          >
-                            <SelectTrigger className="bg-white/10 border-white/20 text-white">
-                              <SelectValue placeholder="Select gender" />
-                            </SelectTrigger>
-                            <SelectContent className="bg-white/10 backdrop-blur-md border border-white/20">
-                              <SelectItem
-                                value="male"
-                                className="text-white hover:bg-white/20"
-                              >
-                                Male
-                              </SelectItem>
-                              <SelectItem
-                                value="female"
-                                className="text-white hover:bg-white/20"
-                              >
-                                Female
-                              </SelectItem>
-                              <SelectItem
-                                value="other"
-                                className="text-white hover:bg-white/20"
-                              >
-                                Other
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <FormField
-                  control={form.control}
-                  name="patientMRN"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-white">
-                        Medical Record Number (Optional)
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
-                        />
-                      </FormControl>
-                      <FormDescription className="text-white/70">
-                        If applicable
-                      </FormDescription>
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Vital Signs Section */}
-          <Card className="bg-white/10 border-white/20 backdrop-blur-xl">
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold text-white flex items-center">
-                <HeartPulse className="mr-2 h-6 w-6" />
-                Vital Signs
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <InteractiveVitalsCard
-                onVitalsChange={setVitals}
-                initialVitals={initialVitals}
-                patientAge={form.watch("patientAge")}
-              />
-            </CardContent>
-          </Card>
-
-          {/* History Section */}
-          <Card className="bg-white/10 border-white/20 backdrop-blur-xl">
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold text-white">History</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <FormField
-                control={form.control}
-                name="history"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Relevant medical history"
-                        className="bg-white/10 border-white/20 text-white placeholder:text-white/60 min-h-32"
-                        {...field}
-                        value={field.value || ""}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </CardContent>
-          </Card>
-
-          {/* Physical Examination Section */}
-          <Card className="bg-white/10 border-white/20 backdrop-blur-xl">
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold text-white">Physical Examination</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <FormField
-                control={form.control}
-                name="physicalExam"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Physical examination findings"
-                        className="bg-white/10 border-white/20 text-white placeholder:text-white/60 min-h-32"
-                        {...field}
-                        value={field.value || ""}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </CardContent>
-          </Card>
-
-          {/* Laboratory Results Section */}
-          <Card className="bg-white/10 border-white/20 backdrop-blur-xl">
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold text-white flex items-center">
-                <TestTube className="mr-2 h-6 w-6" />
-                Laboratory Results
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <SimpleLabs onLabChange={setLabResults} />
-            </CardContent>
-          </Card>
-
-          {/* Radiology Studies Section */}
-          <Card className="bg-white/10 border-white/20 backdrop-blur-xl">
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold text-white flex items-center">
-                <Scan className="mr-2 h-6 w-6" />
-                Radiology Studies
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <SimpleImaging onImagingChange={setRadiologyStudies} />
-            </CardContent>
-          </Card>
-
-          {/* Learning Points Section */}
-          <Card className="bg-white/10 border-white/20 backdrop-blur-xl">
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold text-white">Learning Points</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <FormField
-                control={form.control}
-                name="learningPoints"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Key learning points for this case"
-                        className="bg-white/10 border-white/20 text-white placeholder:text-white/60 min-h-32"
-                        {...field}
-                        value={field.value || ""}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </CardContent>
-          </Card>
-
-          {/* Submit Button */}
-          <div className="flex justify-end">
-            <Button
-              type="submit"
-              disabled={isSaving}
-              className="bg-white/10 border border-white/20 text-white hover:bg-white/20"
-            >
-              <Save className="mr-2 h-4 w-4" />
-              {isSaving ? "Saving..." : "Save Changes"}
-            </Button>
-          </div>
-        </form>
-      </Form>
+      <CaseEditForm
+        form={form}
+        onSubmit={onSubmit}
+        isSaving={isSaving}
+        onVitalsChange={setVitals}
+        onLabChange={setLabResults}
+        onImagingChange={setRadiologyStudies}
+        initialVitals={initialVitals}
+        patientAge={form.watch("patientAge")}
+      />
     </div>
   );
 };
