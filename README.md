@@ -1,5 +1,17 @@
 # Medica
 
+![Beta 1](https://img.shields.io/badge/Beta-1.0.0--beta.1-blue)
+
+## Version
+
+**Beta 1 (v1.0.0-beta.1)** - This application is currently in beta testing phase. While core functionality is implemented and functional, some features may still be unstable or subject to change. The beta version includes:
+
+- ✅ **Core Features:** User authentication, case management, interactive body diagrams
+- ✅ **UI Components:** Complete Shadcn/ui component library integration
+- ✅ **Database Integration:** Supabase backend with real-time features
+- ⚠️ **Beta Status:** Some advanced features may be in development or subject to refinement
+- 🔄 **Active Development:** Regular updates and improvements expected
+
 ## Description
 
 This project is a web-based application designed for medical education and practice. It allows users to engage with interactive clinical case simulations, enhancing their diagnostic and decision-making skills in a risk-free environment. The platform aims to provide a realistic and engaging learning experience for medical students and professionals.
@@ -147,44 +159,69 @@ load without the blank 404-style page.
 
 ```
 medica/
-├── .github/                            # GitHub Actions workflows (e.g., CI, summary.yml)
 ├── public/                             # Static assets (favicon, placeholder images, robots.txt)
 ├── src/                                # Source code
-│   ├── components/                     # React components
-│   │   ├── auth/                       # Authentication-related components (UserProfileDisplay, PrivateRoute)
-│   │   ├── body-diagram/              # SimpleBodyPartSelector component
-│   │   ├── cases/                      # Case specific components (e.g., CaseCard, SymptomChecklist)
-│   │   ├── dashboard/                  # Dashboard specific components (e.g., RecentCasesList, StatCard, DashboardSearchBar)
-│   │   ├── error/                      # Error handling (ErrorBoundary)
-│   │   └── ui/                         # Core UI components from Shadcn/ui (Button, Card, Input, etc.)
-│   ├── layouts/                        # Layout components (AppLayout, Sidebar)
-│   ├── contexts/                       # React Context API providers (AuthContext, ThemeContext)
-│   ├── data/                           # Mock data (mock-data.ts)
-│   ├── hooks/                          # Custom React hooks (use-dashboard-data, use-supabase-cases, etc.)
+│   ├── app/                            # App-level components and configuration
+│   │   ├── backgrounds/                # Background components
+│   │   ├── body-diagram/               # SimpleBodyPartSelector component
+│   │   ├── error/                      # Error handling components
+│   │   ├── navigation/                 # Navigation components
+│   │   └── ui/                         # Core UI components from Shadcn/ui
+│   ├── constants/                      # Application constants
+│   ├── features/                       # Feature-based modules
+│   │   ├── auth/                       # Authentication features
+│   │   │   └── components/             # Auth-specific components
+│   │   ├── cases/                      # Case management features
+│   │   │   ├── __tests__/              # Case-related tests
+│   │   │   ├── components/             # Case-specific components
+│   │   │   ├── create/                 # Case creation functionality
+│   │   │   │   ├── components/         # Create case components
+│   │   │   │   └── schemas/            # Validation schemas
+│   │   │   ├── detail/                 # Case detail views
+│   │   │   ├── edit/                   # Case editing functionality
+│   │   │   └── InteractiveBodyDiagram.tsx # Full SVG body diagram
+│   │   ├── dashboard/                  # Dashboard features
+│   │   │   ├── components/             # Dashboard components
+│   │   │   └── hooks/                  # Dashboard-specific hooks
+│   │   ├── landing/                    # Landing page features
+│   │   │   └── components/             # Landing page components
+│   │   ├── navigation/                 # Navigation features
+│   │   │   └── components/             # Navigation components
+│   │   └── symptoms/                   # Symptoms management
+│   ├── hooks/                          # Custom React hooks
 │   ├── integrations/                   # Third-party service integrations
 │   │   └── supabase/                   # Supabase client and type definitions
-│   ├── lib/                            # Utility functions (utils.ts, validation.ts)
-│   ├── pages/                          # Page components for different routes (Dashboard, Cases, Auth, etc.)
-│   ├── types/                          # TypeScript type definitions (case.ts)
+│   ├── lib/                            # Utility functions and configurations
+│   │   ├── reducers/                   # State reducers
+│   │   └── utils/                      # Utility functions
+│   ├── pages/                          # Page components for different routes
+│   ├── types/                          # TypeScript type definitions
 │   ├── App.css                         # Global styles for App component
 │   ├── App.tsx                         # Main application component
 │   ├── index.css                       # Global styles, Tailwind base/components/utilities
 │   ├── main.tsx                        # Application entry point
-│   └── vite-env.d.ts                 # Vite environment type definitions
-├── supabase/                           # Supabase local development configuration (config.toml)
+│   ├── setupTests.ts                   # Test setup configuration
+│   └── vite-env.d.ts                   # Vite environment type definitions
+├── supabase/                           # Supabase local development configuration
+│   └── migrations/                     # Database migration files
 ├── .gitignore                          # Files ignored by Git
 ├── components.json                     # Shadcn/ui component configuration
 ├── eslint.config.js                    # ESLint configuration
 ├── index.html                          # Main HTML file
+├── LICENSE                             # Project license
+├── LOCAL_HOSTING_GUIDE.md              # Local hosting instructions
+├── netlify.toml                        # Netlify deployment configuration
 ├── package-lock.json                   # npm lock file
 ├── package.json                        # Project metadata, dependencies, and scripts
 ├── postcss.config.js                   # PostCSS configuration
+├── qodana.yaml                         # Qodana code quality configuration
+├── README.md                           # This file
 ├── tailwind.config.ts                  # Tailwind CSS configuration
 ├── tsconfig.app.json                   # TypeScript configuration for the app
 ├── tsconfig.json                       # TypeScript base configuration
-├── tsconfig.node.json                  # TypeScript configuration for Node.js context (e.g., vite.config.ts)
-├── vite.config.ts                      # Vite build tool configuration
-└── README.md                           # This file
+├── tsconfig.node.json                  # TypeScript configuration for Node.js context
+├── vercel.json                         # Vercel deployment configuration
+└── vite.config.ts                      # Vite build tool configuration
 ```
 
 **Note on Body Diagram Components:**
