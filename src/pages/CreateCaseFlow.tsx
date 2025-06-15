@@ -213,6 +213,9 @@ const CreateCaseFlow = () => {
 
       const formData = form.getValues();
 
+      // Extract clinicalDetails fields if present
+      const clinical = formData.clinicalDetails || {};
+
       // Prepare case data for Supabase
       const caseData = {
         patient: {
@@ -227,14 +230,14 @@ const CreateCaseFlow = () => {
           status: "draft" as const,
           chiefComplaint: formData.chiefComplaint || "",
           chiefComplaintAnalysis: undefined,
-          history: formData.medicalHistory,
-          physicalExam: undefined,
+          history: clinical.patientHistory ?? formData.medicalHistory ?? "", // Clinical patientHistory > overview medicalHistory
+          physicalExam: clinical.physicalExam ?? "", // Clinical physicalExam
+          symptoms: clinical.systemSymptoms ?? {},   // Clinical systemSymptoms (review of systems)
+          vitals: clinical.vitals ?? {},             // Clinical vitals
+          labTests: clinical.labResults ?? [],       // Clinical labResults
+          radiologyExams: clinical.radiologyStudies ?? [], // Clinical radiologyStudies
           learningPoints: formData.learningPoints,
-          vitals: {},
-          symptoms: {},
-          urinarySymptoms: [],
-          labTests: [],
-          radiologyExams: [],
+          urinarySymptoms: [], // currently not handled in form, keep as empty array
         },
         resources: formData.resourceLinks?.map(link => ({
           title: link.description || "Resource",
@@ -244,7 +247,6 @@ const CreateCaseFlow = () => {
         })) || [],
       };
 
-      // Create the case using Supabase
       await new Promise((resolve, reject) => {
         createCase(caseData, {
           onSuccess: (caseId) => {
