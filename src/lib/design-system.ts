@@ -1,9 +1,3 @@
-/**
- * UNIFIED DESIGN SYSTEM
- * Single source of truth for all design tokens, themes, component styles, and configurations
- * Clinical Case Compass - Medical Application Design System
- */
-
 import React from "react";
 import { createContext, useContext, useState, useEffect } from "react";
 import { motion, Variants, Transition, useMotionValue, useTransform, useSpring } from "framer-motion";
@@ -527,7 +521,8 @@ export const getAnimationVariants = (animationName: keyof typeof animations) => 
   return animations[animationName];
 };
 
-// Export all design system components
+// Only export the imported tokens ONCE, no duplicate exports!
+
 export {
   typographyTokens,
   typography,
@@ -535,13 +530,13 @@ export {
   spacing,
   borderRadius,
   shadows,
+  backgroundConfig,
   button,
   input,
   card,
   bento,
   animations,
   transitions,
-  backgroundConfig,
   themes,
 };
 
