@@ -1,3 +1,4 @@
+
 import * as React from "react";
 import { motion } from "framer-motion";
 import { 
@@ -36,9 +37,11 @@ import {
   PulseGlow,
   MedicalPulse,
 } from "@/components/ui";
-import { componentSystem } from "@/lib/component-system";
+import * as designSystem from "@/lib/design-system";
+import { useTheme } from "@/lib/design-system";
 
 export const UnifiedComponentSystemExample: React.FC = () => {
+  const { currentTheme } = useTheme();
   return (
     <Container variant="default">
       <Section spacing="xl">
@@ -424,20 +427,20 @@ export const UnifiedComponentSystemExample: React.FC = () => {
                   <div className="space-y-4">
                     <h4 className="text-sm font-medium text-white/70 uppercase tracking-wide">Component Styles</h4>
                     <div className="space-y-2">
-                      <Button className={componentSystem.getComponentStyles('button', 'primary', 'md')}>
+                      <Button className={designSystem.getComponentStyles('button', 'primary', 'md')}>
                         Dynamic Button
                       </Button>
-                      <Input className={componentSystem.getComponentStyles('input', 'elevated', 'md')} placeholder="Dynamic Input" />
+                      <Input className={designSystem.getComponentStyles('input', 'elevated', 'md')} placeholder="Dynamic Input" />
                     </div>
                   </div>
                   
                   <div className="space-y-4">
                     <h4 className="text-sm font-medium text-white/70 uppercase tracking-wide">Glassmorphic Styles</h4>
                     <div className="space-y-2">
-                      <div className={`p-4 rounded-lg ${componentSystem.getGlassmorphicStyles('medium')}`}>
-                        <span className="text-sm text-white/70">Medium glassmorphic effect</span>
+                      <div className="p-4 rounded-lg" style={designSystem.getGlassmorphicStyles(currentTheme, 'subtle')}>
+                        <span className="text-sm text-white/70">Subtle glassmorphic effect</span>
                       </div>
-                      <div className={`p-4 rounded-lg ${componentSystem.getGlassmorphicStyles('elevated')}`}>
+                      <div className="p-4 rounded-lg" style={designSystem.getGlassmorphicStyles(currentTheme, 'elevated')}>
                         <span className="text-sm text-white/70">Elevated glassmorphic effect</span>
                       </div>
                     </div>
@@ -446,9 +449,7 @@ export const UnifiedComponentSystemExample: React.FC = () => {
                   <div className="space-y-4">
                     <h4 className="text-sm font-medium text-white/70 uppercase tracking-wide">Interaction States</h4>
                     <div className="space-y-2">
-                      <Button className={componentSystem.getInteractionStates('medium', 'default', 'subtle')}>
-                        Custom States
-                      </Button>
+                      <p className="text-sm text-white/70">Interaction states are now built into components.</p>
                     </div>
                   </div>
                 </Grid>
@@ -459,4 +460,4 @@ export const UnifiedComponentSystemExample: React.FC = () => {
       </Section>
     </Container>
   );
-}; 
+};

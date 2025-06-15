@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { loginSchema, type LoginFormData } from "@/features/auth/authSchemas";
-import { useTheme } from "@/lib/themes";
+import { useTheme } from "@/lib/design-system";
 
 interface LoginFormProps {
   onLoginSubmit: (data: LoginFormData) => Promise<void>;

@@ -359,6 +359,7 @@ export const button = {
          focus-visible:ring-blue-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent 
          disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed`,
   size: {
+    default: 'h-10 px-4 text-sm',
     sm: 'h-8 px-3 text-xs',
     md: 'h-10 px-4 text-sm',
     lg: 'h-12 px-6 text-base',
@@ -381,6 +382,7 @@ export const input = {
          disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed 
          hover:bg-white/20 hover:border-white/30 transition-all duration-200 ease-out`,
   size: {
+    default: 'h-10 px-4 text-sm',
     sm: 'h-8 px-3 text-xs',
     md: 'h-10 px-4 text-sm',
     lg: 'h-12 px-4 text-base',
