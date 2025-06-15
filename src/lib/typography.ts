@@ -36,6 +36,7 @@ export const typography = {
   // Component specific
   button: `text-sm font-medium`,
   link: `font-medium underline underline-offset-4`,
+  code: `font-mono text-sm bg-white/10 px-2 py-1 rounded text-white/90`,
   
   // Medical text styles
   dosage: `font-mono text-sm text-white/90`,
@@ -98,6 +99,7 @@ export const responsiveType = {
   hero: 'text-3xl md:text-4xl lg:text-6xl',
   display: 'text-2xl md:text-3xl lg:text-4xl',
   h1: 'text-2xl md:text-3xl lg:text-4xl',
+  h2: 'text-xl md:text-2xl lg:text-3xl',
   body: 'text-sm md:text-base'
 };
 

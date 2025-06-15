@@ -36,6 +36,13 @@ const spacing = {
   }
 };
 
+const commonStyles = {
+  pageContainer: "container mx-auto px-4 py-8",
+  sectionSpacing: "space-y-8",
+  cardPadding: "p-6",
+  glassmorphic: "bg-white/10 backdrop-blur-md border border-white/20",
+};
+
 const iconWithText = "flex items-center gap-2";
 const inputBase = "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
 
@@ -72,5 +79,6 @@ export {
   layouts,
   iconWithText,
   inputBase,
-  colors
+  colors,
+  commonStyles
 };

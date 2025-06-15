@@ -32,7 +32,6 @@ import { LearningPointsCard } from "@/features/cases/detail/LearningPointsCard";
 import { ActionsCard } from "@/features/cases/detail/ActionsCard";
 
 import { FileText, Activity } from "lucide-react";
-import { commonStyles } from "@/lib/ui-styles";
 
 const CaseDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -95,7 +94,7 @@ const CaseDetail = () => {
   };
 
   return (
-    <div className={commonStyles.pageContainer}>
+    <div className="container mx-auto px-4 py-8">
       {/* Navigation */}
       <div className="mb-6">
         <Link
