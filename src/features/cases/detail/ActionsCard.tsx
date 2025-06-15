@@ -3,7 +3,6 @@ import React from "react";
 import { BentoCard } from "@/components/ui/bento-card";
 import { Button } from "@/components/ui/button";
 import { Edit, Trash2, Settings } from "lucide-react";
-import { buttonVariants } from "@/lib/ui-styles";
 
 interface ActionsCardProps {
   onEdit: () => void;
@@ -19,23 +18,24 @@ export const ActionsCard: React.FC<ActionsCardProps> = ({ onEdit, onDelete }) =>
       title="Actions"
       compact={true}
     >
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-3">
         <Button
           onClick={onEdit}
           size="sm"
-          className={`${buttonVariants.primary} w-full justify-start`}
+          variant="primary"
+          className="w-full justify-start gap-2 text-sm font-medium"
         >
-          <Edit className="mr-2 h-4 w-4" />
-          Edit
+          <Edit className="h-4 w-4" />
+          Edit Case
         </Button>
         <Button
           onClick={onDelete}
           size="sm"
           variant="destructive"
-          className={`${buttonVariants.destructive} w-full justify-start`}
+          className="w-full justify-start gap-2 text-sm font-medium"
         >
-          <Trash2 className="mr-2 h-4 w-4" />
-          Delete
+          <Trash2 className="h-4 w-4" />
+          Delete Case
         </Button>
       </div>
     </BentoCard>

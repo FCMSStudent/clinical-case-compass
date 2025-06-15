@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { MedicalCase } from "@/types/case";
 import { useSupabaseCases } from "@/hooks/use-supabase-cases";
+import { cn } from "@/lib/utils";
 
 // Import bento card components
 import { PatientInfoCard } from "@/features/cases/detail/PatientInfoCard";
@@ -100,9 +101,9 @@ const CaseDetail = () => {
       <div className="mb-6">
         <Link
           to="/cases"
-          className="inline-flex items-center text-sm text-white/70 hover:text-white transition-colors"
+          className="inline-flex items-center text-sm text-white/70 hover:text-white transition-colors gap-1"
         >
-          <ChevronLeft className="mr-1 h-4 w-4" />
+          <ChevronLeft className="h-4 w-4" />
           Back to all cases
         </Link>
       </div>
@@ -110,7 +111,7 @@ const CaseDetail = () => {
       {/* Page Header */}
       <PageHeader title={medicalCase.title} className="text-white mb-8" />
 
-      {/* Enhanced Bento Grid Layout with 6-column system */}
+      {/* Enhanced Bento Grid Layout */}
       <BentoContainer layout="default">
         {/* Row 1: Patient Info (hero) + Actions (small utility card) */}
         <PatientInfoCard medicalCase={medicalCase} />
@@ -123,10 +124,10 @@ const CaseDetail = () => {
         <DiagnosisCard medicalCase={medicalCase} />
         <ClinicalTextCard
           icon={<FileText />}
-          title="History"
+          title="Medical History"
           content={medicalCase.history}
           layout="medium"
-          placeholder="No medical history recorded"
+          placeholder="No medical history recorded for this case"
         />
 
         {/* Row 3: Physical Exam + Vitals */}
@@ -142,13 +143,13 @@ const CaseDetail = () => {
           onVitalsChange={handleVitalsChange}
         />
 
-        {/* Row 4: Diagnostics (large card spanning more columns) */}
+        {/* Row 4: Diagnostics (full-width card) */}
         <DiagnosticsCard
           onLabChange={handleLabsChange}
           onImagingChange={handleImagingChange}
         />
 
-        {/* Row 5: Learning Points (wide card for full content) */}
+        {/* Row 5: Learning Points (full-width card) */}
         <LearningPointsCard medicalCase={medicalCase} />
       </BentoContainer>
 

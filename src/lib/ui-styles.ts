@@ -23,7 +23,7 @@ export const colors = {
   bg: {
     primary: "bg-white/10",
     secondary: "bg-white/5",
-    elevated: "bg-white/20",
+    elevated: "bg-white/15",
     overlay: "bg-white/10",
     error: "bg-red-500/10",
     success: "bg-green-500/10",
@@ -33,7 +33,7 @@ export const colors = {
   // Border colors
   border: {
     default: "border-white/20",
-    elevated: "border-white/30",
+    elevated: "border-white/25",
     error: "border-red-400/30",
     success: "border-green-400/30",
     warning: "border-yellow-400/30"
@@ -53,7 +53,7 @@ export const typography = {
   // Body text
   body: {
     large: `text-lg leading-relaxed ${colors.primary}`,
-    default: `text-base leading-normal ${colors.primary}`,
+    default: `text-base leading-relaxed ${colors.primary}`,
     small: `text-sm leading-normal ${colors.secondary}`,
     caption: `text-xs leading-tight ${colors.muted}`
   },
@@ -71,25 +71,25 @@ export const spacing = {
     xs: "p-2",
     sm: "p-3", 
     md: "p-4",
-    lg: "p-6",
-    xl: "p-8"
+    lg: "p-5",
+    xl: "p-6"
   },
   
   // Section spacing
   section: {
     xs: "space-y-2",
-    sm: "space-y-4",
-    md: "space-y-6", 
-    lg: "space-y-8",
-    xl: "space-y-12"
+    sm: "space-y-3",
+    md: "space-y-4", 
+    lg: "space-y-6",
+    xl: "space-y-8"
   },
   
   // Grid gaps
   grid: {
     xs: "gap-2",
-    sm: "gap-4",
-    md: "gap-6",
-    lg: "gap-8"
+    sm: "gap-3",
+    md: "gap-4",
+    lg: "gap-6"
   }
 } as const;
 
@@ -126,16 +126,16 @@ export const sizing = {
 /** Improved bento grid container layouts with 6-column system */
 export const bentoGrid = {
   // Base grid layouts - 6-column system for better control
-  container: "grid auto-rows-min grid-cols-1 md:grid-cols-3 lg:grid-cols-6",
-  responsive: "grid-cols-1 md:grid-cols-3 lg:grid-cols-6",
-  dense: "grid-cols-1 md:grid-cols-3 lg:grid-cols-6 grid-flow-dense",
+  container: "grid auto-rows-min grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6",
+  responsive: "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6",
+  dense: "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 grid-flow-dense",
   
   // Gap variations
   gaps: {
     tight: "gap-3",
     default: "gap-4",
-    loose: "gap-6",
-    spacious: "gap-8"
+    loose: "gap-5",
+    spacious: "gap-6"
   },
   
   // Enhanced span utilities for 6-column system
@@ -149,10 +149,12 @@ export const bentoGrid = {
       5: "col-span-5",
       6: "col-span-6",
       // Responsive spans
+      "1-sm-2": "col-span-1 sm:col-span-2",
       "1-md-2": "col-span-1 md:col-span-2",
       "1-md-3": "col-span-1 md:col-span-3", 
       "2-lg-3": "col-span-2 lg:col-span-3",
       "3-lg-4": "col-span-3 lg:col-span-4",
+      "2-md-3-lg-4": "col-span-2 md:col-span-3 lg:col-span-4",
       full: "col-span-full"
     },
     
@@ -166,35 +168,32 @@ export const bentoGrid = {
   }
 } as const;
 
-/** Bento card size variants - defined separately to avoid circular references */
+/** Bento card size variants - defined separately */
 const bentoCardSizes = {
-  compact: "min-h-[140px]",
-  default: "min-h-[180px]",
-  medium: "min-h-[220px]",
+  compact: "min-h-[160px]",
+  default: "min-h-[200px]",
+  medium: "min-h-[240px]",
   large: "min-h-[280px]",
   hero: "min-h-[320px]",
-  tall: "min-h-[360px]"
+  tall: "min-h-[380px]"
 } as const;
 
 /** Bento card layout combinations for 6-column grid */
 const bentoCardLayouts = {
-  // Small cards - utility cards, actions
-  small: `${bentoGrid.span.col["1-md-2"]} ${bentoCardSizes.compact}`,
+  // Small cards - utility cards, actions (1-2 cols)
+  small: `${bentoGrid.span.col["1-sm-2"]} ${bentoCardSizes.compact}`,
   
-  // Medium cards - standard content
+  // Medium cards - standard content (2-3 cols)
   medium: `${bentoGrid.span.col["2-lg-3"]} ${bentoCardSizes.medium}`,
   
-  // Large cards - important content
-  large: `${bentoGrid.span.col["3-lg-4"]} ${bentoCardSizes.large}`,
+  // Large cards - important content (3-4 cols)
+  large: `${bentoGrid.span.col["2-md-3-lg-4"]} ${bentoCardSizes.large}`,
   
   // Hero cards - featured content (spans 4 columns on large screens)
-  hero: `${bentoGrid.span.col["3-lg-4"]} ${bentoCardSizes.hero}`,
+  hero: `${bentoGrid.span.col["2-md-3-lg-4"]} ${bentoCardSizes.hero}`,
   
-  // Featured cards - prominent full-width on mobile, 4 cols on desktop
-  featured: `${bentoGrid.span.col.full} lg:${bentoGrid.span.col[4]} ${bentoCardSizes.medium}`,
-  
-  // Wide cards - spans most of the width
-  wide: `${bentoGrid.span.col.full} lg:${bentoGrid.span.col[5]} ${bentoCardSizes.default}`,
+  // Wide cards - spans most/all of the width
+  wide: `${bentoGrid.span.col.full} lg:${bentoGrid.span.col[6]} ${bentoCardSizes.default}`,
   
   // Tall cards - extra height for content-heavy cards
   tall: `${bentoGrid.span.col["2-lg-3"]} ${bentoCardSizes.tall}`
@@ -211,7 +210,7 @@ export const bentoCard = {
 // -----------------------------------------------------------------------------
 
 /** Enhanced focus ring for interactive elements */
-export const focusRing = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:ring-offset-2";
+export const focusRing = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent";
 
 /** Disabled state styling */
 export const disabledState = "disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed";
@@ -221,16 +220,16 @@ export const loadingState = "animate-pulse bg-white/10";
 
 /** Smooth transitions for interactive elements */
 export const transitions = {
-  fast: "transition-all duration-150",
-  default: "transition-all duration-200", 
-  slow: "transition-all duration-300",
-  colors: "transition-colors duration-200",
-  transform: "transition-transform duration-200"
+  fast: "transition-all duration-150 ease-out",
+  default: "transition-all duration-200 ease-out", 
+  slow: "transition-all duration-300 ease-out",
+  colors: "transition-colors duration-200 ease-out",
+  transform: "transition-transform duration-200 ease-out"
 } as const;
 
 /** Interactive states */
 export const interactiveStates = {
-  hover: "hover:bg-white/25 hover:border-white/35 hover:shadow-lg",
+  hover: "hover:bg-white/20 hover:border-white/30 hover:shadow-lg hover:shadow-white/5",
   active: "active:scale-[0.98]",
   focus: focusRing,
   disabled: disabledState
@@ -246,10 +245,10 @@ export const glassmorphic = `backdrop-blur-md ${colors.border.default} ${transit
 /** Enhanced glassmorphic backgrounds with better depth */
 export const glass = {
   subtle: `${glassmorphic} ${colors.bg.primary} shadow-sm`,
-  elevated: `${glassmorphic} ${colors.bg.elevated} shadow-md border-white/25`,
+  elevated: `${glassmorphic} ${colors.bg.elevated} shadow-md ${colors.border.elevated}`,
   overlay: `backdrop-blur-xl ${colors.border.elevated} ${colors.bg.overlay} shadow-lg`,
-  card: `${glassmorphic} ${colors.bg.primary} rounded-xl shadow-sm border-white/15`,
-  cardElevated: `${glassmorphic} ${colors.bg.elevated} rounded-xl shadow-md border-white/25`
+  card: `${glassmorphic} ${colors.bg.primary} rounded-xl shadow-sm border`,
+  cardElevated: `${glassmorphic} ${colors.bg.elevated} rounded-xl shadow-md border`
 } as const;
 
 // -----------------------------------------------------------------------------
@@ -288,13 +287,13 @@ export const bentoCardVariants = {
   elevated: `${cardElevated} ${transitions.default} ${interactiveStates.hover}`,
   
   // Interactive card with enhanced hover effects
-  interactive: `${cardElevated} ${transitions.default} hover:bg-white/30 hover:shadow-xl cursor-pointer hover:scale-[1.02]`,
+  interactive: `${cardElevated} ${transitions.default} hover:bg-white/25 hover:shadow-xl hover:shadow-white/10 cursor-pointer hover:scale-[1.01]`,
   
   // Featured card for hero content
-  featured: `${cardElevated} ring-1 ring-white/30 ${transitions.default} ${interactiveStates.hover} shadow-lg`,
+  featured: `${cardElevated} ring-1 ring-white/30 ${transitions.default} ${interactiveStates.hover} shadow-lg shadow-white/5`,
   
   // Compact card for utility content with reduced padding
-  compact: `${glass.subtle} rounded-lg p-3 ${transitions.default} hover:bg-white/20`,
+  compact: `${glass.subtle} rounded-xl ${transitions.default} hover:bg-white/20`,
   
   // Status cards with semantic meaning
   success: `${cardBase} ${colors.border.success} ${colors.bg.success} shadow-green-500/10`,
@@ -339,7 +338,7 @@ export const buttonVariants = {
 
 /** Common layout patterns */
 export const layouts = {
-  container: "w-full max-w-6xl mx-auto",
+  container: "w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
   grid: {
     responsive: "grid grid-cols-1 md:grid-cols-2",
     twoCol: `grid grid-cols-2 ${spacing.grid.md}`,
@@ -361,7 +360,7 @@ export const layouts = {
     dense: `${bentoGrid.container} ${bentoGrid.gaps.tight}`,
     
     // Spacious layout for featured content
-    spacious: `${bentoGrid.container} ${bentoGrid.gaps.spacious}`
+    spacious: `${bentoGrid.container} ${bentoGrid.gaps.loose}`
   }
 } as const;
 
@@ -423,7 +422,7 @@ export const medicalForm = {
 
 /** Export commonly used combinations */
 export const commonStyles = {
-  pageContainer: `${layouts.container} ${spacing.section.md}`,
+  pageContainer: `${layouts.container} ${spacing.section.lg}`,
   sectionCard: medicalSection.container,
   formGrid: medicalForm.grid,
   buttonPrimary: buttonVariants.primary,

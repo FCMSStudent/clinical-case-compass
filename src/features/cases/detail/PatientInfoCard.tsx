@@ -21,50 +21,54 @@ export const PatientInfoCard: React.FC<PatientInfoCardProps> = ({ medicalCase })
       subtitle={`${medicalCase.patient.age} years old • ${medicalCase.patient.gender}`}
     >
       <div className="space-y-4">
-        {/* Patient Details */}
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <div className="text-white/60 text-xs uppercase tracking-wide mb-1">Medical Record</div>
-            <div className={typography.body.small}>
+        {/* Patient Details Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-1">
+            <div className="text-white/60 text-xs uppercase tracking-wide font-medium">Medical Record</div>
+            <div className={cn(typography.body.small, "font-medium")}>
               {medicalCase.patient.medicalRecordNumber || "Not provided"}
             </div>
           </div>
-          <div>
-            <div className="text-white/60 text-xs uppercase tracking-wide mb-1">Case Status</div>
-            <Badge variant="outline" className="bg-white/10 border-white/20 text-white capitalize">
+          <div className="space-y-1">
+            <div className="text-white/60 text-xs uppercase tracking-wide font-medium">Case Status</div>
+            <Badge 
+              variant="outline" 
+              className="bg-white/10 border-white/20 text-white capitalize font-medium"
+            >
               {medicalCase.status}
             </Badge>
           </div>
         </div>
 
-        {/* Case Information */}
-        <div className="flex flex-wrap items-center gap-4 pt-3 border-t border-white/10">
+        {/* Case Timeline */}
+        <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-white/10">
           <div className="flex items-center gap-2 text-white/70">
-            <Calendar className="h-4 w-4" />
+            <Calendar className="h-4 w-4 text-white/60" />
             <span className="text-sm">
               Created {format(new Date(medicalCase.createdAt), "MMM d, yyyy")}
             </span>
           </div>
           <div className="flex items-center gap-2 text-white/70">
-            <FileText className="h-4 w-4" />
+            <FileText className="h-4 w-4 text-white/60" />
             <span className="text-sm">
               Updated {format(new Date(medicalCase.updatedAt), "MMM d, yyyy")}
             </span>
           </div>
         </div>
 
-        {/* Tags */}
+        {/* Tags Section */}
         {medicalCase.tags && medicalCase.tags.length > 0 && (
-          <div className="pt-3 border-t border-white/10">
-            <div className="text-white/60 text-xs uppercase tracking-wide mb-2">Tags</div>
+          <div className="pt-4 border-t border-white/10">
+            <div className="text-white/60 text-xs uppercase tracking-wide font-medium mb-3">Tags</div>
             <div className="flex flex-wrap gap-2">
               {medicalCase.tags.map((tag) => (
                 <span
                   key={tag.id}
-                  className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
+                  className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ring-1 ring-white/10"
                   style={{
-                    backgroundColor: `${tag.color}20`,
+                    backgroundColor: `${tag.color}15`,
                     color: tag.color,
+                    borderColor: `${tag.color}30`
                   }}
                 >
                   {tag.name}

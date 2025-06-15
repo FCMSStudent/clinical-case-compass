@@ -19,11 +19,13 @@ export const LearningPointsCard: React.FC<LearningPointsCardProps> = ({ medicalC
     >
       <div className="space-y-3">
         {medicalCase.learningPoints ? (
-          <p className={`${typography.body.default} leading-relaxed`}>{medicalCase.learningPoints}</p>
+          <div className={cn(typography.body.default, "leading-relaxed")}>
+            {medicalCase.learningPoints}
+          </div>
         ) : (
-          <p className={`${typography.body.small} text-white/60`}>
+          <div className={cn(typography.body.small, "text-white/60 p-4 bg-white/5 rounded-lg border border-white/10")}>
             No learning points recorded for this case
-          </p>
+          </div>
         )}
       </div>
     </BentoCard>

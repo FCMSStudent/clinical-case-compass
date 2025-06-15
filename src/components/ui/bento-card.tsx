@@ -11,7 +11,7 @@ interface BentoCardProps extends React.HTMLAttributes<HTMLDivElement> {
   title?: string;
   subtitle?: string;
   children: React.ReactNode;
-  compact?: boolean; // For reduced padding
+  compact?: boolean;
 }
 
 const BentoCard = React.forwardRef<HTMLDivElement, BentoCardProps>(
@@ -21,9 +21,9 @@ const BentoCard = React.forwardRef<HTMLDivElement, BentoCardProps>(
     const sizeClasses = size ? bentoCard.size[size] : '';
     const variantClasses = bentoCardVariants[variant];
 
-    // Adjust padding based on content type
-    const headerPadding = compact ? "p-3 pb-2" : spacing.component.md;
-    const contentPadding = compact ? "px-3 pb-3" : spacing.component.md;
+    // Consistent padding based on card type
+    const headerPadding = compact ? "p-4 pb-3" : "p-5 pb-4";
+    const contentPadding = compact ? "px-4 pb-4" : "px-5 pb-5";
 
     return (
       <div
@@ -40,7 +40,7 @@ const BentoCard = React.forwardRef<HTMLDivElement, BentoCardProps>(
           <div className={cn(headerPadding, "border-b border-white/10")}>
             <div className="flex items-center gap-3">
               {icon && (
-                <div className="flex-shrink-0 flex items-center justify-center p-2 bg-white/10 rounded-lg">
+                <div className="flex-shrink-0 flex items-center justify-center w-10 h-10 bg-white/10 rounded-lg ring-1 ring-white/10">
                   {React.cloneElement(icon as React.ReactElement, {
                     className: cn(iconWithText, (icon as React.ReactElement).props?.className)
                   })}
@@ -51,7 +51,7 @@ const BentoCard = React.forwardRef<HTMLDivElement, BentoCardProps>(
                   <h3 className={cn(typography.h5, "truncate")}>{title}</h3>
                 )}
                 {subtitle && (
-                  <p className={cn(typography.description, "truncate mt-0.5")}>{subtitle}</p>
+                  <p className={cn(typography.description, "truncate mt-1")}>{subtitle}</p>
                 )}
               </div>
             </div>

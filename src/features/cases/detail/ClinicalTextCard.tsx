@@ -25,11 +25,15 @@ export const ClinicalTextCard: React.FC<ClinicalTextCardProps> = ({
       icon={icon}
       title={title}
     >
-      <div className={spacing.section.sm}>
+      <div className="space-y-2">
         {content ? (
-          <p className={typography.body.default}>{content}</p>
+          <div className={cn(typography.body.default, "leading-relaxed")}>
+            {content}
+          </div>
         ) : (
-          <p className={`${typography.body.small} text-white/60`}>{placeholder}</p>
+          <div className={cn(typography.body.small, "text-white/60 p-4 bg-white/5 rounded-lg border border-white/10")}>
+            {placeholder}
+          </div>
         )}
       </div>
     </BentoCard>
