@@ -120,6 +120,78 @@ export const sizing = {
 } as const;
 
 // -----------------------------------------------------------------------------
+// BENTO GRID SYSTEM
+// -----------------------------------------------------------------------------
+
+/** Bento grid container layouts */
+export const bentoGrid = {
+  // Base grid layouts
+  container: "grid auto-rows-min",
+  responsive: "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
+  dense: "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid-flow-dense",
+  
+  // Gap variations
+  gaps: {
+    tight: "gap-3",
+    default: "gap-4",
+    loose: "gap-6",
+    spacious: "gap-8"
+  },
+  
+  // Span utilities
+  span: {
+    // Column spans
+    col: {
+      full: "col-span-full",
+      half: "md:col-span-2",
+      third: "lg:col-span-1",
+      twoThirds: "lg:col-span-2",
+      quarter: "xl:col-span-1"
+    },
+    
+    // Row spans
+    row: {
+      auto: "row-span-1",
+      double: "row-span-2",
+      triple: "row-span-3"
+    }
+  }
+} as const;
+
+/** Bento card size variants */
+export const bentoCard = {
+  // Size variants
+  size: {
+    compact: "min-h-[120px]",
+    default: "min-h-[160px]",
+    medium: "min-h-[200px]",
+    large: "min-h-[280px]",
+    hero: "min-h-[320px]"
+  },
+  
+  // Layout combinations
+  layouts: {
+    // Small cards (1x1)
+    small: `${bentoGrid.span.col.third} ${bentoCard.size.compact}`,
+    
+    // Medium cards (2x1)
+    medium: `${bentoGrid.span.col.half} ${bentoCard.size.default}`,
+    
+    // Large cards (2x2 or spanning)
+    large: `${bentoGrid.span.col.half} ${bentoCard.size.large}`,
+    
+    // Hero cards (full width or 2x2)
+    hero: `${bentoGrid.span.col.twoThirds} ${bentoCard.size.hero}`,
+    
+    // Featured cards (prominent positioning)
+    featured: `${bentoGrid.span.col.full} md:${bentoGrid.span.col.twoThirds} ${bentoCard.size.medium}`,
+    
+    // Tall cards (1x2)
+    tall: `${bentoGrid.span.col.third} ${bentoCard.size.large} ${bentoGrid.span.row.double}`
+  }
+} as const;
+
+// -----------------------------------------------------------------------------
 // INTERACTIVITY & STATE STYLES
 // -----------------------------------------------------------------------------
 
@@ -189,6 +261,33 @@ export const cardBase = glass.card;
 export const cardElevated = glass.cardElevated;
 
 // -----------------------------------------------------------------------------
+// BENTO CARD COMPONENTS
+// -----------------------------------------------------------------------------
+
+/** Bento card variants using the design system */
+export const bentoCardVariants = {
+  // Standard card
+  default: `${cardBase} ${transitions.default} ${interactiveStates.hover}`,
+  
+  // Elevated card with subtle elevation
+  elevated: `${cardElevated} ${transitions.default} ${interactiveStates.hover}`,
+  
+  // Interactive card with hover effects
+  interactive: `${cardBase} ${transitions.default} ${interactiveStates.hover} cursor-pointer`,
+  
+  // Featured card for important content
+  featured: `${cardElevated} ring-1 ring-white/30 ${transitions.default} ${interactiveStates.hover}`,
+  
+  // Compact card for small content
+  compact: `${glass.subtle} rounded-lg ${spacing.component.sm} ${transitions.default}`,
+  
+  // Status cards with semantic meaning
+  success: `${cardBase} ${colors.border.success} ${colors.bg.success}`,
+  warning: `${cardBase} ${colors.border.warning} ${colors.bg.warning}`,
+  error: `${cardBase} ${colors.border.error} ${colors.bg.error}`
+} as const;
+
+// -----------------------------------------------------------------------------
 // SEMANTIC COMPONENT STYLES
 // -----------------------------------------------------------------------------
 
@@ -236,6 +335,18 @@ export const layouts = {
     center: "flex items-center justify-center", 
     start: "flex items-center",
     col: "flex flex-col"
+  },
+  
+  // Bento grid layouts
+  bento: {
+    // Main container with responsive bento grid
+    container: `${bentoGrid.container} ${bentoGrid.responsive} ${bentoGrid.gaps.default}`,
+    
+    // Dense layout for more content
+    dense: `${bentoGrid.container} ${bentoGrid.dense} ${bentoGrid.gaps.tight}`,
+    
+    // Spacious layout for featured content
+    spacious: `${bentoGrid.container} ${bentoGrid.responsive} ${bentoGrid.gaps.spacious}`
   }
 } as const;
 
@@ -302,5 +413,10 @@ export const commonStyles = {
   formGrid: medicalForm.grid,
   buttonPrimary: buttonVariants.primary,
   inputField: formField.input,
-  iconButton: `${buttonBase} ${sizing.button.sm} ${glass.subtle}`
+  iconButton: `${buttonBase} ${sizing.button.sm} ${glass.subtle}`,
+  
+  // Bento grid combinations
+  bentoContainer: layouts.bento.container,
+  bentoCardDefault: bentoCardVariants.default,
+  bentoCardFeatured: bentoCardVariants.featured
 } as const;
