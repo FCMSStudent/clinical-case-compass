@@ -1,16 +1,17 @@
+
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 import { Loader2 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { buttonVariants as unifiedButtonVariants, componentSizes, interactionStates } from "@/lib/component-system"
-import { typo } from "@/lib/typography"
+import { buttonVariants as unifiedButtonVariants } from "@/lib/design-system"
+import { typography } from "@/lib/typography"
 
 const buttonVariants = cva(
   cn(
     "inline-flex items-center justify-center whitespace-nowrap rounded-lg",
-    typo.button
+    typography.button
   ),
   {
     variants: {
@@ -34,14 +35,14 @@ const buttonVariants = cva(
         // Legacy variants for backward compatibility
         default: unifiedButtonVariants.primary,
         destructive: unifiedButtonVariants.error,
-        link: cn(typo.link, "text-white underline-offset-4 hover:underline"),
+        link: cn(typography.link, "text-white underline-offset-4 hover:underline"),
       },
       size: {
-        xs: componentSizes.button.xs,
-        sm: componentSizes.button.sm,
-        md: componentSizes.button.md,
-        lg: componentSizes.button.lg,
-        xl: componentSizes.button.xl,
+        xs: 'h-6 px-2 text-xs',
+        sm: 'h-8 px-3 text-sm',
+        md: 'h-10 px-4 text-sm',
+        lg: 'h-12 px-6 text-base',
+        xl: 'h-14 px-8 text-lg',
         icon: "h-10 w-10",
       },
     },

@@ -30,7 +30,16 @@ export const typography = {
   
   // Medical specific
   vital: `text-lg font-mono tabular-nums text-white`,
-  measurement: `text-base font-mono tabular-nums text-white`
+  measurement: `text-base font-mono tabular-nums text-white`,
+  
+  // Component specific
+  button: `text-sm font-medium`,
+  link: `font-medium underline underline-offset-4`,
+  
+  // Medical text styles
+  dosage: `font-mono text-sm text-white/90`,
+  diagnosis: `font-semibold text-base text-white`,
+  note: `text-sm text-white/80`
 } as const;
 
 // Compatibility alias

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -18,8 +17,8 @@ import {
   getBentoStyles, 
   getGlassmorphicStyles,
   buttonVariants,
-  cardVariants 
-} from '@/lib/component-system';
+  card 
+} from '@/lib/design-system';
 
 export function UnifiedComponentSystemExample() {
   return (
@@ -42,7 +41,7 @@ export function UnifiedComponentSystemExample() {
         {/* Button System */}
         <StaggeredContainer className="space-y-6">
           <StaggeredItem>
-            <Card className={cardVariants.elevated}>
+            <Card className={card.variant.elevated}>
               <CardHeader>
                 <CardTitle className="text-white">Unified Button System</CardTitle>
                 <CardDescription className="text-white/70">
@@ -68,7 +67,7 @@ export function UnifiedComponentSystemExample() {
 
           {/* Glassmorphic Effects */}
           <StaggeredItem>
-            <Card className={cardVariants.elevated}>
+            <Card className={card.variant.elevated}>
               <CardHeader>
                 <CardTitle className="text-white">Glassmorphic Effect Variants</CardTitle>
                 <CardDescription className="text-white/70">
@@ -76,15 +75,15 @@ export function UnifiedComponentSystemExample() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className={`${getGlassmorphicStyles('subtle')} p-4 rounded-lg`}>
+                <div className={card.variant.default + ' p-4'}>
                   <div className="text-white/90 font-medium">Subtle Glass</div>
                   <div className="text-white/70 text-sm">Minimal depth for backgrounds</div>
                 </div>
-                <div className={`${getGlassmorphicStyles('medium')} p-4 rounded-lg`}>
+                <div className={card.variant.elevated + ' p-4'}>
                   <div className="text-white font-medium">Medium Glass</div>
                   <div className="text-white/70 text-sm">Standard card depth</div>
                 </div>
-                <div className={`${getGlassmorphicStyles('elevated')} p-4 rounded-lg`}>
+                <div className={card.variant.featured + ' p-4'}>
                   <div className="text-white font-medium">Elevated Glass</div>
                   <div className="text-white/70 text-sm">Prominent overlays</div>
                 </div>
@@ -94,7 +93,7 @@ export function UnifiedComponentSystemExample() {
 
           {/* Animation Components */}
           <StaggeredItem>
-            <Card className={cardVariants.interactive}>
+            <Card className={card.variant.interactive}>
               <CardHeader>
                 <CardTitle className="text-white">Animation Components</CardTitle>
                 <CardDescription className="text-white/70">
@@ -103,19 +102,19 @@ export function UnifiedComponentSystemExample() {
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <GlassyHover className={`${getGlassmorphicStyles('medium')} p-4 rounded-lg cursor-pointer`}>
+                  <GlassyHover className={`${card.variant.default} p-4 rounded-lg cursor-pointer`}>
                     <Heart className="h-6 w-6 text-red-400 mb-2" />
                     <div className="text-white font-medium">Glassy Hover</div>
                     <div className="text-white/70 text-sm">3D hover effect</div>
                   </GlassyHover>
                   
-                  <Floating className={`${getGlassmorphicStyles('medium')} p-4 rounded-lg`}>
+                  <Floating className={`${card.variant.default} p-4 rounded-lg`}>
                     <Activity className="h-6 w-6 text-green-400 mb-2" />
                     <div className="text-white font-medium">Floating</div>
                     <div className="text-white/70 text-sm">Gentle float animation</div>
                   </Floating>
                   
-                  <PulseGlow className={`${getGlassmorphicStyles('medium')} p-4 rounded-lg`}>
+                  <PulseGlow className={`${card.variant.default} p-4 rounded-lg`}>
                     <AlertTriangle className="h-6 w-6 text-yellow-400 mb-2" />
                     <div className="text-white font-medium">Pulse Glow</div>
                     <div className="text-white/70 text-sm">Medical pulse effect</div>
@@ -127,7 +126,7 @@ export function UnifiedComponentSystemExample() {
 
           {/* Bento Grid System */}
           <StaggeredItem>
-            <Card className={cardVariants.featured}>
+            <Card className={card.variant.featured}>
               <CardHeader>
                 <CardTitle className="text-white">Enhanced Bento Grid</CardTitle>
                 <CardDescription className="text-white/70">
@@ -136,13 +135,13 @@ export function UnifiedComponentSystemExample() {
               </CardHeader>
               <CardContent>
                 <div className={getBentoStyles('container', 'default')}>
-                  <div className={`${getBentoStyles('card', 'small')} ${getGlassmorphicStyles('medium')} p-4 rounded-lg`}>
+                  <div className={`${getBentoStyles('card', 'small')} ${card.variant.default} p-4 rounded-lg`}>
                     <Users className="h-6 w-6 text-blue-400 mb-2" />
                     <div className="text-white font-medium">Patients</div>
                     <div className="text-2xl font-bold text-white">1,234</div>
                   </div>
                   
-                  <div className={`${getBentoStyles('card', 'medium')} ${getGlassmorphicStyles('medium')} p-4 rounded-lg`}>
+                  <div className={`${getBentoStyles('card', 'medium')} ${card.variant.default} p-4 rounded-lg`}>
                     <TrendingUp className="h-6 w-6 text-green-400 mb-2" />
                     <div className="text-white font-medium mb-4">Patient Statistics</div>
                     <div className="space-y-2">
@@ -157,7 +156,7 @@ export function UnifiedComponentSystemExample() {
                     </div>
                   </div>
                   
-                  <div className={`${getBentoStyles('card', 'large')} ${getGlassmorphicStyles('elevated')} p-4 rounded-lg`}>
+                  <div className={`${getBentoStyles('card', 'large')} ${card.variant.elevated} p-4 rounded-lg`}>
                     <div className="text-white font-medium mb-4">Medical Dashboard</div>
                     <div className="space-y-3">
                       <Input 

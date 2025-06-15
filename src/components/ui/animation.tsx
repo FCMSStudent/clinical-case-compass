@@ -59,7 +59,8 @@ const animationVariants = {
 // ANIMATION WRAPPER COMPONENTS
 // ────────────────────────────────────────────────────────────────────────────────
 
-interface AnimatedDivProps extends React.HTMLAttributes<HTMLDivElement> {
+interface AnimatedDivProps {
+  className?: string;
   variant?: keyof typeof animationVariants;
   children: React.ReactNode;
   delay?: number;
@@ -67,7 +68,7 @@ interface AnimatedDivProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const AnimatedDiv = React.forwardRef<HTMLDivElement, AnimatedDivProps>(
-  ({ className, variant = "fadeIn", children, delay = 0, duration, ...props }, ref) => {
+  ({ className, variant = "fadeIn", children, delay = 0, duration }, ref) => {
     const variants = animationVariants[variant];
     
     return (
@@ -78,7 +79,6 @@ const AnimatedDiv = React.forwardRef<HTMLDivElement, AnimatedDivProps>(
         initial="hidden"
         animate="visible"
         exit="exit"
-        {...props}
       >
         {children}
       </motion.div>
@@ -91,14 +91,15 @@ AnimatedDiv.displayName = "AnimatedDiv";
 // STAGGERED CONTAINER COMPONENT
 // ────────────────────────────────────────────────────────────────────────────────
 
-interface StaggeredContainerProps extends React.HTMLAttributes<HTMLDivElement> {
+interface StaggeredContainerProps {
+  className?: string;
   children: React.ReactNode;
   staggerDelay?: number;
   delayChildren?: number;
 }
 
 const StaggeredContainer = React.forwardRef<HTMLDivElement, StaggeredContainerProps>(
-  ({ className, children, staggerDelay = 0.1, delayChildren = 0.2, ...props }, ref) => {
+  ({ className, children, staggerDelay = 0.1, delayChildren = 0.2 }, ref) => {
     const variants: Variants = {
       hidden: { opacity: 0 },
       visible: {
@@ -117,7 +118,6 @@ const StaggeredContainer = React.forwardRef<HTMLDivElement, StaggeredContainerPr
         variants={variants}
         initial="hidden"
         animate="visible"
-        {...props}
       >
         {children}
       </motion.div>
@@ -130,13 +130,14 @@ StaggeredContainer.displayName = "StaggeredContainer";
 // STAGGERED ITEM COMPONENT
 // ────────────────────────────────────────────────────────────────────────────────
 
-interface StaggeredItemProps extends React.HTMLAttributes<HTMLDivElement> {
+interface StaggeredItemProps {
+  className?: string;
   children: React.ReactNode;
   duration?: number;
 }
 
 const StaggeredItem = React.forwardRef<HTMLDivElement, StaggeredItemProps>(
-  ({ className, children, duration = 0.5, ...props }, ref) => {
+  ({ className, children, duration = 0.5 }, ref) => {
     const variants: Variants = {
       hidden: { opacity: 0, y: 20, scale: 0.95 },
       visible: {
@@ -155,7 +156,6 @@ const StaggeredItem = React.forwardRef<HTMLDivElement, StaggeredItemProps>(
         ref={ref}
         className={cn(className)}
         variants={variants}
-        {...props}
       >
         {children}
       </motion.div>
@@ -168,13 +168,14 @@ StaggeredItem.displayName = "StaggeredItem";
 // GLASSY HOVER COMPONENT
 // ────────────────────────────────────────────────────────────────────────────────
 
-interface GlassyHoverProps extends React.HTMLAttributes<HTMLDivElement> {
+interface GlassyHoverProps {
+  className?: string;
   children: React.ReactNode;
   intensity?: "subtle" | "medium" | "strong";
 }
 
 const GlassyHover = React.forwardRef<HTMLDivElement, GlassyHoverProps>(
-  ({ className, children, intensity = "medium", ...props }, ref) => {
+  ({ className, children, intensity = "medium" }, ref) => {
     const hoverAnimation = {
       scale: intensity === "subtle" ? 1.01 : intensity === "strong" ? 1.03 : 1.02,
       filter: intensity === "subtle" ? "brightness(1.05)" : intensity === "strong" ? "brightness(1.15)" : "brightness(1.1)",
@@ -187,7 +188,6 @@ const GlassyHover = React.forwardRef<HTMLDivElement, GlassyHoverProps>(
         whileHover={hoverAnimation}
         whileTap={{ scale: 0.98 }}
         transition={{ duration: 0.3, ease: "easeOut" }}
-        {...props}
       >
         {children}
       </motion.div>
@@ -200,14 +200,15 @@ GlassyHover.displayName = "GlassyHover";
 // FLOATING COMPONENT
 // ────────────────────────────────────────────────────────────────────────────────
 
-interface FloatingProps extends React.HTMLAttributes<HTMLDivElement> {
+interface FloatingProps {
+  className?: string;
   children: React.ReactNode;
   duration?: number;
   amplitude?: number;
 }
 
 const Floating = React.forwardRef<HTMLDivElement, FloatingProps>(
-  ({ className, children, duration = 4, amplitude = 5, ...props }, ref) => {
+  ({ className, children, duration = 4, amplitude = 5 }, ref) => {
     return (
       <motion.div
         ref={ref}
@@ -220,7 +221,6 @@ const Floating = React.forwardRef<HTMLDivElement, FloatingProps>(
           repeat: Infinity,
           ease: "easeInOut",
         }}
-        {...props}
       >
         {children}
       </motion.div>
@@ -233,14 +233,15 @@ Floating.displayName = "Floating";
 // PULSE GLOW COMPONENT
 // ────────────────────────────────────────────────────────────────────────────────
 
-interface PulseGlowProps extends React.HTMLAttributes<HTMLDivElement> {
+interface PulseGlowProps {
+  className?: string;
   children: React.ReactNode;
   color?: string;
   duration?: number;
 }
 
 const PulseGlow = React.forwardRef<HTMLDivElement, PulseGlowProps>(
-  ({ className, children, color = "rgba(255, 255, 255, 0.1)", duration = 2, ...props }, ref) => {
+  ({ className, children, color = "rgba(255, 255, 255, 0.1)", duration = 2 }, ref) => {
     return (
       <motion.div
         ref={ref}
@@ -257,7 +258,6 @@ const PulseGlow = React.forwardRef<HTMLDivElement, PulseGlowProps>(
           repeat: Infinity,
           ease: "easeInOut",
         }}
-        {...props}
       >
         {children}
       </motion.div>
@@ -270,13 +270,14 @@ PulseGlow.displayName = "PulseGlow";
 // MEDICAL PULSE COMPONENT
 // ────────────────────────────────────────────────────────────────────────────────
 
-interface MedicalPulseProps extends React.HTMLAttributes<HTMLDivElement> {
+interface MedicalPulseProps {
+  className?: string;
   children: React.ReactNode;
   duration?: number;
 }
 
 const MedicalPulse = React.forwardRef<HTMLDivElement, MedicalPulseProps>(
-  ({ className, children, duration = 2, ...props }, ref) => {
+  ({ className, children, duration = 2 }, ref) => {
     return (
       <motion.div
         ref={ref}
@@ -290,7 +291,6 @@ const MedicalPulse = React.forwardRef<HTMLDivElement, MedicalPulseProps>(
           repeat: Infinity,
           ease: "easeInOut",
         }}
-        {...props}
       >
         {children}
       </motion.div>
