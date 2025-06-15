@@ -16,8 +16,7 @@ import Cases from "@/pages/Cases";
 import CaseDetail from "@/pages/CaseDetail";
 import CaseEdit from "@/pages/CaseEdit";
 import CreateCaseFlow from "@/pages/CreateCaseFlow";
-import Profile from "@/pages/Profile";
-import Settings from "@/pages/Settings";
+import Account from "@/pages/Account";
 import Auth from "@/pages/Auth";
 import NotFound from "@/pages/NotFound";
 import LandingPage from "@/pages/Landing";
@@ -125,7 +124,7 @@ const AppContent = () => {
           }
         />
         <Route
-          path="/profile"
+          path="/account"
           element={
             <PrivateRoute>
               <EnhancedAppLayout>
@@ -134,22 +133,7 @@ const AppContent = () => {
                     <OfflineBanner />
                   </div>
                 )}
-                <Profile />
-              </EnhancedAppLayout>
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/settings"
-          element={
-            <PrivateRoute>
-              <EnhancedAppLayout>
-                {isOfflineMode && (
-                  <div className="mb-4">
-                    <OfflineBanner />
-                  </div>
-                )}
-                <Settings />
+                <Account />
               </EnhancedAppLayout>
             </PrivateRoute>
           }

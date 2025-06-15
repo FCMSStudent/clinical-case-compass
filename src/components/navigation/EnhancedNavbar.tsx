@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from "react";
 import { Search, Menu, X, Home, BookOpen, ChevronDown, User, LogOut } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -241,14 +242,14 @@ const EnhancedNavbar: React.FC = () => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
-                    className="absolute right-0 mt-2 w-48 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 py-2"
+                    className="absolute right-0 mt-2 w-48 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 py-2 z-20"
                   >
                     <button
-                      className="w-full px-4 py-2 text-left text-white flex items-center space-x-2 transition-colors"
-                      onClick={() => { navigate('/settings'); setIsUserMenuOpen(false); }}
+                      className="w-full px-4 py-2 text-left text-white flex items-center space-x-2 transition-colors hover:bg-white/20"
+                      onClick={() => { navigate('/account'); setIsUserMenuOpen(false); }}
                     >
                       <User className="h-4 w-4" />
-                      <span>Settings</span>
+                      <span>Account</span>
                     </button>
                     <div className="h-px bg-white/20 my-2" />
                     <button
@@ -329,14 +330,14 @@ const EnhancedNavbar: React.FC = () => {
               {/* Mobile User Menu */}
               <div className="border-t border-white/20 mt-4 pt-4">
                 <button
-                  className="w-full flex items-center space-x-3 px-4 py-3 text-white/80 rounded-xl transition-colors"
-                  onClick={() => { navigate('/settings'); setIsMobileMenuOpen(false); }}
+                  className="w-full flex items-center space-x-3 px-4 py-3 text-white/80 rounded-xl transition-colors hover:bg-white/20"
+                  onClick={() => { navigate('/account'); setIsMobileMenuOpen(false); }}
                 >
                   <User className="h-5 w-5" />
-                  <span>Settings</span>
+                  <span>Account</span>
                 </button>
                 <button
-                  className="w-full flex items-center space-x-3 px-4 py-3 text-red-300 rounded-xl transition-colors"
+                  className="w-full flex items-center space-x-3 px-4 py-3 text-red-300 rounded-xl transition-colors hover:bg-white/20"
                   onClick={() => { handleSignOut(); setIsMobileMenuOpen(false); }}
                 >
                   <LogOut className="h-5 w-5" />

@@ -1,3 +1,4 @@
+
 import React, { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import {
   Menu,
@@ -126,10 +127,10 @@ const navItems = [
     description: "Browse and manage your clinical cases"
   },
   {
-    href: "/settings",
-    label: "Profile & Settings",
-    icon: Settings,
-    description: "Configure your account and preferences"
+    href: "/account",
+    label: "Account",
+    icon: User,
+    description: "Manage your profile, settings, and preferences"
   },
 ];
 
@@ -295,11 +296,11 @@ const UserProfile: React.FC<{ collapsed: boolean; isMobile: boolean }> = ({ coll
               <div className="relative bg-white/10 backdrop-blur-md rounded-xl border border-white/20 py-2">
                 <button
                   className="w-full px-4 py-2 text-sm text-left text-white hover:bg-white/20 flex items-center space-x-2 transition-colors focus:outline-none focus:ring-2 focus:ring-white/30"
-                  onClick={() => { navigate("/settings"); setShowUserMenu(false); }}
+                  onClick={() => { navigate("/account"); setShowUserMenu(false); }}
                   role="menuitem"
                 >
                   <User className="h-4 w-4" aria-hidden="true" />
-                  <span>Profile & Settings</span>
+                  <span>Account</span>
                 </button>
                 <div className="h-px bg-white/20 my-2" role="separator" />
                 <button 
@@ -322,7 +323,7 @@ const UserProfile: React.FC<{ collapsed: boolean; isMobile: boolean }> = ({ coll
     <div className="border-t border-white/20 pt-4">
       <div
         className="flex items-center space-x-3 rounded-xl p-3 bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/30"
-        onClick={() => navigate("/settings")}
+        onClick={() => navigate("/account")}
         onKeyDown={handleKeyDown}
         tabIndex={0}
         role="button"
