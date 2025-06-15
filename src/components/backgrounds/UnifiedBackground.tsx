@@ -1,7 +1,6 @@
-
 import React, { useEffect, useState } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import { useTheme } from "@/lib/themes";
+import { useTheme } from "@/lib/design-system";
 import { cn } from "@/lib/utils";
 import { prefersReducedMotion } from "@/lib/motion";
 import { animatedIconsConfig, particleConfig, hexagonConfig } from "@/lib/background-config";
