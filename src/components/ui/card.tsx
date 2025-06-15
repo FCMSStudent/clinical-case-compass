@@ -2,7 +2,7 @@
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
-import { glassmorphicBg } from "@/lib/ui-styles"
+import { cardBase, textPrimary, textSecondary } from "@/lib/ui-styles"
 
 const Card = React.forwardRef<
   HTMLDivElement,
@@ -11,8 +11,7 @@ const Card = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      glassmorphicBg,
-      "rounded-lg shadow-sm",
+      cardBase,
       className
     )}
     {...props}
@@ -40,6 +39,7 @@ const CardTitle = React.forwardRef<
     ref={ref}
     className={cn(
       "text-2xl font-semibold leading-none tracking-tight",
+      textPrimary,
       className
     )}
     {...props}
@@ -53,7 +53,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
+    className={cn("text-sm", textSecondary, className)}
     {...props}
   />
 ))

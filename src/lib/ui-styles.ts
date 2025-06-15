@@ -18,6 +18,9 @@ export const disabledState = "disabled:pointer-events-none disabled:opacity-50";
 /** A general-purpose transition for properties like color, background, and shadow. */
 export const transitionAll = "transition-all duration-200";
 
+/** Enhanced hover states for interactive elements. */
+export const hoverState = "hover:bg-white/20 hover:border-white/30";
+
 // -----------------------------------------------------------------------------
 // GLASSMORPHISM & BACKGROUND STYLES
 // -----------------------------------------------------------------------------
@@ -35,12 +38,75 @@ export const glassmorphicBgElevated = `${glassmorphic} bg-white/20`;
 export const glassmorphicOverlay = `backdrop-blur-xl border border-white/20 bg-white/10`;
 
 // -----------------------------------------------------------------------------
+// TYPOGRAPHY STYLES
+// -----------------------------------------------------------------------------
+
+/** Primary text color for headings and important content. */
+export const textPrimary = "text-white";
+
+/** Secondary text color for descriptions and less important content. */
+export const textSecondary = "text-white/70";
+
+/** Muted text color for labels and subtle information. */
+export const textMuted = "text-white/60";
+
+/** Error text color for validation messages. */
+export const textError = "text-red-300";
+
+/** Success text color for confirmation messages. */
+export const textSuccess = "text-green-300";
+
+// -----------------------------------------------------------------------------
 // SHARED COMPONENT STYLES
 // -----------------------------------------------------------------------------
 
 /** Base styles for all input-like components (Input, Textarea, etc.). */
-export const inputLikeBase = `flex w-full rounded-xl text-sm text-white placeholder:text-white/60 ${glassmorphicBg} ${focusRing} ${disabledState}`;
+export const inputLikeBase = `flex w-full rounded-xl text-sm ${textPrimary} placeholder:${textMuted} ${glassmorphicBg} ${focusRing} ${disabledState} ${hoverState}`;
 
 /** Base styles for all button variants. */
 export const buttonBase = `inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium ${transitionAll} ${focusRing} ${disabledState}`;
 
+/** Standard card styles with glassmorphic effect. */
+export const cardBase = `${glassmorphicBg} rounded-xl shadow-sm`;
+
+/** Elevated card styles for important content. */
+export const cardElevated = `${glassmorphicBgElevated} rounded-xl shadow-md`;
+
+// -----------------------------------------------------------------------------
+// LAYOUT & SPACING
+// -----------------------------------------------------------------------------
+
+/** Standard container padding for page content. */
+export const containerPadding = "px-4 sm:px-6 lg:px-8";
+
+/** Standard spacing between sections. */
+export const sectionSpacing = "space-y-6";
+
+/** Standard grid gaps for responsive layouts. */
+export const gridGap = "gap-4 sm:gap-6";
+
+/** Standard form field spacing. */
+export const formSpacing = "space-y-4";
+
+// -----------------------------------------------------------------------------
+// RESPONSIVE DESIGN
+// -----------------------------------------------------------------------------
+
+/** Standard responsive grid for cards/items. */
+export const responsiveGrid = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3";
+
+/** Standard responsive flex layout. */
+export const responsiveFlex = "flex flex-col md:flex-row md:items-center md:justify-between";
+
+// -----------------------------------------------------------------------------
+// STATE INDICATORS
+// -----------------------------------------------------------------------------
+
+/** Loading state styles. */
+export const loadingState = "animate-pulse bg-white/10";
+
+/** Error state styles for components. */
+export const errorState = "border-red-400/50 bg-red-500/10 text-red-300";
+
+/** Success state styles for components. */
+export const successState = "border-green-400/50 bg-green-500/10 text-green-300";

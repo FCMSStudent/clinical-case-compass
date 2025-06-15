@@ -5,23 +5,21 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { Loader2 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { buttonBase, glassmorphicBg, glassmorphicBgElevated } from "@/lib/ui-styles"
+import { buttonBase, glassmorphicBg, glassmorphicBgElevated, errorState, successState } from "@/lib/ui-styles"
 
 const buttonVariants = cva(
   buttonBase,
   {
     variants: {
       variant: {
-        primary: `${glassmorphicBgElevated} text-white`,
-        default: `${glassmorphicBgElevated} text-white`,
-        destructive:
-          "bg-red-500/20 text-red-300 backdrop-blur-sm border border-red-400/30",
-        outline: `${glassmorphicBg} text-white`,
-        secondary:
-          `${glassmorphicBg} text-white/90`,
-        ghost: "text-white/90 backdrop-blur-sm",
-        success: "bg-emerald-600 text-white",
-        link: "text-white underline-offset-4",
+        primary: `${glassmorphicBgElevated} text-white hover:bg-white/30`,
+        default: `${glassmorphicBgElevated} text-white hover:bg-white/30`,
+        destructive: `${errorState} border border-red-400/30 hover:bg-red-500/20`,
+        outline: `${glassmorphicBg} text-white border border-white/20 hover:bg-white/20`,
+        secondary: `${glassmorphicBg} text-white/90 hover:bg-white/20`,
+        ghost: "text-white/90 hover:bg-white/10",
+        success: `${successState} border border-green-400/30 hover:bg-green-500/20`,
+        link: "text-white underline-offset-4 hover:underline",
       },
       size: {
         default: "h-10 px-4 py-2",
