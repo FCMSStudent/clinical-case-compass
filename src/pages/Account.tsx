@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useAuth } from "@/app/AuthContext";
 import { useLocalStorage } from "@/hooks/use-local-storage";
@@ -122,7 +121,7 @@ const Account = () => {
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full max-w-md">
                    <Label htmlFor="displayName" className="sr-only">Display Name</Label>
                    <Input id="displayName" value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder="Enter your full name" className="flex-grow" />
-                   <div className="flex items-center space-x-2 self-end sm:self-center">
+                   <div className="flex items-center gap-2 self-end sm:self-center">
                      <Button size="sm" onClick={handleSaveProfile} loading={isLoading} variant="success">
                        {!isLoading && <Save className="h-4 w-4" />}
                        <span>Save</span>
@@ -134,12 +133,12 @@ const Account = () => {
                    </div>
                 </div>
               ) : (
-                <div className="flex items-center justify-center sm:justify-start space-x-2">
+                <div className="flex items-center justify-center sm:justify-start gap-2">
                   <h2 className="text-2xl font-semibold">{displayName || "No name set"}</h2>
                   <Button size="icon" variant="ghost" onClick={() => setIsEditing(true)}><Edit3 className="h-4 w-4" /></Button>
                 </div>
               )}
-              <div className="flex items-center justify-center sm:justify-start space-x-2 text-white/70">
+              <div className="flex items-center justify-center sm:justify-start gap-2 text-white/70">
                 <Mail className="h-4 w-4" />
                 <span>{user.email}</span>
               </div>
@@ -176,12 +175,12 @@ const Account = () => {
            <div className="space-y-4">
              <div className="flex items-center justify-between">
                 <p className="text-sm text-white/80">Export all your data to a JSON file.</p>
-                <Button variant="outline" size="sm" onClick={handleExportData}><Download className="h-4 w-4 mr-2" />Export</Button>
+                <Button variant="outline" size="sm" onClick={handleExportData}><Download className="h-4 w-4" />Export</Button>
               </div>
               <div className="border-t border-white/10 pt-4">
                 <div className="flex items-center justify-between">
                   <p className="text-sm text-white/80">Permanently delete all local data.</p>
-                  <Button variant="destructive" size="sm" onClick={handleClearData}><Trash2 className="h-4 w-4 mr-2" />{showDeleteConfirm ? "Confirm" : "Clear Data"}</Button>
+                  <Button variant="destructive" size="sm" onClick={handleClearData}><Trash2 className="h-4 w-4" />{showDeleteConfirm ? "Confirm" : "Clear Data"}</Button>
                 </div>
                  {showDeleteConfirm && (
                   <Alert variant="destructive" className="mt-3"><AlertTriangle className="h-4 w-4" /><AlertDescription>This is irreversible. Click again to confirm.</AlertDescription></Alert>
