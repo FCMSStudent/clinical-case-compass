@@ -16,7 +16,6 @@ export const ActionsCard: React.FC<ActionsCardProps> = ({ onEdit, onDelete }) =>
       variant="compact"
       icon={<Settings />}
       title="Actions"
-      compact={true}
     >
       <div className="flex flex-col gap-3">
         <Button

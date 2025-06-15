@@ -69,3 +69,11 @@ export function RecentCasesSkeleton() {
     </div>
   );
 }
+
+const DashboardSkeleton = {
+  MetricCard: MetricCardSkeleton,
+  RecentActivity: RecentActivitySkeleton,
+  RecentCases: RecentCasesSkeleton,
+};
+
+export default DashboardSkeleton;

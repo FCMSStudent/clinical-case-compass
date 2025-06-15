@@ -543,13 +543,6 @@ export {
   borderRadius,
   shadows,
   backgroundConfig,
-  button,
-  input,
-  card,
-  bento,
-  animations,
-  transitions,
-  themes,
 };
 
 /** Default export of the complete design system */

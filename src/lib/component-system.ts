@@ -164,6 +164,7 @@ export const componentSizes = {
 /** Unified button variants with consistent interaction states */
 export const buttonVariants = {
   // Primary variants
+  default: `${glassmorphicEffects.variants.medium} ${interactionStates.base} ${interactionStates.hover.medium} ${interactionStates.focus.default} ${interactionStates.active.medium} ${interactionStates.disabled} text-white font-medium`,
   primary: `${glassmorphicEffects.variants.medium} ${interactionStates.base} ${interactionStates.hover.medium} ${interactionStates.focus.default} ${interactionStates.active.medium} ${interactionStates.disabled} text-white font-medium`,
   secondary: `${glassmorphicEffects.variants.light} ${interactionStates.base} ${interactionStates.hover.light} ${interactionStates.focus.default} ${interactionStates.active.subtle} ${interactionStates.disabled} text-white/90 font-medium`,
   outline: `${glassmorphicEffects.variants.subtle} ${interactionStates.base} ${interactionStates.hover.light} ${interactionStates.focus.default} ${interactionStates.active.subtle} ${interactionStates.disabled} text-white font-medium`,
@@ -258,16 +259,7 @@ export const layoutPrimitives = {
   },
 } as const;
 
-/** Enhanced bento grid system */
-export const bentoGrid = {
-  // Container variants
-  container: {
-    default: `${layoutPrimitives.grid.responsive} ${layoutPrimitives.gap.md}`,
-    dense: `${layoutPrimitives.grid.responsive} ${layoutPrimitives.gap.sm}`,
-    spacious: `${layoutPrimitives.grid.responsive} ${layoutPrimitives.gap.lg}`,
-    autoFit: `${layoutPrimitives.grid.autoFit} ${layoutPrimitives.gap.md}`,
-  },
-  
+const bentoGridParts = {
   // Card span configurations
   span: {
     // Column spans
@@ -306,15 +298,32 @@ export const bentoGrid = {
     hero: "min-h-[320px]",
     tall: "min-h-[380px]",
   },
+};
+
+/** Enhanced bento grid system */
+export const bentoGrid = {
+  // Container variants
+  container: {
+    default: `${layoutPrimitives.grid.responsive} ${layoutPrimitives.gap.md}`,
+    dense: `${layoutPrimitives.grid.responsive} ${layoutPrimitives.gap.sm}`,
+    spacious: `${layoutPrimitives.grid.responsive} ${layoutPrimitives.gap.lg}`,
+    autoFit: `${layoutPrimitives.grid.autoFit} ${layoutPrimitives.gap.md}`,
+  },
+  
+  // Card span configurations
+  span: bentoGridParts.span,
+  
+  // Card size variants
+  size: bentoGridParts.size,
   
   // Predefined card layouts
   layouts: {
-    small: `${bentoGrid.span.col["1-sm-2"]} ${bentoGrid.size.compact}`,
-    medium: `${bentoGrid.span.col["2-lg-3"]} ${bentoGrid.size.medium}`,
-    large: `${bentoGrid.span.col["2-md-3-lg-4"]} ${bentoGrid.size.large}`,
-    hero: `${bentoGrid.span.col["2-md-3-lg-4"]} ${bentoGrid.size.hero}`,
-    wide: `${bentoGrid.span.col.full} ${bentoGrid.size.default}`,
-    tall: `${bentoGrid.span.col["2-lg-3"]} ${bentoGrid.size.tall}`,
+    small: `${bentoGridParts.span.col["1-sm-2"]} ${bentoGridParts.size.compact}`,
+    medium: `${bentoGridParts.span.col["2-lg-3"]} ${bentoGridParts.size.medium}`,
+    large: `${bentoGridParts.span.col["2-md-3-lg-4"]} ${bentoGridParts.size.large}`,
+    hero: `${bentoGridParts.span.col["2-md-3-lg-4"]} ${bentoGridParts.size.hero}`,
+    wide: `${bentoGridParts.span.col.full} ${bentoGridParts.size.default}`,
+    tall: `${bentoGridParts.span.col["2-lg-3"]} ${bentoGridParts.size.tall}`,
   },
 } as const;
 
@@ -542,15 +551,15 @@ export const getComponentStyles = (
   };
   
   const componentVariants = variants[component];
-  const componentSizes = sizes[component];
+  const componentSizesMap = sizes[component];
   
   const variantClass = variant && componentVariants[variant as keyof typeof componentVariants] 
     ? componentVariants[variant as keyof typeof componentVariants] 
-    : componentVariants.default || componentVariants.primary;
+    : componentVariants['default' as keyof typeof componentVariants];
   
-  const sizeClass = size && componentSizes[size as keyof typeof componentSizes] 
-    ? componentSizes[size as keyof typeof componentSizes] 
-    : componentSizes.md || componentSizes.default;
+  const sizeClass = size && componentSizesMap[size as keyof typeof componentSizesMap] 
+    ? componentSizesMap[size as keyof typeof componentSizesMap] 
+    : componentSizesMap.md || (componentSizesMap as any).default;
   
   return `${variantClass} ${sizeClass}`.trim();
 };
