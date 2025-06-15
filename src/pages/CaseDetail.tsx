@@ -37,6 +37,7 @@ import { useLocalStorage } from "@/hooks/use-local-storage";
 import { MedicalCase } from "@/types/case";
 import { InteractiveVitalsCard } from "@/features/cases/InteractiveVitalsCard";
 import { useSupabaseCases } from "@/hooks/use-supabase-cases";
+import { EnhancedAppLayout } from "@/features/navigation";
 
 const CaseDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -55,34 +56,24 @@ const CaseDetail = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-blue-700 dark:from-blue-900 dark:via-blue-800 dark:to-blue-900 relative flex flex-col items-center justify-center">
-        <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/3 rounded-full blur-3xl"></div>
-        </div>
-        <div className="relative z-10 flex flex-col items-center justify-center min-h-[50vh]">
+      <EnhancedAppLayout>
+        <div className="flex flex-col items-center justify-center min-h-[50vh]">
           <h2 className="text-2xl font-semibold mb-4 text-white">Loading case...</h2>
         </div>
-      </div>
+      </EnhancedAppLayout>
     );
   }
 
   if (error || !medicalCase) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-blue-700 dark:from-blue-900 dark:via-blue-800 dark:to-blue-900 relative flex flex-col items-center justify-center">
-        <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/3 rounded-full blur-3xl"></div>
-        </div>
-        <div className="relative z-10 flex flex-col items-center justify-center min-h-[50vh]">
+      <EnhancedAppLayout>
+        <div className="flex flex-col items-center justify-center min-h-[50vh]">
           <h2 className="text-2xl font-semibold mb-4 text-white">Case not found</h2>
           <Button asChild className="bg-white/10 border border-white/20 text-white hover:bg-white/20">
             <Link to="/cases">Return to all cases</Link>
           </Button>
         </div>
-      </div>
+      </EnhancedAppLayout>
     );
   }
 
@@ -119,14 +110,8 @@ const CaseDetail = () => {
   } : undefined;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-blue-700 dark:from-blue-900 dark:via-blue-800 dark:to-blue-900 relative">
-      {/* Glassy background elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/3 rounded-full blur-3xl"></div>
-      </div>
-      <div className="relative z-10 w-full max-w-6xl mx-auto space-y-6 p-4 md:p-6">
+    <EnhancedAppLayout>
+      <div className="w-full max-w-6xl mx-auto space-y-6">
         <div className="mb-6">
           <Link
             to="/cases"
@@ -155,97 +140,88 @@ const CaseDetail = () => {
         </PageHeader>
 
         <div className="grid gap-6 md:grid-cols-3 mb-6">
-          <div className="relative">
-            <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-            <Card className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20">
-              <CardHeader>
-                <CardTitle className="text-base text-white">Patient Information</CardTitle>
-              </CardHeader>
-              <CardContent className="text-sm text-white/80">
-                <div className="space-y-2">
-                  <div className="grid grid-cols-3 gap-1">
-                    <div className="text-white/60">Name:</div>
-                    <div className="col-span-2 font-medium">{medicalCase.patient.name}</div>
-                  </div>
-                  <div className="grid grid-cols-3 gap-1">
-                    <div className="text-white/60">Age:</div>
-                    <div className="col-span-2">{medicalCase.patient.age} years</div>
-                  </div>
-                  <div className="grid grid-cols-3 gap-1">
-                    <div className="text-white/60">Gender:</div>
-                    <div className="col-span-2 capitalize">{medicalCase.patient.gender}</div>
-                  </div>
-                  {medicalCase.patient.medicalRecordNumber && (
-                    <div className="grid grid-cols-3 gap-1">
-                      <div className="text-white/60">MRN:</div>
-                      <div className="col-span-2">{medicalCase.patient.medicalRecordNumber}</div>
-                    </div>
-                  )}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base text-white">Patient Information</CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm text-white/80">
+              <div className="space-y-2">
+                <div className="grid grid-cols-3 gap-1">
+                  <div className="text-white/60">Name:</div>
+                  <div className="col-span-2 font-medium">{medicalCase.patient.name}</div>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="relative">
-            <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-            <Card className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20">
-              <CardHeader>
-                <CardTitle className="text-base text-white">Diagnosis</CardTitle>
-              </CardHeader>
-              <CardContent className="text-sm text-white/80">
-                {medicalCase.diagnoses && medicalCase.diagnoses.length > 0 ? (
-                  <div className="space-y-3">
-                    {medicalCase.diagnoses.map((diagnosis) => (
-                      <div key={diagnosis.id} className="space-y-1">
-                        <div className="font-medium flex items-center gap-2">
-                          {diagnosis.name}
-                          <Badge variant={diagnosis.status === "confirmed" ? "default" : "outline"} className="bg-white/10 border border-white/20 text-white">
-                            {diagnosis.status}
-                          </Badge>
-                        </div>
-                        {diagnosis.notes && (
-                          <div className="text-white/60">
-                            Note: {diagnosis.notes}
-                          </div>
-                        )}
-                      </div>
-                    ))}
+                <div className="grid grid-cols-3 gap-1">
+                  <div className="text-white/60">Age:</div>
+                  <div className="col-span-2">{medicalCase.patient.age} years</div>
+                </div>
+                <div className="grid grid-cols-3 gap-1">
+                  <div className="text-white/60">Gender:</div>
+                  <div className="col-span-2 capitalize">{medicalCase.patient.gender}</div>
+                </div>
+                {medicalCase.patient.medicalRecordNumber && (
+                  <div className="grid grid-cols-3 gap-1">
+                    <div className="text-white/60">MRN:</div>
+                    <div className="col-span-2">{medicalCase.patient.medicalRecordNumber}</div>
                   </div>
-                ) : (
-                  <div className="text-white/60">No diagnoses recorded</div>
                 )}
-              </CardContent>
-            </Card>
-          </div>
+              </div>
+            </CardContent>
+          </Card>
 
-          <div className="relative">
-            <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-            <Card className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20">
-              <CardHeader>
-                <CardTitle className="text-base text-white">Case Details</CardTitle>
-              </CardHeader>
-              <CardContent className="text-sm text-white/80">
-                <div className="space-y-2">
-                  <div className="grid grid-cols-3 gap-1">
-                    <div className="text-white/60">Created:</div>
-                    <div className="col-span-2">
-                      {format(new Date(medicalCase.createdAt), "MMM d, yyyy")}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base text-white">Diagnosis</CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm text-white/80">
+              {medicalCase.diagnoses && medicalCase.diagnoses.length > 0 ? (
+                <div className="space-y-3">
+                  {medicalCase.diagnoses.map((diagnosis) => (
+                    <div key={diagnosis.id} className="space-y-1">
+                      <div className="font-medium flex items-center gap-2">
+                        {diagnosis.name}
+                        <Badge variant={diagnosis.status === "confirmed" ? "default" : "outline"} className="bg-white/10 border border-white/20 text-white">
+                          {diagnosis.status}
+                        </Badge>
+                      </div>
+                      {diagnosis.notes && (
+                        <div className="text-white/60">
+                          Note: {diagnosis.notes}
+                        </div>
+                      )}
                     </div>
-                  </div>
-                  <div className="grid grid-cols-3 gap-1">
-                    <div className="text-white/60">Updated:</div>
-                    <div className="col-span-2">
-                      {format(new Date(medicalCase.updatedAt), "MMM d, yyyy")}
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-3 gap-1">
-                    <div className="text-white/60">Status:</div>
-                    <div className="col-span-2 capitalize">{medicalCase.status}</div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-white/60">No diagnoses recorded</div>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base text-white">Case Details</CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm text-white/80">
+              <div className="space-y-2">
+                <div className="grid grid-cols-3 gap-1">
+                  <div className="text-white/60">Created:</div>
+                  <div className="col-span-2">
+                    {format(new Date(medicalCase.createdAt), "MMM d, yyyy")}
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
+                <div className="grid grid-cols-3 gap-1">
+                  <div className="text-white/60">Updated:</div>
+                  <div className="col-span-2">
+                    {format(new Date(medicalCase.updatedAt), "MMM d, yyyy")}
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-1">
+                  <div className="text-white/60">Status:</div>
+                  <div className="col-span-2 capitalize">{medicalCase.status}</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         <Tabs defaultValue="clinical" className="mb-6">
@@ -259,10 +235,10 @@ const CaseDetail = () => {
               {medicalCase.history && (
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-lg">History</CardTitle>
+                    <CardTitle className="text-lg text-white">History</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p>{medicalCase.history}</p>
+                    <p className="text-white/80">{medicalCase.history}</p>
                   </CardContent>
                 </Card>
               )}
@@ -270,10 +246,10 @@ const CaseDetail = () => {
               {medicalCase.physicalExam && (
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-lg">Physical Examination</CardTitle>
+                    <CardTitle className="text-lg text-white">Physical Examination</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p>{medicalCase.physicalExam}</p>
+                    <p className="text-white/80">{medicalCase.physicalExam}</p>
                   </CardContent>
                 </Card>
               )}
@@ -285,10 +261,10 @@ const CaseDetail = () => {
               {medicalCase.learningPoints && (
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-lg">Learning Points</CardTitle>
+                    <CardTitle className="text-lg text-white">Learning Points</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p>{medicalCase.learningPoints}</p>
+                    <p className="text-white/80">{medicalCase.learningPoints}</p>
                   </CardContent>
                 </Card>
               )}
@@ -296,12 +272,12 @@ const CaseDetail = () => {
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between">
                   <div>
-                    <CardTitle className="text-lg">Study Resources</CardTitle>
-                    <CardDescription>
+                    <CardTitle className="text-lg text-white">Study Resources</CardTitle>
+                    <CardDescription className="text-white/60">
                       Related learning materials
                     </CardDescription>
                   </div>
-                  <Button size="sm" variant="outline">
+                  <Button size="sm" variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
                     <FileText className="mr-2 h-4 w-4" /> Add Resource
                   </Button>
                 </CardHeader>
@@ -311,9 +287,9 @@ const CaseDetail = () => {
                       {medicalCase.resources.map((resource) => (
                         <div
                           key={resource.id}
-                          className="flex items-start p-3 border rounded-lg"
+                          className="flex items-start p-3 border border-white/20 rounded-lg bg-white/5"
                         >
-                          <div className="h-10 w-10 rounded bg-primary/10 flex items-center justify-center text-primary mr-3">
+                          <div className="h-10 w-10 rounded bg-white/10 flex items-center justify-center text-white mr-3">
                             {resource.type === "textbook" ? (
                               <BookOpen className="h-5 w-5" />
                             ) : (
@@ -321,16 +297,16 @@ const CaseDetail = () => {
                             )}
                           </div>
                           <div className="flex-1">
-                            <h4 className="font-medium">{resource.title}</h4>
-                            <div className="flex items-center text-xs text-muted-foreground mt-1">
+                            <h4 className="font-medium text-white">{resource.title}</h4>
+                            <div className="flex items-center text-xs text-white/60 mt-1">
                               <span className="capitalize">{resource.type}</span>
                             </div>
                             {resource.notes && (
-                              <p className="text-sm mt-2">{resource.notes}</p>
+                              <p className="text-sm mt-2 text-white/80">{resource.notes}</p>
                             )}
                           </div>
                           {resource.url && (
-                            <Button size="sm" variant="ghost" asChild>
+                            <Button size="sm" variant="ghost" asChild className="text-white hover:bg-white/10">
                               <a
                                 href={resource.url}
                                 target="_blank"
@@ -344,7 +320,7 @@ const CaseDetail = () => {
                       ))}
                     </div>
                   ) : (
-                    <div className="text-center py-8 text-muted-foreground">
+                    <div className="text-center py-8 text-white/60">
                       No resources added yet
                     </div>
                   )}
@@ -355,9 +331,8 @@ const CaseDetail = () => {
         </Tabs>
         
         <div className="grid gap-6 md:grid-cols-3">
-          <div className="md:col-span-2 relative">
-            <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-            <Card className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20">
+          <div className="md:col-span-2">
+            <Card>
               <CardHeader>
                 <CardTitle className="text-base text-white">Vitals</CardTitle>
               </CardHeader>
@@ -393,12 +368,11 @@ const CaseDetail = () => {
                     Delete
                   </AlertDialogAction>
                 </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+                </AlertDialog>
           </div>
         </div>
       </div>
-    </div>
+    </EnhancedAppLayout>
   );
 };
 
