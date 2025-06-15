@@ -20,6 +20,7 @@ import Profile from "@/pages/Profile";
 import Settings from "@/pages/Settings";
 import Auth from "@/pages/Auth";
 import NotFound from "@/pages/NotFound";
+import LandingPage from "@/pages/Landing";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -47,8 +48,9 @@ const AppContent = () => {
   return (
     <Router>
       <Routes>
-        {/* Auth page without layout */}
-        <Route path="/auth" element={<Auth />} />
+        {/* Public Routes */}
+        <Route path="/landing" element={<LandingPage />} />
+        <Route path="/auth" element={session ? <Navigate to="/dashboard" replace /> : <Auth />} />
         
         {/* Protected routes with single layout wrapper */}
         <Route
@@ -156,13 +158,17 @@ const AppContent = () => {
             </PrivateRoute>
           }
         />
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/" element={session ? <Navigate to="/dashboard" replace /> : <Navigate to="/landing" replace />} />
         <Route
           path="*"
           element={
-            <EnhancedAppLayout>
-              <NotFound />
-            </EnhancedAppLayout>
+            session ? (
+              <EnhancedAppLayout>
+                <NotFound />
+              </EnhancedAppLayout>
+            ) : (
+              <Navigate to="/landing" replace />
+            )
           }
         />
       </Routes>
