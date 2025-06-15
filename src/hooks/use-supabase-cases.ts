@@ -205,6 +205,24 @@ export function useSupabaseCases() {
     }
   });
 
+  // Custom createCase function that accepts callbacks
+  const createCase = (
+    caseData: Parameters<typeof createCaseMutation.mutate>[0],
+    options?: {
+      onSuccess?: (caseId: string) => void;
+      onError?: (error: Error) => void;
+    }
+  ) => {
+    createCaseMutation.mutate(caseData, {
+      onSuccess: (caseId) => {
+        options?.onSuccess?.(caseId);
+      },
+      onError: (error) => {
+        options?.onError?.(error as Error);
+      }
+    });
+  };
+
   // Fetch available tags
   const {
     data: availableTags = [],
@@ -232,7 +250,7 @@ export function useSupabaseCases() {
     isLoading,
     error,
     useGetCaseQuery,
-    createCase: createCaseMutation.mutate,
+    createCase,
     isCreating: createCaseMutation.isPending,
     availableTags,
     tagsLoading

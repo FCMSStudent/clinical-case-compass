@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "react-router-dom";
 import { FormContainer } from "@/features/cases/create/FormContainer";
 import { FormHeader } from "@/features/cases/create/FormHeader";
 import { FormNavigation } from "@/features/cases/create/FormNavigation";
@@ -15,6 +16,8 @@ import { ClinicalDetailStep } from "@/features/cases/create/ClinicalDetailStep";
 import { LearningPointsStep } from "@/features/cases/create/LearningPointsStep";
 import { useErrorHandler } from "@/hooks/use-error-handler";
 import { useToast } from "@/hooks/use-toast";
+import { useSupabaseCases } from "@/hooks/use-supabase-cases";
+import { useAuth } from "@/app/AuthContext";
 import { FileText, Heart, TestTube } from "lucide-react";
 import { z } from "zod";
 
@@ -98,6 +101,9 @@ const CreateCaseFlow = () => {
   const errorAnnouncementRef = useRef(null);
   const { handleError } = useErrorHandler();
   const { toast } = useToast();
+  const { createCase, isCreating } = useSupabaseCases();
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   // Initialize form with react-hook-form
   const form = useForm<FormData>({
@@ -178,6 +184,15 @@ const CreateCaseFlow = () => {
 
   // Function to handle form submission
   const handleSubmit = useCallback(async () => {
+    if (!user) {
+      toast({
+        variant: "destructive",
+        title: "Authentication Required",
+        description: "You must be logged in to create a case.",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       // Validate all steps
@@ -195,19 +210,61 @@ const CreateCaseFlow = () => {
         }
       }
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const formData = form.getValues();
 
-      toast({
-        title: "Case Created",
-        description: "Your case has been successfully created.",
+      // Prepare case data for Supabase
+      const caseData = {
+        patient: {
+          name: formData.patientName || "Unknown Patient",
+          age: formData.patientAge || 0,
+          gender: (formData.patientSex as "male" | "female" | "other") || "other",
+          medicalRecordNumber: formData.medicalRecordNumber,
+        },
+        case: {
+          title: formData.caseTitle || "Untitled Case",
+          chiefComplaint: formData.chiefComplaint || "",
+          chiefComplaintAnalysis: undefined,
+          history: formData.medicalHistory,
+          physicalExam: undefined,
+          learningPoints: formData.learningPoints,
+          vitals: {},
+          symptoms: {},
+          urinarySymptoms: [],
+          labTests: [],
+          radiologyExams: [],
+        },
+        resources: formData.resourceLinks?.map(link => ({
+          title: link.description || "Resource",
+          type: "other" as const,
+          url: link.url,
+          notes: link.description,
+        })) || [],
+      };
+
+      // Create the case using Supabase
+      await new Promise((resolve, reject) => {
+        createCase(caseData, {
+          onSuccess: (caseId) => {
+            toast({
+              title: "Case Created",
+              description: "Your case has been successfully created.",
+            });
+            // Navigate to the created case or cases list
+            navigate(`/cases`);
+            resolve(caseId);
+          },
+          onError: (error) => {
+            handleError(error, "creating case");
+            reject(error);
+          },
+        });
       });
     } catch (error) {
       handleError(error, "creating case");
     } finally {
       setIsSubmitting(false);
     }
-  }, [trigger, handleError, toast]);
+  }, [trigger, handleError, toast, createCase, user, navigate, form]);
 
   // Function to determine if the user can proceed to the next step
   const canProceed = useMemo(() => {
@@ -253,7 +310,7 @@ const CreateCaseFlow = () => {
                 currentStepLabel={STEPS[currentStep].label}
                 onPrevious={currentStep > 0 ? handlePrevious : undefined}
                 onNext={handleNext}
-                isSubmitting={isSubmitting}
+                isSubmitting={isSubmitting || isCreating}
               />
             </div>
           </FormContainer>
