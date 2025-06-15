@@ -8,124 +8,9 @@ import React from "react";
 import { createContext, useContext, useState, useEffect } from "react";
 import { motion, Variants, Transition, useMotionValue, useTransform, useSpring } from "framer-motion";
 import { Stethoscope, Pill } from "lucide-react";
-
-// ────────────────────────────────────────────────────────────────────────────────
-// CORE DESIGN TOKENS
-// ────────────────────────────────────────────────────────────────────────────────
-
-/** Typography System (Tokens for Tailwind) */
-export const typographyTokens = {
-  fontFamily: {
-    sans: ['Inter', 'system-ui', 'sans-serif'],
-    mono: ['ui-monospace', 'SFMono-Regular', 'monospace'],
-  },
-  fontSize: {
-    '2xs': ['0.625rem', { lineHeight: '0.875rem' }],
-    'xs': ['0.75rem', { lineHeight: '1rem' }],
-    'sm': ['0.875rem', { lineHeight: '1.25rem' }],
-    'base': ['1rem', { lineHeight: '1.5rem' }],
-    'lg': ['1.125rem', { lineHeight: '1.75rem' }],
-    'xl': ['1.25rem', { lineHeight: '1.75rem' }],
-    '2xl': ['1.5rem', { lineHeight: '2rem' }],
-    '3xl': ['1.875rem', { lineHeight: '2.25rem' }],
-    '4xl': ['2.25rem', { lineHeight: '2.5rem' }],
-    '5xl': ['3rem', { lineHeight: '1' }],
-    '6xl': ['3.75rem', { lineHeight: '1' }],
-    '7xl': ['4.5rem', { lineHeight: '1' }],
-  },
-  fontWeight: {
-    normal: '400',
-    medium: '500',
-    semibold: '600',
-    bold: '700',
-  },
-} as const;
-
-/** Color System */
-export const colors = {
-  // Core semantic colors
-  primary: {
-    50: '#f0f9ff',
-    100: '#e0f2fe',
-    200: '#bae6fd',
-    300: '#7dd3fc',
-    400: '#38bdf8',
-    500: '#0ea5e9',
-    600: '#0284c7',
-    700: '#0369a1',
-    800: '#075985',
-    900: '#0c4a6e',
-  },
-  gray: {
-    50: '#f9fafb',
-    100: '#f3f4f6',
-    200: '#e5e7eb',
-    300: '#d1d5db',
-    400: '#9ca3af',
-    500: '#6b7280',
-    600: '#4b5563',
-    700: '#374151',
-    800: '#1f2937',
-    900: '#111827',
-  },
-  // Status colors
-  success: {
-    500: '#10b981',
-    600: '#059669',
-  },
-  warning: {
-    500: '#f59e0b',
-  },
-  error: {
-    500: '#ef4444',
-  },
-  info: {
-    500: '#3b82f6',
-  },
-} as const;
-
-/** Spacing System */
-export const spacing = {
-  0: '0',
-  1: '0.25rem',
-  2: '0.5rem',
-  3: '0.75rem',
-  4: '1rem',
-  5: '1.25rem',
-  6: '1.5rem',
-  8: '2rem',
-  10: '2.5rem',
-  12: '3rem',
-  16: '4rem',
-  20: '5rem',
-  24: '6rem',
-  32: '8rem',
-  40: '10rem',
-  48: '12rem',
-  56: '14rem',
-  64: '16rem',
-} as const;
-
-/** Border Radius System */
-export const borderRadius = {
-  none: '0',
-  sm: 'calc(var(--radius) - 4px)',
-  md: 'calc(var(--radius) - 2px)',
-  lg: 'var(--radius)',
-  xl: 'calc(var(--radius) + 4px)',
-  '2xl': 'calc(var(--radius) + 8px)',
-  full: '9999px',
-} as const;
-
-/** Shadow System */
-export const shadows = {
-  sm: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
-  md: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
-  lg: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
-  xl: '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)',
-  glass: '0 8px 32px rgba(0, 0, 0, 0.1)',
-  glassElevated: '0 12px 40px rgba(0, 0, 0, 0.15)',
-} as const;
+import { typography } from "./typography";
+import { typographyTokens, colors, spacing, borderRadius, shadows } from "./design-tokens";
+import { backgroundConfig } from "./background-config";
 
 // ────────────────────────────────────────────────────────────────────────────────
 // UNIFIED COMPONENT STYLES (from ui-styles.ts)
@@ -164,30 +49,6 @@ export const buttonVariants = {
   ghost: `${buttonBase} text-white/70 hover:bg-white/10`,
   destructive: `${buttonBase} bg-red-500/10 text-red-300 border-red-400/30 hover:bg-red-500/20`,
   success: `${buttonBase} bg-green-500/10 text-green-300 border-green-400/30 hover:bg-green-500/20`
-} as const;
-
-/** Typography scale with consistent font weights and sizes (Class strings) */
-export const typography = {
-  // Headings
-  h1: `text-4xl font-bold leading-tight tracking-tight text-white`,
-  h2: `text-3xl font-bold leading-tight tracking-tight text-white`,
-  h3: `text-2xl font-semibold leading-tight tracking-tight text-white`,
-  h4: `text-xl font-semibold leading-snug text-white`,
-  h5: `text-lg font-semibold leading-snug text-white`,
-  h6: `text-base font-semibold leading-normal text-white`,
-  
-  // Body text
-  body: {
-    large: `text-lg leading-relaxed text-white`,
-    default: `text-base leading-relaxed text-white`,
-    small: `text-sm leading-normal text-white/70`,
-    caption: `text-xs leading-tight text-white/60`
-  },
-  
-  // Labels and form elements
-  label: `text-sm font-medium leading-none text-white`,
-  description: `text-sm leading-normal text-white/70`,
-  placeholder: `placeholder:text-white/60`
 } as const;
 
 // ────────────────────────────────────────────────────────────────────────────────
@@ -346,7 +207,7 @@ export const themes: Record<string, ThemeConfig> = {
       glow: "0 0 20px rgba(139, 92, 246, 0.3)",
     },
   },
-} as const;
+};
 
 // ────────────────────────────────────────────────────────────────────────────────
 // COMPONENT DESIGN TOKENS
@@ -371,7 +232,7 @@ export const button = {
     ghost: 'bg-transparent text-white/70 hover:bg-white/10',
     destructive: 'bg-red-500/10 text-red-300 border border-red-400/30 hover:bg-red-500/20',
   },
-} as const;
+};
 
 /** Input System */
 export const input = {
@@ -387,7 +248,7 @@ export const input = {
     md: 'h-10 px-4 text-sm',
     lg: 'h-12 px-4 text-base',
   },
-} as const;
+};
 
 /** Card System */
 export const card = {
@@ -404,7 +265,7 @@ export const card = {
     md: 'p-4',
     lg: 'p-6',
   },
-} as const;
+};
 
 /** Bento Grid System */
 export const bento = {
@@ -434,7 +295,7 @@ export const bento = {
       tall: 'col-span-2 lg:col-span-3',
     },
   },
-} as const;
+};
 
 // ────────────────────────────────────────────────────────────────────────────────
 // ANIMATION SYSTEM
@@ -501,28 +362,6 @@ export const transitions = {
   slow: { duration: 0.3, ease: "easeOut" } as Transition,
   spring: { type: "spring", stiffness: 100, damping: 20 } as Transition,
   optimized: { duration: 0.3, ease: [0.23, 1, 0.32, 1], type: "spring", stiffness: 100, damping: 20 } as Transition,
-} as const;
-
-// ────────────────────────────────────────────────────────────────────────────────
-// BACKGROUND CONFIGURATION
-// ────────────────────────────────────────────────────────────────────────────────
-
-/** Animated Background Elements */
-export const backgroundConfig = {
-  animatedIcons: [
-    { icon: Stethoscope, initialPosition: { x: "20%", y: "10%" }, animationDelay: 0, duration: 8 },
-    { icon: Pill, initialPosition: { x: "80%", y: "20%" }, animationDelay: 2, duration: 10 },
-    { icon: Stethoscope, initialPosition: { x: "15%", y: "70%" }, animationDelay: 4, duration: 12 },
-    { icon: Pill, initialPosition: { x: "85%", y: "80%" }, animationDelay: 6, duration: 9 },
-  ],
-  particles: {
-    count: 20,
-  },
-  hexagons: [
-    { className: "w-48 h-48 top-[10%] left-[5%] text-white/5 opacity-50" },
-    { className: "w-64 h-64 top-[60%] right-[10%] text-white/5 opacity-50" },
-    { className: "w-32 h-32 top-[75%] left-[20%] text-white/5 opacity-50" },
-  ],
 } as const;
 
 // ────────────────────────────────────────────────────────────────────────────────
