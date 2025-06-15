@@ -103,18 +103,6 @@ export const radiologyStudySchema = z.object({
 
 export type RadiologyStudyFormData = z.infer<typeof radiologyStudySchema>;
 
-// Keep old schema for backward compatibility
-export const radiologyExamSchema = z.object({
-  modality: z.string()
-    .min(1, 'Radiology modality is required')
-    .max(50, 'Radiology modality must be less than 50 characters'),
-  findings: z.string()
-    .min(1, 'Radiology findings are required')
-    .max(1000, 'Radiology findings must be less than 1000 characters')
-});
-
-export type RadiologyExamFormData = z.infer<typeof radiologyExamSchema>;
-
 // Combined case form schema
 export const caseFormSchema = z.object({
   patient: patientSchema.optional(),
@@ -123,7 +111,6 @@ export const caseFormSchema = z.object({
   resources: z.array(resourceSchema).optional(),
   labTests: z.array(labTestSchema).optional(),
   radiologyStudies: z.array(radiologyStudySchema).optional(),
-  radiologyExams: z.array(radiologyExamSchema).optional(),
 });
 
 export type CaseFormData = z.infer<typeof caseFormSchema>;

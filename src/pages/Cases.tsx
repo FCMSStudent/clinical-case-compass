@@ -24,18 +24,10 @@ const Cases = () => {
 
   // Use Supabase hook for real-time case data
   const { cases, isLoading, error } = useSupabaseCases();
-  console.log("[CasesPage] Hook state:", { 
-    casesCount: cases?.length, 
-    isLoading, 
-    hasError: !!error,
-    errorMessage: error?.message,
-    isOfflineMode 
-  });
 
   // Filtering cases based on search query
   const filteredCases = React.useMemo(() => {
     if (!cases || cases.length === 0) {
-      console.log("[CasesPage] No cases to filter");
       return [];
     }
     
@@ -51,7 +43,6 @@ const Cases = () => {
         return titleMatch || patientMatch || complaintMatch;
       });
       
-      console.log("[CasesPage] Filtered", filtered.length, "cases from", cases.length);
       return filtered;
     } catch (filterError) {
       console.error("[CasesPage] Error filtering cases:", filterError);
@@ -82,7 +73,6 @@ const Cases = () => {
   }
 
   if (isLoading) {
-    console.log("[CasesPage] Showing loading state");
     return (
       <div className="space-y-6">
         <PageHeader
@@ -116,8 +106,6 @@ const Cases = () => {
       </div>
     );
   }
-
-  console.log("[CasesPage] Rendering cases page with", filteredCases.length, "cases");
 
   return (
     <CasesErrorBoundary>

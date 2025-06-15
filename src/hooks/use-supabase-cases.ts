@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/app/AuthContext';
 import { toast } from '@/hooks/use-toast';
 import { useErrorHandler } from './use-error-handler';
-import { MedicalCase, Patient, Diagnosis, Resource, CaseTag, LabTest as ComponentLabTest, RadiologyExam as ComponentRadiologyExam, DiagnosisStatus as ComponentDiagnosisStatus } from '@/types/case';
+import { MedicalCase, Patient, Diagnosis, Resource, CaseTag, LabTest as ComponentLabTest, RadiologyStudy, DiagnosisStatus as ComponentDiagnosisStatus } from '@/types/case';
 import { Database } from '@/integrations/supabase/types';
 
 type DbCase = Database['public']['Tables']['medical_cases']['Row'];
@@ -115,10 +115,10 @@ export function useSupabaseCases() {
               physicalExam: caseData.physical_exam || undefined,
               learningPoints: caseData.learning_points || undefined,
               vitals: (caseData.vitals as Record<string, string>) || {},
-              symptoms: (caseData.symptoms as Record<string, boolean>) || {},
+              symptoms: (caseData.symptoms as Record<string, string[]>) || {}, // Corrected type
               urinarySymptoms: (caseData.urinary_symptoms as string[]) || [],
               labTests: [],
-              radiologyExams: [],
+              radiologyStudies: [],
               diagnoses: [],
               resources: [],
               tags: [],
@@ -211,7 +211,8 @@ export function useSupabaseCases() {
         symptoms: caseData.case.symptoms || {},
         urinary_symptoms: caseData.case.urinarySymptoms || [],
         lab_tests: (caseData.case.labTests || []) as unknown as Database['public']['Tables']['medical_cases']['Insert']['lab_tests'],
-        radiology_exams: (caseData.case.radiologyExams || []) as unknown as Database['public']['Tables']['medical_cases']['Insert']['radiology_exams'],
+        // The DB column is still radiology_exams, but we populate it from radiologyStudies
+        radiology_exams: (caseData.case.radiologyStudies || []) as unknown as Database['public']['Tables']['medical_cases']['Insert']['radiology_exams'],
         user_id: user.id,
         patient_id: patientData.id
       };
@@ -379,21 +380,23 @@ function transformDbCaseToMedicalCase(dbCase: Record<string, unknown>): MedicalC
       physicalExam: dbCase.physical_exam as string | undefined,
       learningPoints: dbCase.learning_points as string | undefined,
       vitals: (dbCase.vitals as Record<string, string>) || {},
-      symptoms: (dbCase.symptoms as Record<string, boolean>) || {},
+      symptoms: (dbCase.symptoms as Record<string, string[]>) || {}, // Corrected type
       urinarySymptoms: (dbCase.urinary_symptoms as string[]) || [],
       labTests: ((dbCase.lab_tests as DbLabTest[]) || []).map((test) => ({
-        id: test.id ?? `lab-${Date.now()}-${Math.random()}`,
+        id: test.id ?? (() => { console.error('Lab test missing ID:', test); return `error-missing-id-${Math.random()}`; })(),
         name: test.name ?? '',
         value: test.value ?? '',
         unit: test.unit ?? '',
         normalRange: test.normalRange ?? undefined
       })) as ComponentLabTest[],
-      radiologyExams: ((dbCase.radiology_exams as DbRadiologyExam[]) || []).map((exam) => ({
-        id: exam.id ?? `rad-${Date.now()}-${Math.random()}`,
-        modality: exam.modality ?? exam.type ?? '',
-        findings: exam.findings ?? '',
-        impression: exam.impression ?? undefined
-      })) as ComponentRadiologyExam[],
+      radiologyStudies: ((dbCase.radiology_exams as DbRadiologyExam[]) || []).map((study) => ({
+        id: study.id ?? (() => { console.error('Radiology study missing ID:', study); return `error-missing-id-${Math.random()}`; })(),
+        name: study.modality ?? 'Unknown Study', // Use modality for name, or a default
+        type: study.type ?? 'Unknown', // exam.type is modality like CT, X-Ray
+        findings: study.findings ?? '',
+        impression: study.impression ?? undefined,
+        date: dbCase.updated_at as string // Fallback to case update date, ideally this should be in DB
+      })) as RadiologyStudy[],
       diagnoses: ((dbCase.diagnoses as DbDiagnosis[]) || []).map((d: DbDiagnosis) => ({
         id: d.id,
         name: d.name,

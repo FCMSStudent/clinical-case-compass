@@ -16,7 +16,6 @@ function RecentActivityList() {
     async function getActivities() {
       try {
         setLoading(true);
-        // 2. Replace 'activities' with your actual table name
         const { data, error } = await supabase
           .from('activities')
           .select('*') // Select all columns
@@ -28,13 +27,12 @@ function RecentActivityList() {
           return;
         }
 
-        // 4. CRITICAL: Log the data you receive from Supabase
-        console.log('Fetched data:', data);
-
         // Assuming 'data' is an array of activities, update the state
         // You might want to add a check for 'data' being null or undefined
         if (data) {
-          setActivities(data);
+          setActivities(data as Activity[]);
+        } else {
+          setActivities([]);
         }
 
       } catch (error) {
