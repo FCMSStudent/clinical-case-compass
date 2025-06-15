@@ -8,7 +8,7 @@ import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 import { EnhancedAppLayout } from "@/features/navigation/components/EnhancedAppLayout";
 import { PrivateRoute } from "@/features/auth/PrivateRoute";
 import { OfflineBanner } from "@/components/ui/OfflineBanner";
-import { LoadingScreen } from "@/components/ui/loading-screen";
+import LoadingScreen from "@/components/ui/loading-screen";
 
 // Pages
 import Dashboard from "@/pages/Dashboard";
