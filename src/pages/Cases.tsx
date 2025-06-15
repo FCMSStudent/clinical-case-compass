@@ -1,35 +1,32 @@
 
-import React, { useState, useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
+import React, { useState } from "react";
 import { Plus, Search, Grid, List, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Link } from "react-router-dom";
-import { getCases } from "@/lib/api/cases";
 import type { MedicalCase } from "@/types/case";
 import { CaseCard } from "@/features/cases/CaseCard";
 import { CaseListItem } from "@/features/cases/CaseListItem";
 import { PageHeader } from "@/components/ui/page-header";
 import { CaseGridSkeleton, CaseListSkeleton } from "@/features/cases/CaseCardSkeleton";
+import { useSupabaseCases } from "@/hooks/use-supabase-cases";
 
 const Cases = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
-  const { data: cases, isLoading, isError } = useQuery({
-    queryKey: ["cases", searchQuery],
-    queryFn: () => getCases(searchQuery),
-  });
+  // Use Supabase hook for real-time case data
+  const { cases, isLoading, error } = useSupabaseCases();
 
-  // Filtered cases
-  const filteredCases = useMemo(() => {
+  // Filtering cases based on search query
+  const filteredCases = React.useMemo(() => {
     if (!cases) return [];
-    return cases.filter((caseItem) =>
+    return cases.filter((caseItem: MedicalCase) =>
       caseItem.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      caseItem.patient.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      caseItem.chiefComplaint.toLowerCase().includes(searchQuery.toLowerCase())
+      (caseItem.patient?.name ?? '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (caseItem.chiefComplaint ?? '').toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [cases, searchQuery]);
 
@@ -51,7 +48,7 @@ const Cases = () => {
     );
   }
 
-  if (isError) {
+  if (error) {
     return (
       <div className="space-y-6">
         <PageHeader
@@ -134,7 +131,7 @@ const Cases = () => {
         </Card>
       ) : (
         <div className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "space-y-4"}>
-          {filteredCases.map((caseItem) => (
+          {filteredCases.map((caseItem: MedicalCase) => (
             <div key={caseItem.id}>
               {viewMode === "grid" ? (
                 <CaseCard medicalCase={caseItem} />
