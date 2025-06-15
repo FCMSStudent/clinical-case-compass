@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { Search, Settings, LogOut, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate, NavLink, useLocation } from "react-router-dom";
+import { cn } from '@/lib/utils';
+import { getInteractionStates, getGlassmorphicStyles } from '@/lib/component-system';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -13,8 +15,8 @@ interface AppLayoutProps {
 const HeaderActions = () => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const navigate = useNavigate();
   const userMenuRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   const handleNavigate = (path: string) => {
     navigate(path);
@@ -26,7 +28,7 @@ const HeaderActions = () => {
     setIsUserMenuOpen(false);
   };
 
-  // Close menus when clicking outside
+  // Handle click outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
@@ -62,7 +64,11 @@ const HeaderActions = () => {
       <div className="relative" ref={userMenuRef}>
         <button
           onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-          className="flex items-center p-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl hover:bg-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-white/30"
+          className={cn(
+            "flex items-center p-2 rounded-xl text-white",
+            getGlassmorphicStyles('light'),
+            getInteractionStates('medium', 'default', 'subtle')
+          )}
           aria-label="User menu"
           aria-expanded={isUserMenuOpen}
           aria-haspopup="true"
@@ -81,10 +87,13 @@ const HeaderActions = () => {
               aria-label="User menu options"
             >
               <div className="relative">
-                <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 shadow-xl"></div>
-                <div className="relative bg-white/10 backdrop-blur-md rounded-xl border border-white/20 py-2">
+                <div className={cn("absolute inset-0", getGlassmorphicStyles('elevated'))}></div>
+                <div className={cn("relative py-2", getGlassmorphicStyles('medium'))}>
                   <button
-                    className="w-full px-4 py-2 text-sm text-left text-white hover:bg-white/20 flex items-center space-x-2 transition-colors focus:outline-none focus:ring-2 focus:ring-white/30"
+                    className={cn(
+                      "w-full px-4 py-2 text-sm text-left text-white flex items-center space-x-2",
+                      getInteractionStates('light', 'default', 'subtle')
+                    )}
                     onClick={() => handleNavigate("/settings")}
                     role="menuitem"
                   >
@@ -93,7 +102,10 @@ const HeaderActions = () => {
                   </button>
                   <div className="h-px bg-white/20 my-2" role="separator" />
                   <button 
-                    className="w-full px-4 py-2 text-sm text-left text-red-300 hover:bg-white/20 flex items-center space-x-2 transition-colors focus:outline-none focus:ring-2 focus:ring-white/30"
+                    className={cn(
+                      "w-full px-4 py-2 text-sm text-left text-red-300 flex items-center space-x-2",
+                      getInteractionStates('light', 'default', 'subtle')
+                    )}
                     onClick={handleSignOut}
                     role="menuitem"
                   >
@@ -119,7 +131,7 @@ const TopNavBar: React.FC = () => {
   const location = useLocation();
   return (
     <nav className="w-full flex justify-center mt-12 mb-16">
-      <ul className="flex gap-2 bg-white/10 backdrop-blur-xl border border-white/20 rounded-full px-6 py-2 shadow-xl items-center">
+      <ul className={cn("flex gap-2 rounded-full px-6 py-2 shadow-xl items-center", getGlassmorphicStyles('elevated'))}>
         {NAV_ITEMS.map((item) => {
           const isActive = location.pathname === item.to;
           return (
@@ -127,11 +139,13 @@ const TopNavBar: React.FC = () => {
               <NavLink
                 to={item.to}
                 className={({ isActive: navActive }) =>
-                  `relative px-6 py-2 rounded-full text-lg font-medium text-white transition-all duration-200 outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 ` +
-                  (isActive || navActive
-                    ? "bg-white/20 shadow-md text-white" +
-                      " before:absolute before:inset-0 before:rounded-full before:bg-white/10 before:blur-lg before:opacity-80 before:z-[-1]"
-                    : "hover:bg-white/10 text-white/80")
+                  cn(
+                    "relative px-6 py-2 rounded-full text-lg font-medium text-white transition-all duration-200 outline-none",
+                    getInteractionStates('light', 'default', 'subtle'),
+                    (isActive || navActive
+                      ? cn("bg-white/20 shadow-md text-white", getGlassmorphicStyles('medium'))
+                      : "text-white/80")
+                  )
                 }
                 aria-current={isActive ? "page" : undefined}
               >
@@ -143,13 +157,16 @@ const TopNavBar: React.FC = () => {
         {/* Centered Search Bar */}
         <li className="mx-4 flex-1 flex justify-center min-w-[250px] max-w-xs">
           <div className="relative w-full">
-            <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
+            <div className={cn("absolute inset-0 rounded-xl", getGlassmorphicStyles('light'))}></div>
             <div className="relative flex items-center">
               <Search className="h-4 w-4 text-white/70 ml-3 absolute left-2 top-1/2 -translate-y-1/2" aria-hidden="true" />
               <input
                 type="text"
                 placeholder="Search cases, symptoms..."
-                className="bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 pl-10 pr-4 py-2 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-white/30 w-full"
+                className={cn(
+                  "bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 pl-10 pr-4 py-2 rounded-xl text-sm w-full",
+                  getInteractionStates('subtle', 'default', 'subtle')
+                )}
                 aria-label="Search cases and symptoms"
               />
             </div>
@@ -184,16 +201,23 @@ const ProfileMenu: React.FC = () => {
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/30"
+        className={cn(
+          "flex items-center px-4 py-2 rounded-full text-white",
+          getGlassmorphicStyles('light'),
+          getInteractionStates('medium', 'default', 'subtle')
+        )}
         aria-haspopup="true"
         aria-expanded={open}
       >
         <span>Profile & Settings</span>
       </button>
       {open && (
-        <div className="absolute right-0 mt-2 w-40 z-50 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 shadow-xl py-2">
+        <div className={cn("absolute right-0 mt-2 w-40 z-50 py-2", getGlassmorphicStyles('elevated'))}>
           <button
-            className="w-full px-4 py-2 text-left text-white hover:bg-white/20 flex items-center space-x-2 transition-colors focus:outline-none focus:ring-2 focus:ring-white/30"
+            className={cn(
+              "w-full px-4 py-2 text-left text-white flex items-center space-x-2",
+              getInteractionStates('light', 'default', 'subtle')
+            )}
             onClick={() => { setOpen(false); navigate('/settings'); }}
           >
             <Settings className="h-4 w-4" />
@@ -201,7 +225,10 @@ const ProfileMenu: React.FC = () => {
           </button>
           <div className="h-px bg-white/20 my-2" role="separator" />
           <button
-            className="w-full px-4 py-2 text-left text-red-300 hover:bg-white/20 flex items-center space-x-2 transition-colors focus:outline-none focus:ring-2 focus:ring-white/30"
+            className={cn(
+              "w-full px-4 py-2 text-left text-red-300 flex items-center space-x-2",
+              getInteractionStates('light', 'default', 'subtle')
+            )}
             onClick={() => { setOpen(false); /* add sign out logic here */ }}
           >
             <LogOut className="h-4 w-4" />

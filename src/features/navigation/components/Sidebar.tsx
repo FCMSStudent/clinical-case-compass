@@ -1,4 +1,3 @@
-
 import React, { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import {
   Menu,
@@ -16,6 +15,8 @@ import { useAuth } from '@/app/AuthContext';
 import type { UserMetadata } from '@/types/auth'; // Keep this import
 import { SIDEBAR_CONFIG, getInitialSidebarState, saveSidebarState } from "@/constants/sidebar";
 import { SidebarContext, useSidebar, type SidebarContextValue } from './SidebarContext';
+import { motion, AnimatePresence } from 'framer-motion';
+import { getInteractionStates, getGlassmorphicStyles } from '@/lib/component-system';
 
 const ICON_SIZE = "w-5 h-5";
 
@@ -221,8 +222,8 @@ const NavItem: React.FC<NavItemProps> = ({ item, collapsed, isMobile, onNavigate
 const UserProfile: React.FC<{ collapsed: boolean; isMobile: boolean }> = ({ collapsed, isMobile }) => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
-  const [showTooltip, setShowTooltip] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
 
   if (!user) {
@@ -239,10 +240,10 @@ const UserProfile: React.FC<{ collapsed: boolean; isMobile: boolean }> = ({ coll
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      if (collapsed && !isMobile) {
+      if (collapsed) {
         setShowUserMenu(!showUserMenu);
       } else {
-        navigate("/settings");
+        navigate("/account");
       }
     }
   };
@@ -251,7 +252,11 @@ const UserProfile: React.FC<{ collapsed: boolean; isMobile: boolean }> = ({ coll
     return (
       <div className="group relative">
         <button
-          className="flex w-full items-center justify-center rounded-xl p-2 bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-white/30"
+          className={cn(
+            "flex w-full items-center justify-center rounded-xl p-2 text-white",
+            getGlassmorphicStyles('light'),
+            getInteractionStates('medium', 'default', 'subtle')
+          )}
           onClick={() => setShowUserMenu(!showUserMenu)}
           onKeyDown={handleKeyDown}
           onFocus={() => setShowTooltip(true)}
@@ -261,7 +266,7 @@ const UserProfile: React.FC<{ collapsed: boolean; isMobile: boolean }> = ({ coll
           aria-haspopup="true"
           aria-describedby={showTooltip ? "user-tooltip" : undefined}
         >
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm border border-white/30">
+          <div className={cn("flex h-8 w-8 items-center justify-center rounded-full", getGlassmorphicStyles('medium'))}>
             <User className="h-4 w-4 text-white" aria-hidden="true" />
           </div>
         </button>
@@ -274,8 +279,8 @@ const UserProfile: React.FC<{ collapsed: boolean; isMobile: boolean }> = ({ coll
             role="tooltip"
           >
             <div className="relative">
-              <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 shadow-xl"></div>
-              <div className="relative bg-white/10 backdrop-blur-md rounded-xl border border-white/20 px-3 py-2 text-xs text-white shadow-md min-w-[200px]">
+              <div className={cn("absolute inset-0", getGlassmorphicStyles('elevated'))}></div>
+              <div className={cn("relative px-3 py-2 text-xs text-white shadow-md min-w-[200px]", getGlassmorphicStyles('medium'))}>
                 <div className="font-medium">{fullName}</div>
                 <div className="text-white/70">{user.email}</div>
               </div>
@@ -292,10 +297,13 @@ const UserProfile: React.FC<{ collapsed: boolean; isMobile: boolean }> = ({ coll
             aria-label="User menu"
           >
             <div className="relative">
-              <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 shadow-xl"></div>
-              <div className="relative bg-white/10 backdrop-blur-md rounded-xl border border-white/20 py-2">
+              <div className={cn("absolute inset-0", getGlassmorphicStyles('elevated'))}></div>
+              <div className={cn("relative py-2", getGlassmorphicStyles('medium'))}>
                 <button
-                  className="w-full px-4 py-2 text-sm text-left text-white hover:bg-white/20 flex items-center space-x-2 transition-colors focus:outline-none focus:ring-2 focus:ring-white/30"
+                  className={cn(
+                    "w-full px-4 py-2 text-sm text-left text-white flex items-center space-x-2",
+                    getInteractionStates('light', 'default', 'subtle')
+                  )}
                   onClick={() => { navigate("/account"); setShowUserMenu(false); }}
                   role="menuitem"
                 >
@@ -304,7 +312,10 @@ const UserProfile: React.FC<{ collapsed: boolean; isMobile: boolean }> = ({ coll
                 </button>
                 <div className="h-px bg-white/20 my-2" role="separator" />
                 <button 
-                  className="w-full px-4 py-2 text-sm text-left text-red-300 hover:bg-white/20 flex items-center space-x-2 transition-colors focus:outline-none focus:ring-2 focus:ring-white/30"
+                  className={cn(
+                    "w-full px-4 py-2 text-sm text-left text-red-300 flex items-center space-x-2",
+                    getInteractionStates('light', 'default', 'subtle')
+                  )}
                   onClick={handleSignOut}
                   role="menuitem"
                 >
@@ -322,14 +333,18 @@ const UserProfile: React.FC<{ collapsed: boolean; isMobile: boolean }> = ({ coll
   return (
     <div className="border-t border-white/20 pt-4">
       <div
-        className="flex items-center space-x-3 rounded-xl p-3 bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/30"
+        className={cn(
+          "flex items-center space-x-3 rounded-xl p-3 cursor-pointer text-white",
+          getGlassmorphicStyles('light'),
+          getInteractionStates('medium', 'default', 'subtle')
+        )}
         onClick={() => navigate("/account")}
         onKeyDown={handleKeyDown}
         tabIndex={0}
         role="button"
         aria-label={`User profile: ${fullName}`}
       >
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm border border-white/30">
+        <div className={cn("flex h-10 w-10 items-center justify-center rounded-full", getGlassmorphicStyles('medium'))}>
           <User className="h-5 w-5 text-white" aria-hidden="true" />
         </div>
         <div className="flex-1 min-w-0">
@@ -337,7 +352,11 @@ const UserProfile: React.FC<{ collapsed: boolean; isMobile: boolean }> = ({ coll
           <p className="truncate text-xs text-white/70">{user.email}</p>
         </div>
         <button
-          className="p-1 bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-white/30"
+          className={cn(
+            "p-1 rounded-lg text-white",
+            getGlassmorphicStyles('light'),
+            getInteractionStates('medium', 'default', 'subtle')
+          )}
           aria-label="Sign out"
           onClick={e => { e.stopPropagation(); signOut(); }}
         >
@@ -392,7 +411,11 @@ const Sidebar = React.memo(function Sidebar() {
 
         {isMobile && (
           <button
-            className="ml-auto p-1 bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-white/30"
+            className={cn(
+              "ml-auto p-1 rounded-lg text-white",
+              getGlassmorphicStyles('light'),
+              getInteractionStates('medium', 'default', 'subtle')
+            )}
             onClick={closeSidebar}
             aria-label="Close sidebar"
           >
@@ -430,7 +453,11 @@ const Sidebar = React.memo(function Sidebar() {
         <div className="border-t border-white/20 p-2">
           <button
             onClick={toggleCollapsed}
-            className="flex w-full items-center justify-center rounded-xl p-2 bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-white/30"
+            className={cn(
+              "flex w-full items-center justify-center rounded-xl p-2 text-white",
+              getGlassmorphicStyles('light'),
+              getInteractionStates('medium', 'default', 'subtle')
+            )}
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
             aria-describedby="collapse-description"
           >
