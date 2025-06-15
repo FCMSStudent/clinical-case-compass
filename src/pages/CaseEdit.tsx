@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { z } from "zod";
@@ -45,6 +46,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { EnhancedAppLayout } from "@/features/navigation";
 
 // Define the form schema
 const formSchema = z.object({
@@ -228,19 +231,12 @@ const CaseEdit = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-blue-700 dark:from-blue-900 dark:via-blue-800 dark:to-blue-900">
-      {/* Glassy background elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/3 rounded-full blur-3xl"></div>
-      </div>
-
-      <div className="relative z-10 w-full max-w-6xl mx-auto space-y-6 p-4 md:p-6">
-        <div className="mb-4">
+    <EnhancedAppLayout>
+      <div className="w-full max-w-6xl mx-auto space-y-6">
+        <div className="mb-6">
           <Link
             to={`/cases/${id}`}
-            className="inline-flex items-center text-sm text-white/70 hover:text-white transition-colors"
+            className="inline-flex items-center text-sm text-white/70 hover:text-white"
           >
             <ChevronLeft className="mr-1 h-4 w-4" />
             Back to case
@@ -250,6 +246,7 @@ const CaseEdit = () => {
         <PageHeader
           title="Edit Case"
           description="Update an existing medical case"
+          className="text-white"
         />
 
         {/* Error Summary */}
@@ -270,12 +267,13 @@ const CaseEdit = () => {
             className="space-y-8"
           >
             {/* Basic Information Section */}
-            <div className="relative">
-              <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-              <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
-                <h3 className="text-lg font-semibold text-white mb-6">
+            <Card className="bg-white/10 border-white/20 backdrop-blur-xl">
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold text-white">
                   Basic Information
-                </h3>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
                 <div className="grid gap-6 md:grid-cols-2">
                   <FormField
                     control={form.control}
@@ -284,13 +282,10 @@ const CaseEdit = () => {
                       <FormItem>
                         <FormLabel className="text-white">Case Title</FormLabel>
                         <FormControl>
-                          <div className="relative">
-                            <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
-                            <Input
-                              {...field}
-                              className="relative bg-transparent border-0 text-white placeholder:text-white/60 focus-visible:ring-0 focus-visible:ring-offset-0"
-                            />
-                          </div>
+                          <Input
+                            {...field}
+                            className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -306,13 +301,10 @@ const CaseEdit = () => {
                           Chief Complaint
                         </FormLabel>
                         <FormControl>
-                          <div className="relative">
-                            <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
-                            <Input
-                              {...field}
-                              className="relative bg-transparent border-0 text-white placeholder:text-white/60 focus-visible:ring-0 focus-visible:ring-offset-0"
-                            />
-                          </div>
+                          <Input
+                            {...field}
+                            className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -328,13 +320,10 @@ const CaseEdit = () => {
                           Patient Name
                         </FormLabel>
                         <FormControl>
-                          <div className="relative">
-                            <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
-                            <Input
-                              {...field}
-                              className="relative bg-transparent border-0 text-white placeholder:text-white/60 focus-visible:ring-0 focus-visible:ring-offset-0"
-                            />
-                          </div>
+                          <Input
+                            {...field}
+                            className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -349,16 +338,13 @@ const CaseEdit = () => {
                         <FormItem>
                           <FormLabel className="text-white">Age</FormLabel>
                           <FormControl>
-                            <div className="relative">
-                              <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
-                              <Input
-                                {...field}
-                                type="number"
-                                min={0}
-                                max={120}
-                                className="relative bg-transparent border-0 text-white placeholder:text-white/60 focus-visible:ring-0 focus-visible:ring-offset-0"
-                              />
-                            </div>
+                            <Input
+                              {...field}
+                              type="number"
+                              min={0}
+                              max={120}
+                              className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -376,7 +362,7 @@ const CaseEdit = () => {
                               onValueChange={field.onChange}
                               defaultValue={field.value}
                             >
-                              <SelectTrigger className="bg-white/10 backdrop-blur-sm border border-white/20 text-white">
+                              <SelectTrigger className="bg-white/10 border-white/20 text-white">
                                 <SelectValue placeholder="Select gender" />
                               </SelectTrigger>
                               <SelectContent className="bg-white/10 backdrop-blur-md border border-white/20">
@@ -416,13 +402,10 @@ const CaseEdit = () => {
                           Medical Record Number (Optional)
                         </FormLabel>
                         <FormControl>
-                          <div className="relative">
-                            <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
-                            <Input
-                              {...field}
-                              className="relative bg-transparent border-0 text-white placeholder:text-white/60 focus-visible:ring-0 focus-visible:ring-offset-0"
-                            />
-                          </div>
+                          <Input
+                            {...field}
+                            className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
+                          />
                         </FormControl>
                         <FormDescription className="text-white/70">
                           If applicable
@@ -432,17 +415,18 @@ const CaseEdit = () => {
                     )}
                   />
                 </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
 
             {/* Vital Signs Section */}
-            <div className="relative">
-              <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-              <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
-                <h3 className="text-lg font-semibold text-white mb-6 flex items-center">
+            <Card className="bg-white/10 border-white/20 backdrop-blur-xl">
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold text-white flex items-center">
                   <HeartPulse className="mr-2 h-6 w-6" />
                   Vital Signs & Symptoms
-                </h3>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                   <InteractiveVitalsCard
                     onVitalsChange={setVitals}
@@ -453,148 +437,137 @@ const CaseEdit = () => {
                     onSelectionChange={setUrinarySymptoms}
                     initialSelections={urinarySymptoms}
                   />
-                  <div className="relative">
-                    <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
-                    <div className="relative bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 p-4">
-                      <h3 className="font-medium text-sm mb-2 text-white">
-                        Other Symptoms
-                      </h3>
-                      <SystemReviewChecklist
-                        onSystemSymptomsChange={handleSymptomSelectionChange}
-                        initialSystemSymptoms={systemSymptoms}
-                      />
-                    </div>
+                  <div className="bg-white/10 border-white/20 backdrop-blur-xl rounded-xl p-4">
+                    <h3 className="font-medium text-sm mb-2 text-white">
+                      Other Symptoms
+                    </h3>
+                    <SystemReviewChecklist
+                      onSystemSymptomsChange={handleSymptomSelectionChange}
+                      initialSystemSymptoms={systemSymptoms}
+                    />
                   </div>
                 </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
 
             {/* History & Physical Exam Section */}
             <div className="grid gap-6 md:grid-cols-2">
-              <div className="relative">
-                <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-                <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
+              <Card className="bg-white/10 border-white/20 backdrop-blur-xl">
+                <CardHeader>
+                  <CardTitle className="text-lg font-semibold text-white">History</CardTitle>
+                </CardHeader>
+                <CardContent>
                   <FormField
                     control={form.control}
                     name="history"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white">History</FormLabel>
                         <FormControl>
-                          <div className="relative">
-                            <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
-                            <Textarea
-                              placeholder="Relevant medical history"
-                              className="relative bg-transparent border-0 text-white placeholder:text-white/60 focus-visible:ring-0 focus-visible:ring-offset-0 min-h-32"
-                              {...field}
-                              value={field.value || ""}
-                            />
-                          </div>
+                          <Textarea
+                            placeholder="Relevant medical history"
+                            className="bg-white/10 border-white/20 text-white placeholder:text-white/60 min-h-32"
+                            {...field}
+                            value={field.value || ""}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                </div>
-              </div>
+                </CardContent>
+              </Card>
 
-              <div className="relative">
-                <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-                <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
+              <Card className="bg-white/10 border-white/20 backdrop-blur-xl">
+                <CardHeader>
+                  <CardTitle className="text-lg font-semibold text-white">Physical Examination</CardTitle>
+                </CardHeader>
+                <CardContent>
                   <FormField
                     control={form.control}
                     name="physicalExam"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white">
-                          Physical Examination
-                        </FormLabel>
                         <FormControl>
-                          <div className="relative">
-                            <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
-                            <Textarea
-                              placeholder="Physical examination findings"
-                              className="relative bg-transparent border-0 text-white placeholder:text-white/60 focus-visible:ring-0 focus-visible:ring-offset-0 min-h-32"
-                              {...field}
-                              value={field.value || ""}
-                            />
-                          </div>
+                          <Textarea
+                            placeholder="Physical examination findings"
+                            className="bg-white/10 border-white/20 text-white placeholder:text-white/60 min-h-32"
+                            {...field}
+                            value={field.value || ""}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                </div>
-              </div>
+                </CardContent>
+              </Card>
             </div>
 
             {/* Lab Results & Radiology Section */}
             <div className="grid gap-6 md:grid-cols-2">
-              <div className="relative">
-                <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-                <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
-                  <h3 className="text-lg font-semibold text-white mb-6 flex items-center">
+              <Card className="bg-white/10 border-white/20 backdrop-blur-xl">
+                <CardHeader>
+                  <CardTitle className="text-lg font-semibold text-white flex items-center">
                     <TestTube className="mr-2 h-6 w-6" />
                     Laboratory Results
-                  </h3>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
                   <LabResultsCard
                     onLabResultsChange={setLabResults}
                     initialResults={labResults}
                   />
-                </div>
-              </div>
+                </CardContent>
+              </Card>
 
-              <div className="relative">
-                <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-                <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
-                  <h3 className="text-lg font-semibold text-white mb-6 flex items-center">
+              <Card className="bg-white/10 border-white/20 backdrop-blur-xl">
+                <CardHeader>
+                  <CardTitle className="text-lg font-semibold text-white flex items-center">
                     <Scan className="mr-2 h-6 w-6" />
                     Radiology Exams
-                  </h3>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
                   <RadiologyCard
                     onRadiologyChange={setRadiologyStudies}
                     initialStudies={radiologyStudies}
                   />
-                </div>
-              </div>
+                </CardContent>
+              </Card>
             </div>
 
             {/* Learning Points Section */}
-            <div className="relative">
-              <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-              <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
+            <Card className="bg-white/10 border-white/20 backdrop-blur-xl">
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold text-white">Learning Points</CardTitle>
+              </CardHeader>
+              <CardContent>
                 <FormField
                   control={form.control}
                   name="learningPoints"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-white">
-                        Learning Points
-                      </FormLabel>
                       <FormControl>
-                        <div className="relative">
-                          <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
-                          <Textarea
-                            placeholder="Key learning points for this case"
-                            className="relative bg-transparent border-0 text-white placeholder:text-white/60 focus-visible:ring-0 focus-visible:ring-offset-0 min-h-32"
-                            {...field}
-                            value={field.value || ""}
-                          />
-                        </div>
+                        <Textarea
+                          placeholder="Key learning points for this case"
+                          className="bg-white/10 border-white/20 text-white placeholder:text-white/60 min-h-32"
+                          {...field}
+                          value={field.value || ""}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-              </div>
-            </div>
+              </CardContent>
+            </Card>
 
             {/* Submit Button */}
             <div className="flex justify-end">
               <Button
                 type="submit"
                 disabled={isSaving}
-                className="bg-blue-500/20 backdrop-blur-sm border border-blue-400/30 hover:bg-blue-500/30 text-white"
+                className="bg-white/10 border border-white/20 text-white hover:bg-white/20"
               >
                 <Save className="mr-2 h-4 w-4" />
                 {isSaving ? "Saving..." : "Save Changes"}
@@ -603,7 +576,7 @@ const CaseEdit = () => {
           </form>
         </Form>
       </div>
-    </div>
+    </EnhancedAppLayout>
   );
 };
 
