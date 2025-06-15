@@ -13,7 +13,8 @@ export const typography = {
     large: `text-lg leading-relaxed text-white`,
     default: `text-base leading-relaxed text-white`,
     small: `text-sm leading-normal text-white/70`,
-    caption: `text-xs leading-tight text-white/60`
+    caption: `text-xs leading-tight text-white/60`,
+    toString: function() { return this.default; }
   },
   
   // Additional body text shortcuts

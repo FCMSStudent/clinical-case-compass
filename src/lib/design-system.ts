@@ -449,7 +449,7 @@ export const useTheme = () => {
 // ────────────────────────────────────────────────────────────────────────────────
 
 /** Get glassmorphic styles */
-export const getGlassmorphicStyles = (theme: ThemeConfig, variant: "default" | "elevated" | "subtle" = "default") => {
+export const getGlassmorphicStyles = (theme: ThemeConfig, variant: "default" | "elevated" | "subtle" | "light" = "default") => {
   const baseStyles = {
     backgroundColor: theme.colors.glass.background,
     backdropFilter: theme.colors.glass.backdrop,
@@ -472,6 +472,13 @@ export const getGlassmorphicStyles = (theme: ThemeConfig, variant: "default" | "
         boxShadow: "0 4px 16px rgba(0, 0, 0, 0.05)",
         border: theme.colors.glass.border.replace("0.2", "0.1"),
       };
+    case "light":
+        return {
+          ...baseStyles,
+          backgroundColor: theme.colors.glass.background.replace("0.1", "0.12"),
+          boxShadow: "0 6px 20px rgba(0, 0, 0, 0.08)",
+          border: theme.colors.glass.border.replace("0.2", "0.25"),
+        };
     default:
       return baseStyles;
   }

@@ -20,6 +20,7 @@ export const interactionStates = {
   // Hover states with consistent glassmorphic effects
   hover: {
     subtle: "hover:bg-white/10 hover:border-white/20 hover:shadow-sm",
+    light: "hover:bg-white/15 hover:border-white/20 hover:shadow-md",
     medium: "hover:bg-white/15 hover:border-white/25 hover:shadow-md hover:shadow-white/5",
     strong: "hover:bg-white/20 hover:border-white/30 hover:shadow-lg hover:shadow-white/10",
     elevated: "hover:bg-white/25 hover:border-white/35 hover:shadow-xl hover:shadow-white/15 hover:scale-[1.02]",
@@ -57,8 +58,7 @@ export const interactionStates = {
 // GLASSMORPHIC EFFECT STANDARDS
 // ────────────────────────────────────────────────────────────────────────────────
 
-/** Standardized glassmorphic effects across all components */
-export const glassmorphicEffects = {
+const _glassmorphicEffects = {
   // Base glassmorphic properties
   base: "backdrop-blur-md border border-white/20",
   
@@ -89,14 +89,18 @@ export const glassmorphicEffects = {
     strong: "shadow-xl shadow-black/20",
     elevated: "shadow-2xl shadow-black/25",
   },
-  
+};
+
+/** Standardized glassmorphic effects across all components */
+export const glassmorphicEffects = {
+  ..._glassmorphicEffects,
   // Complete glassmorphic combinations
   variants: {
-    subtle: `${glassmorphicEffects.base} ${glassmorphicEffects.background.subtle} ${glassmorphicEffects.border.subtle} ${glassmorphicEffects.shadow.subtle}`,
-    light: `${glassmorphicEffects.base} ${glassmorphicEffects.background.light} ${glassmorphicEffects.border.light} ${glassmorphicEffects.shadow.light}`,
-    medium: `${glassmorphicEffects.base} ${glassmorphicEffects.background.medium} ${glassmorphicEffects.border.medium} ${glassmorphicEffects.shadow.medium}`,
-    strong: `${glassmorphicEffects.base} ${glassmorphicEffects.background.strong} ${glassmorphicEffects.border.strong} ${glassmorphicEffects.shadow.strong}`,
-    elevated: `${glassmorphicEffects.base} ${glassmorphicEffects.background.elevated} ${glassmorphicEffects.border.elevated} ${glassmorphicEffects.shadow.elevated}`,
+    subtle: `${_glassmorphicEffects.base} ${_glassmorphicEffects.background.subtle} ${_glassmorphicEffects.border.subtle} ${_glassmorphicEffects.shadow.subtle}`,
+    light: `${_glassmorphicEffects.base} ${_glassmorphicEffects.background.light} ${_glassmorphicEffects.border.light} ${_glassmorphicEffects.shadow.light}`,
+    medium: `${_glassmorphicEffects.base} ${_glassmorphicEffects.background.medium} ${_glassmorphicEffects.border.medium} ${_glassmorphicEffects.shadow.medium}`,
+    strong: `${_glassmorphicEffects.base} ${_glassmorphicEffects.background.strong} ${_glassmorphicEffects.border.strong} ${_glassmorphicEffects.shadow.strong}`,
+    elevated: `${_glassmorphicEffects.base} ${_glassmorphicEffects.background.elevated} ${_glassmorphicEffects.border.elevated} ${_glassmorphicEffects.shadow.elevated}`,
   },
 } as const;
 
@@ -619,4 +623,4 @@ export const componentSystem = {
   getInteractionStates,
 } as const;
 
-export default componentSystem; 
+export default componentSystem;

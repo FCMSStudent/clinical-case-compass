@@ -1,3 +1,4 @@
+
 // ────────────────────────────────────────────────────────────────────────────────
 // CORE COMPONENTS
 // ────────────────────────────────────────────────────────────────────────────────
@@ -67,21 +68,21 @@ export { Calendar } from "./calendar"
 export { AspectRatio } from "./aspect-ratio"
 export { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "./resizable"
 export { ScrollArea, ScrollBar } from "./scroll-area"
-export { Carousel, CarouselApi, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "./carousel"
+export { Carousel, type CarouselApi, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "./carousel"
 export { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "./pagination"
 export { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, useFormField } from "./form"
 export { FormGroup } from "./form-group"
 export { FormProgress } from "./form-progress"
-export { InputOTP, InputOTPGroup, InputOTPInput, InputOTPSeparator, InputOTPSlot } from "./input-otp"
+export { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "./input-otp"
 export { PageHeader } from "./page-header"
 export { SettingsCard } from "./settings-card"
 export { RecentCasesCarousel } from "./recent-cases-carousel"
-export { Chart } from "./chart"
-export { LoadingScreen } from "./loading-screen"
+// export { Chart } from "./chart"
+export { default as LoadingScreen } from "./loading-screen"
 export { LoadingSpinner } from "./loading-spinner"
 export { AutosaveIndicator } from "./autosave-indicator"
 export { AvatarUpload } from "./avatar-upload"
-export { DashboardSkeleton } from "./dashboard-skeleton"
+export { default as DashboardSkeleton } from "./dashboard-skeleton"
 export { ErrorSummary } from "./ErrorSummary"
 export { OfflineBanner } from "./OfflineBanner"
 
@@ -91,4 +92,4 @@ export { OfflineBanner } from "./OfflineBanner"
 
 export { Toaster } from "./toaster"
 export { useToast } from "./use-toast"
-export { toast } from "./sonner"
+export { toast } from "sonner"
