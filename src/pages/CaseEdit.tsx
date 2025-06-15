@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { z } from "zod";
@@ -43,10 +42,9 @@ const CaseEdit = () => {
   const { useGetCaseQuery } = useSupabaseCases();
   const { data: supabaseCase, isLoading, error } = useGetCaseQuery(id || "");
   
-  // Determine which case to use (Supabase first, then localStorage, then mock data)
+  // Determine which case to use (Supabase first, then localStorage only)
   const medicalCase = supabaseCase || 
-    storedCases?.find(c => c.id === id) || 
-    (id ? getCaseById(id) : undefined);
+    storedCases?.find(c => c.id === id);
 
   // State for specialized inputs
   const [vitals, setVitals] = useState<Record<string, string>>({});

@@ -1,4 +1,3 @@
-
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { getCaseById } from "@/data/mock-data";
 import { Button } from "@/components/ui/button";
@@ -44,10 +43,9 @@ const CaseDetail = () => {
   const { useGetCaseQuery } = useSupabaseCases();
   const { data: supabaseCase, isLoading, error } = useGetCaseQuery(id || "");
   
-  // Determine which case to display (Supabase first, then localStorage, then mock data)
+  // Determine which case to display: Supabase first, then localStorage (NO mock-data fallback)
   const medicalCase = supabaseCase || 
-    storedCases?.find(c => c.id === id) || 
-    (id ? getCaseById(id) : undefined);
+    storedCases?.find(c => c.id === id);
 
   if (isLoading) {
     return (
