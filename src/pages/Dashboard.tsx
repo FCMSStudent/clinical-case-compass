@@ -11,12 +11,20 @@ import { motion, AnimatePresence } from "framer-motion";
 import { MetricCardSkeleton } from "@/components/ui/dashboard-skeleton";
 import { DynamicRecentActivity } from "@/features/dashboard/components/DynamicRecentActivity";
 import { RecentCasesCarousel } from "@/components/ui/recent-cases-carousel";
+import { 
+  animations, 
+  getComponentStyles, 
+  card, 
+  button, 
+  useTheme 
+} from "@/lib/design-system";
 
 const Dashboard = () => {
   const { isLoading, getStatistics, getRecentCases } = useDashboardData();
   const baseStats = getStatistics();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { currentTheme } = useTheme();
   const recentCases = getRecentCases(6);
 
   // Enhanced stats with completion rate calculation
@@ -41,14 +49,12 @@ const Dashboard = () => {
     onClick?: () => void;
   }) => (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
+      variants={animations.staggeredItem}
       whileHover={{ scale: 1.02, y: -2 }}
       className="group"
     >
       <Card 
-        className={`bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300 ${onClick ? 'cursor-pointer' : ''}`}
+        className={`${card.base} ${card.variant.interactive} ${card.padding.lg} ${onClick ? 'cursor-pointer' : ''}`}
         onClick={onClick}
       >
         <CardContent className="p-6">
@@ -124,9 +130,9 @@ const Dashboard = () => {
 
       {/* Personalized Greeting */}
       <motion.div 
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
+        variants={animations.fadeIn}
+        initial="hidden"
+        animate="visible"
         className="text-left space-y-1"
       >
         <h1 className="text-2xl font-bold text-white">
@@ -148,7 +154,12 @@ const Dashboard = () => {
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+            <motion.div 
+              className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6"
+              variants={animations.staggeredContainer}
+              initial="hidden"
+              animate="visible"
+            >
               <MetricCard
                 title="Total Cases"
                 value={stats.totalCases}
@@ -181,7 +192,7 @@ const Dashboard = () => {
                   isPositive: stats.completionRate > 50 
                 }}
               />
-            </div>
+            </motion.div>
           )}
         </AnimatePresence>
       </section>
@@ -214,7 +225,7 @@ const Dashboard = () => {
                 <div className="space-y-3">
                   <Button 
                     onClick={() => navigate("/cases/new")}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white group"
+                    className={`w-full ${getComponentStyles('button', 'primary', 'md')} group`}
                   >
                     <Plus className="h-4 w-4 mr-2 group-hover:rotate-90 transition-transform duration-200" />
                     Create New Case
@@ -223,7 +234,7 @@ const Dashboard = () => {
                   <Button 
                     onClick={() => navigate("/cases")}
                     variant="outline"
-                    className="w-full border-white/20 text-white hover:bg-white/10"
+                    className={`w-full ${getComponentStyles('button', 'outline', 'md')}`}
                   >
                     <BookOpen className="h-4 w-4 mr-2" />
                     View All Cases

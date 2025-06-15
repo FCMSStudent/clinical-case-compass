@@ -1,7 +1,7 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { layouts } from "@/lib/ui-styles";
+import { getBentoStyles } from "@/lib/design-system";
 
 interface BentoContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   layout?: "default" | "dense" | "spacious";
@@ -10,7 +10,7 @@ interface BentoContainerProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const BentoContainer = React.forwardRef<HTMLDivElement, BentoContainerProps>(
   ({ className, layout = "default", children, ...props }, ref) => {
-    const layoutClasses = layouts.bento[layout];
+    const layoutClasses = getBentoStyles('container', layout);
 
     return (
       <div

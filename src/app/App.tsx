@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider, useAuth } from "./AuthContext";
-import { ThemeProvider } from "@/lib/themes";
+import { ThemeProvider } from "@/lib/design-system";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 import { EnhancedAppLayout } from "@/features/navigation/components/EnhancedAppLayout";
 import { PrivateRoute } from "@/features/auth/PrivateRoute";

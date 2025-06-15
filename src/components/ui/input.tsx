@@ -2,7 +2,7 @@
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
-import { inputBase } from "@/lib/ui-styles"
+import { input } from "@/lib/design-system"
 
 export interface InputProps extends React.ComponentProps<"input"> {
   error?: boolean
@@ -14,8 +14,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <input
         type={type}
         className={cn(
-          inputBase,
-          "h-10 px-3 py-2",
+          `${input.base} ${input.size.md}`,
           error && "border-red-400/50 focus-visible:ring-red-400/30",
           className
         )}

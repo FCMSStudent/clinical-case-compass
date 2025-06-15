@@ -2,7 +2,7 @@
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
-import { cardBase, colors, typography } from "@/lib/ui-styles"
+import { card, typography } from "@/lib/design-system"
 
 const Card = React.forwardRef<
   HTMLDivElement,
@@ -11,7 +11,7 @@ const Card = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      cardBase,
+      `${card.base} ${card.variant.default}`,
       className
     )}
     {...props}
@@ -38,7 +38,7 @@ const CardTitle = React.forwardRef<
   <h3
     ref={ref}
     className={cn(
-      typography.h4,
+      "text-lg font-semibold text-white",
       className
     )}
     {...props}
@@ -52,7 +52,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn(typography.description, className)}
+    className={cn("text-sm text-white/70", className)}
     {...props}
   />
 ))

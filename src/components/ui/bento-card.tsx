@@ -1,7 +1,7 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { bentoCard, bentoCardVariants, spacing, typography, iconWithText } from "@/lib/ui-styles";
+import { getBentoStyles, card, getComponentStyles } from "@/lib/design-system";
 
 interface BentoCardProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: "default" | "elevated" | "interactive" | "featured" | "compact";
@@ -17,9 +17,8 @@ interface BentoCardProps extends React.HTMLAttributes<HTMLDivElement> {
 const BentoCard = React.forwardRef<HTMLDivElement, BentoCardProps>(
   ({ className, variant = "default", size, layout, icon, title, subtitle, children, compact = false, ...props }, ref) => {
     // Determine the layout classes
-    const layoutClasses = layout ? bentoCard.layouts[layout] : '';
-    const sizeClasses = size ? bentoCard.size[size] : '';
-    const variantClasses = bentoCardVariants[variant];
+    const layoutClasses = layout ? getBentoStyles('card', layout, size) : '';
+    const variantClasses = variant ? `${card.base} ${card.variant[variant]}` : `${card.base} ${card.variant.default}`;
 
     // Consistent padding based on card type
     const headerPadding = compact ? "p-4 pb-3" : "p-5 pb-4";
@@ -31,7 +30,6 @@ const BentoCard = React.forwardRef<HTMLDivElement, BentoCardProps>(
         className={cn(
           variantClasses,
           layoutClasses,
-          sizeClasses,
           className
         )}
         {...props}
@@ -41,17 +39,17 @@ const BentoCard = React.forwardRef<HTMLDivElement, BentoCardProps>(
             <div className="flex items-center gap-3">
               {icon && (
                 <div className="flex-shrink-0 flex items-center justify-center w-10 h-10 bg-white/10 rounded-lg ring-1 ring-white/10">
-                  {React.cloneElement(icon as React.ReactElement, {
-                    className: cn(iconWithText, (icon as React.ReactElement).props?.className)
-                  })}
+                                {React.cloneElement(icon as React.ReactElement, {
+                className: cn("h-4 w-4 text-white", (icon as React.ReactElement).props?.className)
+              })}
                 </div>
               )}
               <div className="flex-1 min-w-0">
                 {title && (
-                  <h3 className={cn(typography.h5, "truncate")}>{title}</h3>
+                  <h3 className="text-lg font-semibold text-white truncate">{title}</h3>
                 )}
                 {subtitle && (
-                  <p className={cn(typography.description, "truncate mt-1")}>{subtitle}</p>
+                  <p className="text-sm text-white/70 truncate mt-1">{subtitle}</p>
                 )}
               </div>
             </div>
