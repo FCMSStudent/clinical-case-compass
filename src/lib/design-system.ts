@@ -575,14 +575,20 @@ export const getGlassmorphicStyles = (theme: ThemeConfig, variant: "default" | "
 };
 
 /** Get component styles */
-export const getComponentStyles = (component: keyof typeof button | keyof typeof input | keyof typeof card, variant?: string, size?: string) => {
+export const getComponentStyles = (component: 'button' | 'input' | 'card', variant?: string, size?: string) => {
   const componentMap = { button, input, card };
-  const comp = componentMap[component as keyof typeof componentMap];
+  const comp = componentMap[component];
   if (!comp) return '';
   
   let styles = comp.base;
-  if (variant && 'variant' in comp) styles += ` ${comp.variant[variant as keyof typeof comp.variant] || ''}`;
-  if (size && 'size' in comp) styles += ` ${comp.size[size as keyof typeof comp.size] || ''}`;
+  if (variant && 'variant' in comp && comp.variant) {
+    const variantStyle = comp.variant[variant as keyof typeof comp.variant];
+    if (variantStyle) styles += ` ${variantStyle}`;
+  }
+  if (size && 'size' in comp && comp.size) {
+    const sizeStyle = comp.size[size as keyof typeof comp.size];
+    if (sizeStyle) styles += ` ${sizeStyle}`;
+  }
   
   return styles.trim();
 };
