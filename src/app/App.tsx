@@ -1,4 +1,3 @@
-
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -9,6 +8,7 @@ import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 import { EnhancedAppLayout } from "@/features/navigation/components/EnhancedAppLayout";
 import { PrivateRoute } from "@/features/auth/PrivateRoute";
 import { OfflineBanner } from "@/components/ui/OfflineBanner";
+import { LoadingScreen } from "@/components/ui/loading-screen";
 
 // Pages
 import Dashboard from "@/pages/Dashboard";
@@ -38,11 +38,7 @@ const AppContent = () => {
   const { session, loading, isOfflineMode } = useAuth();
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 via-blue-500 to-blue-700">
-        <span className="text-2xl font-semibold text-white">Loading</span>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   return (

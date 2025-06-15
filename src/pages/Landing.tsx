@@ -9,7 +9,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 
 const LandingPage = () => {
   return (
-    <div className="bg-gradient-to-br from-[#020817] via-[#050d21] to-[#020817] text-white">
+    <div className="text-white">
       <UnifiedBackground />
       <LandingNavbar />
       <ScrollArea className="h-screen w-full relative z-10">
