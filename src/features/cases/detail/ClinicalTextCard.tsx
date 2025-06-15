@@ -1,7 +1,7 @@
-
 import React from "react";
 import { BentoCard } from "@/components/ui/bento-card";
 import { typography, spacing } from "@/lib/ui-styles";
+import { cn } from "@/lib/utils";
 
 interface ClinicalTextCardProps {
   icon: React.ReactNode;

@@ -1,9 +1,9 @@
-
 import React from "react";
 import { BentoCard } from "@/components/ui/bento-card";
 import { BookOpen } from "lucide-react";
 import { MedicalCase } from "@/types/case";
 import { typography } from "@/lib/ui-styles";
+import { cn } from "@/lib/utils";
 
 interface LearningPointsCardProps {
   medicalCase: MedicalCase;
