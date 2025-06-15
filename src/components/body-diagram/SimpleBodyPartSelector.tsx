@@ -234,7 +234,7 @@ export const SimpleBodyPartSelector: React.FC<SimpleBodyPartSelectorProps> = Rea
             >
               <Button
                 variant={getPartVariant(partConfig.id)}
-                size={compact ? "sm" : "default"}
+                size={compact ? "sm" : "md"}
                 className={cn(
                   baseClasses,
                   selectedClasses,

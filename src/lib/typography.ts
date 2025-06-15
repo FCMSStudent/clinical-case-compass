@@ -16,10 +16,21 @@ export const typography = {
     caption: `text-xs leading-tight text-white/60`
   },
   
+  // Additional body text shortcuts
+  bodyLarge: `text-lg leading-relaxed text-white`,
+  bodyDefault: `text-base leading-relaxed text-white`,
+  bodySmall: `text-sm leading-normal text-white/70`,
+  caption: `text-xs leading-tight text-white/60`,
+  
   // Labels and form elements
   label: `text-sm font-medium leading-none text-white`,
+  labelSmall: `text-xs font-medium leading-none text-white/80`,
   description: `text-sm leading-normal text-white/70`,
-  placeholder: `placeholder:text-white/60`
+  placeholder: `placeholder:text-white/60`,
+  
+  // Medical specific
+  vital: `text-lg font-mono tabular-nums text-white`,
+  measurement: `text-base font-mono tabular-nums text-white`
 } as const;
 
 // Compatibility alias

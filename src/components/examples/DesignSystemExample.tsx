@@ -154,8 +154,8 @@ export const DesignSystemExample: React.FC = () => {
                   className={input.size.lg}
                 />
                 <Input 
-                  placeholder="Error state"
-                  error
+                  placeholder="Disabled input"
+                  disabled
                 />
               </div>
             </CardContent>
@@ -375,4 +375,4 @@ const cardClass = getBentoStyles('card', 'medium', 'default');`}
   );
 };
 
-export default DesignSystemExample; 
+export default DesignSystemExample;
