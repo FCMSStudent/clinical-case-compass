@@ -36,6 +36,7 @@ export const typography = {
   // Component specific
   button: `text-sm font-medium`,
   link: `font-medium underline underline-offset-4`,
+  code: `font-mono text-sm`,
   
   // Medical text styles
   dosage: `font-mono text-sm text-white/90`,
