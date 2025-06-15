@@ -85,9 +85,8 @@ export const CaseEditForm: React.FC<CaseEditFormProps> = ({
           <Button
             type="submit"
             disabled={isSaving}
-            className={buttonVariants.primary}
           >
-            <Save className={iconWithText} />
+            <Save className="mr-2 h-4 w-4" />
             {isSaving ? "Saving..." : "Save Changes"}
           </Button>
         </div>

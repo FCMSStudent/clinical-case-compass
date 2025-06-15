@@ -76,7 +76,7 @@ export function Phase2SystemDemo() {
                 <div className={typo.h2}>Heading 2 - Section Titles</div>
                 <div className={typo.h3}>Heading 3 - Subsections</div>
                 <div className={typo.h4}>Heading 4 - Card Headers</div>
-                <div className={typo.body}>Body Text - Regular content and descriptions</div>
+                <div className={typo.bodyDefault}>Body Text - Regular content and descriptions</div>
                 <div className={typo.bodySmall}>Small Body - Supporting information</div>
                 <div className={typo.caption}>Caption - Minimal text and metadata</div>
               </CardContent>
@@ -448,4 +448,4 @@ const bp = formatMedicalMeasurement('120/80', 'mmHg', 'normal');
       </div>
     </div>
   );
-} 
+}

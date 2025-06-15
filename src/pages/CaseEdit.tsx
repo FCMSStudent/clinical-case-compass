@@ -13,7 +13,8 @@ import { useLocalStorage } from "@/hooks/use-local-storage";
 import { MedicalCase } from "@/types/case";
 import { useSupabaseCases } from "@/hooks/use-supabase-cases";
 import { CaseEditForm } from "@/features/cases/edit/CaseEditForm";
-import { spacing, layouts, colors, typography } from "@/lib/ui-styles";
+import { layouts, typography } from "@/lib/design-system";
+import { colors } from "@/lib/design-tokens";
 
 // Define the form schema with optional fields
 const formSchema = z.object({
@@ -172,7 +173,7 @@ const CaseEdit = () => {
 
   if (error || !medicalCase) {
     return (
-      <div className={`${layouts.flex.center} min-h-[50vh] ${layouts.flex.col}`}>
+      <div className={`${layouts.flex.center} min-h-[50vh] flex-col`}>
         <h2 className={`${typography.h3} mb-4`}>Case not found</h2>
         <Link
           to="/cases"
@@ -195,11 +196,11 @@ const CaseEdit = () => {
   } : undefined;
 
   return (
-    <div className={layouts.container}>
+    <div className="container mx-auto px-4 py-8">
       <div className="mb-6">
         <Link
           to={`/cases/${id}`}
-          className={`inline-flex items-center text-sm ${colors.secondary} hover:${colors.primary}`}
+          className={`inline-flex items-center text-sm text-sky-300 hover:text-sky-400`}
         >
           <ChevronLeft className="mr-1 h-4 w-4" />
           Back to case
@@ -209,7 +210,7 @@ const CaseEdit = () => {
       <PageHeader
         title="Edit Case"
         description="Update an existing medical case"
-        className={colors.primary}
+        className="text-sky-300"
       />
 
       <CaseEditForm

@@ -77,7 +77,7 @@ export { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "./inpu
 export { PageHeader } from "./page-header"
 export { SettingsCard } from "./settings-card"
 export { RecentCasesCarousel } from "./recent-cases-carousel"
-// export { Chart } from "./chart"
+// export { Chart } from "./chart" // Chart component is not ready
 export { default as LoadingScreen } from "./loading-screen"
 export { LoadingSpinner } from "./loading-spinner"
 export { AutosaveIndicator } from "./autosave-indicator"
