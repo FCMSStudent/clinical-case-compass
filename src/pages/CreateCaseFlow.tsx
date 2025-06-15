@@ -1,3 +1,4 @@
+
 import React, {
   useState,
   useCallback,
@@ -222,6 +223,8 @@ const CreateCaseFlow = () => {
         },
         case: {
           title: formData.caseTitle || "Untitled Case",
+          priority: "medium" as const,
+          status: "draft" as const,
           chiefComplaint: formData.chiefComplaint || "",
           chiefComplaintAnalysis: undefined,
           history: formData.medicalHistory,
