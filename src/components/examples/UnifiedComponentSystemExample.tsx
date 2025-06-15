@@ -1,463 +1,198 @@
 
-import * as React from "react";
-import { motion } from "framer-motion";
-import { 
-  Stethoscope, 
-  Activity, 
-  Heart, 
-  Pill, 
-  User, 
-  Settings, 
-  Plus,
-  AlertTriangle,
-  CheckCircle,
-  Info,
-  XCircle
-} from "lucide-react";
-
+import React from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Heart, Activity, Users, TrendingUp, AlertTriangle } from 'lucide-react';
 import {
-  Button,
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  Input,
-  Container,
-  Flex,
-  Grid,
-  Section,
-  BentoContainer,
-  BentoCard,
   AnimatedDiv,
   StaggeredContainer,
   StaggeredItem,
   GlassyHover,
   Floating,
-  PulseGlow,
-  MedicalPulse,
-} from "@/components/ui";
-import * as designSystem from "@/lib/design-system";
-import { useTheme } from "@/lib/design-system";
+  PulseGlow
+} from '@/components/ui/animation';
+import { 
+  getComponentStyles, 
+  getBentoStyles, 
+  getGlassmorphicStyles,
+  buttonVariants,
+  cardVariants 
+} from '@/lib/component-system';
 
-export const UnifiedComponentSystemExample: React.FC = () => {
-  const { currentTheme } = useTheme();
+export function UnifiedComponentSystemExample() {
   return (
-    <Container variant="default">
-      <Section spacing="xl">
-        <AnimatedDiv variant="glassmorphicEntrance" className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-white mb-4">
-            Phase 3: Unified Component System
-          </h1>
-          <p className="text-xl text-white/80 max-w-3xl mx-auto">
-            Standardized component variants, interaction states, glassmorphic effects, 
-            layout primitives, and animation standards for consistent medical UI.
+    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-blue-700 dark:from-blue-900 dark:via-blue-800 dark:to-blue-900">
+      <div className="absolute inset-0" aria-hidden="true">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
+      </div>
+      
+      <div className="relative z-10 container mx-auto px-4 py-8 space-y-12">
+        {/* Header */}
+        <AnimatedDiv variant="glassmorphicEntrance" className="text-center space-y-4">
+          <h1 className="text-4xl font-bold text-white">Phase 3: Unified Component System</h1>
+          <p className="text-lg text-white/80 max-w-3xl mx-auto">
+            Complete component system with standardized variants, interaction states, 
+            glassmorphic effects, and animation patterns for medical applications.
           </p>
         </AnimatedDiv>
 
-        {/* Button Variants Section */}
-        <StaggeredContainer className="space-y-8">
+        {/* Button System */}
+        <StaggeredContainer className="space-y-6">
           <StaggeredItem>
-            <Card variant="elevated">
+            <Card className={cardVariants.elevated}>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Settings className="h-5 w-5" />
-                  Standardized Button Variants
-                </CardTitle>
-                <CardDescription>
-                  Consistent interaction states and glassmorphic effects across all button types
+                <CardTitle className="text-white">Unified Button System</CardTitle>
+                <CardDescription className="text-white/70">
+                  Standardized button variants with consistent glassmorphic effects
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <Grid variant="responsive" gap="md">
-                  <div className="space-y-4">
-                    <h4 className="text-sm font-medium text-white/70 uppercase tracking-wide">Primary Variants</h4>
-                    <Flex variant="start" className="flex-wrap gap-3">
-                      <Button variant="primary" size="sm">Primary</Button>
-                      <Button variant="secondary" size="sm">Secondary</Button>
-                      <Button variant="outline" size="sm">Outline</Button>
-                      <Button variant="ghost" size="sm">Ghost</Button>
-                    </Flex>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <h4 className="text-sm font-medium text-white/70 uppercase tracking-wide">Status Variants</h4>
-                    <Flex variant="start" className="flex-wrap gap-3">
-                      <Button variant="success" size="sm">
-                        <CheckCircle className="h-4 w-4 mr-1" />
-                        Success
-                      </Button>
-                      <Button variant="warning" size="sm">
-                        <AlertTriangle className="h-4 w-4 mr-1" />
-                        Warning
-                      </Button>
-                      <Button variant="error" size="sm">
-                        <XCircle className="h-4 w-4 mr-1" />
-                        Error
-                      </Button>
-                      <Button variant="info" size="sm">
-                        <Info className="h-4 w-4 mr-1" />
-                        Info
-                      </Button>
-                    </Flex>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <h4 className="text-sm font-medium text-white/70 uppercase tracking-wide">Medical Variants</h4>
-                    <Flex variant="start" className="flex-wrap gap-3">
-                      <Button variant="medical" size="sm">
-                        <Stethoscope className="h-4 w-4 mr-1" />
-                        Medical
-                      </Button>
-                      <Button variant="critical" size="sm">
-                        <Heart className="h-4 w-4 mr-1" />
-                        Critical
-                      </Button>
-                    </Flex>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <h4 className="text-sm font-medium text-white/70 uppercase tracking-wide">Sizes</h4>
-                    <Flex variant="start" className="flex-wrap gap-3">
-                      <Button variant="primary" size="xs">XS</Button>
-                      <Button variant="primary" size="sm">Small</Button>
-                      <Button variant="primary" size="md">Medium</Button>
-                      <Button variant="primary" size="lg">Large</Button>
-                      <Button variant="primary" size="xl">XL</Button>
-                    </Flex>
-                  </div>
-                </Grid>
-              </CardContent>
-            </Card>
-          </StaggeredItem>
-
-          {/* Input Variants Section */}
-          <StaggeredItem>
-            <Card variant="elevated">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <User className="h-5 w-5" />
-                  Standardized Input Variants
-                </CardTitle>
-                <CardDescription>
-                  Consistent glassmorphic effects and interaction states for form inputs
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Grid variant="responsive" gap="md">
-                  <div className="space-y-4">
-                    <h4 className="text-sm font-medium text-white/70 uppercase tracking-wide">Input Variants</h4>
-                    <div className="space-y-3">
-                      <Input variant="default" placeholder="Default input variant" />
-                      <Input variant="elevated" placeholder="Elevated input variant" />
-                      <Input variant="subtle" placeholder="Subtle input variant" />
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <h4 className="text-sm font-medium text-white/70 uppercase tracking-wide">Input Sizes</h4>
-                    <div className="space-y-3">
-                      <Input size="xs" placeholder="Extra small input" />
-                      <Input size="sm" placeholder="Small input" />
-                      <Input size="md" placeholder="Medium input" />
-                      <Input size="lg" placeholder="Large input" />
-                      <Input size="xl" placeholder="Extra large input" />
-                    </div>
-                  </div>
-                </Grid>
-              </CardContent>
-            </Card>
-          </StaggeredItem>
-
-          {/* Card Variants Section */}
-          <StaggeredItem>
-            <Card variant="elevated">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Activity className="h-5 w-5" />
-                  Standardized Card Variants
-                </CardTitle>
-                <CardDescription>
-                  Glassmorphic effects and interaction states for different card types
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Grid variant="responsive" gap="md">
-                  <Card variant="default">
-                    <CardHeader>
-                      <CardTitle>Default Card</CardTitle>
-                      <CardDescription>Standard glassmorphic card</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-white/70">Hover for subtle interaction effects</p>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card variant="elevated">
-                    <CardHeader>
-                      <CardTitle>Elevated Card</CardTitle>
-                      <CardDescription>Enhanced glassmorphic effects</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-white/70">More pronounced visual depth</p>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card variant="interactive">
-                    <CardHeader>
-                      <CardTitle>Interactive Card</CardTitle>
-                      <CardDescription>Enhanced hover and focus states</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-white/70">Clickable with strong feedback</p>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card variant="featured">
-                    <CardHeader>
-                      <CardTitle>Featured Card</CardTitle>
-                      <CardDescription>Premium visual treatment</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-white/70">Ring border and enhanced effects</p>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card variant="success">
-                    <CardHeader>
-                      <CardTitle>Success Card</CardTitle>
-                      <CardDescription>Positive status indication</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-white/70">Green accent colors</p>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card variant="error">
-                    <CardHeader>
-                      <CardTitle>Error Card</CardTitle>
-                      <CardDescription>Critical status indication</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-white/70">Red accent colors</p>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              </CardContent>
-            </Card>
-          </StaggeredItem>
-
-          {/* Layout Primitives Section */}
-          <StaggeredItem>
-            <Card variant="elevated">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Settings className="h-5 w-5" />
-                  Layout Primitives & Grid Systems
-                </CardTitle>
-                <CardDescription>
-                  Standardized layout components and responsive grid systems
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-8">
-                {/* Flex Layouts */}
-                <div className="space-y-4">
-                  <h4 className="text-sm font-medium text-white/70 uppercase tracking-wide">Flex Layouts</h4>
-                  <Grid variant="responsive" gap="sm">
-                    <Flex variant="center" className="h-20 bg-white/10 rounded-lg">
-                      <span className="text-sm text-white/70">Center</span>
-                    </Flex>
-                    <Flex variant="between" className="h-20 bg-white/10 rounded-lg px-4">
-                      <span className="text-sm text-white/70">Start</span>
-                      <span className="text-sm text-white/70">End</span>
-                    </Flex>
-                    <Flex variant="col" className="h-20 bg-white/10 rounded-lg p-4">
-                      <span className="text-sm text-white/70">Column</span>
-                      <span className="text-sm text-white/70">Layout</span>
-                    </Flex>
-                  </Grid>
+              <CardContent className="space-y-4">
+                <div className="flex flex-wrap gap-3">
+                  <Button className={buttonVariants.primary}>Primary Action</Button>
+                  <Button className={buttonVariants.secondary}>Secondary</Button>
+                  <Button className={buttonVariants.outline}>Outline</Button>
+                  <Button className={buttonVariants.ghost}>Ghost</Button>
                 </div>
-
-                {/* Grid Layouts */}
-                <div className="space-y-4">
-                  <h4 className="text-sm font-medium text-white/70 uppercase tracking-wide">Grid Layouts</h4>
-                  <Grid variant="responsive" gap="sm">
-                    {Array.from({ length: 6 }).map((_, i) => (
-                      <div key={i} className="h-16 bg-white/10 rounded-lg flex items-center justify-center">
-                        <span className="text-sm text-white/70">Item {i + 1}</span>
-                      </div>
-                    ))}
-                  </Grid>
+                <div className="flex flex-wrap gap-3">
+                  <Button className={buttonVariants.success}>Success</Button>
+                  <Button className={buttonVariants.destructive}>Error</Button>
+                  <Button className={buttonVariants.medical}>Medical</Button>
+                  <Button className={buttonVariants.critical}>Critical</Button>
                 </div>
               </CardContent>
             </Card>
           </StaggeredItem>
 
-          {/* Bento Grid Section */}
+          {/* Glassmorphic Effects */}
           <StaggeredItem>
-            <Card variant="elevated">
+            <Card className={cardVariants.elevated}>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Activity className="h-5 w-5" />
-                  Enhanced Bento Grid System
-                </CardTitle>
-                <CardDescription>
-                  Responsive 6-column grid with standardized card layouts
+                <CardTitle className="text-white">Glassmorphic Effect Variants</CardTitle>
+                <CardDescription className="text-white/70">
+                  Standardized glass effects for consistent depth and hierarchy
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <BentoContainer layout="default">
-                  <BentoCard
-                    layout="small"
-                    variant="default"
-                    icon={<Stethoscope className="h-5 w-5 text-white" />}
-                    title="Patient Records"
-                    subtitle="1,234 active cases"
-                  >
-                    <div className="text-2xl font-bold text-white">1,234</div>
-                  </BentoCard>
-
-                  <BentoCard
-                    layout="medium"
-                    variant="interactive"
-                    icon={<Heart className="h-5 w-5 text-white" />}
-                    title="Vital Signs"
-                    subtitle="Real-time monitoring"
-                  >
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span className="text-white/70">Heart Rate</span>
-                        <span className="text-white font-semibold">72 BPM</span>
-                      </div>
-                      <div className="w-full bg-white/10 rounded-full h-2">
-                        <div className="bg-green-400 h-2 rounded-full" style={{ width: '75%' }} />
-                      </div>
-                    </div>
-                  </BentoCard>
-
-                  <BentoCard
-                    layout="large"
-                    variant="featured"
-                    icon={<Pill className="h-5 w-5 text-white" />}
-                    title="Medications"
-                    subtitle="Active prescriptions"
-                  >
-                    <div className="space-y-3">
-                      <div className="flex justify-between items-center">
-                        <span className="text-white/70">Active</span>
-                        <span className="text-white font-semibold">12</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-white/70">Pending</span>
-                        <span className="text-white font-semibold">3</span>
-                      </div>
-                    </div>
-                  </BentoCard>
-
-                  <BentoCard
-                    layout="hero"
-                    variant="elevated"
-                    icon={<Activity className="h-5 w-5 text-white" />}
-                    title="Recent Activity"
-                    subtitle="Latest patient updates"
-                  >
-                    <div className="space-y-2">
-                      <div className="text-sm text-white/70">Dr. Smith updated Case #1234</div>
-                      <div className="text-sm text-white/70">New lab results available</div>
-                      <div className="text-sm text-white/70">Appointment scheduled</div>
-                    </div>
-                  </BentoCard>
-                </BentoContainer>
+              <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className={`${getGlassmorphicStyles('subtle')} p-4 rounded-lg`}>
+                  <div className="text-white/90 font-medium">Subtle Glass</div>
+                  <div className="text-white/70 text-sm">Minimal depth for backgrounds</div>
+                </div>
+                <div className={`${getGlassmorphicStyles('medium')} p-4 rounded-lg`}>
+                  <div className="text-white font-medium">Medium Glass</div>
+                  <div className="text-white/70 text-sm">Standard card depth</div>
+                </div>
+                <div className={`${getGlassmorphicStyles('elevated')} p-4 rounded-lg`}>
+                  <div className="text-white font-medium">Elevated Glass</div>
+                  <div className="text-white/70 text-sm">Prominent overlays</div>
+                </div>
               </CardContent>
             </Card>
           </StaggeredItem>
 
-          {/* Animation Standards Section */}
+          {/* Animation Components */}
           <StaggeredItem>
-            <Card variant="elevated">
+            <Card className={cardVariants.interactive}>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Activity className="h-5 w-5" />
-                  Animation & Transition Standards
-                </CardTitle>
-                <CardDescription>
-                  Standardized animation variants and transition effects
+                <CardTitle className="text-white">Animation Components</CardTitle>
+                <CardDescription className="text-white/70">
+                  Reusable animation wrappers with medical-specific patterns
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <Grid variant="responsive" gap="md">
-                  <GlassyHover intensity="medium" className="p-6 bg-white/10 rounded-lg">
-                    <h4 className="text-sm font-medium text-white/70 mb-2">Glassy Hover</h4>
-                    <p className="text-sm text-white/70">3D hover effects with brightness</p>
+              <CardContent className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <GlassyHover className={`${getGlassmorphicStyles('medium')} p-4 rounded-lg cursor-pointer`}>
+                    <Heart className="h-6 w-6 text-red-400 mb-2" />
+                    <div className="text-white font-medium">Glassy Hover</div>
+                    <div className="text-white/70 text-sm">3D hover effect</div>
                   </GlassyHover>
-
-                  <Floating className="p-6 bg-white/10 rounded-lg">
-                    <h4 className="text-sm font-medium text-white/70 mb-2">Floating</h4>
-                    <p className="text-sm text-white/70">Continuous floating animation</p>
+                  
+                  <Floating className={`${getGlassmorphicStyles('medium')} p-4 rounded-lg`}>
+                    <Activity className="h-6 w-6 text-green-400 mb-2" />
+                    <div className="text-white font-medium">Floating</div>
+                    <div className="text-white/70 text-sm">Gentle float animation</div>
                   </Floating>
-
-                  <PulseGlow className="p-6 bg-white/10 rounded-lg">
-                    <h4 className="text-sm font-medium text-white/70 mb-2">Pulse Glow</h4>
-                    <p className="text-sm text-white/70">Pulsing glow effect</p>
+                  
+                  <PulseGlow className={`${getGlassmorphicStyles('medium')} p-4 rounded-lg`}>
+                    <AlertTriangle className="h-6 w-6 text-yellow-400 mb-2" />
+                    <div className="text-white font-medium">Pulse Glow</div>
+                    <div className="text-white/70 text-sm">Medical pulse effect</div>
                   </PulseGlow>
-
-                  <MedicalPulse className="p-6 bg-white/10 rounded-lg">
-                    <h4 className="text-sm font-medium text-white/70 mb-2">Medical Pulse</h4>
-                    <p className="text-sm text-white/70">Medical-specific pulse animation</p>
-                  </MedicalPulse>
-                </Grid>
+                </div>
               </CardContent>
             </Card>
           </StaggeredItem>
 
-          {/* Utility Functions Section */}
+          {/* Bento Grid System */}
           <StaggeredItem>
-            <Card variant="elevated">
+            <Card className={cardVariants.featured}>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Settings className="h-5 w-5" />
-                  Utility Functions
-                </CardTitle>
-                <CardDescription>
-                  Helper functions for consistent component styling
+                <CardTitle className="text-white">Enhanced Bento Grid</CardTitle>
+                <CardDescription className="text-white/70">
+                  Responsive grid system with predefined layouts for medical dashboards
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Grid variant="responsive" gap="md">
-                  <div className="space-y-4">
-                    <h4 className="text-sm font-medium text-white/70 uppercase tracking-wide">Component Styles</h4>
+                <div className={getBentoStyles('container', 'default')}>
+                  <div className={`${getBentoStyles('card', 'small')} ${getGlassmorphicStyles('medium')} p-4 rounded-lg`}>
+                    <Users className="h-6 w-6 text-blue-400 mb-2" />
+                    <div className="text-white font-medium">Patients</div>
+                    <div className="text-2xl font-bold text-white">1,234</div>
+                  </div>
+                  
+                  <div className={`${getBentoStyles('card', 'medium')} ${getGlassmorphicStyles('medium')} p-4 rounded-lg`}>
+                    <TrendingUp className="h-6 w-6 text-green-400 mb-2" />
+                    <div className="text-white font-medium mb-4">Patient Statistics</div>
                     <div className="space-y-2">
-                      <Button className={designSystem.getComponentStyles('button', 'primary', 'md')}>
-                        Dynamic Button
-                      </Button>
-                      <Input className={designSystem.getComponentStyles('input', 'elevated', 'md')} placeholder="Dynamic Input" />
+                      <div className="flex justify-between text-sm">
+                        <span className="text-white/70">Recovery Rate</span>
+                        <span className="text-green-400">94.2%</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-white/70">Average Stay</span>
+                        <span className="text-white">3.2 days</span>
+                      </div>
                     </div>
                   </div>
                   
-                  <div className="space-y-4">
-                    <h4 className="text-sm font-medium text-white/70 uppercase tracking-wide">Glassmorphic Styles</h4>
-                    <div className="space-y-2">
-                      <div className="p-4 rounded-lg" style={designSystem.getGlassmorphicStyles(currentTheme, 'subtle')}>
-                        <span className="text-sm text-white/70">Subtle glassmorphic effect</span>
-                      </div>
-                      <div className="p-4 rounded-lg" style={designSystem.getGlassmorphicStyles(currentTheme, 'elevated')}>
-                        <span className="text-sm text-white/70">Elevated glassmorphic effect</span>
+                  <div className={`${getBentoStyles('card', 'large')} ${getGlassmorphicStyles('elevated')} p-4 rounded-lg`}>
+                    <div className="text-white font-medium mb-4">Medical Dashboard</div>
+                    <div className="space-y-3">
+                      <Input 
+                        placeholder="Search patients..." 
+                        className={getComponentStyles('input', 'default', 'md')}
+                      />
+                      <div className="flex gap-2 flex-wrap">
+                        <Badge className="bg-green-500/20 text-green-300 border-green-400/30">
+                          Stable: {12}
+                        </Badge>
+                        <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-400/30">
+                          Monitor: {5}
+                        </Badge>
+                        <Badge className="bg-red-500/20 text-red-300 border-red-400/30">
+                          Critical: {2}
+                        </Badge>
                       </div>
                     </div>
                   </div>
-                  
-                  <div className="space-y-4">
-                    <h4 className="text-sm font-medium text-white/70 uppercase tracking-wide">Interaction States</h4>
-                    <div className="space-y-2">
-                      <p className="text-sm text-white/70">Interaction states are now built into components.</p>
-                    </div>
-                  </div>
-                </Grid>
+                </div>
               </CardContent>
             </Card>
           </StaggeredItem>
         </StaggeredContainer>
-      </Section>
-    </Container>
+
+        {/* Footer */}
+        <div className="text-center pt-12 border-t border-white/20">
+          <p className="text-white/70">
+            Phase 3 Complete: Unified Component System with Enhanced Medical Patterns
+          </p>
+          <p className="text-white/60 text-sm mt-2">
+            All components now use standardized variants, effects, and animations
+          </p>
+        </div>
+      </div>
+    </div>
   );
-};
+}

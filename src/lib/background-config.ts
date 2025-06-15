@@ -17,3 +17,8 @@ export const backgroundConfig = {
     { className: "w-32 h-32 top-[75%] left-[20%] text-white/5 opacity-50" },
   ],
 } as const;
+
+// Compatibility exports for components that expect these specific names
+export const animatedIconsConfig = backgroundConfig.animatedIcons;
+export const particleConfig = backgroundConfig.particles;
+export const hexagonConfig = backgroundConfig.hexagons;

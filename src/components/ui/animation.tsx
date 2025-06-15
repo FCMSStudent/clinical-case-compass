@@ -1,7 +1,59 @@
+
 import * as React from "react";
 import { motion, type Variants } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { animationVariants } from "@/lib/component-system";
+
+// ────────────────────────────────────────────────────────────────────────────────
+// ANIMATION VARIANTS
+// ────────────────────────────────────────────────────────────────────────────────
+
+const animationVariants = {
+  fadeIn: {
+    hidden: { opacity: 0, y: 20, scale: 0.95 },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      scale: 1, 
+      transition: { 
+        duration: 0.4, 
+        ease: [0.23, 1, 0.32, 1] 
+      } 
+    },
+    exit: { 
+      opacity: 0, 
+      y: -20, 
+      scale: 0.95, 
+      transition: { 
+        duration: 0.3, 
+        ease: "easeInOut" 
+      } 
+    },
+  } as Variants,
+  
+  glassmorphicEntrance: {
+    hidden: { opacity: 0, y: 30, scale: 0.95, filter: "blur(10px)" },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      scale: 1, 
+      filter: "blur(0px)", 
+      transition: { 
+        duration: 0.6, 
+        ease: [0.23, 1, 0.32, 1] 
+      } 
+    },
+    exit: { 
+      opacity: 0, 
+      y: -30, 
+      scale: 0.95, 
+      filter: "blur(10px)", 
+      transition: { 
+        duration: 0.3, 
+        ease: "easeInOut" 
+      } 
+    },
+  } as Variants,
+};
 
 // ────────────────────────────────────────────────────────────────────────────────
 // ANIMATION WRAPPER COMPONENTS
@@ -18,33 +70,11 @@ const AnimatedDiv = React.forwardRef<HTMLDivElement, AnimatedDivProps>(
   ({ className, variant = "fadeIn", children, delay = 0, duration, ...props }, ref) => {
     const variants = animationVariants[variant];
     
-    // Override duration if provided
-    const customVariants = duration ? {
-      ...variants,
-      visible: {
-        ...variants.visible,
-        transition: {
-          ...variants.visible?.transition,
-          duration,
-          delay,
-        },
-      },
-    } : {
-      ...variants,
-      visible: {
-        ...variants.visible,
-        transition: {
-          ...variants.visible?.transition,
-          delay,
-        },
-      },
-    };
-
     return (
       <motion.div
         ref={ref}
         className={cn(className)}
-        variants={customVariants}
+        variants={variants}
         initial="hidden"
         animate="visible"
         exit="exit"
@@ -145,29 +175,18 @@ interface GlassyHoverProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const GlassyHover = React.forwardRef<HTMLDivElement, GlassyHoverProps>(
   ({ className, children, intensity = "medium", ...props }, ref) => {
-    const variants: Variants = {
-      initial: { scale: 1, rotateX: 0, rotateY: 0, filter: "brightness(1)" },
-      hover: {
-        scale: intensity === "subtle" ? 1.01 : intensity === "strong" ? 1.03 : 1.02,
-        rotateX: intensity === "subtle" ? 1 : intensity === "strong" ? 3 : 2,
-        rotateY: intensity === "subtle" ? 1 : intensity === "strong" ? 3 : 2,
-        filter: intensity === "subtle" ? "brightness(1.05)" : intensity === "strong" ? "brightness(1.15)" : "brightness(1.1)",
-        transition: { duration: 0.3, ease: "easeOut" },
-      },
-      tap: {
-        scale: 0.98,
-        transition: { duration: 0.1 },
-      },
+    const hoverAnimation = {
+      scale: intensity === "subtle" ? 1.01 : intensity === "strong" ? 1.03 : 1.02,
+      filter: intensity === "subtle" ? "brightness(1.05)" : intensity === "strong" ? "brightness(1.15)" : "brightness(1.1)",
     };
 
     return (
       <motion.div
         ref={ref}
         className={cn(className)}
-        variants={variants}
-        initial="initial"
-        whileHover="hover"
-        whileTap="tap"
+        whileHover={hoverAnimation}
+        whileTap={{ scale: 0.98 }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
         {...props}
       >
         {children}
@@ -189,25 +208,18 @@ interface FloatingProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const Floating = React.forwardRef<HTMLDivElement, FloatingProps>(
   ({ className, children, duration = 4, amplitude = 5, ...props }, ref) => {
-    const variants: Variants = {
-      initial: { y: 0 },
-      animate: {
-        y: [-amplitude, amplitude, -amplitude],
-        transition: {
-          duration,
-          repeat: Infinity,
-          ease: "easeInOut",
-        },
-      },
-    };
-
     return (
       <motion.div
         ref={ref}
         className={cn(className)}
-        variants={variants}
-        initial="initial"
-        animate="animate"
+        animate={{
+          y: [-amplitude, amplitude, -amplitude],
+        }}
+        transition={{
+          duration,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
         {...props}
       >
         {children}
@@ -229,29 +241,22 @@ interface PulseGlowProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const PulseGlow = React.forwardRef<HTMLDivElement, PulseGlowProps>(
   ({ className, children, color = "rgba(255, 255, 255, 0.1)", duration = 2, ...props }, ref) => {
-    const variants: Variants = {
-      initial: { boxShadow: `0 0 0 0 ${color}` },
-      animate: {
-        boxShadow: [
-          `0 0 0 0 ${color}`,
-          `0 0 0 10px ${color.replace('0.1', '0.05')}`,
-          `0 0 0 0 ${color}`,
-        ],
-        transition: {
-          duration,
-          repeat: Infinity,
-          ease: "easeInOut",
-        },
-      },
-    };
-
     return (
       <motion.div
         ref={ref}
         className={cn(className)}
-        variants={variants}
-        initial="initial"
-        animate="animate"
+        animate={{
+          boxShadow: [
+            `0 0 0 0 ${color}`,
+            `0 0 0 10px ${color.replace('0.1', '0.05')}`,
+            `0 0 0 0 ${color}`,
+          ],
+        }}
+        transition={{
+          duration,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
         {...props}
       >
         {children}
@@ -272,26 +277,19 @@ interface MedicalPulseProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const MedicalPulse = React.forwardRef<HTMLDivElement, MedicalPulseProps>(
   ({ className, children, duration = 2, ...props }, ref) => {
-    const variants: Variants = {
-      initial: { scale: 1, opacity: 0.8 },
-      animate: {
-        scale: [1, 1.05, 1],
-        opacity: [0.8, 1, 0.8],
-        transition: {
-          duration,
-          repeat: Infinity,
-          ease: "easeInOut",
-        },
-      },
-    };
-
     return (
       <motion.div
         ref={ref}
         className={cn(className)}
-        variants={variants}
-        initial="initial"
-        animate="animate"
+        animate={{
+          scale: [1, 1.05, 1],
+          opacity: [0.8, 1, 0.8],
+        }}
+        transition={{
+          duration,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
         {...props}
       >
         {children}
@@ -323,4 +321,4 @@ export type {
   FloatingProps,
   PulseGlowProps,
   MedicalPulseProps,
-}; 
+};

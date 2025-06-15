@@ -112,3 +112,12 @@ export const shadows = {
   glass: '0 8px 32px rgba(0, 0, 0, 0.1)',
   glassElevated: '0 12px 40px rgba(0, 0, 0, 0.15)',
 } as const;
+
+// Compatibility export for components expecting designTokens
+export const designTokens = {
+  typography: typographyTokens,
+  colors,
+  spacing,
+  borderRadius,
+  shadows,
+} as const;
