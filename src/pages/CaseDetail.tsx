@@ -140,7 +140,7 @@ const CaseDetail = () => {
         </PageHeader>
 
         <div className="grid gap-6 md:grid-cols-3 mb-6">
-          <Card>
+          <Card className="bg-white/10 border-white/20 backdrop-blur-xl">
             <CardHeader>
               <CardTitle className="text-base text-white">Patient Information</CardTitle>
             </CardHeader>
@@ -168,7 +168,7 @@ const CaseDetail = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-white/10 border-white/20 backdrop-blur-xl">
             <CardHeader>
               <CardTitle className="text-base text-white">Diagnosis</CardTitle>
             </CardHeader>
@@ -197,7 +197,7 @@ const CaseDetail = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-white/10 border-white/20 backdrop-blur-xl">
             <CardHeader>
               <CardTitle className="text-base text-white">Case Details</CardTitle>
             </CardHeader>
@@ -233,7 +233,7 @@ const CaseDetail = () => {
           <TabsContent value="clinical" className="mt-6">
             <div className="grid gap-6">
               {medicalCase.history && (
-                <Card>
+                <Card className="bg-white/10 border-white/20 backdrop-blur-xl">
                   <CardHeader>
                     <CardTitle className="text-lg text-white">History</CardTitle>
                   </CardHeader>
@@ -244,7 +244,7 @@ const CaseDetail = () => {
               )}
               
               {medicalCase.physicalExam && (
-                <Card>
+                <Card className="bg-white/10 border-white/20 backdrop-blur-xl">
                   <CardHeader>
                     <CardTitle className="text-lg text-white">Physical Examination</CardTitle>
                   </CardHeader>
@@ -259,7 +259,7 @@ const CaseDetail = () => {
           <TabsContent value="study" className="mt-6">
             <div className="grid gap-6">
               {medicalCase.learningPoints && (
-                <Card>
+                <Card className="bg-white/10 border-white/20 backdrop-blur-xl">
                   <CardHeader>
                     <CardTitle className="text-lg text-white">Learning Points</CardTitle>
                   </CardHeader>
@@ -269,7 +269,7 @@ const CaseDetail = () => {
                 </Card>
               )}
               
-              <Card>
+              <Card className="bg-white/10 border-white/20 backdrop-blur-xl">
                 <CardHeader className="flex flex-row items-center justify-between">
                   <div>
                     <CardTitle className="text-lg text-white">Study Resources</CardTitle>
@@ -332,7 +332,7 @@ const CaseDetail = () => {
         
         <div className="grid gap-6 md:grid-cols-3">
           <div className="md:col-span-2">
-            <Card>
+            <Card className="bg-white/10 border-white/20 backdrop-blur-xl">
               <CardHeader>
                 <CardTitle className="text-base text-white">Vitals</CardTitle>
               </CardHeader>
@@ -368,7 +368,8 @@ const CaseDetail = () => {
                     Delete
                   </AlertDialogAction>
                 </AlertDialogFooter>
-                </AlertDialog>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </div>
       </div>
