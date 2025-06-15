@@ -175,9 +175,11 @@ export const CaseListItem = memo<CaseListItemProps>(({ medicalCase, className, o
                           asChild
                           className="relative group/btn bg-white/10 hover:bg-white/20 text-white"
                         >
-                          <Link to={`/cases/${medicalCase.id}`}>
-                            <Eye className="h-4 w-4 transition-transform group-hover/btn:scale-110" />
-                            <span className="sr-only">View Case</span>
+                          <Link to={`/cases/${medicalCase.id}`} className="flex items-center">
+                            <span className="flex items-center">
+                              <Eye className="h-4 w-4 transition-transform group-hover/btn:scale-110" />
+                              <span className="sr-only">View Case</span>
+                            </span>
                           </Link>
                         </Button>
                       </TooltipTrigger>
@@ -196,9 +198,11 @@ export const CaseListItem = memo<CaseListItemProps>(({ medicalCase, className, o
                           asChild
                           className="relative group/btn bg-white/10 hover:bg-white/20 text-white"
                         >
-                          <Link to={`/cases/edit/${medicalCase.id}`}>
-                            <Edit className="h-4 w-4 transition-transform group-hover/btn:scale-110" />
-                            <span className="sr-only">Edit Case</span>
+                          <Link to={`/cases/edit/${medicalCase.id}`} className="flex items-center">
+                            <span className="flex items-center">
+                              <Edit className="h-4 w-4 transition-transform group-hover/btn:scale-110" />
+                              <span className="sr-only">Edit Case</span>
+                            </span>
                           </Link>
                         </Button>
                       </TooltipTrigger>

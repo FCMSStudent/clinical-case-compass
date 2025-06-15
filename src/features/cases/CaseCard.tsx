@@ -261,18 +261,18 @@ export const CaseCard: React.FC<CaseCardProps> = memo(
                             variant="outline"
                             className="group/btn relative bg-white/10 border-white/20 hover:bg-white/20 text-white"
                           >
-                            <Link to={`/cases/${medicalCase.id}`}>
-                              View Details
-                              <motion.div
-                                className="absolute right-0 top-1/2 -translate-y-1/2 text-white/60"
-                                animate={{
-                                  x: isHovered ? 4 : 0,
-                                  opacity: isHovered ? 1 : 0
-                                }}
-                                transition={{ duration: 0.2 }}
-                              >
-                                <ChevronRight className="h-4 w-4" />
-                              </motion.div>
+                            <Link to={`/cases/${medicalCase.id}`} className="flex items-center">
+                              <span className="flex items-center justify-center">
+                                View Details
+                                <motion.div
+                                  className="ml-1 absolute right-0 top-1/2 -translate-y-1/2 text-white/60"
+                                  style={{ x: isHovered ? 4 : 0, opacity: isHovered ? 1 : 0, position: 'relative', right: isHovered ? '-0.25rem' : '0rem' }}
+                                  animate={{ x: isHovered ? 4 : 0, opacity: isHovered ? 1 : 0 }}
+                                  transition={{ duration: 0.2 }}
+                                >
+                                  <ChevronRight className="h-4 w-4" />
+                                </motion.div>
+                              </span>
                             </Link>
                           </Button>
                         </TooltipTrigger>
