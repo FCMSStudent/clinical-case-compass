@@ -1,8 +1,9 @@
 
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom"; // Added useLocation
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/sonner";
+import { AnimatePresence } from "framer-motion"; // Added AnimatePresence
 import { AuthProvider, useAuth } from "./AuthContext";
 import { ThemeProvider } from "@/lib/design-system";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
@@ -54,22 +55,37 @@ const AppContent = () => {
 
   return (
     <Router>
-      <Routes>
-        {/* Public Routes */}
+      <AppRoutes />
+    </Router>
+  );
+};
+
+// New component to handle location and AnimatePresence for page transitions.
+// This component uses `useLocation` to get the current route and provides it to `AnimatePresence`
+// and `Routes`. The `key` on `Routes` ensures `AnimatePresence` detects route changes.
+const AppRoutes = () => {
+  const location = useLocation();
+  const { session, isOfflineMode } = useAuth(); // Used to determine route elements.
+
+  return (
+    // AnimatePresence enables the animation of components that are mounted or unmounted.
+    // `mode="wait"` ensures that the outgoing component finishes its exit animation
+    // before the new component enters.
+    <AnimatePresence mode="wait">
+      {/* The `location` prop is passed to `Routes` so it works correctly with `AnimatePresence`. */}
+      {/* `key={location.pathname}` is crucial for `AnimatePresence` to differentiate between routes. */}
+      <Routes location={location} key={location.pathname}>
+        {/* Public Routes - Page components (LandingPage, Auth) are motion-enhanced for transitions. */}
         <Route path="/landing" element={<LandingPage />} />
         <Route path="/auth" element={session ? <Navigate to="/dashboard" replace /> : <Auth />} />
         
-        {/* Protected routes with single layout wrapper */}
+        {/* Protected routes - EnhancedAppLayout will be modified to be a motion component */}
         <Route
           path="/dashboard"
           element={
             <PrivateRoute>
               <EnhancedAppLayout>
-                {isOfflineMode && (
-                  <div className="mb-4">
-                    <OfflineBanner />
-                  </div>
-                )}
+                {isOfflineMode && <div className="mb-4"><OfflineBanner /></div>}
                 <Dashboard />
               </EnhancedAppLayout>
             </PrivateRoute>
@@ -80,11 +96,7 @@ const AppContent = () => {
           element={
             <PrivateRoute>
               <EnhancedAppLayout>
-                {isOfflineMode && (
-                  <div className="mb-4">
-                    <OfflineBanner />
-                  </div>
-                )}
+                {isOfflineMode && <div className="mb-4"><OfflineBanner /></div>}
                 <ErrorBoundary fallback={
                   <div className="p-8 text-center">
                     <h2 className="text-xl font-semibold text-white mb-2">Cases Page Error</h2>
@@ -102,11 +114,7 @@ const AppContent = () => {
           element={
             <PrivateRoute>
               <EnhancedAppLayout>
-                {isOfflineMode && (
-                  <div className="mb-4">
-                    <OfflineBanner />
-                  </div>
-                )}
+                {isOfflineMode && <div className="mb-4"><OfflineBanner /></div>}
                 <CaseDetail />
               </EnhancedAppLayout>
             </PrivateRoute>
@@ -117,11 +125,7 @@ const AppContent = () => {
           element={
             <PrivateRoute>
               <EnhancedAppLayout>
-                {isOfflineMode && (
-                  <div className="mb-4">
-                    <OfflineBanner />
-                  </div>
-                )}
+                {isOfflineMode && <div className="mb-4"><OfflineBanner /></div>}
                 <CaseEdit />
               </EnhancedAppLayout>
             </PrivateRoute>
@@ -132,11 +136,7 @@ const AppContent = () => {
           element={
             <PrivateRoute>
               <EnhancedAppLayout>
-                {isOfflineMode && (
-                  <div className="mb-4">
-                    <OfflineBanner />
-                  </div>
-                )}
+                {isOfflineMode && <div className="mb-4"><OfflineBanner /></div>}
                 <CreateCaseFlow />
               </EnhancedAppLayout>
             </PrivateRoute>
@@ -147,11 +147,7 @@ const AppContent = () => {
           element={
             <PrivateRoute>
               <EnhancedAppLayout>
-                {isOfflineMode && (
-                  <div className="mb-4">
-                    <OfflineBanner />
-                  </div>
-                )}
+                {isOfflineMode && <div className="mb-4"><OfflineBanner /></div>}
                 <Account />
               </EnhancedAppLayout>
             </PrivateRoute>
@@ -171,7 +167,7 @@ const AppContent = () => {
           }
         />
       </Routes>
-    </Router>
+    </AnimatePresence>
   );
 };
 
