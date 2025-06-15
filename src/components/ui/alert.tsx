@@ -1,7 +1,7 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
-
 import { cn } from "@/lib/utils"
+import { typo } from "@/lib/typography"
 
 const alertVariants = cva(
   "relative w-full rounded-xl border border-white/20 bg-white/10 backdrop-blur-xl p-4 [&>svg~*]:pl-7 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-white",
@@ -10,7 +10,13 @@ const alertVariants = cva(
       variant: {
         default: "text-white",
         destructive:
-          "border-red-400/30 bg-red-500/20 text-red-300 [&>svg]:text-red-300",
+          "border-error/30 bg-error/20 text-error [&>svg]:text-error",
+        success:
+          "border-success/30 bg-success/20 text-success [&>svg]:text-success",
+        warning:
+          "border-warning/30 bg-warning/20 text-warning [&>svg]:text-warning",
+        info:
+          "border-info/30 bg-info/20 text-info [&>svg]:text-info",
       },
     },
     defaultVariants: {
@@ -38,7 +44,7 @@ const AlertTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <h5
     ref={ref}
-    className={cn("mb-1 font-medium leading-none tracking-tight text-white", className)}
+    className={cn(typo.h6, "mb-1 text-white", className)}
     {...props}
   />
 ))
@@ -50,7 +56,7 @@ const AlertDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("text-sm text-white/70 [&_p]:leading-relaxed", className)}
+    className={cn(typo.bodySmall, "text-white/70 [&_p]:leading-relaxed", className)}
     {...props}
   />
 ))

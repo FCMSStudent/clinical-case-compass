@@ -1,4 +1,3 @@
-
 import { Card, CardContent } from "@/components/ui/card";
 import { UserRound, TrendingUp, Activity, BookOpen, Users, Target, Plus, Eye } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -18,6 +17,8 @@ import {
   button, 
   useTheme 
 } from "@/lib/design-system";
+import { typo, responsiveType } from "@/lib/typography";
+import { cn } from "@/lib/utils";
 
 const Dashboard = () => {
   const { isLoading, getStatistics, getRecentCases } = useDashboardData();
@@ -60,15 +61,15 @@ const Dashboard = () => {
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <p className="text-sm font-medium text-white/70">{title}</p>
+              <p className={cn(typo.labelSmall, "text-white/70")}>{title}</p>
               <div className="flex items-center gap-2 mt-1">
-                <p className="text-2xl font-bold text-white">{value}</p>
+                <p className={cn(typo.vital, "text-white")}>{value}</p>
                 {trend && (
                   <div className="flex items-center gap-1">
                     <TrendingUp 
                       className={`h-4 w-4 ${trend.isPositive ? 'text-green-400' : 'text-red-400 rotate-180'}`}
                     />
-                    <span className={`text-sm font-medium ${trend.isPositive ? 'text-green-400' : 'text-red-400'}`}>
+                    <span className={cn(typo.labelSmall, trend.isPositive ? 'text-green-400' : 'text-red-400')}>
                       {trend.value}%
                     </span>
                   </div>
@@ -83,8 +84,8 @@ const Dashboard = () => {
           {progress !== undefined && (
             <div className="space-y-2">
               <div className="flex justify-between text-xs">
-                <span className="text-white/70">Progress</span>
-                <span className="font-medium text-white">{Math.round(progress)}%</span>
+                <span className={cn(typo.caption, "text-white/70")}>Progress</span>
+                <span className={cn(typo.caption, "font-medium text-white")}>{Math.round(progress)}%</span>
               </div>
               <div className="w-full bg-white/10 rounded-full h-2">
                 <motion.div
@@ -97,7 +98,7 @@ const Dashboard = () => {
             </div>
           )}
           
-          <p className="text-sm text-white/70 mt-2">{description}</p>
+          <p className={cn(typo.bodySmall, "text-white/70 mt-2")}>{description}</p>
         </CardContent>
       </Card>
     </motion.div>
@@ -135,10 +136,10 @@ const Dashboard = () => {
         animate="visible"
         className="text-left space-y-1"
       >
-        <h1 className="text-2xl font-bold text-white">
+        <h1 className={cn(responsiveType.h1, "text-white")}>
           Hello, {getUserDisplayName()}
         </h1>
-        <p className="text-white/70 text-sm">
+        <p className={cn(typo.bodySmall, "text-white/70")}>
           Welcome back to your medical learning dashboard
         </p>
       </motion.div>
@@ -219,7 +220,7 @@ const Dashboard = () => {
             <Card className="bg-white/10 backdrop-blur-sm border-white/20">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-white">Quick Actions</h3>
+                  <h3 className={cn(typo.h3, "text-white")}>Quick Actions</h3>
                   <Target className="h-5 w-5 text-yellow-400" />
                 </div>
                 <div className="space-y-3">

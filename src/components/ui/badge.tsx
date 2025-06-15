@@ -1,11 +1,13 @@
-
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
-
 import { cn } from "@/lib/utils"
+import { typo } from "@/lib/typography"
 
 const badgeVariants = cva(
-  "inline-flex items-center rounded-full border px-2 py-1 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2",
+  cn(
+    "inline-flex items-center rounded-full border px-2 py-1 transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2",
+    typo.labelSmall
+  ),
   {
     variants: {
       variant: {
@@ -14,10 +16,15 @@ const badgeVariants = cva(
         secondary:
           "border-white/20 bg-white/10 text-white/90 backdrop-blur-sm",
         destructive:
-          "border-red-400/30 bg-red-500/20 text-red-300 backdrop-blur-sm",
-        outline: "border-white/20 text-white/90 bg-white/5 backdrop-blur-sm",
+          "border-error/30 bg-error/20 text-error backdrop-blur-sm",
+        outline: 
+          "border-white/20 text-white/90 bg-white/5 backdrop-blur-sm",
         success:
-          "border-green-400/30 bg-green-500/20 text-green-300 backdrop-blur-sm",
+          "border-success/30 bg-success/20 text-success backdrop-blur-sm",
+        warning:
+          "border-warning/30 bg-warning/20 text-warning backdrop-blur-sm",
+        info:
+          "border-info/30 bg-info/20 text-info backdrop-blur-sm",
       },
     },
     defaultVariants: {

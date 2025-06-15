@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Plus, Search, Grid, List, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -12,6 +11,8 @@ import { CaseListItem } from "@/features/cases/CaseListItem";
 import { PageHeader } from "@/components/ui/page-header";
 import { CaseGridSkeleton, CaseListSkeleton } from "@/features/cases/CaseCardSkeleton";
 import { useSupabaseCases } from "@/hooks/use-supabase-cases";
+import { typo } from "@/lib/typography";
+import { cn } from "@/lib/utils";
 
 const Cases = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -55,8 +56,8 @@ const Cases = () => {
           title="Clinical Cases"
           description="Manage and review your medical cases"
         />
-        <Alert className="bg-red-500/20 border-red-400/30">
-          <AlertDescription className="text-white">
+        <Alert variant="destructive">
+          <AlertDescription>
             Failed to load cases. Please try again.
           </AlertDescription>
         </Alert>
@@ -117,8 +118,8 @@ const Cases = () => {
         <Card className="bg-white/10 backdrop-blur-sm border-white/20">
           <CardContent className="p-12 text-center">
             <BookOpen className="h-12 w-12 text-white/60 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-white mb-2">No cases found</h3>
-            <p className="text-white/70 mb-4">
+            <h3 className={cn(typo.h3, "text-white mb-2")}>No cases found</h3>
+            <p className={cn(typo.body, "text-white/70 mb-4")}>
               {searchQuery ? "Try adjusting your search terms" : "Get started by creating your first case"}
             </p>
             <Button asChild className="bg-white/20 border-white/30 text-white hover:bg-white/30">

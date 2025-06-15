@@ -3,6 +3,8 @@ import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Home, ArrowLeft, Search, FileQuestion } from "lucide-react";
+import { typo, responsiveType, createTypographyClass } from "@/lib/typography";
+import { cn } from "@/lib/utils";
 
 const NotFound = () => {
   const location = useLocation();
@@ -29,16 +31,16 @@ const NotFound = () => {
             <div className="mx-auto mb-6 h-24 w-24 rounded-full bg-white/10 flex items-center justify-center">
               <FileQuestion className="h-12 w-12 text-white/70" />
             </div>
-            <h1 className="text-4xl xs:text-5xl font-bold text-white mb-2">404</h1>
-            <h2 className="text-xl xs:text-2xl font-semibold mb-2 text-white">Page Not Found</h2>
-            <p className="text-sm xs:text-base text-white/70 leading-relaxed">
+            <h1 className={cn(responsiveType.display, "text-white mb-2")}>404</h1>
+            <h2 className={cn(responsiveType.h2, "text-white mb-2")}>Page Not Found</h2>
+            <p className={cn(typo.body, "text-white/70 leading-relaxed")}>
               The page you're looking for doesn't exist or has been moved.
             </p>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="bg-white/10 rounded-lg p-3 text-center">
-              <p className="text-xs text-white/70">
-                Requested path: <code className="bg-white/10 px-1 py-1 rounded text-xs text-white/80">{location.pathname}</code>
+              <p className={cn(typo.caption, "text-white/70")}>
+                Requested path: <code className={cn(typo.code, "bg-white/10 px-1 py-1 rounded text-white/80")}>{location.pathname}</code>
               </p>
             </div>
             <div className="grid gap-3">
@@ -62,9 +64,9 @@ const NotFound = () => {
               </Button>
             </div>
             <div className="text-center pt-2">
-              <p className="text-xs text-white/70">
+              <p className={cn(typo.caption, "text-white/70")}>
                 Need help? Check our {" "}
-                <Link to="/cases" className="text-white underline hover:text-blue-200">
+                <Link to="/cases" className={cn(typo.link, "text-white underline hover:text-blue-200")}>
                   main dashboard
                 </Link>
               </p>
@@ -72,7 +74,7 @@ const NotFound = () => {
           </CardContent>
         </Card>
         <div className="mt-6 text-center">
-          <p className="text-xs text-white/70">
+          <p className={cn(typo.caption, "text-white/70")}>
             Error Code: 404 • Page Not Found
           </p>
         </div>

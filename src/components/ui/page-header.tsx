@@ -1,5 +1,5 @@
-
 import { cn } from "@/lib/utils";
+import { typo, responsiveType } from "@/lib/typography";
 
 interface PageHeaderProps {
   title: string;
@@ -27,9 +27,9 @@ export function PageHeader({
           </div>
         )}
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-white">{title}</h1>
+          <h1 className={cn(responsiveType.h1, "text-white")}>{title}</h1>
           {description && (
-            <p className="text-white/80">{description}</p>
+            <p className={cn(typo.bodyLarge, "text-white/80")}>{description}</p>
           )}
         </div>
       </div>

@@ -2,6 +2,7 @@ import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { typo } from "@/lib/typography";
 
 // Enhanced type definitions
 export type BodyPart =
@@ -206,7 +207,7 @@ export const SimpleBodyPartSelector: React.FC<SimpleBodyPartSelectorProps> = Rea
       animate="visible"
       className="space-y-3"
     >
-      <h4 className="text-sm font-semibold text-muted-foreground capitalize tracking-wide">
+      <h4 className={cn(typo.labelSmall, "text-muted-foreground capitalize tracking-wide")}>
         {CATEGORY_LABEL[category]}
       </h4>
       <div className={cn(
@@ -249,13 +250,13 @@ export const SimpleBodyPartSelector: React.FC<SimpleBodyPartSelectorProps> = Rea
                 onMouseLeave={() => setHoveredPart(null)}
                 data-testid={`bodypart-${partConfig.id}`}
               >
-                <span className="text-lg" role="img" aria-hidden="true">
+                <span className={cn(typo.vital, "text-lg")} role="img" aria-hidden="true">
                   {partConfig.icon}
                 </span>
                 <div className="flex-1 text-left">
-                  <div className="font-medium">{partConfig.label}</div>
+                  <div className={cn(typo.label)}>{partConfig.label}</div>
                   {showDescriptions && !compact && (
-                    <div className="text-xs opacity-70 mt-1">
+                    <div className={cn(typo.caption, "opacity-70 mt-1")}>
                       {partConfig.description}
                     </div>
                   )}
@@ -286,8 +287,9 @@ export const SimpleBodyPartSelector: React.FC<SimpleBodyPartSelectorProps> = Rea
       <div className="flex items-center justify-between">
         <div>
           <h3 className={cn(
-            "font-bold tracking-tight",
-            compact ? "text-lg" : "text-xl"
+            typo.h3,
+            "tracking-tight",
+            compact && "text-lg"
           )}>
             Body Diagram
           </h3>
@@ -295,7 +297,7 @@ export const SimpleBodyPartSelector: React.FC<SimpleBodyPartSelectorProps> = Rea
             <motion.p
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
-              className="text-sm text-muted-foreground mt-1"
+              className={cn(typo.bodySmall, "text-muted-foreground mt-1")}
             >
               {selectedParts.size} part{selectedParts.size !== 1 ? 's' : ''} selected
             </motion.p>
@@ -334,9 +336,9 @@ export const SimpleBodyPartSelector: React.FC<SimpleBodyPartSelectorProps> = Rea
             exit={{ opacity: 0, y: 10 }}
             className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50"
           >
-            <div className="bg-popover text-popover-foreground px-3 py-2 rounded-lg shadow-lg border text-sm max-w-xs">
-              <div className="font-medium">{BODY_PART_CONFIG[hoveredPart].label}</div>
-              <div className="text-xs opacity-80 mt-1">
+            <div className={cn("bg-popover text-popover-foreground px-3 py-2 rounded-lg shadow-lg border max-w-xs", typo.bodySmall)}>
+              <div className={cn(typo.label)}>{BODY_PART_CONFIG[hoveredPart].label}</div>
+              <div className={cn(typo.caption, "opacity-80 mt-1")}>
                 {BODY_PART_CONFIG[hoveredPart].description}
               </div>
             </div>
@@ -350,7 +352,7 @@ export const SimpleBodyPartSelector: React.FC<SimpleBodyPartSelectorProps> = Rea
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
-          className="text-center text-sm text-muted-foreground border-t pt-4"
+          className={cn("text-center text-muted-foreground border-t pt-4", typo.bodySmall)}
         >
           {multiSelect ? "Click to select multiple body parts" : "Click to select a body part"}
         </motion.div>

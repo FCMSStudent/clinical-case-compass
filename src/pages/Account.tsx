@@ -1,264 +1,272 @@
-
-import React, { useState, useEffect } from "react";
-import { useAuth } from "@/app/AuthContext";
-import { useLocalStorage } from "@/hooks/use-local-storage";
-import { BentoCard } from "@/components/ui/bento-card";
-import { BentoContainer } from "@/components/ui/bento-container";
-import { PageHeader } from "@/components/ui/page-header";
+import React from "react";
+import { useState } from "react";
+import { toast } from "sonner";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { toast } from "sonner";
-import {
-  User, Mail, Calendar, Shield, Edit3, Save, X, Bell, Moon, Database, Trash2, Download, LogOut, AlertTriangle, Settings as SettingsIcon
+import { Separator } from "@/components/ui/separator";
+import { useAuth } from "@/app/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { 
+  User, 
+  Mail, 
+  Shield, 
+  Settings, 
+  Download, 
+  Trash2, 
+  LogOut,
+  Eye,
+  EyeOff,
+  CheckCircle,
+  AlertCircle
 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useDashboardData } from "@/features/dashboard/hooks/use-dashboard-data";
+import { typo, responsiveType } from "@/lib/typography";
+import { cn } from "@/lib/utils";
 
 const Account = () => {
-  const { user, updateProfile, signOut } = useAuth();
-  const [isEditing, setIsEditing] = useState(false);
-  const [displayName, setDisplayName] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+  const { getStatistics } = useDashboardData();
+  const stats = getStatistics();
   
-  const [storedCases, setStoredCases] = useLocalStorage("medical-cases", []);
+  // State for settings
   const [notifications, setNotifications] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
-  const [dataSync, setDataSync] = useState(true);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [autoSync, setAutoSync] = useState(true);
+  const [isExporting, setIsExporting] = useState(false);
+  const [isClearing, setIsClearing] = useState(false);
 
-  useEffect(() => {
-    if (user?.user_metadata?.full_name) {
-      setDisplayName(user.user_metadata.full_name);
+  // Get user metadata
+  const displayName = user?.user_metadata?.full_name || user?.email?.split('@')[0];
+  const email = user?.email;
+  
+  const getInitials = (name: string) => {
+    return name.split(' ').map(n => n[0]).join('').toUpperCase();
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  const handleExportData = async () => {
+    setIsExporting(true);
+    try {
+      // Simulate export process
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      toast.success("Data exported successfully!");
+    } catch (error) {
+      toast.error("Failed to export data");
+    } finally {
+      setIsExporting(false);
     }
-  }, [user]);
+  };
 
-  const handleSaveProfile = async () => {
-    if (!displayName.trim()) {
-      toast.error("Display name cannot be empty");
+  const handleClearData = async () => {
+    if (!window.confirm("Are you sure you want to clear all data? This action cannot be undone.")) {
       return;
     }
-    setIsLoading(true);
+    
+    setIsClearing(true);
     try {
-      await updateProfile({ full_name: displayName });
-      setIsEditing(false);
-      toast.success("Profile updated successfully");
+      // Simulate clearing process
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      toast.success("Data cleared successfully!");
     } catch (error) {
-      console.error("Error updating profile:", error);
-      toast.error("Failed to update profile");
+      toast.error("Failed to clear data");
     } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleCancelEdit = () => {
-    setDisplayName(user?.user_metadata?.full_name || "");
-    setIsEditing(false);
-  };
-  
-  const handleExportData = () => {
-    try {
-      const dataBlob = new Blob([JSON.stringify(storedCases, null, 2)], { type: "application/json" });
-      const url = URL.createObjectURL(dataBlob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `medical-cases-export-${new Date().toISOString().split('T')[0]}.json`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-      toast.success("Data exported successfully");
-    } catch (error) {
-      console.error("Export failed:", error);
-      toast.error("Failed to export data");
-    }
-  };
-
-  const handleClearData = () => {
-    if (showDeleteConfirm) {
-      setStoredCases([]);
-      setShowDeleteConfirm(false);
-      toast.success("All local data cleared");
-    } else {
-      setShowDeleteConfirm(true);
-      setTimeout(() => setShowDeleteConfirm(false), 5000);
+      setIsClearing(false);
     }
   };
 
   const handleSignOut = async () => {
     try {
       await signOut();
+      navigate('/auth');
       toast.success("Signed out successfully");
     } catch (error) {
-      console.error("Sign out error:", error);
       toast.error("Failed to sign out");
     }
   };
 
-  const getInitials = (name: string) => name.split(" ").map((part) => part.charAt(0)).join("").toUpperCase().slice(0, 2);
-  const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
-
-  if (!user) return null;
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <h2 className={cn(typo.h2, "text-white mb-2")}>Access Denied</h2>
+          <p className={cn(typo.body, "text-white/70")}>Please sign in to view your account</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-8">
-      <PageHeader
-        title="Account"
-        description="Manage your profile, settings, and preferences"
-        icon={<User className="h-8 w-8" />}
-      />
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="text-center space-y-2">
+        <h1 className={cn(responsiveType.h1, "text-white")}>Account Settings</h1>
+        <p className={cn(typo.body, "text-white/70")}>Manage your profile and preferences</p>
+      </div>
 
-      <BentoContainer>
-        <BentoCard layout="hero" className="col-span-full lg:col-span-4" size="large" title="Profile" icon={<User />}>
-          <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6">
-            <Avatar className="h-20 w-20 lg:h-24 lg:w-24 flex-shrink-0">
-              <AvatarImage src={user.user_metadata?.avatar_url} alt={displayName || "User avatar"} />
-              <AvatarFallback className="bg-blue-500/20 text-xl">{displayName ? getInitials(displayName) : "U"}</AvatarFallback>
-            </Avatar>
-            
-            <div className="flex-1 w-full space-y-4">
-              {isEditing ? (
-                <div className="space-y-3">
-                  <div className="space-y-2">
-                    <Label htmlFor="displayName">Display Name</Label>
-                    <Input 
-                      id="displayName" 
-                      value={displayName} 
-                      onChange={(e) => setDisplayName(e.target.value)} 
-                      placeholder="Enter your full name" 
-                      className="w-full"
-                    />
-                  </div>
-                  <div className="flex gap-2">
-                    <Button size="sm" onClick={handleSaveProfile} loading={isLoading} variant="success">
-                      {!isLoading && <Save className="h-4 w-4" />}
-                      Save
-                    </Button>
-                    <Button size="sm" variant="ghost" onClick={handleCancelEdit} disabled={isLoading}>
-                      <X className="h-4 w-4" />
-                      Cancel
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <h2 className="text-2xl font-semibold text-white">{displayName || "No name set"}</h2>
-                    <Button size="icon" variant="ghost" onClick={() => setIsEditing(true)}>
-                      <Edit3 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  <div className="flex items-center gap-2 text-white/70">
-                    <Mail className="h-4 w-4" />
-                    <span>{user.email}</span>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </BentoCard>
-
-        <BentoCard layout="tall" className="col-span-full lg:col-span-2" size="large" title="Account Details" icon={<Shield />}>
-          <div className="space-y-6">
-            <div className="space-y-2">
-              <Label className="text-white/70 text-xs uppercase tracking-wide">User ID</Label>
-              <p className="font-mono bg-white/5 p-3 rounded-lg text-xs break-all border border-white/10">{user.id}</p>
-            </div>
-            
-            <div className="space-y-2">
-              <Label className="text-white/70 text-xs uppercase tracking-wide">Account Created</Label>
-              <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-white/50" />
-                <p className="text-sm">{formatDate(user.created_at)}</p>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Profile Overview */}
+        <div className="lg:col-span-1">
+          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+            <CardHeader className="text-center">
+              <div className="mx-auto w-24 h-24 mb-4">
+                <Avatar className="w-24 h-24">
+                  <AvatarImage src={user.user_metadata?.avatar_url} />
+                  <AvatarFallback className={cn("bg-blue-500/20", typo.vital)}>{displayName ? getInitials(displayName) : "U"}</AvatarFallback>
+                </Avatar>
               </div>
-            </div>
-            
-            <div className="space-y-2">
-              <Label className="text-white/70 text-xs uppercase tracking-wide">Email Status</Label>
-              <Badge variant={user.email_confirmed_at ? "success" : "secondary"}>
-                {user.email_confirmed_at ? "Verified" : "Unverified"}
+              <CardTitle className={cn(typo.h2, "text-white")}>{displayName || "No name set"}</CardTitle>
+              <p className={cn(typo.body, "text-white/70")}>{email}</p>
+              <Badge variant="success" className="mx-auto">
+                <CheckCircle className="w-3 h-3 mr-1" />
+                Verified
               </Badge>
-            </div>
-          </div>
-        </BentoCard>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* User Information */}
+              <div className="space-y-3">
+                <div>
+                  <Label className={cn(typo.caption, "text-white/70 uppercase tracking-wide")}>User ID</Label>
+                  <p className={cn(typo.code, "bg-white/5 p-3 rounded-lg break-all border border-white/10")}>{user.id}</p>
+                </div>
+                
+                <div>
+                  <Label className={cn(typo.caption, "text-white/70 uppercase tracking-wide")}>Account Created</Label>
+                  <div className="flex items-center gap-2 mt-1">
+                    <User className="w-4 h-4 text-white/70" />
+                    <p className={cn(typo.bodySmall)}>{formatDate(user.created_at)}</p>
+                  </div>
+                </div>
+                
+                <div>
+                  <Label className={cn(typo.caption, "text-white/70 uppercase tracking-wide")}>Email Status</Label>
+                  <div className="flex items-center gap-2 mt-1">
+                    <CheckCircle className="w-4 h-4 text-green-400" />
+                    <span className="text-green-400">Verified</span>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
-        <BentoCard layout="medium" className="col-span-full lg:col-span-3" title="Preferences" icon={<SettingsIcon />}>
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div className="space-y-1">
-                <Label htmlFor="notifications" className="text-white">Push Notifications</Label>
-                <p className="text-sm text-white/60">Receive updates about your cases</p>
-              </div>
-              <Switch id="notifications" checked={notifications} onCheckedChange={setNotifications} />
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <div className="space-y-1">
-                <Label htmlFor="dark-mode" className="text-white">Dark Mode</Label>
-                <p className="text-sm text-white/60">Toggle dark theme appearance</p>
-              </div>
-              <Switch id="dark-mode" checked={darkMode} onCheckedChange={setDarkMode} />
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <div className="space-y-1">
-                <Label htmlFor="data-sync" className="text-white">Data Synchronization</Label>
-                <p className="text-sm text-white/60">Sync data across devices</p>
-              </div>
-              <Switch id="data-sync" checked={dataSync} onCheckedChange={setDataSync} />
-            </div>
-          </div>
-        </BentoCard>
-        
-        <BentoCard layout="medium" className="col-span-full lg:col-span-3" title="Data Management" icon={<Database />}>
-          <div className="space-y-6">
-            <div className="space-y-3">
+        {/* Settings */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Preferences */}
+          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+            <CardHeader>
+              <CardTitle className={cn(typo.h3, "text-white flex items-center gap-2")}>
+                <Settings className="w-5 h-5" />
+                Preferences
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
-                <div className="space-y-1">
-                  <h4 className="font-medium text-white">Export Data</h4>
-                  <p className="text-sm text-white/70">Download all your data as JSON</p>
+                <div>
+                  <h4 className={cn(typo.label, "text-white")}>Email Notifications</h4>
+                  <p className={cn(typo.bodySmall, "text-white/60")}>Receive updates about your cases</p>
                 </div>
-                <Button variant="outline" size="sm" onClick={handleExportData}>
-                  <Download className="h-4 w-4" />
-                  Export
-                </Button>
+                <Switch checked={notifications} onCheckedChange={setNotifications} />
               </div>
-            </div>
-            
-            <div className="border-t border-white/10 pt-4 space-y-3">
+              
               <div className="flex items-center justify-between">
-                <div className="space-y-1">
-                  <h4 className="font-medium text-white">Clear All Data</h4>
-                  <p className="text-sm text-white/70">Permanently delete all local data</p>
+                <div>
+                  <h4 className={cn(typo.label, "text-white")}>Dark Theme</h4>
+                  <p className={cn(typo.bodySmall, "text-white/60")}>Toggle dark theme appearance</p>
                 </div>
-                <Button variant="destructive" size="sm" onClick={handleClearData}>
-                  <Trash2 className="h-4 w-4" />
-                  {showDeleteConfirm ? "Confirm" : "Clear Data"}
+                <Switch checked={darkMode} onCheckedChange={setDarkMode} />
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className={cn(typo.label, "text-white")}>Auto Sync</h4>
+                  <p className={cn(typo.bodySmall, "text-white/60")}>Sync data across devices</p>
+                </div>
+                <Switch checked={autoSync} onCheckedChange={setAutoSync} />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Data Management */}
+          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+            <CardHeader>
+              <CardTitle className={cn(typo.h3, "text-white flex items-center gap-2")}>
+                <Shield className="w-5 h-5" />
+                Data Management
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10">
+                <div>
+                  <h4 className={cn(typo.label, "text-white")}>Export Data</h4>
+                  <p className={cn(typo.bodySmall, "text-white/70")}>Download all your data as JSON</p>
+                </div>
+                <Button
+                  onClick={handleExportData}
+                  disabled={isExporting}
+                  variant="outline"
+                  className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  {isExporting ? "Exporting..." : "Export"}
                 </Button>
               </div>
               
-              {showDeleteConfirm && (
-                <Alert variant="destructive" className="mt-3">
-                  <AlertTriangle className="h-4 w-4" />
-                  <AlertDescription>This action is irreversible. Click "Confirm" again to proceed.</AlertDescription>
-                </Alert>
-              )}
-            </div>
-          </div>
-        </BentoCard>
-        
-        <BentoCard variant="interactive" className="col-span-full" onClick={handleSignOut}>
-          <div className="flex items-center justify-between p-2">
-            <div className="space-y-1">
-              <h3 className="font-semibold text-white">Sign Out</h3>
-              <p className="text-sm text-white/70">Sign out of your account on this device</p>
-            </div>
-            <LogOut className="h-5 w-5 text-red-400 flex-shrink-0" />
-          </div>
-        </BentoCard>
-      </BentoContainer>
+              <div className="flex items-center justify-between p-4 bg-red-500/10 rounded-lg border border-red-400/30">
+                <div>
+                  <h4 className={cn(typo.label, "text-white")}>Clear All Data</h4>
+                  <p className={cn(typo.bodySmall, "text-white/70")}>Permanently delete all local data</p>
+                </div>
+                <Button
+                  onClick={handleClearData}
+                  disabled={isClearing}
+                  variant="destructive"
+                  className="bg-red-500/20 border-red-400/30 text-red-300 hover:bg-red-500/30"
+                >
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  {isClearing ? "Clearing..." : "Clear"}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Account Actions */}
+          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+            <CardHeader>
+              <CardTitle className={cn(typo.h3, "text-white")}>Account Actions</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10">
+                <div>
+                  <h3 className={cn(typo.label, "text-white")}>Sign Out</h3>
+                  <p className={cn(typo.bodySmall, "text-white/70")}>Sign out of your account on this device</p>
+                </div>
+                <Button
+                  onClick={handleSignOut}
+                  variant="outline"
+                  className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Sign Out
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 };

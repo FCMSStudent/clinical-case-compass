@@ -5,9 +5,13 @@ import { Loader2 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { buttonVariants as unifiedButtonVariants, componentSizes, interactionStates } from "@/lib/component-system"
+import { typo } from "@/lib/typography"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-lg font-medium",
+  cn(
+    "inline-flex items-center justify-center whitespace-nowrap rounded-lg",
+    typo.button
+  ),
   {
     variants: {
       variant: {
@@ -30,7 +34,7 @@ const buttonVariants = cva(
         // Legacy variants for backward compatibility
         default: unifiedButtonVariants.primary,
         destructive: unifiedButtonVariants.error,
-        link: "text-white underline-offset-4 hover:underline",
+        link: cn(typo.link, "text-white underline-offset-4 hover:underline"),
       },
       size: {
         xs: componentSizes.button.xs,
@@ -56,33 +60,16 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, loading = false, children, disabled, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, loading = false, disabled, children, ...props }, ref) => {
     const Comp = asChild ? Slot : "button"
-    
-    if (asChild) {
-      return (
-        <Comp
-          className={cn(buttonVariants({ variant, size, className }))}
-          ref={ref}
-          {...props}
-        >
-          {children}
-        </Comp>
-      )
-    }
-    
     return (
       <Comp
-        className={cn(
-          buttonVariants({ variant, size, className }), 
-          "gap-2",
-          loading && interactionStates.loading
-        )}
+        className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
         disabled={disabled || loading}
         {...props}
       >
-        {loading && <Loader2 className={cn("animate-spin", componentSizes.icon.sm)} />}
+        {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
         {children}
       </Comp>
     )

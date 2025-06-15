@@ -1,7 +1,7 @@
-
 import { forwardRef } from 'react';
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
+import { typo } from '@/lib/typography';
 
 interface FormGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   label?: string;
@@ -16,17 +16,17 @@ const FormGroup = forwardRef<HTMLDivElement, FormGroupProps>(
     return (
       <div ref={ref} className={cn('space-y-2', className)} {...props}>
         {label && (
-          <Label className={cn('text-sm font-medium', error && 'text-destructive')}>
+          <Label className={cn(typo.label, error && 'text-destructive')}>
             {label}
             {required && <span className="text-destructive ml-1">*</span>}
           </Label>
         )}
         {children}
         {description && !error && (
-          <p className="text-sm text-muted-foreground">{description}</p>
+          <p className={cn(typo.bodySmall, "text-muted-foreground")}>{description}</p>
         )}
         {error && (
-          <p className="text-sm text-destructive">{error}</p>
+          <p className={cn(typo.bodySmall, "text-destructive")}>{error}</p>
         )}
       </div>
     );
