@@ -119,20 +119,27 @@ const Account = () => {
             </Avatar>
             <div className="space-y-3 flex-1 text-center sm:text-left">
               {isEditing ? (
-                <div className="flex flex-col sm:flex-row items-center gap-2">
-                  <Input id="displayName" value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder="Enter your name" className="flex-grow" />
-                  <div className="flex items-center space-x-2 mt-2 sm:mt-0">
-                    <Button size="sm" onClick={handleSaveProfile} disabled={isLoading} variant="success"><Save className="h-4 w-4" /></Button>
-                    <Button size="sm" variant="outline" onClick={handleCancelEdit}><X className="h-4 w-4" /></Button>
-                  </div>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full max-w-md">
+                   <Label htmlFor="displayName" className="sr-only">Display Name</Label>
+                   <Input id="displayName" value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder="Enter your full name" className="flex-grow" />
+                   <div className="flex items-center space-x-2 self-end sm:self-center">
+                     <Button size="sm" onClick={handleSaveProfile} loading={isLoading} variant="success">
+                       {!isLoading && <Save className="h-4 w-4" />}
+                       <span>Save</span>
+                     </Button>
+                     <Button size="sm" variant="ghost" onClick={handleCancelEdit} disabled={isLoading}>
+                       <X className="h-4 w-4" />
+                       <span>Cancel</span>
+                     </Button>
+                   </div>
                 </div>
               ) : (
                 <div className="flex items-center justify-center sm:justify-start space-x-2">
-                  <h2 className="text-2xl font-bold">{displayName || "No name set"}</h2>
+                  <h2 className="text-2xl font-semibold">{displayName || "No name set"}</h2>
                   <Button size="icon" variant="ghost" onClick={() => setIsEditing(true)}><Edit3 className="h-4 w-4" /></Button>
                 </div>
               )}
-              <div className="flex items-center justify-center sm:justify-start space-x-2 text-muted-foreground">
+              <div className="flex items-center justify-center sm:justify-start space-x-2 text-white/70">
                 <Mail className="h-4 w-4" />
                 <span>{user.email}</span>
               </div>
@@ -198,4 +205,3 @@ const Account = () => {
 };
 
 export default Account;
-
