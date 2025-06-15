@@ -13,8 +13,8 @@ import { Stethoscope, Pill } from "lucide-react";
 // CORE DESIGN TOKENS
 // ────────────────────────────────────────────────────────────────────────────────
 
-/** Typography System */
-export const typography = {
+/** Typography System (Tokens for Tailwind) */
+export const typographyTokens = {
   fontFamily: {
     sans: ['Inter', 'system-ui', 'sans-serif'],
     mono: ['ui-monospace', 'SFMono-Regular', 'monospace'],
@@ -125,6 +125,69 @@ export const shadows = {
   xl: '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)',
   glass: '0 8px 32px rgba(0, 0, 0, 0.1)',
   glassElevated: '0 12px 40px rgba(0, 0, 0, 0.15)',
+} as const;
+
+// ────────────────────────────────────────────────────────────────────────────────
+// UNIFIED COMPONENT STYLES (from ui-styles.ts)
+// ────────────────────────────────────────────────────────────────────────────────
+
+/** Enhanced focus ring for interactive elements */
+export const focusRing = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent";
+
+/** Disabled state styling */
+export const disabledState = "disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed";
+
+/** Enhanced glassmorphic effect */
+export const glassmorphic = `backdrop-blur-md border-white/20 transition-all duration-200 ease-out`;
+
+/** Enhanced glassmorphic backgrounds with better depth */
+export const glass = {
+  subtle: `${glassmorphic} bg-white/10 shadow-sm`,
+  elevated: `${glassmorphic} bg-white/15 shadow-md border-white/25`,
+  overlay: `backdrop-blur-xl border-white/25 bg-white/10 shadow-lg`,
+  card: `${glassmorphic} bg-white/10 rounded-xl shadow-sm border`,
+  cardElevated: `${glassmorphic} bg-white/15 rounded-xl shadow-md border`
+} as const;
+
+/** Base styles for buttons */
+export const buttonBase = `
+  inline-flex items-center justify-center whitespace-nowrap rounded-xl 
+  text-sm font-medium transition-all duration-200 ease-out ${focusRing} ${disabledState}
+  h-10 px-4
+`.trim();
+
+/** Button variants using the design system */
+export const buttonVariants = {
+  primary: `${buttonBase} ${glass.elevated} text-white hover:bg-white/30`,
+  secondary: `${buttonBase} ${glass.subtle} text-white/70 hover:bg-white/20`,
+  outline: `${buttonBase} ${glass.subtle} text-white border-white/20 hover:bg-white/20`,
+  ghost: `${buttonBase} text-white/70 hover:bg-white/10`,
+  destructive: `${buttonBase} bg-red-500/10 text-red-300 border-red-400/30 hover:bg-red-500/20`,
+  success: `${buttonBase} bg-green-500/10 text-green-300 border-green-400/30 hover:bg-green-500/20`
+} as const;
+
+/** Typography scale with consistent font weights and sizes (Class strings) */
+export const typography = {
+  // Headings
+  h1: `text-4xl font-bold leading-tight tracking-tight text-white`,
+  h2: `text-3xl font-bold leading-tight tracking-tight text-white`,
+  h3: `text-2xl font-semibold leading-tight tracking-tight text-white`,
+  h4: `text-xl font-semibold leading-snug text-white`,
+  h5: `text-lg font-semibold leading-snug text-white`,
+  h6: `text-base font-semibold leading-normal text-white`,
+  
+  // Body text
+  body: {
+    large: `text-lg leading-relaxed text-white`,
+    default: `text-base leading-relaxed text-white`,
+    small: `text-sm leading-normal text-white/70`,
+    caption: `text-xs leading-tight text-white/60`
+  },
+  
+  // Labels and form elements
+  label: `text-sm font-medium leading-none text-white`,
+  description: `text-sm leading-normal text-white/70`,
+  placeholder: `placeholder:text-white/60`
 } as const;
 
 // ────────────────────────────────────────────────────────────────────────────────
@@ -625,6 +688,7 @@ export const getAnimationVariants = (animationName: keyof typeof animations) => 
 
 // Export all design system components
 export {
+  typographyTokens,
   typography,
   colors,
   spacing,
@@ -642,6 +706,7 @@ export {
 
 /** Default export of the complete design system */
 export default {
+  typographyTokens,
   typography,
   colors,
   spacing,
@@ -660,4 +725,4 @@ export default {
   getBentoStyles,
   getAnimationVariants,
   prefersReducedMotion,
-}; 
+};

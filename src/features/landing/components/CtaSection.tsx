@@ -3,7 +3,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { NavLink } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { buttonVariants, typography } from '@/lib/ui-styles';
+import { buttonVariants, typography } from '@/lib/design-system';
 import { ArrowRight } from 'lucide-react';
 
 const CtaSection = () => {
