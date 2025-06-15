@@ -1,21 +1,21 @@
-
 import * as React from "react"
-
 import { cn } from "@/lib/utils"
-import { input } from "@/lib/design-system"
+import { inputVariants as unifiedInputVariants, componentSizes } from "@/lib/component-system"
 
-export interface InputProps extends React.ComponentProps<"input"> {
-  error?: boolean
+export interface InputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
+  variant?: keyof typeof unifiedInputVariants
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, error, ...props }, ref) => {
+  ({ className, type, variant = "default", ...props }, ref) => {
     return (
       <input
         type={type}
         className={cn(
-          `${input.base} ${input.size.md}`,
-          error && "border-red-400/50 focus-visible:ring-red-400/30",
+          "flex w-full rounded-lg",
+          unifiedInputVariants[variant],
+          componentSizes.input.md,
           className
         )}
         ref={ref}

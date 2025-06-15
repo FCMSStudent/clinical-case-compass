@@ -1,16 +1,15 @@
-
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { getBentoStyles } from "@/lib/design-system";
+import { bentoGrid } from "@/lib/component-system";
 
 interface BentoContainerProps extends React.HTMLAttributes<HTMLDivElement> {
-  layout?: "default" | "dense" | "spacious";
+  layout?: keyof typeof bentoGrid.container;
   children: React.ReactNode;
 }
 
 const BentoContainer = React.forwardRef<HTMLDivElement, BentoContainerProps>(
   ({ className, layout = "default", children, ...props }, ref) => {
-    const layoutClasses = getBentoStyles('container', layout);
+    const layoutClasses = bentoGrid.container[layout];
 
     return (
       <div
