@@ -158,37 +158,40 @@ export const bentoGrid = {
   }
 } as const;
 
-/** Bento card size variants */
-export const bentoCard = {
-  // Size variants
-  size: {
-    compact: "min-h-[120px]",
-    default: "min-h-[160px]",
-    medium: "min-h-[200px]",
-    large: "min-h-[280px]",
-    hero: "min-h-[320px]"
-  },
+/** Bento card size variants - defined separately to avoid circular references */
+const bentoCardSizes = {
+  compact: "min-h-[120px]",
+  default: "min-h-[160px]",
+  medium: "min-h-[200px]",
+  large: "min-h-[280px]",
+  hero: "min-h-[320px]"
+} as const;
+
+/** Bento card layout combinations */
+const bentoCardLayouts = {
+  // Small cards (1x1)
+  small: `${bentoGrid.span.col.third} ${bentoCardSizes.compact}`,
   
-  // Layout combinations
-  layouts: {
-    // Small cards (1x1)
-    small: `${bentoGrid.span.col.third} ${bentoCard.size.compact}`,
-    
-    // Medium cards (2x1)
-    medium: `${bentoGrid.span.col.half} ${bentoCard.size.default}`,
-    
-    // Large cards (2x2 or spanning)
-    large: `${bentoGrid.span.col.half} ${bentoCard.size.large}`,
-    
-    // Hero cards (full width or 2x2)
-    hero: `${bentoGrid.span.col.twoThirds} ${bentoCard.size.hero}`,
-    
-    // Featured cards (prominent positioning)
-    featured: `${bentoGrid.span.col.full} md:${bentoGrid.span.col.twoThirds} ${bentoCard.size.medium}`,
-    
-    // Tall cards (1x2)
-    tall: `${bentoGrid.span.col.third} ${bentoCard.size.large} ${bentoGrid.span.row.double}`
-  }
+  // Medium cards (2x1)
+  medium: `${bentoGrid.span.col.half} ${bentoCardSizes.default}`,
+  
+  // Large cards (2x2 or spanning)
+  large: `${bentoGrid.span.col.half} ${bentoCardSizes.large}`,
+  
+  // Hero cards (full width or 2x2)
+  hero: `${bentoGrid.span.col.twoThirds} ${bentoCardSizes.hero}`,
+  
+  // Featured cards (prominent positioning)
+  featured: `${bentoGrid.span.col.full} md:${bentoGrid.span.col.twoThirds} ${bentoCardSizes.medium}`,
+  
+  // Tall cards (1x2)
+  tall: `${bentoGrid.span.col.third} ${bentoCardSizes.large} ${bentoGrid.span.row.double}`
+} as const;
+
+/** Combined bento card configuration */
+export const bentoCard = {
+  size: bentoCardSizes,
+  layouts: bentoCardLayouts
 } as const;
 
 // -----------------------------------------------------------------------------
