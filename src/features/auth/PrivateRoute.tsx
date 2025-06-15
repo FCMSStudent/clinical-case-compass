@@ -7,6 +7,7 @@ interface PrivateRouteProps {
 
 export function PrivateRoute({ children }: PrivateRouteProps) {
   const { user, loading } = useAuth();
+  console.log("[PrivateRoute] Received state:", { user, loading });
   
   if (loading) {
     return (
