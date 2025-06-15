@@ -2,6 +2,7 @@
 import * as React from "react";
 import { motion, type Variants } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { glassmorphicEntrance as libGlassmorphicEntrance } from "@/lib/motion"; // Import the source of truth
 
 // ────────────────────────────────────────────────────────────────────────────────
 // ANIMATION VARIANTS
@@ -30,29 +31,8 @@ const animationVariants = {
     },
   } as Variants,
   
-  glassmorphicEntrance: {
-    hidden: { opacity: 0, y: 30, scale: 0.95, filter: "blur(10px)" },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
-      scale: 1, 
-      filter: "blur(0px)", 
-      transition: { 
-        duration: 0.6, 
-        ease: [0.23, 1, 0.32, 1] 
-      } 
-    },
-    exit: { 
-      opacity: 0, 
-      y: -30, 
-      scale: 0.95, 
-      filter: "blur(10px)", 
-      transition: { 
-        duration: 0.3, 
-        ease: "easeInOut" 
-      } 
-    },
-  } as Variants,
+  // Use the imported glassmorphicEntrance from src/lib/motion.ts as the source of truth
+  glassmorphicEntrance: libGlassmorphicEntrance,
 };
 
 // ────────────────────────────────────────────────────────────────────────────────

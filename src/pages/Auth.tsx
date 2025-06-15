@@ -22,6 +22,11 @@ import {
 import { CheckCircle2 } from "lucide-react";
 import UnifiedBackground from "@/components/backgrounds/UnifiedBackground";
 import { useTheme } from "@/lib/design-system";
+import {
+  pageTransitionVariants as globalPageTransitionVariants, // Renamed to avoid conflict
+  reducedMotionPageTransitionVariants as globalReducedMotionPageVariants, // Renamed
+  getMotionVariants
+} from "@/lib/motion"; // Added motion imports
 
 import type { LoginFormData, SignupFormData } from "@/features/auth/authSchemas";
 import LoginForm from "@/features/auth/components/LoginForm";
@@ -90,8 +95,22 @@ const Auth = () => {
     }
   };
 
+  // Get page transition variants, respecting reduced motion settings.
+  const pageVariants = getMotionVariants(globalPageTransitionVariants, globalReducedMotionPageVariants);
+
   return (
-    <div className="min-h-screen relative overflow-hidden" style={{ background: currentTheme.colors.background }}>
+    // This outermost motion.div applies the global page transition animations.
+    // It's keyed by the route in App.tsx's AnimatePresence setup.
+    // The Auth page also has internal animations for its content card, which will play
+    // as this main container animates in.
+    <motion.div
+      className="min-h-screen relative overflow-hidden"
+      style={{ background: currentTheme.colors.background }}
+      variants={pageVariants}
+      initial="initial" // Start state from globalPageTransitionVariants.
+      animate="animate" // End state from globalPageTransitionVariants.
+      exit="exit"       // Exit state from globalPageTransitionVariants.
+    >
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 px-4 py-2 rounded-lg z-50 focus:outline-none focus:ring-2 focus:ring-white/30"

@@ -1,3 +1,6 @@
+/**
+ * @file Centralized Framer Motion animation variants and utilities.
+ */
 import React from "react";
 import { motion, Variants, Transition, useMotionValue, useTransform, useSpring } from "framer-motion";
 
@@ -27,6 +30,247 @@ export const useAdaptiveTinting = (scrollY: number | undefined) => {
     tintIntensity: springTintIntensity,
     tintHue: springTintHue
   };
+};
+
+/**
+ * Defines subtle hover, tap, and focus animations for button components.
+ * - `hover`: Slight scale up and brightness increase.
+ * - `tap`: Slight scale down and brightness decrease.
+ * - `focus`: Adds a visible focus ring and subtle scale.
+ * - `initial`: Sets base values for animated properties.
+ */
+export const subtleButtonHoverTap: Variants = {
+  hover: {
+    scale: 1.03,
+    filter: "brightness(1.05)", // Slightly less intense than example
+    transition: { duration: 0.2, ease: "easeOut" }
+  },
+  tap: {
+    scale: 0.97,
+    filter: "brightness(0.95)", // Slightly less intense than example
+    transition: { duration: 0.1, ease: "easeIn" }
+  },
+  focus: {
+    scale: 1.01, // Subtle scale on focus
+    boxShadow: "0 0 0 3px rgba(59, 130, 246, 0.4)", // Focus ring
+    transition: { duration: 0.2, ease: "easeOut" }
+  },
+  initial: { // Ensure initial state is defined for all animated properties
+    scale: 1,
+    filter: "brightness(1)",
+    boxShadow: "0 0 0 0 rgba(59, 130, 246, 0)", // Initial transparent boxShadow
+  }
+};
+
+/**
+ * Page transition variants for smooth routing
+ */
+export const pageTransitionVariants: Variants = {
+  initial: {
+    opacity: 0,
+    x: "-20px", // Slide in from left
+  },
+  animate: {
+    opacity: 1,
+    x: "0px",
+    transition: { duration: 0.4, ease: "easeInOut" }
+  },
+  exit: {
+    opacity: 0,
+    x: "20px", // Slide out to right
+    transition: { duration: 0.3, ease: "easeInOut" }
+  }
+};
+
+/**
+ * Reduced motion version for `pageTransitionVariants`.
+ * Provides a quick fade-in/out effect with no movement.
+ */
+export const reducedMotionPageTransitionVariants: Variants = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1, transition: { duration: 0.01 } },
+  exit: { opacity: 0, transition: { duration: 0.01 } }
+};
+
+/**
+ * Reduced motion version for `subtleButtonHoverTap`.
+ * Disables hover animation, provides minimal tap feedback, and a focus ring.
+ */
+export const subtleReducedMotionButton: Variants = {
+  hover: {}, // No hover animation
+  tap: { scale: 0.98 }, // Minimal tap feedback
+  focus: { // Only focus ring for accessibility
+    boxShadow: "0 0 0 3px rgba(59, 130, 246, 0.4)",
+    transition: { duration: 0.1 }
+  },
+  initial: {
+    scale: 1,
+    boxShadow: "0 0 0 0 rgba(59, 130, 246, 0)",
+  }
+};
+
+/**
+ * Defines subtle hover animations for checkbox components.
+ * Focus state is typically handled by CSS (`focusRing` utility).
+ * - `hover`: Slightly increases border opacity and scales up the checkbox.
+ * - `initial`: Sets base values for border color and scale.
+ */
+export const subtleCheckboxHover: Variants = {
+  hover: {
+    // Using a slightly more opaque border color on hover for the checkbox itself
+    // Initial is 'border-white/20' (hsla(0, 0%, 100%, 0.2))
+    borderColor: "hsla(0, 0%, 100%, 0.35)", // border-white/35
+    scale: 1.08, // Make the checkbox square scale up a bit
+    transition: { duration: 0.15, ease: "easeOut" }
+  },
+  initial: {
+    borderColor: "hsla(0, 0%, 100%, 0.2)", // Match initial border-white/20 from Checkbox component
+    scale: 1,
+  }
+};
+
+/**
+ * Reduced motion version for `subtleCheckboxHover`.
+ * Disables hover animations, maintaining initial state.
+ */
+export const reducedMotionCheckboxHover: Variants = {
+  hover: {}, // No hover animation for reduced motion
+  initial: {
+    borderColor: "hsla(0, 0%, 100%, 0.2)",
+    scale: 1,
+  }
+};
+
+/**
+ * Defines subtle hover and focus animations for navigation link elements.
+ * - `hover`: Increases brightness and applies a slight scale.
+ * - `focus`: Applies a focus ring, increases brightness, and slight scale.
+ * - `initial`: Sets base values for filter, scale, and boxShadow.
+ */
+export const subtleNavLinkInteraction: Variants = {
+  hover: {
+    // Using filter brightness as background is often transparent or complex
+    filter: "brightness(1.15)",
+    scale: 1.02,
+    transition: { duration: 0.15, ease: "easeOut" }
+  },
+  focus: {
+    scale: 1.01,
+    // Using a distinct boxShadow for focus that works on various backgrounds
+    boxShadow: "0 0 0 2px hsl(var(--ring) / 0.6), 0 1px 2px rgba(0,0,0,0.1)",
+    filter: "brightness(1.1)",
+    transition: { duration: 0.15, ease: "easeOut" }
+  },
+  initial: {
+    filter: "brightness(1)",
+    scale: 1,
+    boxShadow: "0 0 0 0px hsl(var(--ring) / 0)",
+  }
+};
+
+/**
+ * Reduced motion version for `subtleNavLinkInteraction`.
+ * Disables hover animation and provides a minimal focus style (ring and slight brightness).
+ */
+export const reducedMotionNavLinkInteraction: Variants = {
+  hover: {}, // No hover animation
+  focus: { // Only focus ring for accessibility
+    boxShadow: "0 0 0 2px hsl(var(--ring) / 0.6)",
+    filter: "brightness(1.05)", // Minimal brightness change
+  },
+  initial: {
+    filter: "brightness(1)",
+    boxShadow: "0 0 0 0px hsl(var(--ring) / 0)",
+  }
+};
+
+/**
+ * Defines subtle hover and focus animations for card components.
+ * Intended for cards that are interactive.
+ * - `hover`: Applies a slight scale and enhances boxShadow.
+ * - `focus`: Applies a focus ring, slight scale, and base boxShadow.
+ * - `initial`: Sets base values for scale and boxShadow.
+ */
+export const subtleCardInteraction: Variants = {
+  hover: {
+    scale: 1.015, // Very subtle scale
+    boxShadow: "0px 6px 18px rgba(0,0,0,0.07)", // Slightly enhance existing shadow if any
+    transition: { duration: 0.2, ease: "easeOut" }
+  },
+  focus: {
+    scale: 1.01,
+    boxShadow: "0 0 0 2px hsl(var(--ring) / 0.5), 0px 5px 15px rgba(0,0,0,0.06)", // Focus ring + base shadow
+    transition: { duration: 0.2, ease: "easeOut" }
+  },
+  initial: {
+    scale: 1,
+    // Assuming base shadow is applied by Card's own styles (unifiedCardVariants)
+    // If not, we'd need a base boxShadow here: e.g., "0px 5px 15px rgba(0,0,0,0.06)"
+    // For now, let framer-motion only add/change shadow on hover/focus if not defined initially.
+    // To be safe, define an initial state for boxShadow that motion can animate from.
+    boxShadow: "0px 4px 12px rgba(0,0,0,0.05)", // A plausible default initial shadow
+  }
+};
+
+/**
+ * Reduced motion version for `subtleCardInteraction`.
+ * Disables hover animation and provides a focus ring.
+ */
+export const reducedMotionCardInteraction: Variants = {
+  hover: {}, // No hover animation
+  focus: { // Only focus ring for accessibility
+    boxShadow: "0 0 0 2px hsl(var(--ring) / 0.5)",
+    transition: { duration: 0.1 }
+  },
+  initial: {
+    boxShadow: "0px 4px 12px rgba(0,0,0,0.05)", // Match initial state
+  }
+};
+
+/**
+ * Defines subtle focus animations for input components.
+ * - `focus`: Changes borderColor and adds a boxShadow to indicate focus.
+ * - `initial`: Sets base borderColor and transparent boxShadow.
+ */
+export const subtleInputInteraction: Variants = {
+  focus: {
+    borderColor: "hsl(var(--ring))", // Use existing ring color for focus border
+    boxShadow: "0 0 0 2px hsl(var(--ring) / 0.4)", // Subtle shadow with ring color
+    transition: { duration: 0.2, ease: "easeOut" }
+  },
+  initial: {
+    borderColor: "hsl(var(--input))", // Default input border color
+    boxShadow: "0 0 0 0px hsl(var(--ring) / 0)", // Transparent initial boxShadow
+  }
+};
+
+/**
+ * Reduced motion version for `subtleInputInteraction`.
+ * Only changes borderColor on focus.
+ */
+export const reducedMotionInputInteraction: Variants = {
+  focus: {
+    borderColor: "hsl(var(--ring))", // Simple border change for focus
+  },
+  initial: {
+    borderColor: "hsl(var(--input))",
+  }
+};
+
+/**
+ * Reduced motion variants for subtle button interactions
+ */
+export const subtleReducedMotionButton: Variants = {
+  hover: {}, // No hover animation
+  tap: { scale: 0.98 }, // Minimal tap feedback
+  focus: { // Only focus ring for accessibility
+    boxShadow: "0 0 0 3px rgba(59, 130, 246, 0.4)",
+    transition: { duration: 0.1 }
+  },
+  initial: {
+    scale: 1,
+    boxShadow: "0 0 0 0 rgba(59, 130, 246, 0)",
+  }
 };
 
 /**
@@ -72,7 +316,7 @@ export const glassmorphicEntrance: Variants = {
     opacity: 0,
     y: 30,
     scale: 0.95,
-    filter: "blur(10px)",
+    filter: "blur(5px)", // Reduced blur
   },
   visible: {
     opacity: 1,
@@ -88,7 +332,7 @@ export const glassmorphicEntrance: Variants = {
     opacity: 0,
     y: -30,
     scale: 0.95,
-    filter: "blur(10px)",
+    filter: "blur(5px)", // Reduced blur
     transition: {
       duration: 0.3,
       ease: "easeInOut",

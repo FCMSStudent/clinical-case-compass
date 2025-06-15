@@ -3,6 +3,12 @@ import React from "react";
 import EnhancedNavbar from "@/components/navigation/EnhancedNavbar";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import UnifiedBackground from "@/components/backgrounds/UnifiedBackground";
+import { motion } from "framer-motion"; // Added motion
+import {
+  pageTransitionVariants,
+  reducedMotionPageTransitionVariants,
+  getMotionVariants
+} from "@/lib/motion"; // Added motion imports
 
 interface EnhancedAppLayoutProps {
   children: React.ReactNode;
@@ -13,11 +19,22 @@ export const EnhancedAppLayout: React.FC<EnhancedAppLayoutProps> = ({
   children,
   className = ""
 }) => {
+  // Get page transition variants, respecting reduced motion settings.
+  const variants = getMotionVariants(pageTransitionVariants, reducedMotionPageTransitionVariants);
+
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen"> {/* Base container for background, not part of the animation. */}
       <UnifiedBackground />
       
-      <div className="relative z-10 flex flex-col min-h-screen">
+      {/* This motion.div wraps the main page content and applies page transition animations. */}
+      {/* It's keyed by the route in App.tsx's AnimatePresence setup. */}
+      <motion.div
+        className="relative z-10 flex flex-col min-h-screen"
+        variants={variants}
+        initial="initial" // Start state for the animation (e.g., opacity 0, off-screen)
+        animate="animate" // End state for the animation (e.g., opacity 1, on-screen)
+        exit="exit"       // State for when the component is unmounting (e.g., opacity 0, off-screen)
+      >
         {/* Floating Navbar */}
         <div className="w-full flex justify-center pt-6 px-4">
           <div className="w-full max-w-7xl">

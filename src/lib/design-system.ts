@@ -3,6 +3,8 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { motion, Variants, Transition, useMotionValue, useTransform, useSpring } from "framer-motion";
 import { Stethoscope, Pill } from "lucide-react";
 import { typography } from "./typography";
+// Import the source of truth for glassmorphicEntrance
+import { glassmorphicEntrance as libGlassmorphicEntrance } from "./motion";
 import { typographyTokens, colors, spacing, borderRadius, shadows } from "./design-tokens";
 import { backgroundConfig } from "./background-config";
 
@@ -309,12 +311,8 @@ export const animations = {
     exit: { opacity: 0, y: -20, scale: 0.95, transition: { duration: 0.3, ease: "easeInOut" } },
   } as Variants,
   
-  // Glassmorphic entrance
-  glassmorphicEntrance: {
-    hidden: { opacity: 0, y: 30, scale: 0.95, filter: "blur(10px)" },
-    visible: { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", transition: { duration: 0.6, ease: [0.23, 1, 0.32, 1] } },
-    exit: { opacity: 0, y: -30, scale: 0.95, filter: "blur(10px)", transition: { duration: 0.3, ease: "easeInOut" } },
-  } as Variants,
+  // Glassmorphic entrance (now using the single source of truth)
+  glassmorphicEntrance: libGlassmorphicEntrance,
 
   // Staggered animations
   staggeredContainer: {
