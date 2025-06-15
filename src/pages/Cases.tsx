@@ -20,6 +20,7 @@ const Cases = () => {
 
   // Use Supabase hook for real-time case data
   const { cases, isLoading, error } = useSupabaseCases();
+  console.log("[CasesPage] isLoading state:", isLoading);
 
   // Filtering cases based on search query
   const filteredCases = React.useMemo(() => {
@@ -30,6 +31,7 @@ const Cases = () => {
       (caseItem.chiefComplaint ?? '').toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [cases, searchQuery]);
+  console.log("[CasesPage] filteredCases:", filteredCases);
 
   if (isLoading) {
     return (
@@ -49,6 +51,7 @@ const Cases = () => {
     );
   }
 
+  console.log("[CasesPage] error object:", error);
   if (error) {
     return (
       <div className="space-y-6">
@@ -132,15 +135,27 @@ const Cases = () => {
         </Card>
       ) : (
         <div className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "space-y-4"}>
-          {filteredCases.map((caseItem: MedicalCase) => (
-            <div key={caseItem.id}>
-              {viewMode === "grid" ? (
-                <CaseCard medicalCase={caseItem} />
-              ) : (
-                <CaseListItem medicalCase={caseItem} onDelete={() => {}} />
-              )}
-            </div>
-          ))}
+          {filteredCases.map((caseItem: MedicalCase) => {
+            try {
+              return (
+                <div key={caseItem.id}>
+                  {viewMode === "grid" ? (
+                    <CaseCard medicalCase={caseItem} />
+                  ) : (
+                    <CaseListItem medicalCase={caseItem} onDelete={() => {}} />
+                  )}
+                </div>
+              );
+            } catch (renderError) {
+              console.error("[CasesPage] Error rendering case item:", caseItem.id, renderError);
+              // Optionally return a fallback UI for the failed item
+              return (
+                <div key={caseItem.id} className="p-4 border border-red-500">
+                  <p>Error rendering this case. Check console for details.</p>
+                </div>
+              );
+            }
+          })}
         </div>
       )}
     </div>

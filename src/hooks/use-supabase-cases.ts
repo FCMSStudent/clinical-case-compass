@@ -37,6 +37,8 @@ export function useSupabaseCases() {
   const { handleError } = useErrorHandler();
   const queryClient = useQueryClient();
 
+  console.log("[useSupabaseCases] Hook initialized, user:", user);
+
   // Fetch all cases
   const {
     data: cases = [],
@@ -45,6 +47,7 @@ export function useSupabaseCases() {
   } = useQuery({
     queryKey: ['cases', user?.id],
     queryFn: async (): Promise<MedicalCase[]> => {
+      console.log("[useSupabaseCases] queryFn for fetching all cases, user:", user);
       if (!user) throw new Error('User not authenticated');
 
       const { data, error } = await supabase
@@ -72,6 +75,7 @@ export function useSupabaseCases() {
   const useGetCaseQuery = (id: string) => useQuery({
     queryKey: ['case', id],
     queryFn: async (): Promise<MedicalCase | null> => {
+      console.log("[useSupabaseCases] queryFn for useGetCaseQuery, user:", user, "caseId:", id);
       if (!user) throw new Error('User not authenticated');
 
       const { data, error } = await supabase
@@ -106,6 +110,7 @@ export function useSupabaseCases() {
       resources?: Omit<Resource, 'id'>[];
       tagIds?: string[];
     }) => {
+      console.log("[useSupabaseCases] mutationFn for createCaseMutation, user:", user);
       if (!user) throw new Error('User not authenticated');
 
       // Create patient first
