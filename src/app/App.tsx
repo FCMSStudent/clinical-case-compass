@@ -50,27 +50,118 @@ const AppContent = () => {
         {/* Auth page without layout */}
         <Route path="/auth" element={<Auth />} />
         
-        {/* All other routes with enhanced layout */}
+        {/* Protected routes with single layout wrapper */}
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute>
+              <EnhancedAppLayout>
+                {isOfflineMode && (
+                  <div className="mb-4">
+                    <OfflineBanner />
+                  </div>
+                )}
+                <Dashboard />
+              </EnhancedAppLayout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/cases"
+          element={
+            <PrivateRoute>
+              <EnhancedAppLayout>
+                {isOfflineMode && (
+                  <div className="mb-4">
+                    <OfflineBanner />
+                  </div>
+                )}
+                <Cases />
+              </EnhancedAppLayout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/cases/:id"
+          element={
+            <PrivateRoute>
+              <EnhancedAppLayout>
+                {isOfflineMode && (
+                  <div className="mb-4">
+                    <OfflineBanner />
+                  </div>
+                )}
+                <CaseDetail />
+              </EnhancedAppLayout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/cases/edit/:id"
+          element={
+            <PrivateRoute>
+              <EnhancedAppLayout>
+                {isOfflineMode && (
+                  <div className="mb-4">
+                    <OfflineBanner />
+                  </div>
+                )}
+                <CaseEdit />
+              </EnhancedAppLayout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/cases/new"
+          element={
+            <PrivateRoute>
+              <EnhancedAppLayout>
+                {isOfflineMode && (
+                  <div className="mb-4">
+                    <OfflineBanner />
+                  </div>
+                )}
+                <CreateCaseFlow />
+              </EnhancedAppLayout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <EnhancedAppLayout>
+                {isOfflineMode && (
+                  <div className="mb-4">
+                    <OfflineBanner />
+                  </div>
+                )}
+                <Profile />
+              </EnhancedAppLayout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <PrivateRoute>
+              <EnhancedAppLayout>
+                {isOfflineMode && (
+                  <div className="mb-4">
+                    <OfflineBanner />
+                  </div>
+                )}
+                <Settings />
+              </EnhancedAppLayout>
+            </PrivateRoute>
+          }
+        />
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route
           path="*"
           element={
             <EnhancedAppLayout>
-              {isOfflineMode && (
-                <div className="mb-4">
-                  <OfflineBanner />
-                </div>
-              )}
-              <Routes>
-                <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-                <Route path="/cases" element={<PrivateRoute><Cases /></PrivateRoute>} />
-                <Route path="/cases/:id" element={<PrivateRoute><CaseDetail /></PrivateRoute>} />
-                <Route path="/cases/edit/:id" element={<PrivateRoute><CaseEdit /></PrivateRoute>} />
-                <Route path="/cases/new" element={<PrivateRoute><CreateCaseFlow /></PrivateRoute>} />
-                <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
-                <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
-                <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
+              <NotFound />
             </EnhancedAppLayout>
           }
         />
