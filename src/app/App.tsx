@@ -1,3 +1,4 @@
+
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -63,7 +64,7 @@ const AppContent = () => {
                 <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
                 <Route path="/cases" element={<PrivateRoute><Cases /></PrivateRoute>} />
                 <Route path="/cases/:id" element={<PrivateRoute><CaseDetail /></PrivateRoute>} />
-                <Route path="/cases/:id/edit" element={<PrivateRoute><CaseEdit /></PrivateRoute>} />
+                <Route path="/cases/edit/:id" element={<PrivateRoute><CaseEdit /></PrivateRoute>} />
                 <Route path="/cases/new" element={<PrivateRoute><CreateCaseFlow /></PrivateRoute>} />
                 <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
                 <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
