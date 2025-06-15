@@ -1,4 +1,5 @@
 
+// Barrel for cases feature exports
 export * from './components/CaseCard';
 export * from './CaseListItem';
 export * from './InteractiveBodyDiagram';
