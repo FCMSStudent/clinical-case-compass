@@ -235,7 +235,7 @@ const CreateCaseFlow = () => {
           symptoms: clinical.systemSymptoms ?? {},   // Clinical systemSymptoms (review of systems)
           vitals: clinical.vitals ?? {},             // Clinical vitals
           labTests: clinical.labResults ?? [],       // Clinical labResults
-          radiologyExams: clinical.radiologyStudies ?? [], // Clinical radiologyStudies
+          radiologyStudies: clinical.radiologyStudies ?? [], // Clinical radiologyStudies
           learningPoints: formData.learningPoints,
           urinarySymptoms: [], // currently not handled in form, keep as empty array
         },

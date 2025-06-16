@@ -19,7 +19,7 @@ import {
   Clock
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { RadiologyStudy, RadiologyExam } from "@/types/case";
+import type { RadiologyStudy } from "@/types/case";
 
 // Common radiology studies with typical findings
 const COMMON_RADIOLOGY_STUDIES = [
@@ -218,7 +218,7 @@ export const RadiologyCard: React.FC<RadiologyCardProps> = ({
         <div className="pb-4 pt-6 px-6 flex items-center justify-between">
           <h3 className="text-lg font-semibold text-white flex items-center gap-2">
             <FileText className="h-5 w-5 text-white/80" />
-            Radiology Exams
+            Radiology Studies
           </h3>
           <Button
             type="button"
@@ -405,43 +405,5 @@ function Badge({
     >
       {children}
     </span>
-  );
-}
-
-// Add a compatibility wrapper for RadiologyExam
-export function RadiologyCardWithExam({ 
-  onRadiologyChange, 
-  initialExams = [] 
-}: { 
-  onRadiologyChange?: (exams: RadiologyExam[]) => void;
-  initialExams?: RadiologyExam[];
-}) {
-  const convertExamToStudy = (exam: RadiologyExam): RadiologyStudy => ({
-    id: exam.id,
-    name: exam.modality,
-    type: exam.modality,
-    findings: exam.findings,
-    date: new Date().toISOString(),
-  });
-
-  const convertStudyToExam = (study: RadiologyStudy): RadiologyExam => ({
-    id: study.id,
-    modality: study.type,
-    findings: study.findings,
-  });
-
-  const studies = initialExams.map(convertExamToStudy);
-
-  const handleStudiesChange = (newStudies: RadiologyStudy[]) => {
-    if (onRadiologyChange) {
-      onRadiologyChange(newStudies.map(convertStudyToExam));
-    }
-  };
-
-  return (
-    <RadiologyCard 
-      onRadiologyChange={handleStudiesChange}
-      initialStudies={studies}
-    />
   );
 }
