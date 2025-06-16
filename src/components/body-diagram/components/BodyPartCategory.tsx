@@ -3,12 +3,12 @@ import React from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { typo } from "@/lib/typography";
-import type { BodyPart, BodyPartCategory, BodyPartConfig } from "../types/bodyPartTypes";
+import type { BodyPart, BodyPartCategory as BodyPartCategoryType, BodyPartConfig } from "../types/bodyPartTypes";
 import { BodyPartButton } from "./BodyPartButton";
 import { CATEGORY_LABEL } from "../data/bodyPartData";
 
 interface BodyPartCategoryComponentProps {
-  category: BodyPartCategory;
+  category: BodyPartCategoryType;
   parts: BodyPartConfig[];
   selectedParts: Set<BodyPart>;
   highlightedParts: Set<BodyPart>;
