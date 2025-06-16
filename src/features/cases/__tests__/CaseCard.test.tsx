@@ -1,6 +1,7 @@
 /** @vitest-environment jsdom */
 import React from 'react';
-import { render, screen, cleanup } from '@testing-library/react';
+import { render, cleanup } from '@testing-library/react';
+import { screen } from '@testing-library/dom';
 import { BrowserRouter } from 'react-router-dom';
 import { describe, it, expect, afterEach } from 'vitest';
 import * as jestDomMatchers from '@testing-library/jest-dom/matchers';
