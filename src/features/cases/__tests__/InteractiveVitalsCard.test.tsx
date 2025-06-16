@@ -1,4 +1,3 @@
-
 /** @vitest-environment jsdom */
 import React from 'react';
 import { render, screen, cleanup, fireEvent } from '@testing-library/react';
