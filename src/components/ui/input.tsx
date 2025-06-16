@@ -1,7 +1,7 @@
 import * as React from "react"
 import { motion } from "framer-motion" // Added motion
 import { cn } from "@/lib/utils"
-import { inputVariants as unifiedInputVariants, componentSizes } from "@/lib/component-system"
+import { input as newInputStyles } from "@/lib/styles/components" // Updated import
 import {
   getMotionVariants,
   subtleInputInteraction,
@@ -10,11 +10,11 @@ import {
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
-  variant?: keyof typeof unifiedInputVariants
+  // variant prop is removed as new system uses a single base style for input + sizes
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, variant = "default", ...props }, ref) => {
+  ({ className, type, ...props }, ref) => { // variant prop removed from destructuring
     // Get the appropriate animation variants based on user's reduced motion preference
     const appliedVariants = getMotionVariants(subtleInputInteraction, reducedMotionInputInteraction);
 
@@ -23,12 +23,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <motion.input
         type={type}
         className={cn(
-          "flex w-full rounded-lg", // Base styles
-          // Note: We are removing unifiedInputVariants[variant] if it heavily styles border/shadow that motion will handle
-          // Or ensure motion variants override. For now, let's assume motion variants will take precedence for border/shadow.
-          // If not, we might need to adjust the className to remove conflicting styles on focus.
-          unifiedInputVariants[variant],
-          componentSizes.input.md,
+          newInputStyles.base,    // Use base style from new system
+          newInputStyles.size.md, // Use size style from new system
           className
         )}
         ref={ref}

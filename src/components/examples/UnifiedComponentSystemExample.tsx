@@ -15,10 +15,10 @@ import {
 import { 
   getComponentStyles, 
   getBentoStyles, 
-  getGlassmorphicStyles,
-  buttonVariants,
-  card 
-} from '@/lib/design-system';
+  getGlassmorphicStyles
+} from '@/lib/styles/utils';
+import { buttonVariants } from '@/lib/styles/common';
+import { card } from '@/lib/styles/components';
 
 export function UnifiedComponentSystemExample() {
   return (

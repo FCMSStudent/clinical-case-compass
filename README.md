@@ -299,7 +299,7 @@ function AnimatedContent() {
 
 ### Theme Switching
 ```typescript
-import { useTheme } from '@/lib/design-system';
+import { useTheme } from '@/lib/styles/theme';
 
 function ThemeSwitcher() {
   const { currentTheme, setTheme, getThemeNames } = useTheme();

@@ -3,7 +3,7 @@ import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { glass } from "@/lib/ui-styles"
+import { glass } from "@/lib/styles/common" // Updated import
 
 const Dialog = DialogPrimitive.Root
 

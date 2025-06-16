@@ -10,13 +10,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { MetricCardSkeleton } from "@/components/ui/dashboard-skeleton";
 import { DynamicRecentActivity } from "@/features/dashboard/components/DynamicRecentActivity";
 import { RecentCasesCarousel } from "@/components/ui/recent-cases-carousel";
-import { 
-  animations, 
-  getComponentStyles, 
-  card, 
-  button, 
-  useTheme 
-} from "@/lib/design-system";
+import { animations } from "@/lib/styles/animations";
+import { getComponentStyles } from "@/lib/styles/utils";
+import { card, button } from "@/lib/styles/components";
+import { useTheme } from "@/lib/styles/theme";
 import { typo, responsiveType } from "@/lib/typography";
 import { cn } from "@/lib/utils";
 

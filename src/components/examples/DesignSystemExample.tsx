@@ -16,20 +16,16 @@ import {
   BookOpen
 } from 'lucide-react';
 
+import { useTheme, themes } from '@/lib/styles/theme';
+import { animations } from '@/lib/styles/animations';
 import { 
-  useTheme,
-  animations,
   getComponentStyles,
   getBentoStyles,
   getGlassmorphicStyles,
-  getAnimationVariants,
-  backgroundConfig,
-  button,
-  card,
-  input,
-  bento,
-  themes
-} from '@/lib/design-system';
+  getAnimationVariants
+} from '@/lib/styles/utils';
+import { button, card, input, bento } from '@/lib/styles/components';
+import { backgroundConfig } from '@/lib/design-system'; // backgroundConfig remains
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';

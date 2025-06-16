@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/sonner";
 import { AnimatePresence } from "framer-motion"; // Added AnimatePresence
 import { AuthProvider, useAuth } from "./AuthContext";
-import { ThemeProvider } from "@/lib/design-system";
+import { ThemeProvider } from "@/lib/styles/theme";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 import { ProtectedRouteLayout } from "@/features/navigation";
 import LoadingScreen from "@/components/ui/loading-screen";

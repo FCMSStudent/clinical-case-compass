@@ -1,7 +1,7 @@
 import * as React from "react"
 import { motion } from "framer-motion" // Added motion
 import { cn } from "@/lib/utils"
-import { cardVariants as unifiedCardVariants, componentSizes } from "@/lib/component-system"
+import { card as newCardStyles } from "@/lib/styles/components" // Updated import
 import {
   getMotionVariants,
   subtleCardInteraction,
@@ -11,7 +11,7 @@ import {
 const Card = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & {
-    variant?: keyof typeof unifiedCardVariants
+    variant?: keyof typeof newCardStyles.variant // Updated to use newCardStyles
     // Consumers can pass standard motion props like 'whileHover', 'variants' etc. to override defaults if needed.
   }
 >(({ className, variant = "default", ...props }, ref) => {
@@ -25,8 +25,8 @@ const Card = React.forwardRef<
     <motion.div
       ref={ref}
       className={cn(
-        "rounded-xl", // Base styles from card.tsx
-        unifiedCardVariants[variant], // Theme styles from component-system (includes base shadow, bg, etc.)
+        newCardStyles.base, // Use base style from new system
+        newCardStyles.variant[variant], // Use variant style from new system
         className
       )}
       // Apply the subtle interaction variants for hover and focus states.
@@ -47,7 +47,7 @@ const CardHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex flex-col space-y-1.5", componentSizes.card.md, className)}
+    className={cn("flex flex-col space-y-1.5", newCardStyles.padding.lg, className)} // Use new padding
     {...props}
   />
 ))
@@ -84,7 +84,7 @@ const CardContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("pt-0", componentSizes.card.md, className)} {...props} />
+  <div ref={ref} className={cn("pt-0", newCardStyles.padding.lg, className)} {...props} /> // Use new padding
 ))
 CardContent.displayName = "CardContent"
 
@@ -94,7 +94,7 @@ const CardFooter = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex items-center pt-0", componentSizes.card.md, className)}
+    className={cn("flex items-center pt-0", newCardStyles.padding.lg, className)} // Use new padding
     {...props}
   />
 ))

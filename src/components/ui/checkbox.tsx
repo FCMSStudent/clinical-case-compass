@@ -4,7 +4,7 @@ import { Check } from "lucide-react"
 import { motion } from "framer-motion" // Added motion
 
 import { cn } from "@/lib/utils"
-import { focusRing } from "@/lib/ui-styles"
+import { focusRing } from "@/lib/styles/common" // Updated import
 import {
   getMotionVariants,
   subtleCheckboxHover,

@@ -5,7 +5,7 @@ import { Loader2 } from "lucide-react"
 import { motion, Variants } from "framer-motion" // Added motion
 
 import { cn } from "@/lib/utils"
-import { buttonVariants as unifiedButtonVariants } from "@/lib/design-system"
+import { buttonVariants as unifiedButtonVariants } from "@/lib/styles/common"
 import { typography } from "@/lib/typography"
 import {
   getMotionVariants,

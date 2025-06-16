@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { loginSchema, type LoginFormData } from "@/features/auth/authSchemas";
-import { useTheme } from "@/lib/design-system";
+import { useTheme } from "@/lib/styles/theme";
 
 interface LoginFormProps {
   onLoginSubmit: (data: LoginFormData) => Promise<void>;

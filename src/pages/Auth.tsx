@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/alert";
 import { CheckCircle2 } from "lucide-react";
 import UnifiedBackground from "@/components/backgrounds/UnifiedBackground";
-import { useTheme } from "@/lib/design-system";
+import { useTheme } from "@/lib/styles/theme";
 import {
   pageTransitionVariants as globalPageTransitionVariants, // Renamed to avoid conflict
   reducedMotionPageTransitionVariants as globalReducedMotionPageVariants, // Renamed

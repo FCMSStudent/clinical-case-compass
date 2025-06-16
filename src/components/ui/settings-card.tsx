@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { glass } from '@/lib/ui-styles';
+import { glass } from '@/lib/styles/common'; // Updated import
 
 interface SettingsCardProps {
   title: string;

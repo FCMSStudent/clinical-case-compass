@@ -7,15 +7,10 @@ The Clinical Case Compass unified design system provides a single source of trut
 ## 🚀 Quick Start
 
 ```typescript
-import { 
-  useTheme,
-  getComponentStyles,
-  getBentoStyles,
-  animations,
-  button,
-  card,
-  input
-} from '@/lib/design-system';
+import { useTheme } from '@/lib/styles/theme';
+import { getComponentStyles, getBentoStyles } from '@/lib/styles/utils';
+import { animations } from '@/lib/styles/animations';
+import { button, card, input } from '@/lib/styles/components';
 ```
 
 ## 🎨 Theme System
@@ -23,7 +18,7 @@ import {
 ### Using Theme Context
 
 ```typescript
-import { useTheme } from '@/lib/design-system';
+import { useTheme } from '@/lib/styles/theme';
 
 const MyComponent = () => {
   const { currentTheme, setTheme, availableThemes } = useTheme();
@@ -50,7 +45,7 @@ const MyComponent = () => {
 ### Buttons
 
 ```typescript
-import { getComponentStyles } from '@/lib/design-system';
+import { getComponentStyles } from '@/lib/styles/utils';
 
 // Method 1: Using utility function
 <Button className={getComponentStyles('button', 'primary', 'md')}>
@@ -149,7 +144,7 @@ const cardClass = getBentoStyles('card', 'medium', 'default');
 
 ```typescript
 import { motion } from 'framer-motion';
-import { animations } from '@/lib/design-system';
+import { animations } from '@/lib/styles/animations';
 
 <motion.div
   variants={animations.fadeIn}
@@ -186,7 +181,7 @@ import { animations } from '@/lib/design-system';
 ### Accessibility Support
 
 ```typescript
-import { getAnimationVariants } from '@/lib/design-system';
+import { getAnimationVariants } from '@/lib/styles/utils';
 
 // Automatically respects user's reduced motion preference
 <motion.div variants={getAnimationVariants('fadeIn')}>
@@ -225,7 +220,8 @@ const cardShadow = shadows.glass; // 0 8px 32px rgba(0, 0, 0, 0.1)
 ### Glassmorphic Styles
 
 ```typescript
-import { getGlassmorphicStyles, useTheme } from '@/lib/design-system';
+import { getGlassmorphicStyles } from '@/lib/styles/utils';
+import { useTheme } from '@/lib/styles/theme';
 
 const MyComponent = () => {
   const { currentTheme } = useTheme();
@@ -257,7 +253,7 @@ import { buttonVariants, cardBase } from '@/lib/ui-styles';
 
 ```typescript
 // New way
-import { getComponentStyles } from '@/lib/design-system';
+import { getComponentStyles } from '@/lib/styles/utils';
 
 <Button className={getComponentStyles('button', 'primary', 'md')}>Button</Button>
 <Card className={getComponentStyles('card', 'default')}>Content</Card>

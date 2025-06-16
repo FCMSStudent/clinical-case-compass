@@ -1,20 +1,21 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { bentoGrid } from "@/lib/component-system";
+import { bento as newBentoStyles } from "@/lib/styles/components"; // Updated import
 
 interface BentoContainerProps extends React.HTMLAttributes<HTMLDivElement> {
-  layout?: keyof typeof bentoGrid.container;
+  gap?: keyof typeof newBentoStyles.container.gap; // Changed prop from layout to gap
   children: React.ReactNode;
 }
 
 const BentoContainer = React.forwardRef<HTMLDivElement, BentoContainerProps>(
-  ({ className, layout = "default", children, ...props }, ref) => {
-    const layoutClasses = bentoGrid.container[layout];
+  ({ className, gap = "default", children, ...props }, ref) => { // Changed prop from layout to gap
+    // Map old layout values to new gap values if necessary, or just use new gap directly
+    const gapClass = newBentoStyles.container.gap[gap];
 
     return (
       <div
         ref={ref}
-        className={cn(layoutClasses, className)}
+        className={cn(newBentoStyles.container.base, gapClass, className)} // Apply new base and gap
         {...props}
       >
         {children}
