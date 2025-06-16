@@ -1,3 +1,4 @@
+
 import React from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -6,7 +7,7 @@ import type { BodyPart, BodyPartCategory, BodyPartConfig } from "../types/bodyPa
 import { BodyPartButton } from "./BodyPartButton";
 import { CATEGORY_LABEL } from "../data/bodyPartData";
 
-interface BodyPartCategoryProps {
+interface BodyPartCategoryComponentProps {
   category: BodyPartCategory;
   parts: BodyPartConfig[];
   selectedParts: Set<BodyPart>;
@@ -20,7 +21,7 @@ interface BodyPartCategoryProps {
   getPartVariant: (part: BodyPart) => "default" | "secondary" | "outline";
 }
 
-export const BodyPartCategory: React.FC<BodyPartCategoryProps> = ({
+export const BodyPartCategory: React.FC<BodyPartCategoryComponentProps> = ({
   category,
   parts,
   selectedParts,

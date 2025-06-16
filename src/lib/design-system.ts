@@ -1,3 +1,4 @@
+
 // ────────────────────────────────────────────────────────────────────────────────
 // DESIGN SYSTEM - MODULAR ENTRY POINT
 // ────────────────────────────────────────────────────────────────────────────────
@@ -6,7 +7,6 @@
 export * from './colors';
 export * from './spacing';
 export * from './components';
-export * from './utilities';
 export * from './theme-system.tsx';
 export * from './typography';
 export * from './design-tokens';
@@ -34,7 +34,6 @@ import {
 } from './components';
 import { 
   getGlassmorphicStyles, 
-  prefersReducedMotion, 
   applyThemeToDocument,
   removeThemeFromDocument,
   generateThemeCSSProperties,
@@ -56,7 +55,6 @@ export const designSystem = {
   // Colors
   colors,
   themeColors,
-  ThemeColors,
   
   // Spacing & Layout
   spacing,
@@ -82,7 +80,6 @@ export const designSystem = {
   
   // Utilities
   getGlassmorphicStyles,
-  prefersReducedMotion,
   applyThemeToDocument,
   removeThemeFromDocument,
   generateThemeCSSProperties,
@@ -97,7 +94,6 @@ export const designSystem = {
   useTheme,
   ThemeSwitcher,
   themes,
-  ThemeConfig,
   
   // Typography
   typography,
@@ -113,4 +109,4 @@ export const designSystem = {
 // Default export for backward compatibility
 export default designSystem;
 
-export { animations }; 
+export { animations };

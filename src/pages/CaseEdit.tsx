@@ -1,4 +1,3 @@
-
 // Remove: import { getCaseById } from "@/data/mock-data";
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
@@ -85,12 +84,15 @@ const CaseEdit = () => {
       return;
     }
 
-    // Populate form with case data
+    // Populate form with case data - handle gender mapping
+    const patientGender = medicalCase.patient.gender;
+    const mappedGender = patientGender === "unknown" ? "other" : patientGender;
+    
     form.reset({
       title: medicalCase.title || "",
       patientName: medicalCase.patient.name || "",
       patientAge: medicalCase.patient.age || 0,
-      patientGender: medicalCase.patient.gender || "male",
+      patientGender: mappedGender as "male" | "female" | "other",
       patientMRN: medicalCase.patient.medicalRecordNumber || "",
       chiefComplaint: medicalCase.chiefComplaint || "",
       history: medicalCase.history || "",

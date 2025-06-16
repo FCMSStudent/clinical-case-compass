@@ -1,44 +1,25 @@
+
 import * as React from "react"
-import { motion } from "framer-motion" // Added motion
+
 import { cn } from "@/lib/utils"
 import { cardVariants as unifiedCardVariants, componentSizes } from "@/lib/component-system"
-import {
-  getMotionVariants,
-  subtleCardInteraction,
-  reducedMotionCardInteraction
-} from "@/lib/motion" // Added motion imports
 
 const Card = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & {
     variant?: keyof typeof unifiedCardVariants
-    // Consumers can pass standard motion props like 'whileHover', 'variants' etc. to override defaults if needed.
   }
->(({ className, variant = "default", ...props }, ref) => {
-  // Get the appropriate animation variants based on user's reduced motion preference
-  const appliedVariants = getMotionVariants(subtleCardInteraction, reducedMotionCardInteraction);
-
-  // The Card component is now a motion.div, applying subtle hover/focus animations
-  // if it's made interactive (e.g., by an onClick handler or by being focusable).
-  // These animations provide default feedback without requiring consumers to wrap Card in motion.div.
-  return (
-    <motion.div
-      ref={ref}
-      className={cn(
-        "rounded-xl", // Base styles from card.tsx
-        unifiedCardVariants[variant], // Theme styles from component-system (includes base shadow, bg, etc.)
-        className
-      )}
-      // Apply the subtle interaction variants for hover and focus states.
-      // Initial state is also defined in these variants.
-      variants={appliedVariants}
-      initial="initial"
-      whileHover="hover"
-      whileFocus="focus" // Card needs to be focusable (e.g. tabIndex="0") for whileFocus to trigger
-      {...props}
-    />
-  );
-})
+>(({ className, variant = "default", ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn(
+      "rounded-xl transition-all duration-200 ease-out",
+      unifiedCardVariants[variant],
+      className
+    )}
+    {...props}
+  />
+))
 Card.displayName = "Card"
 
 const CardHeader = React.forwardRef<
