@@ -11,6 +11,12 @@ export default defineConfig(({ mode }) => {
   const isGitHubPages = env.VITE_DEPLOY_TARGET === 'github-pages';
   
   return {
+    // Vitest configuration
+    test: {
+      globals: true,
+      environment: 'jsdom',
+      setupFiles: './src/setupTests.ts', // if you have a setup file
+    },
     // Set base path only for GitHub Pages, use root for all other deployments
     base: isGitHubPages ? "/medica/" : "/",
     envPrefix: "VITE_",

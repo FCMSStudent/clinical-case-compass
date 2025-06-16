@@ -6,7 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { authReducer, initialAuthState, type AuthState, type AuthAction } from "@/lib/reducers/authReducer";
 import type { UserMetadata } from "@/types/auth";
 
-type AuthContextType = {
+export type AuthContextType = {
   session: Session | null;
   user: User | null;
   loading: boolean;
@@ -17,7 +17,7 @@ type AuthContextType = {
   updateProfile: (data: UserMetadata) => Promise<void>;
 };
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(authReducer, initialAuthState);
