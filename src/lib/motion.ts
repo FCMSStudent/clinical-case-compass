@@ -258,22 +258,6 @@ export const reducedMotionInputInteraction: Variants = {
 };
 
 /**
- * Reduced motion variants for subtle button interactions
- */
-export const subtleReducedMotionButton: Variants = {
-  hover: {}, // No hover animation
-  tap: { scale: 0.98 }, // Minimal tap feedback
-  focus: { // Only focus ring for accessibility
-    boxShadow: "0 0 0 3px rgba(59, 130, 246, 0.4)",
-    transition: { duration: 0.1 }
-  },
-  initial: {
-    scale: 1,
-    boxShadow: "0 0 0 0 rgba(59, 130, 246, 0)",
-  }
-};
-
-/**
  * Motion-responsive hover effects with adaptive scaling
  */
 export const useMotionResponsiveHover = () => {

@@ -1,4 +1,3 @@
-
 import React from "react";
 import EnhancedNavbar from "@/components/navigation/EnhancedNavbar";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
@@ -48,7 +47,7 @@ export const EnhancedAppLayout: React.FC<EnhancedAppLayoutProps> = ({
             {children}
           </div>
         </main>
-      </div>
+      </motion.div>
     </div>
   );
 };
