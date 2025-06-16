@@ -2,7 +2,7 @@ export interface Patient {
   id: string;
   name: string;
   age: number;
-  gender: "male" | "female" | "other";
+  gender: "male" | "female" | "other" | "unknown";
   medicalRecordNumber?: string;
 }
 
@@ -47,14 +47,6 @@ export interface RadiologyStudy {
   impression?: string;
 }
 
-// Keep RadiologyExam for backward compatibility, but mark as deprecated
-/** @deprecated Use RadiologyStudy instead */
-export interface RadiologyExam {
-  id: string;
-  modality: string;
-  findings: string;
-}
-
 export interface MedicalCase {
   id: string;
   title: string;
@@ -73,13 +65,9 @@ export interface MedicalCase {
   learningPoints?: string;
   vitals?: Record<string, string>;
   urinarySymptoms?: string[];
-  symptoms?: Record<string, boolean>;
-  systemSymptoms?: Record<string, string[]>;
+  symptoms?: Record<string, string[]>; // Corrected type for review of systems
   labTests?: LabTest[];
   radiologyStudies?: RadiologyStudy[];
-  // Keep radiologyExams for backward compatibility but mark as deprecated
-  /** @deprecated Use radiologyStudies instead */
-  radiologyExams?: RadiologyExam[];
   pastMedicalHistory?: string[];
   medications?: string[];
   allergies?: string[];
@@ -88,7 +76,6 @@ export interface MedicalCase {
   differentialDiagnosis?: string[];
   managementPlan?: string;
   notes?: string;
-  // Add missing properties that are being used in the codebase
   rating?: number;
   specialty?: string;
 }

@@ -1,12 +1,12 @@
 
-import React, { createContext, useReducer, useEffect, useContext } from "react";
+import React, { createContext, useReducer, useEffect, useContext, useMemo, useCallback } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { authReducer, initialAuthState, type AuthState, type AuthAction } from "@/lib/reducers/authReducer";
 import type { UserMetadata } from "@/types/auth";
 
-type AuthContextType = {
+export type AuthContextType = {
   session: Session | null;
   user: User | null;
   loading: boolean;
@@ -17,7 +17,7 @@ type AuthContextType = {
   updateProfile: (data: UserMetadata) => Promise<void>;
 };
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(authReducer, initialAuthState);
@@ -61,11 +61,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // Then check for existing session
     supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
+      const initializedUser = currentSession?.user ?? null;
       dispatch({ 
         type: 'INITIALIZE_AUTH', 
         payload: { 
           session: currentSession, 
-          user: currentSession?.user ?? null, 
+          user: initializedUser,
           isOfflineMode: false 
         } 
       });
@@ -77,9 +78,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => {
       subscription.unsubscribe();
     };
-  }, [toast]);
+  }, [toast]); // `dispatch` is stable
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = useCallback(async (email: string, password: string) => {
     if (isOfflineMode) {
       toast({
         variant: "destructive",
@@ -101,9 +102,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
       throw err;
     }
-  };
+  }, [isOfflineMode, toast]);
 
-  const signUp = async (email: string, password: string, fullName?: string) => {
+  const signUp = useCallback(async (email: string, password: string, fullName?: string) => {
     if (isOfflineMode) {
       toast({
         variant: "destructive",
@@ -136,9 +137,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
       throw err;
     }
-  };
+  }, [isOfflineMode, toast]);
 
-  const signOut = async () => {
+  const signOut = useCallback(async () => {
     if (isOfflineMode) {
       return;
     }
@@ -153,9 +154,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         description: err.message || "An error occurred during sign out",
       });
     }
-  };
+  }, [isOfflineMode, toast]);
 
-  const updateProfile = async (data: UserMetadata) => {
+  const updateProfile = useCallback(async (data: UserMetadata) => {
     if (isOfflineMode) {
       toast({
         variant: "destructive",
@@ -211,9 +212,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
       throw err;
     }
-  };
+  }, [isOfflineMode, toast, user, dispatch]);
 
-  const value = {
+  const value = useMemo(() => ({
     session,
     user,
     loading,
@@ -222,7 +223,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     signUp,
     signOut,
     updateProfile,
-  };
+  }), [session, user, loading, isOfflineMode, signIn, signUp, signOut, updateProfile]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

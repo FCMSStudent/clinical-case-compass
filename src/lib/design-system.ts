@@ -49,8 +49,6 @@ import { ThemeProvider, useTheme, ThemeSwitcher, themes } from './theme-system.t
 import { typography } from './typography';
 import { typographyTokens } from './design-tokens';
 import { backgroundConfig } from './background-config';
-
-// Animation system (from existing motion.ts)
 import { animations } from './animations';
 
 // Consolidated exports for easy access

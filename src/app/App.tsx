@@ -1,13 +1,13 @@
+
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom"; // Added useLocation
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/sonner";
+import { AnimatePresence } from "framer-motion"; // Added AnimatePresence
 import { AuthProvider, useAuth } from "./AuthContext";
 import { ThemeProvider } from "@/lib/design-system";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
-import { EnhancedAppLayout } from "@/features/navigation/components/EnhancedAppLayout";
-import { PrivateRoute } from "@/features/auth/PrivateRoute";
-import { OfflineBanner } from "@/components/ui/OfflineBanner";
+import { ProtectedRouteLayout } from "@/features/navigation";
 import LoadingScreen from "@/components/ui/loading-screen";
 
 // Pages
@@ -21,20 +21,31 @@ import Auth from "@/pages/Auth";
 import NotFound from "@/pages/NotFound";
 import LandingPage from "@/pages/Landing";
 
-// Create a client
+// Create a client with better error handling
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 1000 * 60 * 5, // 5 minutes
       gcTime: 1000 * 60 * 10, // 10 minutes
-      retry: 1,
+      retry: (failureCount, error) => {
+        // Don't retry on authentication errors
+        if (error?.message?.includes('not authenticated')) {
+          return false;
+        }
+        return failureCount < 2;
+      },
       refetchOnWindowFocus: false,
     },
+    mutations: {
+      retry: 1,
+    }
   },
 });
 
 const AppContent = () => {
-  const { session, loading, isOfflineMode } = useAuth();
+  const { session, loading } = useAuth();
+
+  console.log("[App] Auth state:", { session: !!session, loading });
 
   if (loading) {
     return <LoadingScreen />;
@@ -42,100 +53,84 @@ const AppContent = () => {
 
   return (
     <Router>
-      <Routes>
-        {/* Public Routes */}
+      <AppRoutes />
+    </Router>
+  );
+};
+
+// New component to handle location and AnimatePresence for page transitions.
+// This component uses `useLocation` to get the current route and provides it to `AnimatePresence`
+// and `Routes`. The `key` on `Routes` ensures `AnimatePresence` detects route changes.
+const AppRoutes = () => {
+  const location = useLocation();
+  const { session } = useAuth(); // Used to determine route elements.
+
+  return (
+    // AnimatePresence enables the animation of components that are mounted or unmounted.
+    // `mode="wait"` ensures that the outgoing component finishes its exit animation
+    // before the new component enters.
+    <AnimatePresence mode="wait">
+      {/* The `location` prop is passed to `Routes` so it works correctly with `AnimatePresence`. */}
+      {/* `key={location.pathname}` is crucial for `AnimatePresence` to differentiate between routes. */}
+      <Routes location={location} key={location.pathname}>
+        {/* Public Routes - Page components (LandingPage, Auth) are motion-enhanced for transitions. */}
         <Route path="/landing" element={<LandingPage />} />
         <Route path="/auth" element={session ? <Navigate to="/dashboard" replace /> : <Auth />} />
         
-        {/* Protected routes with single layout wrapper */}
+        {/* Protected routes - EnhancedAppLayout will be modified to be a motion component */}
         <Route
           path="/dashboard"
           element={
-            <PrivateRoute>
-              <EnhancedAppLayout>
-                {isOfflineMode && (
-                  <div className="mb-4">
-                    <OfflineBanner />
-                  </div>
-                )}
-                <Dashboard />
-              </EnhancedAppLayout>
-            </PrivateRoute>
+            <ProtectedRouteLayout>
+              <Dashboard />
+            </ProtectedRouteLayout>
           }
         />
         <Route
           path="/cases"
           element={
-            <PrivateRoute>
-              <EnhancedAppLayout>
-                {isOfflineMode && (
-                  <div className="mb-4">
-                    <OfflineBanner />
-                  </div>
-                )}
+            <ProtectedRouteLayout>
+              <ErrorBoundary fallback={
+                <div className="p-8 text-center">
+                  <h2 className="text-xl font-semibold text-white mb-2">Cases Page Error</h2>
+                  <p className="text-white/70">There was an error loading the cases page.</p>
+                </div>
+              }>
                 <Cases />
-              </EnhancedAppLayout>
-            </PrivateRoute>
+              </ErrorBoundary>
+            </ProtectedRouteLayout>
           }
         />
         <Route
           path="/cases/:id"
           element={
-            <PrivateRoute>
-              <EnhancedAppLayout>
-                {isOfflineMode && (
-                  <div className="mb-4">
-                    <OfflineBanner />
-                  </div>
-                )}
-                <CaseDetail />
-              </EnhancedAppLayout>
-            </PrivateRoute>
+            <ProtectedRouteLayout>
+              <CaseDetail />
+            </ProtectedRouteLayout>
           }
         />
         <Route
           path="/cases/edit/:id"
           element={
-            <PrivateRoute>
-              <EnhancedAppLayout>
-                {isOfflineMode && (
-                  <div className="mb-4">
-                    <OfflineBanner />
-                  </div>
-                )}
-                <CaseEdit />
-              </EnhancedAppLayout>
-            </PrivateRoute>
+            <ProtectedRouteLayout>
+              <CaseEdit />
+            </ProtectedRouteLayout>
           }
         />
         <Route
           path="/cases/new"
           element={
-            <PrivateRoute>
-              <EnhancedAppLayout>
-                {isOfflineMode && (
-                  <div className="mb-4">
-                    <OfflineBanner />
-                  </div>
-                )}
-                <CreateCaseFlow />
-              </EnhancedAppLayout>
-            </PrivateRoute>
+            <ProtectedRouteLayout>
+              <CreateCaseFlow />
+            </ProtectedRouteLayout>
           }
         />
         <Route
           path="/account"
           element={
-            <PrivateRoute>
-              <EnhancedAppLayout>
-                {isOfflineMode && (
-                  <div className="mb-4">
-                    <OfflineBanner />
-                  </div>
-                )}
-                <Account />
-              </EnhancedAppLayout>
-            </PrivateRoute>
+            <ProtectedRouteLayout>
+              <Account />
+            </ProtectedRouteLayout>
           }
         />
         <Route path="/" element={session ? <Navigate to="/dashboard" replace /> : <Navigate to="/landing" replace />} />
@@ -143,16 +138,16 @@ const AppContent = () => {
           path="*"
           element={
             session ? (
-              <EnhancedAppLayout>
+              <ProtectedRouteLayout>
                 <NotFound />
-              </EnhancedAppLayout>
+              </ProtectedRouteLayout>
             ) : (
               <Navigate to="/landing" replace />
             )
           }
         />
       </Routes>
-    </Router>
+    </AnimatePresence>
   );
 };
 
