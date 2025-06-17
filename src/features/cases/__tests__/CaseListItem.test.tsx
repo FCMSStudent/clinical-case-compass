@@ -1,7 +1,8 @@
 
 /** @vitest-environment jsdom */
 import React from 'react';
-import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import { render, cleanup } from '@testing-library/react';
+import { screen, fireEvent } from '@testing-library/dom';
 import { BrowserRouter } from 'react-router-dom';
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import * as jestDomMatchers from '@testing-library/jest-dom/matchers';
@@ -21,7 +22,7 @@ const mockCase: MedicalCase = {
   resources: [],
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
-  status: 'draft', // Add missing status field
+  status: 'draft',
 };
 
 describe('CaseListItem', () => {

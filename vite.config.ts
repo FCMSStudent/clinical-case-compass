@@ -1,49 +1,22 @@
-import { defineConfig, loadEnv } from "vite";
-import react from "@vitejs/plugin-react";
+
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react-swc";
 import path from "path";
+import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), "");
-  
-  // Only use base path for GitHub Pages deployment when explicitly set
-  const isGitHubPages = env.VITE_DEPLOY_TARGET === 'github-pages';
-  
-  return {
-    // Vitest configuration
-    test: {
-      globals: true,
-      environment: 'jsdom',
-      setupFiles: './src/setupTests.ts', // if you have a setup file
+export default defineConfig(({ mode }) => ({
+  server: {
+    host: "::",
+    port: 8080,
+  },
+  plugins: [
+    react(),
+    mode === 'development' && componentTagger(),
+  ].filter(Boolean),
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
     },
-    // Set base path only for GitHub Pages, use root for all other deployments
-    base: isGitHubPages ? "/medica/" : "/",
-    envPrefix: "VITE_",
-    server: {
-      host: "::",
-      port: 8080,
-    },
-    plugins: [
-      react(),
-    ].filter(Boolean),
-    resolve: {
-      alias: {
-        "@": path.resolve(__dirname, "./src"),
-      },
-    },
-    build: {
-      outDir: "dist",
-      assetsDir: "assets",
-      sourcemap: false,
-      rollupOptions: {
-        output: {
-          manualChunks: {
-            vendor: ['react', 'react-dom'],
-            router: ['react-router-dom'],
-            ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu'],
-          },
-        },
-      },
-    },
-  };
-});
+  },
+}));

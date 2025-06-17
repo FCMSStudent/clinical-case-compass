@@ -49,12 +49,12 @@ const inputVariants = cva("rounded-lg flex w-full bg-transparent", {
 
 // ─── Props --------------------------------------------------------------------
 export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement>,
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>,
     VariantProps<typeof inputVariants> {}
 
 // ─── Component ----------------------------------------------------------------
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, variant, size, type = "text", ...props }, ref) => {
+  ({ className, variant, size = 'md', type = "text", ...props }, ref) => {
     const animationVariants = getMotionVariants(
       subtleInputInteraction,
       reducedMotionInputInteraction,
@@ -64,11 +64,11 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <motion.input
         ref={ref}
         type={type}
-        className={cn(inputVariants({ variant, size, className }))}
+        className={cn(inputVariants({ variant, size: size as 'xs' | 'sm' | 'md' | 'lg', className }))}
         variants={animationVariants as any}
         initial="initial"
         whileFocus="focus"
-        {...props}
+        {...(props as any)}
       />
     );
   },

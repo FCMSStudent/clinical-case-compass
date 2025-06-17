@@ -1,7 +1,7 @@
-
 /** @vitest-environment jsdom */
 import React from 'react';
-import { render, screen, cleanup } from '@testing-library/react';
+import { render, cleanup } from '@testing-library/react';
+import { screen } from '@testing-library/dom';
 import { BrowserRouter } from 'react-router-dom';
 import { describe, it, expect, afterEach } from 'vitest';
 import * as jestDomMatchers from '@testing-library/jest-dom/matchers';
@@ -26,7 +26,7 @@ const mockMedicalCase: MedicalCase = {
   resources: [],
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
-  status: 'draft', // Add missing status field
+  status: 'draft',
 };
 
 describe('CaseCard', () => {
@@ -102,10 +102,8 @@ describe('CaseCard', () => {
       </BrowserRouter>
     );
 
-    // First two tags are visible
     expect(screen.getByText('Urgent')).toBeInTheDocument();
     expect(screen.getByText('Important')).toBeInTheDocument();
-    // The remaining tag count is displayed as +1
     expect(screen.getByText('+1')).toBeInTheDocument();
   });
 

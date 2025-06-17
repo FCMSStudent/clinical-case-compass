@@ -1,5 +1,7 @@
+
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import { screen } from '@testing-library/dom';
 import { describe, it, expect, vi } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import ProtectedRouteLayout from './ProtectedRouteLayout';
@@ -19,18 +21,20 @@ vi.mock('@/components/ui/OfflineBanner', () => ({
 }));
 
 const mockAuthContext = (isOfflineMode: boolean, session: boolean = true): AuthContextType => ({
-  session: session ? { user: { id: 'test-user' } } : null, // Provide a minimal session object
+  session: session ? {
+    access_token: 'mock-access-token',
+    refresh_token: 'mock-refresh-token',
+    expires_in: 3600,
+    token_type: 'bearer',
+    user: { id: 'test-user', aud: 'authenticated', role: 'authenticated', email: 'test@example.com', created_at: '2023-01-01T00:00:00Z', app_metadata: {}, user_metadata: {} }
+  } : null,
   loading: false,
   isOfflineMode,
-  signInWithGithub: vi.fn(),
+  signIn: vi.fn(),
+  signUp: vi.fn(),
   signOut: vi.fn(),
-  user: null, // Add other necessary fields from AuthContextType if your component uses them
-  error: null,
-  setError: vi.fn(),
-  login: vi.fn(),
-  signup: vi.fn(),
-  sendPasswordResetEmail: vi.fn(),
-  updatePassword: vi.fn(),
+  updateProfile: vi.fn(),
+  user: session ? { id: 'test-user', aud: 'authenticated', role: 'authenticated', email: 'test@example.com', created_at: '2023-01-01T00:00:00Z', app_metadata: {}, user_metadata: {} } : null,
 });
 
 describe('ProtectedRouteLayout', () => {

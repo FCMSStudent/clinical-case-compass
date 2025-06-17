@@ -24,7 +24,10 @@ import {
 
 // ─── Tailwind-powered variant factory ─────────────────────────────────────────
 const buttonVariants = cva(
-  cn("inline-flex items-center justify-center whitespace-nowrap rounded-lg", typography.button),
+  cn(
+    "inline-flex items-center justify-center whitespace-nowrap rounded-lg transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent disabled:pointer-events-none disabled:opacity-50",
+    typography.button
+  ),
   {
     variants: {
       variant: {
@@ -90,37 +93,33 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       loading = false,
       disabled,
       children,
-      ...props
+      ...rest
     },
     ref,
   ) => {
-    // When composing, we don’t attach Framer Motion props.
-    const Comp = asChild ? Slot : motion.button;
-
     // Respect user reduced-motion preference.
     const animationVariants = getMotionVariants(
       subtleButtonHoverTap,
       subtleReducedMotionButton,
     );
 
-    // ── AS CHILD (no framer props) ───────────────────────────────────────────
     if (asChild) {
+      // Slot does not support motion props or the 'disabled' prop
       return (
-        <Comp
+        <Slot
           className={cn(buttonVariants({ variant, size, className }))}
-          ref={ref}
-          disabled={disabled || loading}
-          {...props}
+          ref={ref as any}
+          {...rest}
         >
           {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           {children}
-        </Comp>
+        </Slot>
       );
     }
 
-    // ── DEFAULT (framer-powered) ────────────────────────────────────────────
+    // Use motion.button for animation
     return (
-      <Comp
+      <motion.button
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
         disabled={disabled || loading}
@@ -129,11 +128,11 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         whileHover="hover"
         whileTap="tap"
         whileFocus="focus"
-        {...props}
+        {...rest}
       >
         {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
         {children}
-      </Comp>
+      </motion.button>
     );
   },
 );

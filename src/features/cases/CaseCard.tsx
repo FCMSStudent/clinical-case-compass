@@ -1,5 +1,7 @@
+
 import React, { memo, useMemo, useState } from "react";
 import { motion } from "framer-motion";
+import { Tag } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MedicalCase } from "@/types/case";
 import { CaseCardHeader } from "./components/CaseCardHeader";
@@ -14,14 +16,6 @@ import { getPrimaryDiagnosis, isValidMedicalCase } from "./utils/caseUtils";
  * ────────────────────────────────────────────────────────────────────────────────
  */
 const VISIBLE_TAGS = 2;
-
-function getPrimaryDiagnosis(caseData: MedicalCase) {
-  if (!caseData.diagnoses?.length) return null;
-  return (
-    caseData.diagnoses.find((d) => d.status === "confirmed") ||
-    caseData.diagnoses[0]
-  );
-}
 
 interface TagPillProps {
   tag: { id: string; name: string; color: string };

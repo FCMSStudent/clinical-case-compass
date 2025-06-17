@@ -1,4 +1,3 @@
-
 // ────────────────────────────────────────────────────────────────────────────────
 // CORE COMPONENTS
 // ────────────────────────────────────────────────────────────────────────────────
@@ -64,7 +63,6 @@ export { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./
 export { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./collapsible"
 export { Separator } from "./separator"
 export { Skeleton } from "./skeleton"
-export { Calendar } from "./calendar"
 export { AspectRatio } from "./aspect-ratio"
 export { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "./resizable"
 export { ScrollArea, ScrollBar } from "./scroll-area"

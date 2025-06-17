@@ -1,5 +1,6 @@
+
 import React, { memo, useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Tag, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -34,6 +35,7 @@ const VISIBLE_TAGS = 2;
 
 export const CaseCardFooter = memo(({ medicalCase, isHovered, onDelete }: CaseCardFooterProps) => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const navigate = useNavigate();
   
   const visibleTags = medicalCase?.tags?.slice(0, VISIBLE_TAGS) ?? [];
   const hiddenTagCount = (medicalCase?.tags?.length ?? 0) - visibleTags.length;
@@ -70,26 +72,26 @@ export const CaseCardFooter = memo(({ medicalCase, isHovered, onDelete }: CaseCa
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button
-                asChild
-                size="sm"
-                variant="outline"
-                className="group/btn relative bg-white/10 border-white/20 hover:bg-white/20 text-white"
+              <motion.div
+                animate={{ x: isHovered ? 4 : 0 }}
+                transition={{ duration: 0.2 }}
               >
-                <Link to={`/cases/${medicalCase.id}`} className="flex items-center">
-                  <span className="flex items-center justify-center">
-                    View Details
-                    <motion.div
-                      className="ml-1 absolute right-0 top-1/2 -translate-y-1/2 text-white/60"
-                      style={{ x: isHovered ? 4 : 0, opacity: isHovered ? 1 : 0, position: 'relative', right: isHovered ? '-0.25rem' : '0rem' }}
-                      animate={{ x: isHovered ? 4 : 0, opacity: isHovered ? 1 : 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <ChevronRight className="h-4 w-4" />
-                    </motion.div>
-                  </span>
-                </Link>
-              </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => navigate(`/cases/${medicalCase.id}`)}
+                  className="group/btn relative bg-white/10 border-white/20 hover:bg-white/20 text-white"
+                >
+                  View Details
+                  <motion.div
+                    className="ml-2"
+                    animate={{ opacity: isHovered ? 1 : 0.6 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </motion.div>
+                </Button>
+              </motion.div>
             </TooltipTrigger>
             <TooltipContent className="bg-white/10 backdrop-blur-md border border-white/20 text-white">
               View full case details
@@ -134,4 +136,4 @@ export const CaseCardFooter = memo(({ medicalCase, isHovered, onDelete }: CaseCa
   );
 });
 
-CaseCardFooter.displayName = "CaseCardFooter"; 
+CaseCardFooter.displayName = "CaseCardFooter";

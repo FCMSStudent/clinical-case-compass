@@ -43,9 +43,7 @@ const cardVariants = cva("rounded-xl w-full bg-transparent", {
 // ─── Card Component -----------------------------------------------------------
 export interface CardProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof cardVariants> {
-  // Consumers may inject their own Framer Motion props (whileHover, etc.)
-}
+    VariantProps<typeof cardVariants> {}
 
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
   ({ className, variant, ...props }, ref) => {
@@ -62,7 +60,7 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
         initial="initial"
         whileHover="hover"
         whileFocus="focus"
-        {...props}
+        {...(props as any)}
       />
     );
   },

@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -96,7 +97,7 @@ export const AddRadiologyForm: React.FC<AddRadiologyFormProps> = ({
               <Label>Study Name</Label>
               <Input
                 value={customStudy.name}
-                onChange={(e) => setCustomStudy(prev => ({ ...prev, name: e.target.value }))}
+                onChange={(e) => setCustomStudy({ ...customStudy, name: e.target.value })}
                 placeholder="Enter study name"
               />
             </div>
@@ -104,7 +105,7 @@ export const AddRadiologyForm: React.FC<AddRadiologyFormProps> = ({
               <Label>Study Type</Label>
               <Select
                 value={customStudy.type}
-                onValueChange={(value) => setCustomStudy(prev => ({ ...prev, type: value }))}
+                onValueChange={(value) => setCustomStudy({ ...customStudy, type: value })}
               >
                 <SelectTrigger className="rounded-xl shadow-xl py-3 px-4">
                   <SelectValue placeholder="Select type" />
