@@ -1,45 +1,78 @@
-import * as React from "react"
-import { motion } from "framer-motion" // Added motion
-import { cn } from "@/lib/utils"
-import { inputVariants as unifiedInputVariants, componentSizes } from "@/lib/component-system"
+// -----------------------------------------------------------------------------
+// Input – Liquid Glass Edition
+// -----------------------------------------------------------------------------
+// 1. Adds `glass` variants (`glass-subtle`, `glass`, `glass-elevated`) that
+//    automatically adopt design-system blur, border & shadow tokens.
+// 2. Uses Framer Motion for a smooth focus ring scale/opacity transition that
+//    respects reduced-motion preferences.
+// -----------------------------------------------------------------------------
+
+import * as React from "react";
+import { motion } from "framer-motion";
+import { cva, type VariantProps } from "class-variance-authority";
+
+import { cn } from "@/lib/utils";
+import {
+  inputVariants as legacyInputVariants,
+  componentSizes,
+} from "@/lib/component-system";
 import {
   getMotionVariants,
   subtleInputInteraction,
-  reducedMotionInputInteraction
-} from "@/lib/motion" // Added motion imports
+  reducedMotionInputInteraction,
+} from "@/lib/motion";
 
+// ─── Tailwind variant generator ──────────────────────────────────────────────
+const inputVariants = cva("rounded-lg flex w-full bg-transparent", {
+  variants: {
+    variant: {
+      // Brand / status (legacy)
+      ...legacyInputVariants,
+
+      // Glass presets
+      "glass-subtle": cn("glass-subtle text-white/90 placeholder:text-white/50"),
+      glass: cn("glass text-white placeholder:text-white/70"),
+      "glass-elevated": cn("glass-elevated text-white placeholder:text-white/80"),
+    },
+    size: {
+      xs: componentSizes.input.xs,
+      sm: componentSizes.input.sm,
+      md: componentSizes.input.md,
+      lg: componentSizes.input.lg,
+    },
+  },
+  defaultVariants: {
+    variant: "default",
+    size: "md",
+  },
+});
+
+// ─── Props --------------------------------------------------------------------
 export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
-  variant?: keyof typeof unifiedInputVariants
-}
+  extends React.InputHTMLAttributes<HTMLInputElement>,
+    VariantProps<typeof inputVariants> {}
 
-const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, variant = "default", ...props }, ref) => {
-    // Get the appropriate animation variants based on user's reduced motion preference
-    const appliedVariants = getMotionVariants(subtleInputInteraction, reducedMotionInputInteraction);
+// ─── Component ----------------------------------------------------------------
+export const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  ({ className, variant, size, type = "text", ...props }, ref) => {
+    const animationVariants = getMotionVariants(
+      subtleInputInteraction,
+      reducedMotionInputInteraction,
+    );
 
     return (
-      // Using motion.input to enable Framer Motion animations on focus
       <motion.input
-        type={type}
-        className={cn(
-          "flex w-full rounded-lg", // Base styles
-          // Note: We are removing unifiedInputVariants[variant] if it heavily styles border/shadow that motion will handle
-          // Or ensure motion variants override. For now, let's assume motion variants will take precedence for border/shadow.
-          // If not, we might need to adjust the className to remove conflicting styles on focus.
-          unifiedInputVariants[variant],
-          componentSizes.input.md,
-          className
-        )}
         ref={ref}
-        variants={appliedVariants}
+        type={type}
+        className={cn(inputVariants({ variant, size, className }))}
+        variants={animationVariants as any}
         initial="initial"
         whileFocus="focus"
         {...props}
       />
-    )
-  }
-)
-Input.displayName = "Input"
+    );
+  },
+);
+Input.displayName = "Input";
 
-export { Input }
+export { inputVariants };

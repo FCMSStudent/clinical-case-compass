@@ -1,54 +1,66 @@
-import * as React from "react"
-import { Slot } from "@radix-ui/react-slot"
-import { cva, type VariantProps } from "class-variance-authority"
-import { Loader2 } from "lucide-react"
-import { motion, Variants } from "framer-motion" // Added motion
+// -----------------------------------------------------------------------------
+// Button – Liquid Glass Edition
+// -----------------------------------------------------------------------------
+// 1. Tailwind class names now leverage `glass-{level}` utilities for frosted
+//    backgrounds that adapt to both light & dark modes.
+// 2. Supports `variant="glass" | "glass-subtle" | "glass-elevated"` out-of-the-box.
+// 3. Ensures motion-respectful animations via `getMotionVariants()` helper.
+// -----------------------------------------------------------------------------
 
-import { cn } from "@/lib/utils"
-import { buttonVariants as unifiedButtonVariants } from "@/lib/design-system"
-import { typography } from "@/lib/typography"
+import * as React from "react";
+import { Slot } from "@radix-ui/react-slot";
+import { cva, type VariantProps } from "class-variance-authority";
+import { Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
+
+import { cn } from "@/lib/utils";
+import { buttonVariants as legacyVariants } from "@/lib/design-system";
+import { typography } from "@/lib/typography";
 import {
   getMotionVariants,
   subtleButtonHoverTap,
-  subtleReducedMotionButton
-} from "@/lib/motion" // Added motion imports
+  subtleReducedMotionButton,
+} from "@/lib/motion";
 
+// ─── Tailwind-powered variant factory ─────────────────────────────────────────
 const buttonVariants = cva(
-  cn(
-    "inline-flex items-center justify-center whitespace-nowrap rounded-lg",
-    typography.button
-  ),
+  cn("inline-flex items-center justify-center whitespace-nowrap rounded-lg", typography.button),
   {
     variants: {
       variant: {
-        // Primary variants
-        primary: unifiedButtonVariants.primary,
-        secondary: unifiedButtonVariants.secondary,
-        outline: unifiedButtonVariants.outline,
-        ghost: unifiedButtonVariants.ghost,
-        
-        // Status variants
-        success: unifiedButtonVariants.success,
-        warning: unifiedButtonVariants.warning,
-        error: unifiedButtonVariants.error,
-        info: unifiedButtonVariants.info,
-        
-        // Medical-specific variants
-        medical: unifiedButtonVariants.medical,
-        critical: unifiedButtonVariants.critical,
-        
-        // Legacy variants for backward compatibility
-        default: unifiedButtonVariants.primary,
-        destructive: unifiedButtonVariants.error,
+        // ------------------------------------------------------------------
+        // Brand / Status (inherit from legacy design-system for compatibility)
+        // ------------------------------------------------------------------
+        primary: legacyVariants.primary,
+        secondary: legacyVariants.secondary,
+        outline: legacyVariants.outline,
+        ghost: legacyVariants.ghost,
+        success: legacyVariants.success,
+        warning: legacyVariants.warning,
+        error: legacyVariants.error,
+        info: legacyVariants.info,
+        medical: legacyVariants.medical,
+        critical: legacyVariants.critical,
+
+        // ------------------------------------------------------------------
+        // Glassmorphism presets (use new Tailwind utilities)
+        // ------------------------------------------------------------------
+        "glass-subtle": cn("glass-subtle text-white/80"),
+        glass: cn("glass text-white"),
+        "glass-elevated": cn("glass-elevated text-white"),
+
+        // Legacy aliases ----------------------------------------------------
+        default: legacyVariants.primary,
+        destructive: legacyVariants.error,
         link: cn(typography.link, "text-white underline-offset-4 hover:underline"),
       },
       size: {
-        xs: 'h-6 px-2 text-xs',
-        sm: 'h-8 px-3 text-sm',
-        default: 'h-10 px-4 text-sm',
-        md: 'h-10 px-4 text-sm',
-        lg: 'h-12 px-6 text-base',
-        xl: 'h-14 px-8 text-lg',
+        xs: "h-6 px-2 text-xs",
+        sm: "h-8 px-3 text-sm",
+        default: "h-10 px-4 text-sm",
+        md: "h-10 px-4 text-sm",
+        lg: "h-12 px-6 text-base",
+        xl: "h-14 px-8 text-lg",
         icon: "h-10 w-10",
       },
     },
@@ -56,26 +68,42 @@ const buttonVariants = cva(
       variant: "default",
       size: "default",
     },
-  }
-)
+  },
+);
 
+// ─── Component Props ──────────────────────────────────────────────────────────
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
-  asChild?: boolean
-  loading?: boolean
+  asChild?: boolean;
+  loading?: boolean;
 }
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, loading = false, disabled, children, ...props }, ref) => {
-    // Determine the component type: Slot for composition, motion.button for animation
+// ─── Component ----------------------------------------------------------------
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    {
+      className,
+      variant,
+      size,
+      asChild = false,
+      loading = false,
+      disabled,
+      children,
+      ...props
+    },
+    ref,
+  ) => {
+    // When composing, we don’t attach Framer Motion props.
     const Comp = asChild ? Slot : motion.button;
-    // Get the appropriate animation variants based on user's reduced motion preference
-    const appliedVariants = getMotionVariants(subtleButtonHoverTap, subtleReducedMotionButton);
 
-    // If 'asChild' is true, Framer Motion props cannot be directly applied here.
-    // The parent component would be responsible for wrapping this component's child with `motion`
-    // if animations are desired on the child.
+    // Respect user reduced-motion preference.
+    const animationVariants = getMotionVariants(
+      subtleButtonHoverTap,
+      subtleReducedMotionButton,
+    );
+
+    // ── AS CHILD (no framer props) ───────────────────────────────────────────
     if (asChild) {
       return (
         <Comp
@@ -90,12 +118,13 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       );
     }
 
+    // ── DEFAULT (framer-powered) ────────────────────────────────────────────
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
         disabled={disabled || loading}
-        variants={appliedVariants}
+        variants={animationVariants as any}
         initial="initial"
         whileHover="hover"
         whileTap="tap"
@@ -105,9 +134,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
         {children}
       </Comp>
-    )
-  }
-)
-Button.displayName = "Button"
+    );
+  },
+);
+Button.displayName = "Button";
 
-export { Button, buttonVariants }
+export { buttonVariants };

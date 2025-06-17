@@ -1,47 +1,76 @@
-import * as React from "react"
-import { motion } from "framer-motion" // Added motion
-import { cn } from "@/lib/utils"
-import { cardVariants as unifiedCardVariants, componentSizes } from "@/lib/component-system"
+// -----------------------------------------------------------------------------
+// Card – Liquid Glass Edition
+// -----------------------------------------------------------------------------
+// 1. New `glass-*` variants tap into Tailwind utilities created in the updated
+//    config (glass-subtle | glass | glass-elevated).
+// 2. Framer Motion provides a gentle lift / shadow shift on hover + focus that
+//    respects user reduced-motion preferences.
+// 3. All legacy theme variants (primary, secondary, etc.) remain available via
+//    `unifiedCardVariants` so migrations are painless.
+// -----------------------------------------------------------------------------
+
+import * as React from "react";
+import { motion } from "framer-motion";
+import { cva, type VariantProps } from "class-variance-authority";
+
+import { cn } from "@/lib/utils";
+import {
+  cardVariants as legacyCardVariants,
+  componentSizes,
+} from "@/lib/component-system";
 import {
   getMotionVariants,
   subtleCardInteraction,
-  reducedMotionCardInteraction
-} from "@/lib/motion" // Added motion imports
+  reducedMotionCardInteraction,
+} from "@/lib/motion";
 
-const Card = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & {
-    variant?: keyof typeof unifiedCardVariants
-    // Consumers can pass standard motion props like 'whileHover', 'variants' etc. to override defaults if needed.
-  }
->(({ className, variant = "default", ...props }, ref) => {
-  // Get the appropriate animation variants based on user's reduced motion preference
-  const appliedVariants = getMotionVariants(subtleCardInteraction, reducedMotionCardInteraction);
+// ─── Tailwind CVA --------------------------------------------------------------
+const cardVariants = cva("rounded-xl w-full bg-transparent", {
+  variants: {
+    variant: {
+      ...legacyCardVariants,
+      // Glass presets ------------------------------------------------------
+      "glass-subtle": cn("glass-subtle"),
+      glass: cn("glass"),
+      "glass-elevated": cn("glass-elevated"),
+    },
+  },
+  defaultVariants: {
+    variant: "default",
+  },
+});
 
-  // The Card component is now a motion.div, applying subtle hover/focus animations
-  // if it's made interactive (e.g., by an onClick handler or by being focusable).
-  // These animations provide default feedback without requiring consumers to wrap Card in motion.div.
-  return (
-    <motion.div
-      ref={ref}
-      className={cn(
-        "rounded-xl", // Base styles from card.tsx
-        unifiedCardVariants[variant], // Theme styles from component-system (includes base shadow, bg, etc.)
-        className
-      )}
-      // Apply the subtle interaction variants for hover and focus states.
-      // Initial state is also defined in these variants.
-      variants={appliedVariants}
-      initial="initial"
-      whileHover="hover"
-      whileFocus="focus" // Card needs to be focusable (e.g. tabIndex="0") for whileFocus to trigger
-      {...props}
-    />
-  );
-})
-Card.displayName = "Card"
+// ─── Card Component -----------------------------------------------------------
+export interface CardProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof cardVariants> {
+  // Consumers may inject their own Framer Motion props (whileHover, etc.)
+}
 
-const CardHeader = React.forwardRef<
+export const Card = React.forwardRef<HTMLDivElement, CardProps>(
+  ({ className, variant, ...props }, ref) => {
+    const animationVariants = getMotionVariants(
+      subtleCardInteraction,
+      reducedMotionCardInteraction,
+    );
+
+    return (
+      <motion.div
+        ref={ref}
+        className={cn(cardVariants({ variant, className }))}
+        variants={animationVariants as any}
+        initial="initial"
+        whileHover="hover"
+        whileFocus="focus"
+        {...props}
+      />
+    );
+  },
+);
+Card.displayName = "Card";
+
+// ─── Sub-components -----------------------------------------------------------
+export const CardHeader = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
@@ -50,25 +79,22 @@ const CardHeader = React.forwardRef<
     className={cn("flex flex-col space-y-1.5", componentSizes.card.md, className)}
     {...props}
   />
-))
-CardHeader.displayName = "CardHeader"
+));
+CardHeader.displayName = "CardHeader";
 
-const CardTitle = React.forwardRef<
-  HTMLParagraphElement,
+export const CardTitle = React.forwardRef<
+  HTMLHeadingElement,
   React.HTMLAttributes<HTMLHeadingElement>
 >(({ className, ...props }, ref) => (
   <h3
     ref={ref}
-    className={cn(
-      "text-lg font-semibold text-white",
-      className
-    )}
+    className={cn("text-lg font-semibold text-white", className)}
     {...props}
   />
-))
-CardTitle.displayName = "CardTitle"
+));
+CardTitle.displayName = "CardTitle";
 
-const CardDescription = React.forwardRef<
+export const CardDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => (
@@ -77,18 +103,22 @@ const CardDescription = React.forwardRef<
     className={cn("text-sm text-white/70", className)}
     {...props}
   />
-))
-CardDescription.displayName = "CardDescription"
+));
+CardDescription.displayName = "CardDescription";
 
-const CardContent = React.forwardRef<
+export const CardContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("pt-0", componentSizes.card.md, className)} {...props} />
-))
-CardContent.displayName = "CardContent"
+  <div
+    ref={ref}
+    className={cn("pt-0", componentSizes.card.md, className)}
+    {...props}
+  />
+));
+CardContent.displayName = "CardContent";
 
-const CardFooter = React.forwardRef<
+export const CardFooter = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
@@ -97,7 +127,7 @@ const CardFooter = React.forwardRef<
     className={cn("flex items-center pt-0", componentSizes.card.md, className)}
     {...props}
   />
-))
-CardFooter.displayName = "CardFooter"
+));
+CardFooter.displayName = "CardFooter";
 
-export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
+export { cardVariants };

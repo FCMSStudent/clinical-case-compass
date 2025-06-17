@@ -1,133 +1,147 @@
+// -----------------------------------------------------------------------------
+// Motion Primitives – Liquid Glass Edition
+// -----------------------------------------------------------------------------
+// 1. Centralises common animation variants (fadeIn, glassEntrance, etc.) that
+//    read from the design-system motion tokens.
+// 2. Adds Tailwind-friendly utilities (`className="glass hover:animate-fadeIn"`) –
+//    consumers can still reach for these React abstractions when they need
+//    co-ordinated / staggered timelines.
+// 3. Respects reduced-motion preferences across the board.
+// -----------------------------------------------------------------------------
 
 import * as React from "react";
-import { motion, type Variants } from "framer-motion";
+import { motion, type Variants, useReducedMotion } from "framer-motion";
+
 import { cn } from "@/lib/utils";
-import { glassmorphicEntrance as libGlassmorphicEntrance } from "@/lib/motion"; // Import the source of truth
+import {
+  prefersReducedMotion,
+  glassmorphicEntrance as systemGlassEntrance,
+} from "@/lib/motion";
 
-// ────────────────────────────────────────────────────────────────────────────────
-// ANIMATION VARIANTS
-// ────────────────────────────────────────────────────────────────────────────────
-
-const animationVariants = {
+// ─── Variants ------------------------------------------------------------------
+export const animationVariants = {
   fadeIn: {
-    hidden: { opacity: 0, y: 20, scale: 0.95 },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
-      scale: 1, 
-      transition: { 
-        duration: 0.4, 
-        ease: [0.23, 1, 0.32, 1] 
-      } 
+    hidden: { opacity: 0, y: 24, scale: 0.96 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: { duration: 0.4, ease: [0.23, 1, 0.32, 1] },
     },
-    exit: { 
-      opacity: 0, 
-      y: -20, 
-      scale: 0.95, 
-      transition: { 
-        duration: 0.3, 
-        ease: "easeInOut" 
-      } 
+    exit: {
+      opacity: 0,
+      y: -24,
+      scale: 0.96,
+      transition: { duration: 0.3, ease: "easeInOut" },
     },
   } as Variants,
-  
-  // Use the imported glassmorphicEntrance from src/lib/motion.ts as the source of truth
-  glassmorphicEntrance: libGlassmorphicEntrance,
+  glassEntrance: systemGlassEntrance,
+} as const;
+
+// Helper – choose proper variant respecting user prefs -------------------------
+const pickVariants = (
+  variant: keyof typeof animationVariants,
+  reducedVariant?: Variants,
+): Variants => {
+  return prefersReducedMotion() && reducedVariant ? reducedVariant : animationVariants[variant];
 };
 
-// ────────────────────────────────────────────────────────────────────────────────
-// ANIMATION WRAPPER COMPONENTS
-// ────────────────────────────────────────────────────────────────────────────────
-
-interface AnimatedDivProps {
-  className?: string;
+// ─── Components ----------------------------------------------------------------
+export interface AnimatedDivProps
+  extends React.HTMLAttributes<HTMLDivElement> {
   variant?: keyof typeof animationVariants;
-  children: React.ReactNode;
   delay?: number;
   duration?: number;
 }
 
-const AnimatedDiv = React.forwardRef<HTMLDivElement, AnimatedDivProps>(
-  ({ className, variant = "fadeIn", children, delay = 0, duration }, ref) => {
-    const variants = animationVariants[variant];
-    
+export const AnimatedDiv = React.forwardRef<HTMLDivElement, AnimatedDivProps>(
+  (
+    {
+      className,
+      variant = "fadeIn",
+      delay = 0,
+      duration,
+      ...props
+    },
+    ref,
+  ) => {
+    const shouldReduce = useReducedMotion();
+    const selected = pickVariants(variant);
+
+    // Optional runtime duration override
+    if (duration && selected.visible && typeof selected.visible !== "string") {
+      selected.visible.transition = {
+        ...(selected.visible.transition as any),
+        duration,
+        delay,
+      };
+    }
+
     return (
       <motion.div
         ref={ref}
         className={cn(className)}
-        variants={variants}
+        variants={selected}
         initial="hidden"
         animate="visible"
         exit="exit"
-      >
-        {children}
-      </motion.div>
+        {...props}
+      />
     );
-  }
+  },
 );
 AnimatedDiv.displayName = "AnimatedDiv";
 
-// ────────────────────────────────────────────────────────────────────────────────
-// STAGGERED CONTAINER COMPONENT
-// ────────────────────────────────────────────────────────────────────────────────
-
-interface StaggeredContainerProps {
-  className?: string;
-  children: React.ReactNode;
+// ─── Staggered Container -------------------------------------------------------
+export interface StaggeredContainerProps
+  extends React.HTMLAttributes<HTMLDivElement> {
   staggerDelay?: number;
   delayChildren?: number;
 }
 
-const StaggeredContainer = React.forwardRef<HTMLDivElement, StaggeredContainerProps>(
-  ({ className, children, staggerDelay = 0.1, delayChildren = 0.2 }, ref) => {
-    const variants: Variants = {
-      hidden: { opacity: 0 },
-      visible: {
-        opacity: 1,
-        transition: {
-          staggerChildren: staggerDelay,
-          delayChildren,
-        },
+export const StaggeredContainer = React.forwardRef<
+  HTMLDivElement,
+  StaggeredContainerProps
+>(({ className, staggerDelay = 0.12, delayChildren = 0.2, ...props }, ref) => {
+  const variants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: staggerDelay,
+        delayChildren,
       },
-    };
+    },
+  };
 
-    return (
-      <motion.div
-        ref={ref}
-        className={cn(className)}
-        variants={variants}
-        initial="hidden"
-        animate="visible"
-      >
-        {children}
-      </motion.div>
-    );
-  }
-);
+  return (
+    <motion.div
+      ref={ref}
+      className={cn(className)}
+      variants={variants}
+      initial="hidden"
+      animate="visible"
+      {...props}
+    />
+  );
+});
 StaggeredContainer.displayName = "StaggeredContainer";
 
-// ────────────────────────────────────────────────────────────────────────────────
-// STAGGERED ITEM COMPONENT
-// ────────────────────────────────────────────────────────────────────────────────
-
-interface StaggeredItemProps {
-  className?: string;
-  children: React.ReactNode;
+// ─── Staggered Item ------------------------------------------------------------
+export interface StaggeredItemProps
+  extends React.HTMLAttributes<HTMLDivElement> {
   duration?: number;
 }
 
-const StaggeredItem = React.forwardRef<HTMLDivElement, StaggeredItemProps>(
-  ({ className, children, duration = 0.5 }, ref) => {
+export const StaggeredItem = React.forwardRef<HTMLDivElement, StaggeredItemProps>(
+  ({ className, duration = 0.5, ...props }, ref) => {
     const variants: Variants = {
-      hidden: { opacity: 0, y: 20, scale: 0.95 },
+      hidden: { opacity: 0, y: 24, scale: 0.96 },
       visible: {
         opacity: 1,
         y: 0,
         scale: 1,
-        transition: {
-          duration,
-          ease: [0.23, 1, 0.32, 1],
-        },
+        transition: { duration, ease: [0.23, 1, 0.32, 1] },
       },
     };
 
@@ -136,163 +150,116 @@ const StaggeredItem = React.forwardRef<HTMLDivElement, StaggeredItemProps>(
         ref={ref}
         className={cn(className)}
         variants={variants}
-      >
-        {children}
-      </motion.div>
+        {...props}
+      />
     );
-  }
+  },
 );
 StaggeredItem.displayName = "StaggeredItem";
 
-// ────────────────────────────────────────────────────────────────────────────────
-// GLASSY HOVER COMPONENT
-// ────────────────────────────────────────────────────────────────────────────────
-
-interface GlassyHoverProps {
-  className?: string;
-  children: React.ReactNode;
+// ─── Glassy Hover --------------------------------------------------------------
+export interface GlassyHoverProps
+  extends React.HTMLAttributes<HTMLDivElement> {
   intensity?: "subtle" | "medium" | "strong";
 }
 
-const GlassyHover = React.forwardRef<HTMLDivElement, GlassyHoverProps>(
-  ({ className, children, intensity = "medium" }, ref) => {
-    const hoverAnimation = {
-      scale: intensity === "subtle" ? 1.01 : intensity === "strong" ? 1.03 : 1.02,
-      filter: intensity === "subtle" ? "brightness(1.05)" : intensity === "strong" ? "brightness(1.15)" : "brightness(1.1)",
-    };
+const brightness = {
+  subtle: "brightness(1.05)",
+  medium: "brightness(1.1)",
+  strong: "brightness(1.15)",
+} as const;
 
-    return (
-      <motion.div
-        ref={ref}
-        className={cn(className)}
-        whileHover={hoverAnimation}
-        whileTap={{ scale: 0.98 }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
-      >
-        {children}
-      </motion.div>
-    );
-  }
+const scale = {
+  subtle: 1.01,
+  medium: 1.02,
+  strong: 1.03,
+} as const;
+
+export const GlassyHover = React.forwardRef<HTMLDivElement, GlassyHoverProps>(
+  ({ className, intensity = "medium", ...props }, ref) => (
+    <motion.div
+      ref={ref}
+      className={cn(className)}
+      whileHover={{ scale: scale[intensity], filter: brightness[intensity] }}
+      whileTap={{ scale: 0.97 }}
+      transition={{ duration: 0.28, ease: "easeOut" }}
+      {...props}
+    />
+  ),
 );
 GlassyHover.displayName = "GlassyHover";
 
-// ────────────────────────────────────────────────────────────────────────────────
-// FLOATING COMPONENT
-// ────────────────────────────────────────────────────────────────────────────────
-
-interface FloatingProps {
-  className?: string;
-  children: React.ReactNode;
+// ─── Floating ------------------------------------------------------------------
+export interface FloatingProps
+  extends React.HTMLAttributes<HTMLDivElement> {
   duration?: number;
   amplitude?: number;
 }
 
-const Floating = React.forwardRef<HTMLDivElement, FloatingProps>(
-  ({ className, children, duration = 4, amplitude = 5 }, ref) => {
-    return (
-      <motion.div
-        ref={ref}
-        className={cn(className)}
-        animate={{
-          y: [-amplitude, amplitude, -amplitude],
-        }}
-        transition={{
-          duration,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      >
-        {children}
-      </motion.div>
-    );
-  }
+export const Floating = React.forwardRef<HTMLDivElement, FloatingProps>(
+  ({ className, duration = 4, amplitude = 6, ...props }, ref) => (
+    <motion.div
+      ref={ref}
+      className={cn(className)}
+      animate={{ y: [-amplitude, amplitude, -amplitude] }}
+      transition={{ duration, repeat: Infinity, ease: "easeInOut" }}
+      {...props}
+    />
+  ),
 );
 Floating.displayName = "Floating";
 
-// ────────────────────────────────────────────────────────────────────────────────
-// PULSE GLOW COMPONENT
-// ────────────────────────────────────────────────────────────────────────────────
-
-interface PulseGlowProps {
-  className?: string;
-  children: React.ReactNode;
+// ─── Pulse Glow ---------------------------------------------------------------
+export interface PulseGlowProps
+  extends React.HTMLAttributes<HTMLDivElement> {
   color?: string;
   duration?: number;
 }
 
-const PulseGlow = React.forwardRef<HTMLDivElement, PulseGlowProps>(
-  ({ className, children, color = "rgba(255, 255, 255, 0.1)", duration = 2 }, ref) => {
-    return (
-      <motion.div
-        ref={ref}
-        className={cn(className)}
-        animate={{
-          boxShadow: [
-            `0 0 0 0 ${color}`,
-            `0 0 0 10px ${color.replace('0.1', '0.05')}`,
-            `0 0 0 0 ${color}`,
-          ],
-        }}
-        transition={{
-          duration,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      >
-        {children}
-      </motion.div>
-    );
-  }
+export const PulseGlow = React.forwardRef<HTMLDivElement, PulseGlowProps>(
+  (
+    { className, color = "rgba(255,255,255,0.12)", duration = 2, ...props },
+    ref,
+  ) => (
+    <motion.div
+      ref={ref}
+      className={cn(className)}
+      animate={{
+        boxShadow: [
+          `0 0 0 0 ${color}`,
+          `0 0 0 12px ${color.replace("0.12", "0.04")}`,
+          `0 0 0 0 ${color}`,
+        ],
+      }}
+      transition={{ duration, repeat: Infinity, ease: "easeInOut" }}
+      {...props}
+    />
+  ),
 );
 PulseGlow.displayName = "PulseGlow";
 
-// ────────────────────────────────────────────────────────────────────────────────
-// MEDICAL PULSE COMPONENT
-// ────────────────────────────────────────────────────────────────────────────────
-
-interface MedicalPulseProps {
-  className?: string;
-  children: React.ReactNode;
+// ─── Medical Pulse -------------------------------------------------------------
+export interface MedicalPulseProps
+  extends React.HTMLAttributes<HTMLDivElement> {
   duration?: number;
 }
 
-const MedicalPulse = React.forwardRef<HTMLDivElement, MedicalPulseProps>(
-  ({ className, children, duration = 2 }, ref) => {
-    return (
-      <motion.div
-        ref={ref}
-        className={cn(className)}
-        animate={{
-          scale: [1, 1.05, 1],
-          opacity: [0.8, 1, 0.8],
-        }}
-        transition={{
-          duration,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      >
-        {children}
-      </motion.div>
-    );
-  }
+export const MedicalPulse = React.forwardRef<HTMLDivElement, MedicalPulseProps>(
+  ({ className, duration = 2, ...props }, ref) => (
+    <motion.div
+      ref={ref}
+      className={cn(className)}
+      animate={{ scale: [1, 1.05, 1], opacity: [0.8, 1, 0.8] }}
+      transition={{ duration, repeat: Infinity, ease: "easeInOut" }}
+      {...props}
+    />
+  ),
 );
 MedicalPulse.displayName = "MedicalPulse";
 
-// ────────────────────────────────────────────────────────────────────────────────
-// EXPORTS
-// ────────────────────────────────────────────────────────────────────────────────
-
-export {
-  AnimatedDiv,
-  StaggeredContainer,
-  StaggeredItem,
-  GlassyHover,
-  Floating,
-  PulseGlow,
-  MedicalPulse,
-};
-
+// -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
 export type {
   AnimatedDivProps,
   StaggeredContainerProps,
