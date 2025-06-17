@@ -5,8 +5,8 @@ import {
   Activity,
   TrendingUp
 } from 'lucide-react';
+import { card } from "@/lib/components";
 import { 
-  card,
   animations
 } from '@/lib/design-system';
 

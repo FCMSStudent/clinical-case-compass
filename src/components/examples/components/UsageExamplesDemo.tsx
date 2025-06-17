@@ -2,9 +2,9 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { 
-  card,
   animations
 } from '@/lib/design-system';
+import { card } from "@/lib/components";
 
 export const UsageExamplesDemo: React.FC = () => {
   return (
