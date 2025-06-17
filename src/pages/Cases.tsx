@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import type { MedicalCase } from "@/types/case";
 import { CaseCard } from "@/features/cases/CaseCard";
 import { CaseListItem } from "@/features/cases/CaseListItem";
@@ -21,6 +21,7 @@ const Cases = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const { isOfflineMode } = useAuth();
+  const navigate = useNavigate();
 
   // Use Supabase hook for real-time case data
   const { cases, isLoading, error } = useSupabaseCases();
@@ -131,11 +132,12 @@ const Cases = () => {
               >
                 <List className="h-4 w-4" />
               </Button>
-              <Button asChild className="bg-white/20 border-white/30 text-white hover:bg-white/30">
-                <Link to="/cases/new">
-                  <Plus className="h-4 w-4 mr-2" />
-                  New Case
-                </Link>
+              <Button 
+                onClick={() => navigate("/cases/new")}
+                className="bg-white/20 border-white/30 text-white hover:bg-white/30"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                New Case
               </Button>
             </div>
           }
@@ -165,11 +167,12 @@ const Cases = () => {
               <p className={cn(typo.body, "text-white/70 mb-4")}>
                 {searchQuery ? "Try adjusting your search terms" : "Get started by creating your first case"}
               </p>
-              <Button asChild className="bg-white/20 border-white/30 text-white hover:bg-white/30">
-                <Link to="/cases/new">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Create New Case
-                </Link>
+              <Button 
+                onClick={() => navigate("/cases/new")}
+                className="bg-white/20 border-white/30 text-white hover:bg-white/30"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Create New Case
               </Button>
             </CardContent>
           </Card>
