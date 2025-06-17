@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { Plus, Search, Grid, List, BookOpen } from "lucide-react";
+import { Plus, Search, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -8,9 +8,8 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useNavigate } from "react-router-dom";
 import type { MedicalCase } from "@/types/case";
 import { CaseCard } from "@/features/cases/CaseCard";
-import { CaseListItem } from "@/features/cases/CaseListItem";
 import { PageHeader } from "@/components/ui/page-header";
-import { CaseGridSkeleton, CaseListSkeleton } from "@/features/cases/CaseCardSkeleton";
+import { CaseGridSkeleton } from "@/features/cases/CaseCardSkeleton";
 import { CasesErrorBoundary } from "@/features/cases/components/CasesErrorBoundary";
 import { useSupabaseCases } from "@/hooks/use-supabase-cases";
 import { useAuth } from "@/app/AuthContext";
@@ -19,7 +18,6 @@ import { cn } from "@/lib/utils";
 
 const Cases = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const { isOfflineMode } = useAuth();
   const navigate = useNavigate();
 
@@ -86,7 +84,7 @@ const Cases = () => {
             </Button>
           }
         />
-        {viewMode === "grid" ? <CaseGridSkeleton /> : <CaseListSkeleton />}
+        <CaseGridSkeleton />
       </div>
     );
   }
@@ -115,31 +113,13 @@ const Cases = () => {
           title="Clinical Cases"
           description="Manage and review your medical cases"
           actions={
-            <div className="flex items-center gap-2">
-              <Button
-                variant={viewMode === "grid" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setViewMode("grid")}
-                className="bg-white/20 border-white/30 text-white hover:bg-white/30"
-              >
-                <Grid className="h-4 w-4" />
-              </Button>
-              <Button
-                variant={viewMode === "list" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setViewMode("list")}
-                className="bg-white/20 border-white/30 text-white hover:bg-white/30"
-              >
-                <List className="h-4 w-4" />
-              </Button>
-              <Button 
-                onClick={() => navigate("/cases/new")}
-                className="bg-white/20 border-white/30 text-white hover:bg-white/30"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                New Case
-              </Button>
-            </div>
+            <Button 
+              onClick={() => navigate("/cases/new")}
+              className="bg-white/20 border-white/30 text-white hover:bg-white/30"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              New Case
+            </Button>
           }
         />
 
@@ -177,7 +157,7 @@ const Cases = () => {
             </CardContent>
           </Card>
         ) : (
-          <div className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "space-y-4"}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredCases.map((caseItem: MedicalCase) => {
               try {
                 // Add safety check for case item
@@ -188,11 +168,7 @@ const Cases = () => {
 
                 return (
                   <div key={caseItem.id}>
-                    {viewMode === "grid" ? (
-                      <CaseCard medicalCase={caseItem} />
-                    ) : (
-                      <CaseListItem medicalCase={caseItem} onDelete={() => {}} />
-                    )}
+                    <CaseCard medicalCase={caseItem} />
                   </div>
                 );
               } catch (renderError) {
