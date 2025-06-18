@@ -4,6 +4,7 @@ import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { card } from "@/lib/design-system"
 import { getGlassHoverVariants, getGlassTransitionVariants } from "@/lib/glass-effects"
+import { typography } from "@/lib/typography"
 
 const Card = React.forwardRef<
   HTMLDivElement,
@@ -56,7 +57,7 @@ const CardTitle = React.forwardRef<
   <h3
     ref={ref}
     className={cn(
-      "text-lg font-semibold text-white",
+      typography.h4,
       className
     )}
     {...props}
@@ -70,7 +71,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-sm text-white/70", className)}
+    className={cn(typography.body.small, className)}
     {...props}
   />
 ))

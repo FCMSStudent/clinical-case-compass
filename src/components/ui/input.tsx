@@ -14,11 +14,12 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 import { input } from "@/lib/design-system"
 import { getGlassHoverVariants } from "@/lib/glass-effects"
+import { typography } from "@/lib/typography"
 
 // ─── Tailwind variant generator ──────────────────────────────────────────────
 const inputVariants = cva(
   // Base styles - unified across all inputs with enhanced glass effects
-  "flex w-full rounded-lg text-sm font-medium transition-all duration-300 ease-out backdrop-blur-md",
+  cn("flex w-full rounded-lg transition-all duration-300 ease-out backdrop-blur-md", typography.body.default),
   {
     variants: {
       variant: {
@@ -79,9 +80,9 @@ const inputVariants = cva(
       size: {
         xs: 'h-6 px-2 text-xs',
         sm: 'h-8 px-3 text-sm',
-        md: 'h-10 px-4 text-sm',
-        lg: 'h-12 px-4 text-base',
-        xl: 'h-14 px-6 text-lg',
+        md: 'h-10 px-4 text-base md:text-lg',
+        lg: 'h-12 px-4 text-lg md:text-xl',
+        xl: 'h-14 px-6 text-xl md:text-2xl',
       },
     },
     defaultVariants: {

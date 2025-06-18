@@ -1,8 +1,7 @@
-
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
-import { typography } from "@/lib/typography"
+import { typography, accessible } from "@/lib/typography"
 
 const alertVariants = cva(
   "relative w-full rounded-xl border border-white/20 bg-white/10 backdrop-blur-xl p-4 [&>svg~*]:pl-7 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-white",
@@ -42,10 +41,15 @@ Alert.displayName = "Alert"
 const AlertTitle = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLHeadingElement>
->(({ className, ...props }, ref) => (
+>(({ className, variant, ...props }, ref) => (
   <h5
     ref={ref}
-    className={cn(typography.h6, "mb-1 text-white", className)}
+    className={cn(
+      typography.h6,
+      variant === 'destructive' && accessible.critical,
+      "mb-1 text-white",
+      className
+    )}
     {...props}
   />
 ))
