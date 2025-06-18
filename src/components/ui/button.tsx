@@ -1,34 +1,35 @@
-
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 import { Loader2 } from "lucide-react"
+import { motion } from "framer-motion"
 
 import { cn } from "@/lib/utils"
 import { buttonVariants as unifiedButtonVariants } from "@/lib/design-system"
 import { typography } from "@/lib/typography"
+import { getGlassHoverVariants } from "@/lib/glass-effects"
 
 const buttonVariants = cva(
   cn(
-    "inline-flex items-center justify-center whitespace-nowrap rounded-lg transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent disabled:pointer-events-none disabled:opacity-50",
+    "inline-flex items-center justify-center whitespace-nowrap rounded-lg transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:filter focus-visible:brightness-110 focus-visible:saturate-105 disabled:pointer-events-none disabled:opacity-50 backdrop-blur-md",
     typography.button
   ),
   {
     variants: {
       variant: {
-        // Primary variants
+        // Primary variants with enhanced glass effects
         primary: unifiedButtonVariants.primary,
         secondary: unifiedButtonVariants.secondary,
         outline: unifiedButtonVariants.outline,
         ghost: unifiedButtonVariants.ghost,
         
-        // Status variants
+        // Status variants with enhanced glass effects
         success: unifiedButtonVariants.success,
         warning: unifiedButtonVariants.warning,
         error: unifiedButtonVariants.error,
         info: unifiedButtonVariants.info,
         
-        // Medical-specific variants
+        // Medical-specific variants with enhanced glass effects
         medical: unifiedButtonVariants.medical,
         critical: unifiedButtonVariants.critical,
         
@@ -59,17 +60,24 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
   loading?: boolean
+  glassIntensity?: 'subtle' | 'medium' | 'strong'
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, loading = false, disabled, children, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button"
+  ({ className, variant, size, asChild = false, loading = false, disabled, children, glassIntensity = 'medium', ...props }, ref) => {
+    const Comp = asChild ? Slot : motion.button
+    const glassVariants = getGlassHoverVariants(glassIntensity)
     
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
         disabled={disabled || loading}
+        variants={glassVariants}
+        initial="initial"
+        whileHover="hover"
+        whileTap="tap"
+        whileFocus="focus"
         {...props}
       >
         {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

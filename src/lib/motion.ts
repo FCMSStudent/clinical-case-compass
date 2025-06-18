@@ -1,8 +1,115 @@
 /**
  * @file Centralized Framer Motion animation variants and utilities.
+ * Enhanced with Apple-inspired liquid glass animations.
  */
 import React from "react";
 import { motion, Variants, Transition, useMotionValue, useTransform, useSpring } from "framer-motion";
+
+// ────────────────────────────────────────────────────────────────────────────────
+// APPLE-INSPIRED ANIMATION TOKENS FOR LIQUID GLASS
+// ────────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Apple-inspired animation tokens for liquid glass effects
+ */
+export const motionTokens = {
+  // Apple's signature easing curves
+  glassEnter: "cubic-bezier(0.16, 1, 0.3, 1)", // Apple's easeOut
+  glassHover: "cubic-bezier(0.4, 0, 0.2, 1)",   // Smooth interactions
+  glassExit: "cubic-bezier(0.4, 0, 0.2, 1)",    // Consistent exit
+  
+  // Duration tokens
+  duration: {
+    instant: "150ms",
+    quick: "300ms",
+    smooth: "500ms",
+    fluid: "800ms",
+  },
+  
+  // Glass-specific animation variants
+  glass: {
+    // Subtle glass hover effects
+    hover: {
+      scale: 1.02,
+      filter: "brightness(1.05) saturate(1.1)",
+      transition: { duration: 0.3, ease: "cubic-bezier(0.4, 0, 0.2, 1)" }
+    },
+    
+    // Glass tap feedback
+    tap: {
+      scale: 0.98,
+      filter: "brightness(0.95)",
+      transition: { duration: 0.15, ease: "cubic-bezier(0.4, 0, 0.2, 1)" }
+    },
+    
+    // Glass focus state
+    focus: {
+      scale: 1.01,
+      filter: "brightness(1.1) saturate(1.05)",
+      boxShadow: "0 0 0 3px rgba(255, 255, 255, 0.3), 0 8px 32px rgba(0, 0, 0, 0.15)",
+      transition: { duration: 0.2, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }
+    },
+    
+    // Glass entrance animation
+    enter: {
+      opacity: 1,
+      scale: 1,
+      filter: "blur(0px)",
+      transition: { duration: 0.4, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }
+    },
+    
+    // Glass exit animation
+    exit: {
+      opacity: 0,
+      scale: 0.95,
+      filter: "blur(4px)",
+      transition: { duration: 0.3, ease: "cubic-bezier(0.4, 0, 0.2, 1)" }
+    },
+    
+    // Initial glass state
+    initial: {
+      opacity: 0,
+      scale: 0.95,
+      filter: "blur(4px)",
+    }
+  },
+  
+  // Micro-interactions for critical alerts
+  pulse: {
+    critical: {
+      scale: [1, 1.05, 1],
+      filter: ["brightness(1)", "brightness(1.2)", "brightness(1)"],
+      transition: { 
+        duration: 2, 
+        repeat: Infinity, 
+        ease: "easeInOut" 
+      }
+    },
+    
+    gentle: {
+      scale: [1, 1.02, 1],
+      filter: ["brightness(1)", "brightness(1.05)", "brightness(1)"],
+      transition: { 
+        duration: 3, 
+        repeat: Infinity, 
+        ease: "easeInOut" 
+      }
+    }
+  },
+  
+  // Parallax effects for depth layers
+  parallax: {
+    subtle: {
+      y: [0, -10],
+      transition: { duration: 0.8, ease: "easeOut" }
+    },
+    
+    medium: {
+      y: [0, -20],
+      transition: { duration: 1.2, ease: "easeOut" }
+    }
+  }
+} as const;
 
 // ────────────────────────────────────────────────────────────────────────────────
 // ENHANCED MOTION UTILITIES FOR GLASSY VISIONOS UI
@@ -33,60 +140,124 @@ export const useAdaptiveTinting = (scrollY: number | undefined) => {
 };
 
 /**
+ * Enhanced glass hover effects with Apple-inspired interactions
+ */
+export const glassHoverVariants: Variants = {
+  hover: {
+    scale: 1.02,
+    filter: "brightness(1.05) saturate(1.1)",
+    boxShadow: "0 12px 40px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.3)",
+    transition: { duration: 0.3, ease: motionTokens.glassHover }
+  },
+  tap: {
+    scale: 0.98,
+    filter: "brightness(0.95)",
+    transition: { duration: 0.15, ease: motionTokens.glassHover }
+  },
+  focus: {
+    scale: 1.01,
+    filter: "brightness(1.1) saturate(1.05)",
+    boxShadow: "0 0 0 3px rgba(255, 255, 255, 0.3), 0 8px 32px rgba(0, 0, 0, 0.15)",
+    transition: { duration: 0.2, ease: motionTokens.glassEnter }
+  },
+  initial: {
+    scale: 1,
+    filter: "brightness(1)",
+    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.2)",
+  }
+};
+
+/**
+ * Glass entrance and exit animations
+ */
+export const glassTransitionVariants: Variants = {
+  initial: {
+    opacity: 0,
+    scale: 0.95,
+    filter: "blur(4px)",
+  },
+  animate: {
+    opacity: 1,
+    scale: 1,
+    filter: "blur(0px)",
+    transition: { 
+      duration: 0.4, 
+      ease: motionTokens.glassEnter 
+    }
+  },
+  exit: {
+    opacity: 0,
+    scale: 0.95,
+    filter: "blur(4px)",
+    transition: { 
+      duration: 0.3, 
+      ease: motionTokens.glassExit 
+    }
+  }
+};
+
+/**
  * Defines subtle hover, tap, and focus animations for button components.
- * - `hover`: Slight scale up and brightness increase.
+ * Enhanced with Apple-inspired liquid glass effects.
+ * - `hover`: Slight scale up and brightness increase with enhanced glass effect.
  * - `tap`: Slight scale down and brightness decrease.
- * - `focus`: Adds a visible focus ring and subtle scale.
+ * - `focus`: Adds a visible focus ring and subtle scale with glass enhancement.
  * - `initial`: Sets base values for animated properties.
  */
 export const subtleButtonHoverTap: Variants = {
   hover: {
     scale: 1.03,
-    filter: "brightness(1.05)", // Slightly less intense than example
-    transition: { duration: 0.2, ease: "easeOut" }
+    filter: "brightness(1.05) saturate(1.1)",
+    boxShadow: "0 12px 40px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.3)",
+    transition: { duration: 0.3, ease: motionTokens.glassHover }
   },
   tap: {
     scale: 0.97,
-    filter: "brightness(0.95)", // Slightly less intense than example
-    transition: { duration: 0.1, ease: "easeIn" }
+    filter: "brightness(0.95)",
+    transition: { duration: 0.15, ease: motionTokens.glassHover }
   },
   focus: {
-    scale: 1.01, // Subtle scale on focus
-    boxShadow: "0 0 0 3px rgba(59, 130, 246, 0.4)", // Focus ring
-    transition: { duration: 0.2, ease: "easeOut" }
+    scale: 1.01,
+    filter: "brightness(1.1) saturate(1.05)",
+    boxShadow: "0 0 0 3px rgba(255, 255, 255, 0.3), 0 8px 32px rgba(0, 0, 0, 0.15)",
+    transition: { duration: 0.2, ease: motionTokens.glassEnter }
   },
-  initial: { // Ensure initial state is defined for all animated properties
+  initial: {
     scale: 1,
     filter: "brightness(1)",
-    boxShadow: "0 0 0 0 rgba(59, 130, 246, 0)", // Initial transparent boxShadow
+    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.2)",
   }
 };
 
 /**
  * Improved page transition variants with vertical movement and better easing
+ * Enhanced with glass blur effects
  */
 export const pageTransitionVariants: Variants = {
   initial: {
     opacity: 0,
-    y: 20, // Subtle upward movement instead of horizontal sliding
-    scale: 0.98, // Very subtle scale for smoother feel
+    y: 20,
+    scale: 0.98,
+    filter: "blur(4px)",
   },
   animate: {
     opacity: 1,
     y: 0,
     scale: 1,
+    filter: "blur(0px)",
     transition: { 
-      duration: 0.3, 
-      ease: [0.23, 1, 0.32, 1] // Smooth cubic-bezier easing
+      duration: 0.4, 
+      ease: motionTokens.glassEnter
     }
   },
   exit: {
     opacity: 0,
-    y: -10, // Subtle upward exit movement
+    y: -10,
     scale: 0.98,
+    filter: "blur(4px)",
     transition: { 
       duration: 0.3, 
-      ease: [0.23, 1, 0.32, 1] // Consistent easing
+      ease: motionTokens.glassExit
     }
   }
 };
