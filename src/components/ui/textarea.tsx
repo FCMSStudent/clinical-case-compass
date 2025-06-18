@@ -18,21 +18,19 @@ import {
   subtleInputInteraction,
   reducedMotionInputInteraction,
 } from "@/lib/motion";
+import { typography } from "@/lib/typography";
 
 // ─── Tailwind variant generator ──────────────────────────────────────────────
 const textareaVariants = cva(
   // Base styles - unified with Input component
-  "flex w-full rounded-lg text-sm font-medium transition-all duration-200 ease-out resize-none",
+  "flex w-full rounded-xl text-sm font-medium transition-all duration-200 ease-out resize-none",
   {
     variants: {
       variant: {
         // Default glassmorphic variant
         default: cn(
-          "bg-white/10 backdrop-blur-md border border-white/20",
-          "text-white placeholder:text-white/60",
-          "hover:bg-white/20 hover:border-white/30",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
-          "disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed"
+          "bg-white/10 backdrop-blur-[16px] saturate-130 brightness-105 border border-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:filter focus-visible:brightness-110 focus-visible:saturate-105 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/20 hover:border-white/30 transition-all duration-300 ease-out shadow-[0_2px_8px_rgba(0,0,0,0.04)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]",
+          typography.body.default
         ),
         
         // Subtle variant for less prominent textareas

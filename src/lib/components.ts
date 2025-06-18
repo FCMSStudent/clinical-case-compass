@@ -19,13 +19,13 @@ export const glass = {
   overlay: `backdrop-blur-xl border-white/25 bg-white/10 shadow-[0_16px_64px_rgba(0,0,0,0.1)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] backdrop-blur-[40px] saturate-180 contrast-110`,
   
   // Card variants with enhanced glass effects
-  card: `${glassmorphic} bg-white/8 rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] border backdrop-blur-[18px] saturate-140 brightness-106`,
-  cardElevated: `${glassmorphic} bg-white/12 rounded-xl shadow-[0_12px_48px_rgba(0,0,0,0.12)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] border backdrop-blur-[24px] saturate-160 brightness-108`,
+  card: `${glassmorphic} bg-white/8 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] border backdrop-blur-[18px] saturate-140 brightness-106`,
+  cardElevated: `${glassmorphic} bg-white/12 rounded-2xl shadow-[0_12px_48px_rgba(0,0,0,0.12)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] border backdrop-blur-[24px] saturate-160 brightness-108`,
   
   // Contextual glass variants
-  navigation: `${glassmorphic} bg-white/18 rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] border backdrop-blur-[24px] saturate-160 brightness-108`,
-  modal: `${glassmorphic} bg-white/25 rounded-xl shadow-[0_24px_80px_rgba(0,0,0,0.15)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] border backdrop-blur-[45px] saturate-190 contrast-112`,
-  alert: `${glassmorphic} bg-white/20 rounded-xl shadow-[0_12px_48px_rgba(0,0,0,0.12)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] border backdrop-blur-[30px] saturate-150 brightness-105`,
+  navigation: `${glassmorphic} bg-white/18 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] border backdrop-blur-[24px] saturate-160 brightness-108`,
+  modal: `${glassmorphic} bg-white/25 rounded-2xl shadow-[0_24px_80px_rgba(0,0,0,0.15)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] border backdrop-blur-[45px] saturate-190 contrast-112`,
+  alert: `${glassmorphic} bg-white/20 rounded-2xl shadow-[0_12px_48px_rgba(0,0,0,0.12)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] border backdrop-blur-[30px] saturate-150 brightness-105`,
   dropdown: `${glassmorphic} bg-white/15 rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] border backdrop-blur-[28px] saturate-170 brightness-107`,
   
   // Interactive glass variants with enhanced hover states
@@ -64,7 +64,7 @@ export const buttonVariants = {
 
 /** Button System with enhanced glass effects */
 export const button = {
-  base: `inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium 
+  base: `inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium 
          transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 
          focus-visible:ring-white/30 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent 
          focus-visible:filter focus-visible:brightness-110 focus-visible:saturate-105
@@ -86,7 +86,7 @@ export const button = {
 
 /** Input System with enhanced glass effects */
 export const input = {
-  base: `flex w-full rounded-lg text-sm text-white placeholder:text-white/60 
+  base: `flex w-full rounded-xl text-sm text-white placeholder:text-white/60 
          bg-white/10 backdrop-blur-[16px] saturate-130 brightness-105 border border-white/20 
          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 
          focus-visible:ring-offset-2 focus-visible:ring-offset-transparent 
@@ -104,7 +104,7 @@ export const input = {
 
 /** Card System with enhanced Apple-inspired glass effects */
 export const card = {
-  base: `backdrop-blur-md border border-white/20 transition-all duration-300 ease-out rounded-xl`,
+  base: `backdrop-blur-md border border-white/20 transition-all duration-300 ease-out rounded-2xl`,
   variant: {
     default: 'bg-white/8 backdrop-blur-[18px] saturate-140 brightness-106 shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]',
     elevated: 'bg-white/12 backdrop-blur-[24px] saturate-160 brightness-108 shadow-[0_12px_48px_rgba(0,0,0,0.12)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]',
