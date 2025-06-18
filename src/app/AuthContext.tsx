@@ -1,4 +1,3 @@
-
 import React, { createContext, useReducer, useEffect, useContext, useMemo, useCallback } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
@@ -25,6 +24,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { toast } = useToast();
 
   useEffect(() => {
+    console.log("[AuthProvider] Starting auth initialization");
+    
     // Check if we're in offline mode (missing Supabase credentials)
     const isCredentialsMissing = 
       import.meta.env.VITE_SUPABASE_URL === undefined || 
@@ -33,17 +34,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       import.meta.env.VITE_SUPABASE_ANON_KEY === "YOUR_SUPABASE_ANON_KEY";
 
     if (isCredentialsMissing) {
+      console.log("[AuthProvider] Running in offline mode - Supabase credentials not configured");
       dispatch({ type: 'SET_OFFLINE_MODE', payload: true });
-      console.warn("Running in offline mode - Supabase credentials not configured");
       return;
     }
+
+    console.log("[AuthProvider] Setting up Supabase auth listener");
 
     // Set up auth state listener first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, currentSession) => {
+        console.log("[AuthProvider] Auth state change:", { event, hasSession: !!currentSession });
         dispatch({ type: 'SET_SESSION', payload: currentSession });
         
         if (event === 'SIGNED_IN') {
+          console.log("[AuthProvider] User signed in");
           toast({
             title: "Signed in successfully",
             description: "Welcome to Clinical Case Compass",
@@ -51,6 +56,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
         
         if (event === 'SIGNED_OUT') {
+          console.log("[AuthProvider] User signed out");
           toast({
             title: "Signed out",
             description: "You have been signed out",
@@ -60,7 +66,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     );
 
     // Then check for existing session
-    supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
+    console.log("[AuthProvider] Checking for existing session");
+    supabase.auth.getSession().then(({ data: { session: currentSession }, error }) => {
+      if (error) {
+        console.error("[AuthProvider] Error getting session:", error);
+        dispatch({ type: 'SET_LOADING', payload: false });
+        return;
+      }
+
+      console.log("[AuthProvider] Session check complete:", { hasSession: !!currentSession });
       const initializedUser = currentSession?.user ?? null;
       dispatch({ 
         type: 'INITIALIZE_AUTH', 
@@ -71,17 +85,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         } 
       });
     }).catch((error) => {
-      console.error("Error getting session:", error);
+      console.error("[AuthProvider] Error getting session:", error);
+      // Always set loading to false, even on error
       dispatch({ type: 'SET_LOADING', payload: false });
     });
 
     return () => {
+      console.log("[AuthProvider] Cleaning up auth listener");
       subscription.unsubscribe();
     };
   }, [toast]); // `dispatch` is stable
 
   const signIn = useCallback(async (email: string, password: string) => {
     if (isOfflineMode) {
+      console.log("[AuthProvider] Sign in attempted in offline mode");
       toast({
         variant: "destructive",
         title: "Offline Mode",
@@ -91,10 +108,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     try {
+      console.log("[AuthProvider] Attempting sign in");
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
+      console.log("[AuthProvider] Sign in successful");
     } catch (error: unknown) {
       const err = error as Error;
+      console.error("[AuthProvider] Sign in failed:", err);
       toast({
         variant: "destructive",
         title: "Sign in failed",
@@ -106,6 +126,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signUp = useCallback(async (email: string, password: string, fullName?: string) => {
     if (isOfflineMode) {
+      console.log("[AuthProvider] Sign up attempted in offline mode");
       toast({
         variant: "destructive",
         title: "Offline Mode",
@@ -115,6 +136,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     try {
+      console.log("[AuthProvider] Attempting sign up");
       const { error } = await supabase.auth.signUp({
         email,
         password,
@@ -124,12 +146,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
       if (error) throw error;
 
+      console.log("[AuthProvider] Sign up successful");
       toast({
         title: "Account created",
         description: "Please check your email to verify your account",
       });
     } catch (error: unknown) {
       const err = error as Error;
+      console.error("[AuthProvider] Sign up failed:", err);
       toast({
         variant: "destructive",
         title: "Sign up failed",
@@ -145,9 +169,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     try {
+      console.log("[AuthProvider] Attempting sign out");
       await supabase.auth.signOut();
+      console.log("[AuthProvider] Sign out successful");
     } catch (error: unknown) {
       const err = error as Error;
+      console.error("[AuthProvider] Sign out failed:", err);
       toast({
         variant: "destructive",
         title: "Sign out failed",
@@ -214,16 +241,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [isOfflineMode, toast, user, dispatch]);
 
-  const value = useMemo(() => ({
-    session,
-    user,
-    loading,
-    isOfflineMode,
-    signIn,
-    signUp,
-    signOut,
-    updateProfile,
-  }), [session, user, loading, isOfflineMode, signIn, signUp, signOut, updateProfile]);
+  const value = useMemo(() => {
+    console.log("[AuthProvider] Context value:", { hasSession: !!session, hasUser: !!user, loading, isOfflineMode });
+    return {
+      session,
+      user,
+      loading,
+      isOfflineMode,
+      signIn,
+      signUp,
+      signOut,
+      updateProfile,
+    };
+  }, [session, user, loading, isOfflineMode, signIn, signUp, signOut, updateProfile]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
