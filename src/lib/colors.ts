@@ -64,7 +64,7 @@ export interface GlassSystem {
   background: string;
   border: string;
   shadow: string;
-  backdrop: string;
+  backdropFilter: string;
   
   // Apple-inspired enhancements
   subtle: string; // For layered elements
@@ -145,7 +145,7 @@ export const themeColors: Record<string, ThemeColors> = {
       background: "rgba(255, 255, 255, 0.1)",
       border: "rgba(255, 255, 255, 0.2)",
       shadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
-      backdrop: "blur(20px)",
+      backdropFilter: "blur(20px)",
       
       // Apple-inspired enhancements
       subtle: "rgba(255, 255, 255, 0.05)",
@@ -211,7 +211,7 @@ export const themeColors: Record<string, ThemeColors> = {
       background: "rgba(255, 255, 255, 0.1)",
       border: "rgba(255, 255, 255, 0.2)",
       shadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
-      backdrop: "blur(20px)",
+      backdropFilter: "blur(20px)",
       
       // Apple-inspired enhancements
       subtle: "rgba(255, 255, 255, 0.05)",
@@ -277,7 +277,7 @@ export const themeColors: Record<string, ThemeColors> = {
       background: "rgba(255, 255, 255, 0.1)",
       border: "rgba(255, 255, 255, 0.2)",
       shadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
-      backdrop: "blur(20px)",
+      backdropFilter: "blur(20px)",
       
       // Apple-inspired enhancements
       subtle: "rgba(255, 255, 255, 0.05)",
@@ -343,7 +343,7 @@ export const getGradientStyles = (themeColors: ThemeColors, type: "primary" | "s
 export const getGlassmorphicColorStyles = (themeColors: ThemeColors, variant: "default" | "elevated" | "subtle" | "light" | "navigation" | "modal" | "card" | "alert" = "default") => {
   const baseStyles = {
     backgroundColor: themeColors.glass.background,
-    backdropFilter: themeColors.glass.backdrop,
+    backdropFilter: themeColors.glass.backdropFilter,
     border: themeColors.glass.border,
     boxShadow: themeColors.glass.shadow,
   };

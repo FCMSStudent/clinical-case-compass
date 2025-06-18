@@ -157,9 +157,10 @@ export const EnhancedIcon = React.forwardRef<SVGSVGElement, EnhancedIconProps>(
     interactive = false,
     ...props 
   }, ref) => {
+    // Only pass valid SVG props to Icon
+    const { animation: _animation, showStateTransition: _showStateTransition, interactive: _interactive, ...svgProps } = props;
     const IconComponent = (
       <Icon
-        ref={ref}
         className={cn(
           ICON_SIZES[size],
           ICON_WEIGHTS[weight],
@@ -168,7 +169,7 @@ export const EnhancedIcon = React.forwardRef<SVGSVGElement, EnhancedIconProps>(
           interactive && "cursor-pointer",
           className
         )}
-        {...props}
+        {...svgProps}
       />
     );
 
