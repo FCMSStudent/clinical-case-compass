@@ -1,8 +1,8 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom"; // Added useLocation
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/sonner";
-import { AnimatePresence } from "framer-motion"; // Added AnimatePresence
+import { AnimatePresence } from "framer-motion";
 import { AuthProvider, useAuth } from "./AuthContext";
 import { ThemeProvider } from "@/lib/design-system";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
@@ -41,38 +41,19 @@ const queryClient = new QueryClient({
   },
 });
 
-const AppContent = () => {
-  console.log('AppContent rendering');
-  
-  // Temporary simplified version
-  return (
-    <div className="p-8 text-white bg-black min-h-screen">
-      <h1>App Test</h1>
-      <p>If you can see this, the app is rendering.</p>
-    </div>
-  );
-};
-
-// New component to handle location and AnimatePresence for page transitions.
-// This component uses `useLocation` to get the current route and provides it to `AnimatePresence`
-// and `Routes`. The `key` on `Routes` ensures `AnimatePresence` detects route changes.
+// Component to handle location and AnimatePresence for page transitions
 const AppRoutes = () => {
   const location = useLocation();
-  const { session } = useAuth(); // Used to determine route elements.
+  const { session } = useAuth();
 
   return (
-    // AnimatePresence enables the animation of components that are mounted or unmounted.
-    // `mode="wait"` ensures that the outgoing component finishes its exit animation
-    // before the new component enters.
     <AnimatePresence mode="wait">
-      {/* The `location` prop is passed to `Routes` so it works correctly with `AnimatePresence`. */}
-      {/* `key={location.pathname}` is crucial for `AnimatePresence` to differentiate between routes. */}
       <Routes location={location} key={location.pathname}>
-        {/* Public Routes - Page components (LandingPage, Auth) are motion-enhanced for transitions. */}
+        {/* Public Routes */}
         <Route path="/landing" element={<LandingPage />} />
         <Route path="/auth" element={session ? <Navigate to="/dashboard" replace /> : <Auth />} />
         
-        {/* Protected routes - EnhancedAppLayout will be modified to be a motion component */}
+        {/* Protected routes */}
         <Route
           path="/dashboard"
           element={
@@ -152,7 +133,9 @@ const App = () => {
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
           <AuthProvider>
-            <AppContent />
+            <Router>
+              <AppRoutes />
+            </Router>
             <Toaster position="top-right" />
           </AuthProvider>
         </ThemeProvider>
