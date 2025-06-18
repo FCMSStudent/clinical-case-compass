@@ -1,9 +1,9 @@
 
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom"; // Added useLocation
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/sonner";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion"; // Added AnimatePresence
 import { AuthProvider, useAuth } from "./AuthContext";
 import { ThemeProvider } from "@/lib/design-system";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
@@ -43,21 +43,13 @@ const queryClient = new QueryClient({
 });
 
 const AppContent = () => {
-  const { session, loading, isOfflineMode } = useAuth();
+  const { session, loading } = useAuth();
 
-  console.log("[AppContent] Auth state:", { 
-    hasSession: !!session, 
-    loading, 
-    isOfflineMode,
-    sessionUser: session?.user?.email 
-  });
+  console.log("[App] Auth state:", { session: !!session, loading });
 
   if (loading) {
-    console.log("[AppContent] Showing loading screen");
     return <LoadingScreen />;
   }
-
-  console.log("[AppContent] Rendering router with session:", !!session);
 
   return (
     <Router>
@@ -67,33 +59,25 @@ const AppContent = () => {
 };
 
 // New component to handle location and AnimatePresence for page transitions.
+// This component uses `useLocation` to get the current route and provides it to `AnimatePresence`
+// and `Routes`. The `key` on `Routes` ensures `AnimatePresence` detects route changes.
 const AppRoutes = () => {
   const location = useLocation();
-  const { session } = useAuth();
-
-  console.log("[AppRoutes] Current location:", location.pathname, "Has session:", !!session);
+  const { session } = useAuth(); // Used to determine route elements.
 
   return (
+    // AnimatePresence enables the animation of components that are mounted or unmounted.
+    // `mode="wait"` ensures that the outgoing component finishes its exit animation
+    // before the new component enters.
     <AnimatePresence mode="wait">
+      {/* The `location` prop is passed to `Routes` so it works correctly with `AnimatePresence`. */}
+      {/* `key={location.pathname}` is crucial for `AnimatePresence` to differentiate between routes. */}
       <Routes location={location} key={location.pathname}>
-        {/* Public Routes */}
+        {/* Public Routes - Page components (LandingPage, Auth) are motion-enhanced for transitions. */}
         <Route path="/landing" element={<LandingPage />} />
-        <Route 
-          path="/auth" 
-          element={session ? (
-            <>
-              {console.log("[AppRoutes] Redirecting authenticated user from /auth to /dashboard")}
-              <Navigate to="/dashboard" replace />
-            </>
-          ) : (
-            <>
-              {console.log("[AppRoutes] Showing auth page to unauthenticated user")}
-              <Auth />
-            </>
-          )} 
-        />
+        <Route path="/auth" element={session ? <Navigate to="/dashboard" replace /> : <Auth />} />
         
-        {/* Protected routes */}
+        {/* Protected routes - EnhancedAppLayout will be modified to be a motion component */}
         <Route
           path="/dashboard"
           element={
@@ -149,20 +133,7 @@ const AppRoutes = () => {
             </ProtectedRouteLayout>
           }
         />
-        <Route 
-          path="/" 
-          element={session ? (
-            <>
-              {console.log("[AppRoutes] Redirecting authenticated user from / to /dashboard")}
-              <Navigate to="/dashboard" replace />
-            </>
-          ) : (
-            <>
-              {console.log("[AppRoutes] Redirecting unauthenticated user from / to /landing")}
-              <Navigate to="/landing" replace />
-            </>
-          )} 
-        />
+        <Route path="/" element={session ? <Navigate to="/dashboard" replace /> : <Navigate to="/landing" replace />} />
         <Route
           path="*"
           element={
@@ -171,10 +142,7 @@ const AppRoutes = () => {
                 <NotFound />
               </ProtectedRouteLayout>
             ) : (
-              <>
-                {console.log("[AppRoutes] Redirecting unauthenticated user from unknown route to /landing")}
-                <Navigate to="/landing" replace />
-              </>
+              <Navigate to="/landing" replace />
             )
           }
         />
@@ -184,8 +152,6 @@ const AppRoutes = () => {
 };
 
 const App = () => {
-  console.log("[App] App component mounting");
-  
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>

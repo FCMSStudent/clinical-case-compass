@@ -11,12 +11,12 @@ import { MetricCardSkeleton } from "@/components/ui/dashboard-skeleton";
 import { DynamicRecentActivity } from "@/features/dashboard/components/DynamicRecentActivity";
 import { RecentCasesCarousel } from "@/components/ui/recent-cases-carousel";
 import { 
+  animations, 
   getComponentStyles, 
+  card, 
   button, 
   useTheme 
 } from "@/lib/design-system";
-import { card } from "@/lib/components";
-import { animations } from "@/lib/animations";
 import { typo, responsiveType } from "@/lib/typography";
 import { cn } from "@/lib/utils";
 
