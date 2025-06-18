@@ -1,14 +1,7 @@
+
 // -----------------------------------------------------------------------------
 // Motion Primitives – Liquid Glass Edition
 // -----------------------------------------------------------------------------
-// 1. Centralises common animation variants (fadeIn, glassEntrance, etc.) that
-//    read from the design-system motion tokens.
-// 2. Adds Tailwind-friendly utilities (`className="glass hover:animate-fadeIn"`) –
-//    consumers can still reach for these React abstractions when they need
-//    co-ordinated / staggered timelines.
-// 3. Respects reduced-motion preferences across the board.
-// -----------------------------------------------------------------------------
-
 import * as React from "react";
 import { motion, type Variants, useReducedMotion } from "framer-motion";
 
@@ -35,7 +28,7 @@ export const animationVariants = {
       transition: { duration: 0.3, ease: "easeInOut" },
     },
   } as Variants,
-  glassEntrance: systemGlassEntrance,
+  glassmorphicEntrance: systemGlassEntrance,
 } as const;
 
 // Helper – choose proper variant respecting user prefs -------------------------
@@ -48,7 +41,7 @@ const pickVariants = (
 
 // ─── Components ----------------------------------------------------------------
 export interface AnimatedDivProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onDrag'> {
   variant?: keyof typeof animationVariants;
   delay?: number;
   duration?: number;
@@ -68,20 +61,29 @@ export const AnimatedDiv = React.forwardRef<HTMLDivElement, AnimatedDivProps>(
     const shouldReduce = useReducedMotion();
     const selected = pickVariants(variant);
 
-    // Optional runtime duration override
-    if (duration && selected.visible && typeof selected.visible !== "string") {
-      selected.visible.transition = {
-        ...(selected.visible.transition as any),
-        duration,
-        delay,
-      };
-    }
+    // Create a copy for duration override
+    const variants = React.useMemo(() => {
+      if (duration && selected.visible && typeof selected.visible === 'object') {
+        return {
+          ...selected,
+          visible: {
+            ...selected.visible,
+            transition: {
+              ...(selected.visible as any).transition,
+              duration,
+              delay,
+            },
+          },
+        };
+      }
+      return selected;
+    }, [selected, duration, delay]);
 
     return (
       <motion.div
         ref={ref}
         className={cn(className)}
-        variants={selected}
+        variants={variants}
         initial="hidden"
         animate="visible"
         exit="exit"
@@ -94,7 +96,7 @@ AnimatedDiv.displayName = "AnimatedDiv";
 
 // ─── Staggered Container -------------------------------------------------------
 export interface StaggeredContainerProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onDrag'> {
   staggerDelay?: number;
   delayChildren?: number;
 }
@@ -129,7 +131,7 @@ StaggeredContainer.displayName = "StaggeredContainer";
 
 // ─── Staggered Item ------------------------------------------------------------
 export interface StaggeredItemProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onDrag'> {
   duration?: number;
 }
 
@@ -159,7 +161,7 @@ StaggeredItem.displayName = "StaggeredItem";
 
 // ─── Glassy Hover --------------------------------------------------------------
 export interface GlassyHoverProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onDrag'> {
   intensity?: "subtle" | "medium" | "strong";
 }
 
@@ -191,7 +193,7 @@ GlassyHover.displayName = "GlassyHover";
 
 // ─── Floating ------------------------------------------------------------------
 export interface FloatingProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onDrag'> {
   duration?: number;
   amplitude?: number;
 }
@@ -211,7 +213,7 @@ Floating.displayName = "Floating";
 
 // ─── Pulse Glow ---------------------------------------------------------------
 export interface PulseGlowProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onDrag'> {
   color?: string;
   duration?: number;
 }
@@ -240,7 +242,7 @@ PulseGlow.displayName = "PulseGlow";
 
 // ─── Medical Pulse -------------------------------------------------------------
 export interface MedicalPulseProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onDrag'> {
   duration?: number;
 }
 
@@ -256,16 +258,3 @@ export const MedicalPulse = React.forwardRef<HTMLDivElement, MedicalPulseProps>(
   ),
 );
 MedicalPulse.displayName = "MedicalPulse";
-
-// -----------------------------------------------------------------------------
-// Exports
-// -----------------------------------------------------------------------------
-export type {
-  AnimatedDivProps,
-  StaggeredContainerProps,
-  StaggeredItemProps,
-  GlassyHoverProps,
-  FloatingProps,
-  PulseGlowProps,
-  MedicalPulseProps,
-};

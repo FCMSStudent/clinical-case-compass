@@ -1,51 +1,35 @@
+
 // -----------------------------------------------------------------------------
 // Bento Card – Liquid Glass Edition
 // -----------------------------------------------------------------------------
-// * Wraps the updated `cardVariants` so any card can render as a bento tile.
-// * Adds `surface` prop (none | glass-subtle | glass | glass-elevated) to align
-//   with the rest of the system.
-// * Supports `layout` presets from `bentoGrid.layouts` for grid span control.
-// -----------------------------------------------------------------------------
-
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
-import { cardVariants } from "@/components/ui/card";
 import { bentoGrid, componentSizes } from "@/lib/component-system";
-
-// Helper merge ---------------------------------------------------------------
-const merge = <T extends Record<string, string>>(a: T, b: Partial<T>): T =>
-  ({ ...a, ...b }) as T;
 
 // Variants --------------------------------------------------------------------
 const bentoCardVariants = cva("flex flex-col", {
   variants: {
     layout: bentoGrid.layouts,
-    surface: merge(
-      {
-        none: "",
-      },
-      {
-        "glass-subtle": "glass-subtle",
-        glass: "glass",
-        "glass-elevated": "glass-elevated",
-      },
-    ),
-    card: cardVariants.variants.variant!, // pull keys from existing cardVariants
+    surface: {
+      none: "",
+      "glass-subtle": "glass-subtle",
+      glass: "glass",
+      "glass-elevated": "glass-elevated",
+    },
+    variant: {
+      default: "glass backdrop-blur-lg border border-white/20",
+      elevated: "glass-elevated backdrop-blur-lg border border-white/30",
+      subtle: "glass-subtle backdrop-blur-md border border-white/10",
+    },
   },
   defaultVariants: {
     layout: "medium",
     surface: "none",
-    card: "default",
+    variant: "default",
   },
 });
-
-type LayoutKey = keyof typeof bentoGrid.layouts;
-
-type SurfaceKey = "none" | "glass-subtle" | "glass" | "glass-elevated";
-
-type CardKey = Parameters<typeof cardVariants>[0]["variant"];
 
 export interface BentoCardProps
   extends React.HTMLAttributes<HTMLDivElement>,
@@ -61,7 +45,7 @@ export const BentoCard = React.forwardRef<HTMLDivElement, BentoCardProps>(
       className,
       layout,
       surface,
-      card = "default",
+      variant = "default",
       icon,
       title,
       subtitle,
@@ -72,7 +56,7 @@ export const BentoCard = React.forwardRef<HTMLDivElement, BentoCardProps>(
   ) => (
     <div
       ref={ref}
-      className={cn(bentoCardVariants({ layout, surface, card, className }), componentSizes.card.md)}
+      className={cn(bentoCardVariants({ layout, surface, variant, className }), componentSizes.card.md)}
       {...props}
     >
       {/* Header ------------------------------------------------------------ */}
