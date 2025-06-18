@@ -1,340 +1,372 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Search, Menu, X, Home, BookOpen, ChevronDown, User, LogOut } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useNavigate, NavLink, useLocation } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { useSupabaseCases } from "@/hooks/use-supabase-cases";
-import { useAuth } from "@/app/AuthContext";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import type { MedicalCase } from "@/types/case";
+// -----------------------------------------------------------------------------
+// Enhanced Navbar – Liquid Glass Edition
+// -----------------------------------------------------------------------------
+// * Frosted surface (`glass`) with subtle border + shadow that adapts to dark
+//   and light themes.
+// * Animations powered by Framer Motion, respecting reduced-motion prefs.
+// * Desktop, tablet, and mobile layouts consolidated into one responsive
+//   component – no duplication of markup.
+// * Pulls design-system primitives (Card, Button, Input) for consistent styling.
+// -----------------------------------------------------------------------------
 
-const NAV_ITEMS = [
+import * as React from "react";
+import {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  MutableRefObject,
+} from "react";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+
+import {
+  Search,
+  Menu,
+  X,
+  Home,
+  BookOpen,
+  User,
+  ChevronDown,
+  LogOut,
+} from "lucide-react";
+
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+
+import { cn } from "@/lib/utils";
+import { useAuth } from "@/app/AuthContext";
+import { useSupabaseCases } from "@/hooks/use-supabase-cases";
+
+// -----------------------------------------------------------------------------
+// Constants --------------------------------------------------------------------
+const NAV = [
   { label: "Dashboard", to: "/dashboard", icon: Home },
   { label: "Cases", to: "/cases", icon: BookOpen },
-];
+] as const;
 
-interface SearchResult {
+type SearchResult = {
   id: string;
   title: string;
-  type: 'case' | 'patient';
   subtitle?: string;
   path: string;
+};
+
+// -----------------------------------------------------------------------------
+// Animation helpers ------------------------------------------------------------
+const dropdownVariants = {
+  hidden: { opacity: 0, y: -8 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.18, ease: [0.23, 1, 0.32, 1] } },
+  exit: { opacity: 0, y: -8, transition: { duration: 0.12, ease: "easeInOut" } },
+};
+
+const mobileMenuVariants = {
+  hidden: { opacity: 0, height: 0 },
+  visible: {
+    opacity: 1,
+    height: "auto",
+    transition: { duration: 0.22, ease: [0.23, 1, 0.32, 1] },
+  },
+  exit: { opacity: 0, height: 0, transition: { duration: 0.15, ease: "easeInOut" } },
+};
+
+// -----------------------------------------------------------------------------
+// Hook – click outside ---------------------------------------------------------
+function useClickOutside<T extends HTMLElement>(
+  ref: MutableRefObject<T | null>,
+  cb: () => void,
+) {
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) cb();
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [cb, ref]);
 }
 
-const EnhancedNavbar: React.FC = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  
+// -----------------------------------------------------------------------------
+// Component --------------------------------------------------------------------
+export const EnhancedNavbar: React.FC = () => {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [userOpen, setUserOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [q, setQ] = useState("");
+  const [results, setResults] = useState<SearchResult[]>([]);
+
   const navigate = useNavigate();
   const location = useLocation();
   const { user, signOut } = useAuth();
-  const searchRef = useRef<HTMLDivElement>(null);
-  const userMenuRef = useRef<HTMLDivElement>(null);
-
-  // Fetch cases for search
   const { cases } = useSupabaseCases();
 
-  // Debounced search effect
+  const searchRef = useRef<HTMLDivElement>(null);
+  const userRef = useRef<HTMLDivElement>(null);
+
+  useClickOutside(searchRef, () => setSearchOpen(false));
+  useClickOutside(userRef, () => setUserOpen(false));
+
+  // Debounced search ---------------------------------------------------------
   useEffect(() => {
-    if (!searchQuery.trim() || !cases) {
-      setSearchResults([]);
+    if (!q.trim()) {
+      setResults([]);
       return;
     }
-
-    const timeoutId = setTimeout(() => {
-      const filtered = cases
-        .filter(caseItem => 
-          caseItem.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          caseItem.patient?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          caseItem.chiefComplaint?.toLowerCase().includes(searchQuery.toLowerCase())
+    const id = setTimeout(() => {
+      const subset = cases
+        ?.filter((c) =>
+          [c.title, c.patient?.name, c.chiefComplaint]
+            .filter(Boolean)
+            .some((v) => v!.toLowerCase().includes(q.toLowerCase())),
         )
-        .slice(0, 5)
-        .map(caseItem => ({
-          id: caseItem.id,
-          title: caseItem.title,
-          type: 'case' as const,
-          subtitle: `${caseItem.patient?.name ?? ""} - ${caseItem.chiefComplaint ?? ""}`,
-          path: `/cases/${caseItem.id}`
-        }));
+        .slice(0, 6)
+        .map((c) => ({
+          id: c.id,
+          title: c.title,
+          subtitle: `${c.patient?.name ?? ""} – ${c.chiefComplaint ?? ""}`,
+          path: `/cases/${c.id}`,
+        })) ?? [];
+      setResults(subset);
+    }, 250);
+    return () => clearTimeout(id);
+  }, [q, cases]);
 
-      setSearchResults(filtered);
-    }, 300);
-
-    return () => clearTimeout(timeoutId);
-  }, [searchQuery, cases]);
-
-  // Click outside handlers
+  // Esc key -------------------------------------------------------------------
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
-        setIsSearchFocused(false);
-      }
-      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
-        setIsUserMenuOpen(false);
+    const esc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setMobileOpen(false);
+        setUserOpen(false);
+        setSearchOpen(false);
       }
     };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("keydown", esc);
+    return () => document.removeEventListener("keydown", esc);
   }, []);
 
-  // Escape key handler
-  useEffect(() => {
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setIsSearchFocused(false);
-        setIsMobileMenuOpen(false);
-        setIsUserMenuOpen(false);
-      }
-    };
+  // Helpers -------------------------------------------------------------------
+  const displayName =
+    user?.user_metadata?.full_name ?? user?.email?.split("@")[0] ?? "User";
 
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, []);
-
-  const handleSearchResultClick = (result: SearchResult) => {
-    navigate(result.path);
-    setIsSearchFocused(false);
-    setSearchQuery("");
-  };
+  const isReduced = useReducedMotion();
 
   const handleSignOut = async () => {
     try {
       await signOut();
-      setIsUserMenuOpen(false);
-      navigate('/auth');
-    } catch (error) {
-      console.error('Error signing out:', error);
-      // Still redirect to auth page even if signOut fails
-      navigate('/auth');
+    } finally {
+      setUserOpen(false);
+      navigate("/auth");
     }
   };
 
-  const getUserDisplayName = () => {
-    return user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'User';
-  };
-
+  // -------------------------------------------------------------------------
+  // JSX ----------------------------------------------------------------------
   return (
-    <nav className="w-full bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl">
+    <Card variant="glass" className="w-full">
       <div className="px-6">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center">
-            <NavLink to="/dashboard" className="text-2xl font-bold text-white transition-colors">
-              Medica
-            </NavLink>
-          </div>
+          <NavLink to="/dashboard" className="text-2xl font-bold text-white">
+            Medica
+          </NavLink>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            {NAV_ITEMS.map((item) => {
-              const isActive = location.pathname === item.to;
+          {/* Desktop Nav */}
+          <div className="hidden items-center space-x-8 md:flex">
+            {NAV.map(({ label, to, icon: Icon }) => {
+              const active = location.pathname === to;
               return (
                 <NavLink
-                  key={item.to}
-                  to={item.to}
+                  key={to}
+                  to={to}
                   className={cn(
-                    "flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200",
-                    "text-white/80",
-                    isActive 
-                      ? "bg-white/20 text-white shadow-sm" 
-                      : "text-white/80"
+                    "flex items-center space-x-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                    active ? "bg-white/20 text-white" : "text-white/80 hover:text-white",
                   )}
                 >
-                  <item.icon className="h-4 w-4" />
-                  <span>{item.label}</span>
+                  <Icon className="h-4 w-4" />
+                  <span>{label}</span>
                 </NavLink>
               );
             })}
           </div>
 
-          {/* Search Bar */}
-          <div 
+          {/* Search */}
+          <div
             ref={searchRef}
             className={cn(
-              "relative transition-all duration-300 ease-out hidden md:block",
-              isSearchFocused ? "w-80" : "w-64"
+              "relative hidden transition-[width] duration-300 md:block",
+              searchOpen ? "w-80" : "w-64",
             )}
           >
-            <div className="relative">
-              <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
-              <div className="relative flex items-center">
-                <Search className="h-4 w-4 text-white/70 absolute left-3 top-1/2 -translate-y-1/2" />
-                <input
-                  type="text"
-                  placeholder="Search cases, patients..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onFocus={() => setIsSearchFocused(true)}
-                  className="bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 pl-10 pr-4 py-2 rounded-xl text-sm focus:outline-none w-full"
-                />
-              </div>
+            {/* Frosted wrapper */}
+            <div className="glass-subtle absolute inset-0 rounded-xl border border-white/20" />
+            <div className="relative flex items-center">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/70" />
+              <input
+                type="text"
+                placeholder="Search cases, patients…"
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                onFocus={() => setSearchOpen(true)}
+                className="w-full rounded-xl bg-transparent px-10 py-2 text-sm text-white placeholder:text-white/50 focus:outline-none"
+              />
             </div>
-
-            {/* Search Results Dropdown */}
+            {/* Dropdown */}
             <AnimatePresence>
-              {isSearchFocused && (searchQuery || searchResults.length > 0) && (
+              {searchOpen && (q || results.length) && (
                 <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="absolute top-full left-0 right-0 mt-2 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 z-50"
+                  variants={dropdownVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  className="glass absolute left-0 right-0 top-full z-50 mt-2 rounded-xl border border-white/20"
                 >
-                  {searchResults.length > 0 ? (
-                    <div className="py-2">
-                      {searchResults.map((result) => (
-                        <button
-                          key={result.id}
-                          onClick={() => handleSearchResultClick(result)}
-                          className="w-full px-4 py-3 text-left transition-colors"
-                        >
-                          <div className="font-medium text-white text-sm">{result.title}</div>
-                          <div className="text-white/70 text-xs mt-1">{result.subtitle}</div>
-                        </button>
-                      ))}
-                    </div>
-                  ) : searchQuery ? (
-                    <div className="py-4 px-4 text-white/70 text-sm">No results found</div>
-                  ) : (
-                    <div className="py-4 px-4">
-                      <div className="text-white/70 text-xs mb-2">Quick suggestions</div>
-                      <div className="space-y-1">
-                        {["Recent cases", "Cardiology", "Emergency"].map((suggestion) => (
+                  {results.length ? (
+                    <ul className="py-2">
+                      {results.map((r) => (
+                        <li key={r.id}>
                           <button
-                            key={suggestion}
-                            onClick={() => setSearchQuery(suggestion)}
-                            className="block w-full text-left px-2 py-1 text-white/60 text-sm rounded"
+                            onClick={() => {
+                              navigate(r.path);
+                              setSearchOpen(false);
+                              setQ("");
+                            }}
+                            className="w-full px-4 py-3 text-left hover:bg-white/10"
                           >
-                            {suggestion}
+                            <p className="text-sm font-medium text-white">{r.title}</p>
+                            <p className="mt-1 text-xs text-white/70">{r.subtitle}</p>
                           </button>
-                        ))}
-                      </div>
-                    </div>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="px-4 py-4 text-sm text-white/70">No results</p>
                   )}
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
 
-          {/* User Menu */}
-          <div className="hidden md:block">
-            <div className="relative" ref={userMenuRef}>
-              <button
-                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                className="flex items-center space-x-2 px-3 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl transition-colors"
-              >
-                <User className="h-4 w-4 text-white" />
-                <span className="text-white text-sm">{getUserDisplayName()}</span>
-                <ChevronDown className="h-3 w-3 text-white/70" />
-              </button>
-
-              <AnimatePresence>
-                {isUserMenuOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
-                    className="absolute right-0 mt-2 w-48 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 py-2 z-20"
-                  >
-                    <button
-                      className="w-full px-4 py-2 text-left text-white flex items-center space-x-2 transition-colors hover:bg-white/20"
-                      onClick={() => { navigate('/account'); setIsUserMenuOpen(false); }}
-                    >
-                      <User className="h-4 w-4" />
-                      <span>Account</span>
-                    </button>
-                    <div className="h-px bg-white/20 my-2" />
-                    <button
-                      className="w-full px-4 py-2 text-left text-red-300 flex items-center space-x-2 transition-colors"
-                      onClick={handleSignOut}
-                    >
-                      <LogOut className="h-4 w-4" />
-                      <span>Sign out</span>
-                    </button>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="flex items-center justify-center p-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl transition-colors"
+          {/* User menu (desktop) */}
+          <div className="hidden md:block" ref={userRef}>
+            <Button
+              variant="outline"
+              size="sm"
+              className="glass-subtle flex items-center space-x-2"
+              onClick={() => setUserOpen(!userOpen)}
             >
-              {isMobileMenuOpen ? (
-                <X className="h-5 w-5 text-white" />
-              ) : (
-                <Menu className="h-5 w-5 text-white" />
+              <User className="h-4 w-4" />
+              <span className="text-sm text-white">{displayName}</span>
+              <ChevronDown className="h-3 w-3 text-white/70" />
+            </Button>
+            <AnimatePresence>
+              {userOpen && (
+                <motion.div
+                  variants={dropdownVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  className="glass absolute right-0 mt-2 w-48 rounded-xl border border-white/20 py-2"
+                >
+                  <button
+                    className="flex w-full items-center space-x-2 px-4 py-2 text-left text-white hover:bg-white/10"
+                    onClick={() => {
+                      navigate("/account");
+                      setUserOpen(false);
+                    }}
+                  >
+                    <User className="h-4 w-4" />
+                    <span>Account</span>
+                  </button>
+                  <div className="my-2 h-px bg-white/20" />
+                  <button
+                    className="flex w-full items-center space-x-2 px-4 py-2 text-left text-red-300 hover:bg-white/10"
+                    onClick={handleSignOut}
+                  >
+                    <LogOut className="h-4 w-4" />
+                    <span>Sign out</span>
+                  </button>
+                </motion.div>
               )}
-            </button>
+            </AnimatePresence>
           </div>
+
+          {/* Mobile toggle */}
+          <Button
+            size="icon"
+            variant="outline"
+            className="glass-subtle md:hidden"
+            onClick={() => setMobileOpen(!mobileOpen)}
+          >
+            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile panel */}
         <AnimatePresence>
-          {isMobileMenuOpen && (
+          {mobileOpen && (
             <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="md:hidden border-t border-white/20 mt-4 pt-4 pb-4"
+              variants={mobileMenuVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="md:hidden"
             >
-              {/* Mobile Search */}
-              <div className="mb-4">
+              {/* Search */}
+              <div className="mt-4">
                 <div className="relative">
-                  <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
+                  <div className="glass-subtle absolute inset-0 rounded-xl border border-white/20" />
                   <div className="relative flex items-center">
-                    <Search className="h-4 w-4 text-white/70 absolute left-3 top-1/2 -translate-y-1/2" />
+                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/70" />
                     <input
                       type="text"
-                      placeholder="Search cases, patients..."
-                      className="bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 pl-10 pr-4 py-3 rounded-xl text-sm focus:outline-none w-full"
+                      placeholder="Search…"
+                      className="w-full rounded-xl bg-transparent px-10 py-3 text-sm text-white placeholder:text-white/50 focus:outline-none"
                     />
                   </div>
                 </div>
               </div>
 
-              {/* Mobile Navigation Items */}
-              <div className="space-y-2">
-                {NAV_ITEMS.map((item) => {
-                  const isActive = location.pathname === item.to;
+              {/* Nav links */}
+              <div className="mt-4 space-y-2">
+                {NAV.map(({ label, to, icon: Icon }) => {
+                  const active = location.pathname === to;
                   return (
                     <NavLink
-                      key={item.to}
-                      to={item.to}
-                      onClick={() => setIsMobileMenuOpen(false)}
+                      key={to}
+                      to={to}
+                      onClick={() => setMobileOpen(false)}
                       className={cn(
-                        "flex items-center space-x-3 px-4 py-3 rounded-xl transition-colors",
-                        isActive 
-                          ? "bg-white/20 text-white" 
-                          : "text-white/80"
+                        "flex items-center space-x-3 rounded-xl px-4 py-3 transition-colors",
+                        active ? "bg-white/20 text-white" : "text-white/80 hover:text-white",
                       )}
                     >
-                      <item.icon className="h-5 w-5" />
-                      <span className="font-medium">{item.label}</span>
+                      <Icon className="h-5 w-5" />
+                      <span className="font-medium">{label}</span>
                     </NavLink>
                   );
                 })}
               </div>
 
-              {/* Mobile User Menu */}
-              <div className="border-t border-white/20 mt-4 pt-4">
+              {/* User shortcuts */}
+              <div className="mt-4 border-t border-white/20 pt-4">
                 <button
-                  className="w-full flex items-center space-x-3 px-4 py-3 text-white/80 rounded-xl transition-colors hover:bg-white/20"
-                  onClick={() => { navigate('/account'); setIsMobileMenuOpen(false); }}
+                  className="flex w-full items-center space-x-3 rounded-xl px-4 py-3 text-white/80 hover:bg-white/20"
+                  onClick={() => {
+                    navigate("/account");
+                    setMobileOpen(false);
+                  }}
                 >
                   <User className="h-5 w-5" />
                   <span>Account</span>
                 </button>
                 <button
-                  className="w-full flex items-center space-x-3 px-4 py-3 text-red-300 rounded-xl transition-colors hover:bg-white/20"
-                  onClick={() => { handleSignOut(); setIsMobileMenuOpen(false); }}
+                  className="flex w-full items-center space-x-3 rounded-xl px-4 py-3 text-red-300 hover:bg-white/20"
+                  onClick={() => {
+                    handleSignOut();
+                    setMobileOpen(false);
+                  }}
                 >
                   <LogOut className="h-5 w-5" />
                   <span>Sign out</span>
@@ -344,7 +376,7 @@ const EnhancedNavbar: React.FC = () => {
           )}
         </AnimatePresence>
       </div>
-    </nav>
+    </Card>
   );
 };
 

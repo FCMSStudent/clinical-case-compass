@@ -14,10 +14,10 @@ import {
 } from 'lucide-react';
 import { 
   getComponentStyles,
-  card,
   input,
   animations
 } from '@/lib/design-system';
+import { card } from "@/lib/components";
 
 export const ComponentShowcaseDemo: React.FC = () => {
   return (

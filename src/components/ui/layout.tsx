@@ -1,140 +1,156 @@
+// -----------------------------------------------------------------------------
+// Layout Primitives – Liquid Glass Edition
+// -----------------------------------------------------------------------------
+// Adds optional frosted-surface variants (`glass-*`) so wrappers themselves can
+// participate in glassmorphic stacks (e.g. hero sections, translucent sidebars).
+// -----------------------------------------------------------------------------
+
 import * as React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+
 import { cn } from "@/lib/utils";
-import { layoutPrimitives } from "@/lib/component-system";
+import { layoutPrimitives as legacy } from "@/lib/component-system";
 
-// ────────────────────────────────────────────────────────────────────────────────
-// CONTAINER COMPONENTS
-// ────────────────────────────────────────────────────────────────────────────────
+// ─── Helpers ------------------------------------------------------------------
+const merge = <T extends Record<string, string>>(a: T, b: Partial<T>): T =>
+  ({ ...a, ...b }) as T;
 
-interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: keyof typeof layoutPrimitives.container;
-  children: React.ReactNode;
-}
+// ─── Container ----------------------------------------------------------------
+const containerVariants = cva("w-full mx-auto", {
+  variants: {
+    variant: merge(legacy.container, {
+      "glass-subtle": "glass-subtle backdrop-blur-md px-4 md:px-8",
+      glass: "glass backdrop-blur-lg px-4 md:px-8",
+      "glass-elevated": "glass-elevated backdrop-blur-lg px-4 md:px-8",
+    }),
+  },
+  defaultVariants: { variant: "default" },
+});
 
-const Container = React.forwardRef<HTMLDivElement, ContainerProps>(
-  ({ className, variant = "default", children, ...props }, ref) => {
-    return (
-      <div
-        ref={ref}
-        className={cn(layoutPrimitives.container[variant], className)}
-        {...props}
-      >
-        {children}
-      </div>
-    );
-  }
+export interface ContainerProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof containerVariants> {}
+
+export const Container = React.forwardRef<HTMLDivElement, ContainerProps>(
+  ({ className, variant, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn(containerVariants({ variant, className }))}
+      {...props}
+    />
+  ),
 );
 Container.displayName = "Container";
 
-// ────────────────────────────────────────────────────────────────────────────────
-// FLEX LAYOUT COMPONENTS
-// ────────────────────────────────────────────────────────────────────────────────
+// ─── Flex ---------------------------------------------------------------------
+const flexVariants = cva("flex", {
+  variants: {
+    variant: merge(legacy.flex, {
+      "glass-subtle": "glass-subtle",
+      glass: "glass",
+      "glass-elevated": "glass-elevated",
+    }),
+  },
+  defaultVariants: { variant: "center" },
+});
 
-interface FlexProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: keyof typeof layoutPrimitives.flex;
-  children: React.ReactNode;
-}
+export interface FlexProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof flexVariants> {}
 
-const Flex = React.forwardRef<HTMLDivElement, FlexProps>(
-  ({ className, variant = "center", children, ...props }, ref) => {
-    return (
-      <div
-        ref={ref}
-        className={cn(layoutPrimitives.flex[variant], className)}
-        {...props}
-      >
-        {children}
-      </div>
-    );
-  }
+export const Flex = React.forwardRef<HTMLDivElement, FlexProps>(
+  ({ className, variant, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn(flexVariants({ variant, className }))}
+      {...props}
+    />
+  ),
 );
 Flex.displayName = "Flex";
 
-// ────────────────────────────────────────────────────────────────────────────────
-// GRID LAYOUT COMPONENTS
-// ────────────────────────────────────────────────────────────────────────────────
+// ─── Grid ---------------------------------------------------------------------
+const gridVariants = cva("grid", {
+  variants: {
+    variant: merge(legacy.grid, {
+      "glass-subtle": "glass-subtle",
+      glass: "glass",
+      "glass-elevated": "glass-elevated",
+    }),
+  },
+  defaultVariants: { variant: "responsive" },
+});
 
-interface GridProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: keyof typeof layoutPrimitives.grid;
-  gap?: keyof typeof layoutPrimitives.gap;
-  children: React.ReactNode;
+const gapVariants = merge(legacy.gap, {
+  none: "gap-0",
+});
+
+export interface GridProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof gridVariants> {
+  gap?: keyof typeof gapVariants;
 }
 
-const Grid = React.forwardRef<HTMLDivElement, GridProps>(
-  ({ className, variant = "responsive", gap = "md", children, ...props }, ref) => {
-    return (
-      <div
-        ref={ref}
-        className={cn(
-          layoutPrimitives.grid[variant],
-          layoutPrimitives.gap[gap],
-          className
-        )}
-        {...props}
-      >
-        {children}
-      </div>
-    );
-  }
+export const Grid = React.forwardRef<HTMLDivElement, GridProps>(
+  ({ className, variant, gap = "md", ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn(gridVariants({ variant }), gapVariants[gap], className)}
+      {...props}
+    />
+  ),
 );
 Grid.displayName = "Grid";
 
-// ────────────────────────────────────────────────────────────────────────────────
-// SPACING COMPONENTS
-// ────────────────────────────────────────────────────────────────────────────────
+// ─── Spacing ------------------------------------------------------------------
+const spacingVariants = merge(legacy.spacing, {
+  xs: "py-1",
+  xl: "py-16",
+});
 
-interface SpacingProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: keyof typeof layoutPrimitives.spacing;
-  children: React.ReactNode;
+export interface SpacingProps
+  extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: keyof typeof spacingVariants;
 }
 
-const Spacing = React.forwardRef<HTMLDivElement, SpacingProps>(
-  ({ className, variant = "md", children, ...props }, ref) => {
-    return (
-      <div
-        ref={ref}
-        className={cn(layoutPrimitives.spacing[variant], className)}
-        {...props}
-      >
-        {children}
-      </div>
-    );
-  }
+export const Spacing = React.forwardRef<HTMLDivElement, SpacingProps>(
+  ({ className, variant = "md", ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn(spacingVariants[variant], className)}
+      {...props}
+    />
+  ),
 );
 Spacing.displayName = "Spacing";
 
-// ────────────────────────────────────────────────────────────────────────────────
-// SECTION COMPONENTS
-// ────────────────────────────────────────────────────────────────────────────────
-
-interface SectionProps extends React.HTMLAttributes<HTMLElement> {
-  container?: keyof typeof layoutPrimitives.container;
-  spacing?: keyof typeof layoutPrimitives.spacing;
-  children: React.ReactNode;
+// ─── Section ------------------------------------------------------------------
+export interface SectionProps
+  extends React.HTMLAttributes<HTMLElement>,
+    VariantProps<typeof containerVariants> {
+  spacing?: keyof typeof spacingVariants;
 }
 
-const Section = React.forwardRef<HTMLElement, SectionProps>(
-  ({ className, container = "default", spacing = "lg", children, ...props }, ref) => {
-    return (
-      <section
-        ref={ref}
-        className={cn(
-          layoutPrimitives.container[container],
-          layoutPrimitives.spacing[spacing],
-          className
-        )}
-        {...props}
-      >
-        {children}
-      </section>
-    );
-  }
+export const Section = React.forwardRef<HTMLElement, SectionProps>(
+  (
+    { className, variant = "default", spacing = "lg", ...props },
+    ref,
+  ) => (
+    <section
+      ref={ref}
+      className={cn(
+        containerVariants({ variant }),
+        spacingVariants[spacing],
+        className,
+      )}
+      {...props}
+    />
+  ),
 );
 Section.displayName = "Section";
 
-// ────────────────────────────────────────────────────────────────────────────────
-// EXPORTS
-// ────────────────────────────────────────────────────────────────────────────────
-
-export { Container, Flex, Grid, Spacing, Section };
-export type { ContainerProps, FlexProps, GridProps, SpacingProps, SectionProps }; 
+// -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
+export { containerVariants, flexVariants, gridVariants };
+export type { GridProps, FlexProps, SectionProps, SpacingProps, ContainerProps };

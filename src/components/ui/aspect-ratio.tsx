@@ -1,98 +1,132 @@
-import * as React from "react"
-import * as AspectRatioPrimitive from "@radix-ui/react-aspect-ratio"
-import { cn } from "@/lib/utils"
+// -----------------------------------------------------------------------------
+// Aspect Ratio – Liquid Glass Edition
+// -----------------------------------------------------------------------------
+// * Adds glass surfaces so media can float on frosted panels.
+// * Provides `preset` shortcuts (square, video, etc.) plus custom ratio.
+// * `surface` prop matches the rest of the design-system (`none`, `glass-subtle`,
+//   `glass`, `glass-elevated`).
+// -----------------------------------------------------------------------------
 
-interface AspectRatioProps extends React.ComponentPropsWithoutRef<typeof AspectRatioPrimitive.Root> {
-  /** 
-   * Common aspect ratio presets for convenience 
-   * Custom ratios can still be passed via the `ratio` prop
-   */
-  preset?: "square" | "video" | "photo" | "cinema" | "portrait"
-  /** 
-   * Add a subtle border and background for better visual definition
-   */
-  variant?: "default" | "bordered" | "elevated"
-  /** 
-   * Whether to show loading state placeholder
-   */
-  loading?: boolean
+import * as React from "react";
+import * as AspectRatioPrimitive from "@radix-ui/react-aspect-ratio";
+
+import { cn } from "@/lib/utils";
+
+// -----------------------------------------------------------------------------
+// Presets ----------------------------------------------------------------------
+
+export const aspectRatioPresets = {
+  square: 1, // 1:1
+  video: 16 / 9,
+  photo: 4 / 3,
+  cinema: 21 / 9,
+  portrait: 3 / 4,
+} as const;
+
+// -----------------------------------------------------------------------------
+// Variants ---------------------------------------------------------------------
+
+type Surface = "none" | "glass-subtle" | "glass" | "glass-elevated";
+
+const surfaceStyles: Record<Surface, string> = {
+  none: "",
+  "glass-subtle": "glass-subtle backdrop-blur-md",
+  glass: "glass backdrop-blur-lg",
+  "glass-elevated": "glass-elevated backdrop-blur-lg",
+};
+
+const outlineStyles = {
+  default: "",
+  bordered: "border border-border rounded-md overflow-hidden",
+  elevated: "border border-border rounded-md shadow-md overflow-hidden bg-background",
+} as const;
+
+// -----------------------------------------------------------------------------
+// Props ------------------------------------------------------------------------
+
+export interface AspectRatioProps
+  extends React.ComponentPropsWithoutRef<typeof AspectRatioPrimitive.Root> {
+  preset?: keyof typeof aspectRatioPresets;
+  surface?: Surface;
+  variant?: keyof typeof outlineStyles;
+  loading?: boolean;
 }
 
-const aspectRatioPresets = {
-  square: 1,        // 1:1
-  video: 16 / 9,    // 16:9
-  photo: 4 / 3,     // 4:3
-  cinema: 21 / 9,   // 21:9 (ultrawide)
-  portrait: 3 / 4,  // 3:4
-} as const
+// -----------------------------------------------------------------------------
+// Component --------------------------------------------------------------------
 
-const AspectRatio = React.forwardRef<
+export const AspectRatio = React.forwardRef<
   React.ElementRef<typeof AspectRatioPrimitive.Root>,
   AspectRatioProps
->(({ className, preset, variant = "default", loading = false, ratio, ...props }, ref) => {
-  // Use preset ratio if provided, otherwise fall back to custom ratio or default
-  const finalRatio = preset ? aspectRatioPresets[preset] : ratio
+>(
+  (
+    {
+      className,
+      preset,
+      surface = "none",
+      variant = "default",
+      loading = false,
+      ratio,
+      children,
+      ...props
+    },
+    ref,
+  ) => {
+    const finalRatio = preset ? aspectRatioPresets[preset] : ratio;
 
-  const variantStyles = {
-    default: "",
-    bordered: "border border-border rounded-md overflow-hidden",
-    elevated: "border border-border rounded-md shadow-sm overflow-hidden bg-background",
-  }
+    return (
+      <AspectRatioPrimitive.Root
+        ref={ref}
+        ratio={finalRatio}
+        className={cn("relative", surfaceStyles[surface], outlineStyles[variant], className)}
+        {...props}
+      >
+        {loading ? (
+          <div className="absolute inset-0 flex items-center justify-center glass-subtle animate-pulse">
+            <span className="text-sm text-white/70">Loading…</span>
+          </div>
+        ) : (
+          children
+        )}
+      </AspectRatioPrimitive.Root>
+    );
+  },
+);
+AspectRatio.displayName = "AspectRatio";
 
-  return (
-    <AspectRatioPrimitive.Root
-      ref={ref}
-      ratio={finalRatio}
-      className={cn(
-        "relative",
-        variantStyles[variant],
-        className
-      )}
-      {...props}
-    >
-      {loading ? (
-        <div className="absolute inset-0 flex items-center justify-center bg-muted animate-pulse">
-          <div className="text-muted-foreground text-sm">Loading...</div>
-        </div>
-      ) : (
-        props.children
-      )}
-    </AspectRatioPrimitive.Root>
-  )
-})
+// -----------------------------------------------------------------------------
+// Helper Components ------------------------------------------------------------
 
-AspectRatio.displayName = "AspectRatio"
-
-// Additional utility components for common use cases
-const AspectRatioImage = React.forwardRef<
+export const AspectRatioImage = React.forwardRef<
   HTMLImageElement,
-  React.ImgHTMLAttributes<HTMLImageElement> & Pick<AspectRatioProps, "preset" | "variant">
->(({ preset = "photo", variant = "default", className, alt, ...props }, ref) => (
-  <AspectRatio preset={preset} variant={variant}>
-    <img
-      ref={ref}
-      className={cn("object-cover w-full h-full", className)}
-      alt={alt}
-      {...props}
-    />
+  React.ImgHTMLAttributes<HTMLImageElement> & {
+    preset?: keyof typeof aspectRatioPresets;
+    surface?: Surface;
+    variant?: keyof typeof outlineStyles;
+  }
+>((
+  { preset = "photo", surface = "none", variant = "default", className, alt, ...props },
+  ref,
+) => (
+  <AspectRatio preset={preset} surface={surface} variant={variant}>
+    <img ref={ref} alt={alt} className={cn("h-full w-full object-cover", className)} {...props} />
   </AspectRatio>
-))
+));
+AspectRatioImage.displayName = "AspectRatioImage";
 
-AspectRatioImage.displayName = "AspectRatioImage"
-
-const AspectRatioVideo = React.forwardRef<
+export const AspectRatioVideo = React.forwardRef<
   HTMLVideoElement,
-  React.VideoHTMLAttributes<HTMLVideoElement> & Pick<AspectRatioProps, "preset" | "variant">
->(({ preset = "video", variant = "default", className, ...props }, ref) => (
-  <AspectRatio preset={preset} variant={variant}>
-    <video
-      ref={ref}
-      className={cn("object-cover w-full h-full", className)}
-      {...props}
-    />
+  React.VideoHTMLAttributes<HTMLVideoElement> & {
+    preset?: keyof typeof aspectRatioPresets;
+    surface?: Surface;
+    variant?: keyof typeof outlineStyles;
+  }
+>((
+  { preset = "video", surface = "none", variant = "default", className, ...props },
+  ref,
+) => (
+  <AspectRatio preset={preset} surface={surface} variant={variant}>
+    <video ref={ref} className={cn("h-full w-full object-cover", className)} {...props} />
   </AspectRatio>
-))
-
-AspectRatioVideo.displayName = "AspectRatioVideo"
-
-export { AspectRatio, AspectRatioImage, AspectRatioVideo }
+));
+AspectRatioVideo.displayName = "AspectRatioVideo";

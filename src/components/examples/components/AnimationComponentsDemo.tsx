@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Heart, Activity, AlertTriangle } from 'lucide-react';
 import { StaggeredItem, GlassyHover, Floating, PulseGlow } from '@/components/ui/animation';
-import { card } from '@/lib/design-system';
+import { card } from "@/lib/components";
 
 export function AnimationComponentsDemo() {
   return (

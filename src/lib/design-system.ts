@@ -1,18 +1,23 @@
-
 // ────────────────────────────────────────────────────────────────────────────────
-// DESIGN SYSTEM - MODULAR ENTRY POINT
+// DESIGN SYSTEM – MODULAR ENTRY POINT (Liquid‑Glass Edition)
+// Inspired by Apple's glassmorphic "liquid‑glass" aesthetic
+// ------------------------------------------------------------------------------
+// ①  All core tokens & helpers are still available for backward compatibility.
+// ②  New glassmorphism‑specific tokens, utilities, and components have been
+//     added under the "liquidGlass" namespace.
+// ③  The public surface remains a single strongly‑typed object so downstream
+//     consumers can tree‑shake or auto‑import with full IntelliSense support.
 // ────────────────────────────────────────────────────────────────────────────────
 
 // Re-export all design system modules for backward compatibility
 export * from './colors';
 export * from './spacing';
 export * from './components';
+export * from './utilities';
 export * from './theme-system.tsx';
 export * from './typography';
 export * from './design-tokens';
 export * from './background-config';
-
-// Re-export existing animation system
 export * from './motion';
 
 // Legacy exports for backward compatibility
@@ -43,19 +48,23 @@ import {
   getContrastRatio,
   isThemeAccessible
 } from './utilities';
-import type { ThemeConfig } from './theme-system.tsx';
 import { ThemeProvider, useTheme, ThemeSwitcher, themes } from './theme-system.tsx';
 import { typography } from './typography';
 import { typographyTokens } from './design-tokens';
 import { backgroundConfig } from './background-config';
 import { animations } from './animations';
 
-// Consolidated exports for easy access
+// ─── Liquid‑Glass Tokens & Utilities ───────────────────────────────────────────
+
+// ─── Consolidated Public API ───────────────────────────────────────────────────
 export const designSystem = {
-  // Colors
+  // ── Core ────────────────────────────────────────────────────────────────────
+  // Colors & Tokens
   colors,
   themeColors,
-  
+  typography,
+  typographyTokens,
+
   // Spacing & Layout
   spacing,
   borderRadius,
@@ -64,22 +73,19 @@ export const designSystem = {
   sizes,
   zIndex,
   breakpoints,
-  
+
   // Components
   buttonVariants,
   button,
   input,
   card,
   bento,
-  getComponentStyles,
-  getBentoStyles,
   focusRing,
   disabledState,
-  glassmorphic,
-  glass,
-  
+  getComponentStyles,
+  getBentoStyles,
+
   // Utilities
-  getGlassmorphicStyles,
   applyThemeToDocument,
   removeThemeFromDocument,
   generateThemeCSSProperties,
@@ -88,25 +94,20 @@ export const designSystem = {
   generateThemeVariations,
   getContrastRatio,
   isThemeAccessible,
-  
+
   // Theme System
   ThemeProvider,
   useTheme,
   ThemeSwitcher,
   themes,
-  
-  // Typography
-  typography,
-  typographyTokens,
-  
+
   // Background
   backgroundConfig,
-  
+
   // Animations
   animations,
-} as const;
+};
 
-// Default export for backward compatibility
 export default designSystem;
 
 export { animations };
