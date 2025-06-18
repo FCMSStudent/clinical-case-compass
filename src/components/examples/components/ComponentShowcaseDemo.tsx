@@ -15,10 +15,10 @@ import {
 } from 'lucide-react';
 import { 
   getComponentStyles,
+  card,
   input,
   animations
 } from '@/lib/design-system';
-import { card } from "@/lib/components";
 import { Textarea } from '@/components/ui/textarea';
 
 export const ComponentShowcaseDemo: React.FC = () => {
@@ -228,29 +228,32 @@ export const ComponentShowcaseDemo: React.FC = () => {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <Card className={`${card.base} ${card.variant.default} ${card.padding.md}`}>
-                <CardContent>
-                  <div className="flex items-center space-x-2">
-                    <Heart className="h-5 w-5 text-red-400" />
-                    <span className="text-white">Default Card</span>
+                <CardContent className="pt-6">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Heart className="h-4 w-4 text-red-400" />
+                    <span className="text-sm font-medium">Default Card</span>
                   </div>
+                  <p className="text-xs text-white/70">Standard card with glassmorphic effect</p>
                 </CardContent>
               </Card>
               
               <Card className={`${card.base} ${card.variant.elevated} ${card.padding.md}`}>
-                <CardContent>
-                  <div className="flex items-center space-x-2">
-                    <Activity className="h-5 w-5 text-green-400" />
-                    <span className="text-white">Elevated Card</span>
+                <CardContent className="pt-6">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Activity className="h-4 w-4 text-blue-400" />
+                    <span className="text-sm font-medium">Elevated Card</span>
                   </div>
+                  <p className="text-xs text-white/70">Enhanced depth with stronger shadows</p>
                 </CardContent>
               </Card>
               
               <Card className={`${card.base} ${card.variant.interactive} ${card.padding.md}`}>
-                <CardContent>
-                  <div className="flex items-center space-x-2">
-                    <TrendingUp className="h-5 w-5 text-blue-400" />
-                    <span className="text-white">Interactive Card</span>
+                <CardContent className="pt-6">
+                  <div className="flex items-center gap-2 mb-2">
+                    <TrendingUp className="h-4 w-4 text-green-400" />
+                    <span className="text-sm font-medium">Interactive Card</span>
                   </div>
+                  <p className="text-xs text-white/70">Hover effects and click interactions</p>
                 </CardContent>
               </Card>
             </div>

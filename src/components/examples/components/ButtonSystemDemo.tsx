@@ -2,8 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { StaggeredItem } from '@/components/ui/animation';
-import { buttonVariants } from '@/lib/design-system';
-import { card } from "@/lib/components";
+import { buttonVariants, card } from '@/lib/design-system';
 
 export function ButtonSystemDemo() {
   return (

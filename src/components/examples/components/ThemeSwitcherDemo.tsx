@@ -5,10 +5,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { 
   useTheme,
   getComponentStyles,
+  card,
   themes
 } from '@/lib/design-system';
 import { animations } from '@/lib/design-system';
-import { card } from "@/lib/components";
 
 export const ThemeSwitcherDemo: React.FC = () => {
   const { currentTheme, setTheme, availableThemes } = useTheme();

@@ -7,20 +7,22 @@
 // 4. Framer Motion integration for smooth interactions
 // -----------------------------------------------------------------------------
 
-import * as React from "react";
-import { motion } from "framer-motion";
-import { cva, type VariantProps } from "class-variance-authority";
+import * as React from "react"
+import { motion } from "framer-motion"
+import { cva, type VariantProps } from "class-variance-authority"
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
+import { inputVariants as unifiedInputVariants, componentSizes } from "@/lib/component-system"
+
 import {
   inputVariants as legacyInputVariants,
   componentSizes,
-} from "@/lib/component-system";
+} from "@/lib/component-system"
 import {
   getMotionVariants,
   subtleInputInteraction,
   reducedMotionInputInteraction,
-} from "@/lib/motion";
+} from "@/lib/motion"
 
 // ─── Tailwind variant generator ──────────────────────────────────────────────
 const inputVariants = cva(
@@ -99,7 +101,7 @@ const inputVariants = cva(
       size: "md",
     },
   }
-);
+)
 
 // ─── Props --------------------------------------------------------------------
 export interface InputProps
