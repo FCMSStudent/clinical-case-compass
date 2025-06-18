@@ -1,4 +1,3 @@
-
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom"; // Added useLocation
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -43,18 +42,14 @@ const queryClient = new QueryClient({
 });
 
 const AppContent = () => {
-  const { session, loading } = useAuth();
-
-  console.log("[App] Auth state:", { session: !!session, loading });
-
-  if (loading) {
-    return <LoadingScreen />;
-  }
-
+  console.log('AppContent rendering');
+  
+  // Temporary simplified version
   return (
-    <Router>
-      <AppRoutes />
-    </Router>
+    <div className="p-8 text-white bg-black min-h-screen">
+      <h1>App Test</h1>
+      <p>If you can see this, the app is rendering.</p>
+    </div>
   );
 };
 

@@ -1,4 +1,3 @@
-
 import React, { memo } from "react";
 import { useFormContext, FieldValues, Path } from "react-hook-form";
 import {
@@ -86,11 +85,14 @@ export const PatientStep = memo(function PatientStep<
           <FormField
             control={control}
             name={"patientName" as Path<T>}
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <FormItem>
                 <FormControl>
                   <Input
                     placeholder="e.g., John Doe"
+                    variant="medical"
+                    leftIcon={<User className="h-4 w-4" />}
+                    error={!!fieldState.error}
                     {...field}
                   />
                 </FormControl>
@@ -101,7 +103,7 @@ export const PatientStep = memo(function PatientStep<
         </StatusFieldCard>
 
         <StatusFieldCard
-          icon={FileTextIcon} // Use renamed icon
+          icon={FileTextIcon}
           title="Medical Record Number (MRN)"
           tooltip="If available, enter the patient's unique medical record number for easy identification."
           fieldValue={medicalRecordNumberValue}
@@ -110,11 +112,14 @@ export const PatientStep = memo(function PatientStep<
           <FormField
             control={control}
             name={"medicalRecordNumber" as Path<T>}
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <FormItem>
                 <FormControl>
                   <Input
                     placeholder="e.g., 1234567"
+                    variant="medical"
+                    leftIcon={<FileTextIcon className="h-4 w-4" />}
+                    error={!!fieldState.error}
                     {...field}
                   />
                 </FormControl>
@@ -136,12 +141,15 @@ export const PatientStep = memo(function PatientStep<
             <FormField
               control={control}
               name={"patientAge" as Path<T>}
-              render={({ field }) => (
+              render={({ field, fieldState }) => (
                 <FormItem>
                   <FormControl>
                     <Input
                       type="number"
                       placeholder="e.g., 42"
+                      variant="medical"
+                      leftIcon={<Calendar className="h-4 w-4" />}
+                      error={!!fieldState.error}
                       {...field}
                       onChange={e => field.onChange(parseInt(e.target.value,10) || undefined)}
                     />
@@ -163,11 +171,11 @@ export const PatientStep = memo(function PatientStep<
             <FormField
               control={control}
               name={"patientSex" as Path<T>}
-              render={({ field }) => (
+              render={({ field, fieldState }) => (
                 <FormItem>
                   <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className={fieldState.error ? "border-red-400/30 bg-red-500/10" : ""}>
                         <SelectValue placeholder="Select sex" />
                       </SelectTrigger>
                     </FormControl>
@@ -189,10 +197,10 @@ export const PatientStep = memo(function PatientStep<
       <SectionTitle 
         title="Medical Background"
         description="Relevant medical history and chronic conditions."
-        icon={FileTextIcon} // Use renamed icon
+        icon={FileTextIcon}
       />
       <StatusFieldCard
-        icon={FileTextIcon} // Use renamed icon
+        icon={FileTextIcon}
         title="Medical History"
         tooltip="Summarize the patient's relevant past medical history, chronic conditions, and previous interventions."
         fieldValue={medicalHistoryValue}
@@ -201,13 +209,14 @@ export const PatientStep = memo(function PatientStep<
         <FormField
           control={control}
           name={"medicalHistory" as Path<T>}
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <FormItem>
               <FormControl>
                 <Textarea
                   placeholder="e.g., Hypertension, Type 2 Diabetes, Previous appendectomy in 2010..."
-                  rows={4}
-                  // Removed custom classes, rely on StatusFieldCard for container styling
+                  variant="medical"
+                  size="lg"
+                  error={!!fieldState.error}
                   {...field}
                 />
               </FormControl>

@@ -96,6 +96,10 @@ export const card = {
   },
 };
 
+// Debug logging
+console.log('Card object loaded:', card);
+console.log('Card variant:', card.variant);
+
 /** Bento Grid System */
 export const bento = {
   container: {
