@@ -1,4 +1,4 @@
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserRound, TrendingUp, Activity, BookOpen, Users, Target, Plus, Eye } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDashboardData } from "@/features/dashboard/hooks/use-dashboard-data";
@@ -21,15 +21,230 @@ import { typo, responsiveType } from "@/lib/typography";
 import { cn } from "@/lib/utils";
 
 const Dashboard = () => {
-  console.log('Dashboard component rendering');
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { currentTheme } = useTheme();
+  const { data, isLoading, error } = useDashboardData();
   
-  // Temporary simplified version to test if the component renders at all
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
+
+  if (error) {
+    return (
+      <div className="p-8 text-center">
+        <Card className={getComponentStyles('card', 'error', 'lg')}>
+          <CardContent className="pt-6">
+            <h2 className="text-xl font-semibold text-white mb-2">Dashboard Error</h2>
+            <p className="text-white/70">There was an error loading the dashboard data.</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
-    <div className="p-8 text-white">
-      <h1>Dashboard Test</h1>
-      <p>If you can see this, the component is rendering.</p>
-      <p>Card object: {JSON.stringify(card ? 'defined' : 'undefined')}</p>
-    </div>
+    <motion.div
+      className="container mx-auto px-4 py-8 space-y-8"
+      variants={animations.fadeIn}
+      initial="hidden"
+      animate={isVisible ? "visible" : "hidden"}
+    >
+      {/* Welcome Header */}
+      <motion.div
+        variants={animations.staggeredItem}
+        className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4"
+      >
+        <div>
+          <h1 className={cn(typo.h1, responsiveType.h1, "text-white mb-2")}>
+            Welcome back, {user?.user_metadata?.full_name || 'Doctor'}!
+          </h1>
+          <p className={cn(typo.body, "text-white/70")}>
+            Here's what's happening with your clinical cases today.
+          </p>
+        </div>
+        
+        <div className="flex gap-3">
+          <Button
+            onClick={() => navigate('/cases/new')}
+            className={getComponentStyles('button', 'primary', 'md')}
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            New Case
+          </Button>
+          <Button
+            onClick={() => navigate('/cases')}
+            variant="outline"
+            className={getComponentStyles('button', 'outline', 'md')}
+          >
+            <Eye className="h-4 w-4 mr-2" />
+            View All
+          </Button>
+        </div>
+      </motion.div>
+
+      {/* Metrics Grid */}
+      <motion.div
+        variants={animations.staggeredContainer}
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+      >
+        {isLoading ? (
+          // Loading skeletons
+          Array.from({ length: 4 }).map((_, index) => (
+            <MetricCardSkeleton key={index} />
+          ))
+        ) : (
+          // Actual metrics
+          <>
+            <motion.div variants={animations.staggeredItem}>
+              <Card className={getComponentStyles('card', 'default', 'md')}>
+                <CardContent className="pt-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-white/70">Total Cases</p>
+                      <p className="text-2xl font-bold text-white">
+                        {data?.totalCases || 0}
+                      </p>
+                    </div>
+                    <div className="p-3 rounded-lg bg-blue-500/20">
+                      <BookOpen className="h-6 w-6 text-blue-400" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div variants={animations.staggeredItem}>
+              <Card className={getComponentStyles('card', 'default', 'md')}>
+                <CardContent className="pt-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-white/70">Active Cases</p>
+                      <p className="text-2xl font-bold text-white">
+                        {data?.activeCases || 0}
+                      </p>
+                    </div>
+                    <div className="p-3 rounded-lg bg-green-500/20">
+                      <Activity className="h-6 w-6 text-green-400" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div variants={animations.staggeredItem}>
+              <Card className={getComponentStyles('card', 'default', 'md')}>
+                <CardContent className="pt-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-white/70">This Month</p>
+                      <p className="text-2xl font-bold text-white">
+                        {data?.monthlyCases || 0}
+                      </p>
+                    </div>
+                    <div className="p-3 rounded-lg bg-purple-500/20">
+                      <TrendingUp className="h-6 w-6 text-purple-400" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div variants={animations.staggeredItem}>
+              <Card className={getComponentStyles('card', 'default', 'md')}>
+                <CardContent className="pt-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-white/70">Patients</p>
+                      <p className="text-2xl font-bold text-white">
+                        {data?.totalPatients || 0}
+                      </p>
+                    </div>
+                    <div className="p-3 rounded-lg bg-orange-500/20">
+                      <Users className="h-6 w-6 text-orange-400" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </>
+        )}
+      </motion.div>
+
+      {/* Main Content Grid */}
+      <motion.div
+        variants={animations.staggeredContainer}
+        className="grid grid-cols-1 lg:grid-cols-3 gap-8"
+      >
+        {/* Recent Cases */}
+        <motion.div variants={animations.staggeredItem} className="lg:col-span-2">
+          <Card className={getComponentStyles('card', 'elevated', 'lg')}>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-white">Recent Cases</CardTitle>
+                <Badge variant="secondary" className="bg-white/10 text-white/80">
+                  {data?.recentCases?.length || 0} cases
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <RecentCasesCarousel cases={data?.recentCases || []} />
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Recent Activity */}
+        <motion.div variants={animations.staggeredItem}>
+          <Card className={getComponentStyles('card', 'elevated', 'lg')}>
+            <CardHeader>
+              <CardTitle className="text-white">Recent Activity</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <DynamicRecentActivity activities={data?.recentActivity || []} />
+            </CardContent>
+          </Card>
+        </motion.div>
+      </motion.div>
+
+      {/* Quick Actions */}
+      <motion.div variants={animations.staggeredItem}>
+        <Card className={getComponentStyles('card', 'interactive', 'lg')}>
+          <CardHeader>
+            <CardTitle className="text-white">Quick Actions</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Button
+                onClick={() => navigate('/cases/new')}
+                className={getComponentStyles('button', 'primary', 'md')}
+                variant="outline"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Create New Case
+              </Button>
+              <Button
+                onClick={() => navigate('/cases')}
+                className={getComponentStyles('button', 'secondary', 'md')}
+                variant="outline"
+              >
+                <BookOpen className="h-4 w-4 mr-2" />
+                Browse Cases
+              </Button>
+              <Button
+                onClick={() => navigate('/account')}
+                className={getComponentStyles('button', 'ghost', 'md')}
+                variant="outline"
+              >
+                <UserRound className="h-4 w-4 mr-2" />
+                Profile Settings
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+    </motion.div>
   );
 };
 
