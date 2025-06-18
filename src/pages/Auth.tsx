@@ -23,10 +23,12 @@ import { CheckCircle2 } from "lucide-react";
 import UnifiedBackground from "@/components/backgrounds/UnifiedBackground";
 import { useTheme } from "@/lib/design-system";
 import {
-  pageTransitionVariants as globalPageTransitionVariants, // Renamed to avoid conflict
-  reducedMotionPageTransitionVariants as globalReducedMotionPageVariants, // Renamed
+  pageTransitionVariants as globalPageTransitionVariants,
+  reducedMotionPageTransitionVariants as globalReducedMotionPageVariants,
   getMotionVariants
-} from "@/lib/motion"; // Added motion imports
+} from "@/lib/motion";
+import { getGlassTransitionVariants, liquidGlassClasses } from "@/lib/glass-effects";
+import { cn } from "@/lib/utils";
 
 import type { LoginFormData, SignupFormData } from "@/features/auth/authSchemas";
 import LoginForm from "@/features/auth/components/LoginForm";
@@ -99,21 +101,17 @@ const Auth = () => {
   const pageVariants = getMotionVariants(globalPageTransitionVariants, globalReducedMotionPageVariants);
 
   return (
-    // This outermost motion.div applies the global page transition animations.
-    // It's keyed by the route in App.tsx's AnimatePresence setup.
-    // The Auth page also has internal animations for its content card, which will play
-    // as this main container animates in.
     <motion.div
       className="min-h-screen relative overflow-hidden"
       style={{ background: currentTheme.colors.background }}
       variants={pageVariants}
-      initial="initial" // Start state from globalPageTransitionVariants.
-      animate="animate" // End state from globalPageTransitionVariants.
-      exit="exit"       // Exit state from globalPageTransitionVariants.
+      initial="initial"
+      animate="animate"
+      exit="exit"
     >
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 px-4 py-2 rounded-lg z-50 focus:outline-none focus:ring-2 focus:ring-white/30"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 px-4 py-2 rounded-lg z-50 focus:outline-none focus:ring-2 focus:ring-white/30 transition-all duration-300"
         style={{ 
           backgroundColor: currentTheme.colors.primary,
           color: currentTheme.colors.text
@@ -128,30 +126,31 @@ const Auth = () => {
         <motion.div
           initial={{ opacity: 0, y: 20, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
+          transition={{ duration: 0.6, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
           className="w-full max-w-sm sm:max-w-md lg:max-w-lg"
         >
           <Card 
-            className="border shadow-2xl transition-all duration-300 hover:border-opacity-30"
-            style={{
-              backgroundColor: currentTheme.colors.glass.background,
-              backdropFilter: currentTheme.colors.glass.backdrop,
-              borderColor: currentTheme.colors.glass.border,
-              boxShadow: currentTheme.colors.glass.shadow,
-            }}
+            className={cn("border shadow-2xl transition-all duration-300 hover:border-opacity-30", liquidGlassClasses.modal)}
+            variants={getGlassTransitionVariants('medium')}
+            initial="initial"
+            animate="animate"
           >
             <CardHeader className="text-center pb-8">
               <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2, duration: 0.5 }}
+                transition={{ delay: 0.2, duration: 0.5, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
                 className="text-center mb-6"
               >
-                <div className="flex items-center justify-center gap-3 mb-4">
-                  <h1 className="text-3xl font-bold tracking-wide" style={{ color: currentTheme.colors.text }}>
+                <motion.div 
+                  className="flex items-center justify-center gap-3 mb-4"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <h1 className="text-3xl font-bold tracking-wide transition-all duration-300 hover:brightness-110" style={{ color: currentTheme.colors.text }}>
                     Medica
                   </h1>
-                </div>
+                </motion.div>
                 <p className="text-base font-light" style={{ color: currentTheme.colors.textSecondary }}>
                   Sign in to your account or create a new one
                 </p>
@@ -161,17 +160,12 @@ const Auth = () => {
             <CardContent className="px-8 pb-8 space-y-8">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                 <TabsList 
-                  className="grid w-full grid-cols-2 rounded-2xl p-1 mb-8 relative overflow-hidden"
-                  style={{
-                    backgroundColor: currentTheme.colors.glass.background,
-                    backdropFilter: currentTheme.colors.glass.backdrop,
-                    borderColor: currentTheme.colors.glass.border,
-                  }}
+                  className={cn("grid w-full grid-cols-2 rounded-2xl p-1 mb-8 relative overflow-hidden", liquidGlassClasses.card)}
                 >
                   <motion.div
                     className="absolute inset-y-1 rounded-xl shadow-sm"
                     style={{
-                      backgroundColor: currentTheme.colors.glass.background.replace('0.1', '0.2'),
+                      backgroundColor: currentTheme.colors.glass.contextual.navigation,
                     }}
                     initial={false}
                     animate={{
@@ -182,7 +176,7 @@ const Auth = () => {
                   />
                   <TabsTrigger 
                     value="login" 
-                    className="relative z-10 rounded-xl text-sm font-medium transition-all data-[state=active]:text-opacity-100"
+                    className="relative z-10 rounded-xl text-sm font-medium transition-all duration-300 data-[state=active]:text-opacity-100 hover:brightness-105 hover:saturate-110"
                     style={{ 
                       color: `${currentTheme.colors.text}90`,
                     }}
@@ -192,7 +186,7 @@ const Auth = () => {
                   </TabsTrigger>
                   <TabsTrigger 
                     value="signup" 
-                    className="relative z-10 rounded-xl text-sm font-medium transition-all data-[state=active]:text-opacity-100"
+                    className="relative z-10 rounded-xl text-sm font-medium transition-all duration-300 data-[state=active]:text-opacity-100 hover:brightness-105 hover:saturate-110"
                     style={{ 
                       color: `${currentTheme.colors.text}90`,
                     }}
@@ -204,11 +198,25 @@ const Auth = () => {
 
                 <AnimatePresence mode="wait">
                   <TabsContent value="login" className="space-y-6">
-                    <LoginForm isLoading={isLoading} onLoginSubmit={onLoginSubmit} />
+                    <motion.div
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 20 }}
+                      transition={{ duration: 0.3, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
+                    >
+                      <LoginForm isLoading={isLoading} onLoginSubmit={onLoginSubmit} />
+                    </motion.div>
                   </TabsContent>
 
                   <TabsContent value="signup" className="space-y-6">
-                    <SignupForm isLoading={isLoading} onSignupSubmit={onSignupSubmit} />
+                    <motion.div
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{ duration: 0.3, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
+                    >
+                      <SignupForm isLoading={isLoading} onSignupSubmit={onSignupSubmit} />
+                    </motion.div>
                   </TabsContent>
                 </AnimatePresence>
               </Tabs>
@@ -219,18 +227,13 @@ const Auth = () => {
                     initial={{ opacity: 0, y: 20, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -20, scale: 0.95 }}
-                    transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+                    transition={{ duration: 0.4, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
                     className="mt-6"
                     role="alert"
                     aria-live="polite"
                   >
                     <Alert 
-                      className="rounded-xl"
-                      style={{
-                        backgroundColor: `${currentTheme.colors.status.success}10`,
-                        backdropFilter: currentTheme.colors.glass.backdrop,
-                        borderColor: `${currentTheme.colors.status.success}20`,
-                      }}
+                      className={cn("rounded-xl", liquidGlassClasses.alert)}
                     >
                       <CheckCircle2 className="h-4 w-4" style={{ color: currentTheme.colors.status.success }} aria-hidden="true" />
                       <AlertTitle style={{ color: currentTheme.colors.status.success }} className="font-medium">
