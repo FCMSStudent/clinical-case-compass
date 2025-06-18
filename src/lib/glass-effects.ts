@@ -3,6 +3,7 @@
 // ────────────────────────────────────────────────────────────────────────────────
 
 import { motionTokens } from './motion';
+import { shadows } from './spacing';
 
 /**
  * Apple-inspired liquid glass effect utilities
@@ -18,12 +19,12 @@ export const liquidGlassEffects = {
   },
 
   /**
-   * Inner shadow effects for depth
+   * Inner shadow effects for depth - enhanced with softer highlights
    */
   innerShadow: {
-    subtle: "inset 0 1px 0 rgba(255, 255, 255, 0.3)",
-    medium: "inset 0 2px 4px rgba(255, 255, 255, 0.2)",
-    strong: "inset 0 4px 8px rgba(255, 255, 255, 0.15)",
+    subtle: shadows.innerHighlight,
+    medium: shadows.innerHighlightMedium,
+    strong: shadows.innerHighlightStrong,
   },
 
   /**
@@ -43,40 +44,43 @@ export const liquidGlassEffects = {
   },
 
   /**
-   * Glass hover states with micro-interactions
+   * Glass hover states with micro-interactions - updated with softer shadows
    */
   hover: {
     subtle: {
       scale: 1.02,
       filter: "brightness(1.05) saturate(1.1)",
+      boxShadow: shadows.glassWithHighlight,
       transition: { duration: 0.3, ease: motionTokens.glassHover }
     },
     medium: {
       scale: 1.03,
       filter: "brightness(1.1) saturate(1.15)",
+      boxShadow: shadows.glassElevatedWithHighlight,
       transition: { duration: 0.3, ease: motionTokens.glassHover }
     },
     strong: {
       scale: 1.05,
       filter: "brightness(1.15) saturate(1.2)",
+      boxShadow: shadows.glassFloatingWithHighlight,
       transition: { duration: 0.3, ease: motionTokens.glassHover }
     }
   },
 
   /**
-   * Glass focus states
+   * Glass focus states - enhanced with softer shadows
    */
   focus: {
     subtle: {
       scale: 1.01,
       filter: "brightness(1.1) saturate(1.05)",
-      boxShadow: "0 0 0 3px rgba(255, 255, 255, 0.3), 0 8px 32px rgba(0, 0, 0, 0.15)",
+      boxShadow: `0 0 0 3px rgba(255, 255, 255, 0.3), ${shadows.glassWithHighlight}`,
       transition: { duration: 0.2, ease: motionTokens.glassEnter }
     },
     medium: {
       scale: 1.02,
       filter: "brightness(1.15) saturate(1.1)",
-      boxShadow: "0 0 0 4px rgba(255, 255, 255, 0.4), 0 12px 40px rgba(0, 0, 0, 0.2)",
+      boxShadow: `0 0 0 4px rgba(255, 255, 255, 0.4), ${shadows.glassElevatedWithHighlight}`,
       transition: { duration: 0.2, ease: motionTokens.glassEnter }
     }
   },
@@ -171,42 +175,42 @@ export const applyLiquidGlass = (
     transition: `all ${motionTokens.duration.smooth} ${motionTokens.glassHover}`,
   };
 
-  // Context-specific adjustments
+  // Context-specific adjustments with softer shadows and inner highlights
   switch (context) {
     case 'navigation':
       return {
         ...baseStyles,
         backgroundColor: 'rgba(255, 255, 255, 0.18)',
-        backdropFilter: liquidGlassEffects.backdrop.medium,
-        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
+        backdropFilter: liquidGlassEffects.backdrop.navigation,
+        boxShadow: shadows.glassWithHighlight,
       };
     case 'modal':
       return {
         ...baseStyles,
         backgroundColor: 'rgba(255, 255, 255, 0.25)',
-        backdropFilter: liquidGlassEffects.backdrop.heavy,
-        boxShadow: '0 16px 64px rgba(0, 0, 0, 0.2)',
+        backdropFilter: liquidGlassEffects.backdrop.modal,
+        boxShadow: shadows.glassModalWithHighlight,
       };
     case 'alert':
       return {
         ...baseStyles,
         backgroundColor: 'rgba(255, 255, 255, 0.2)',
         backdropFilter: liquidGlassEffects.backdrop.medium,
-        boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)',
+        boxShadow: shadows.glassElevatedWithHighlight,
       };
     case 'button':
       return {
         ...baseStyles,
         backgroundColor: 'rgba(255, 255, 255, 0.15)',
         backdropFilter: liquidGlassEffects.backdrop.light,
-        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)',
+        boxShadow: shadows.glassWithHighlight,
       };
     default: // card
       return {
         ...baseStyles,
         backgroundColor: 'rgba(255, 255, 255, 0.08)',
-        backdropFilter: liquidGlassEffects.backdrop.light,
-        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.06)',
+        backdropFilter: liquidGlassEffects.backdrop.card,
+        boxShadow: shadows.glassWithHighlight,
       };
   }
 };
@@ -263,29 +267,29 @@ export const getParallaxEffect = (intensity: 'subtle' | 'medium' | 'strong' = 's
  * CSS classes for liquid glass effects
  */
 export const liquidGlassClasses = {
-  // Base glass classes
+  // Base glass classes with softer shadows
   base: 'backdrop-blur-md border border-white/20 transition-all duration-300 ease-out',
   
-  // Contextual variants with enhanced translucent backgrounds
-  card: 'bg-white/8 backdrop-blur-[18px] saturate-140 brightness-106 shadow-sm',
-  navigation: 'bg-white/18 backdrop-blur-[24px] saturate-160 brightness-108 shadow-md',
-  modal: 'bg-white/25 backdrop-blur-[45px] saturate-190 contrast-112 shadow-lg',
-  alert: 'bg-white/20 backdrop-blur-[30px] saturate-150 brightness-105 shadow-md',
-  button: 'bg-white/15 backdrop-blur-[20px] brightness-110 shadow-md',
-  dropdown: 'bg-white/15 backdrop-blur-[28px] saturate-170 brightness-107 shadow-md',
-  overlay: 'bg-white/10 backdrop-blur-[40px] saturate-180 contrast-110 shadow-lg',
-  input: 'bg-white/10 backdrop-blur-[16px] saturate-130 brightness-105 shadow-sm',
+  // Contextual variants with enhanced translucent backgrounds and softer shadows
+  card: 'bg-white/8 backdrop-blur-[18px] saturate-140 brightness-106 shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]',
+  navigation: 'bg-white/18 backdrop-blur-[24px] saturate-160 brightness-108 shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]',
+  modal: 'bg-white/25 backdrop-blur-[45px] saturate-190 contrast-112 shadow-[0_24px_80px_rgba(0,0,0,0.15)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]',
+  alert: 'bg-white/20 backdrop-blur-[30px] saturate-150 brightness-105 shadow-[0_12px_48px_rgba(0,0,0,0.12)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]',
+  button: 'bg-white/15 backdrop-blur-[20px] brightness-110 shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]',
+  dropdown: 'bg-white/15 backdrop-blur-[28px] saturate-170 brightness-107 shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]',
+  overlay: 'bg-white/10 backdrop-blur-[40px] saturate-180 contrast-110 shadow-[0_16px_64px_rgba(0,0,0,0.1)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]',
+  input: 'bg-white/10 backdrop-blur-[16px] saturate-130 brightness-105 shadow-[0_2px_8px_rgba(0,0,0,0.04)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]',
   
-  // Interactive states
-  hover: 'hover:bg-white/25 hover:shadow-xl hover:shadow-white/10 hover:scale-[1.02] hover:brightness-105 hover:saturate-110',
+  // Interactive states with enhanced shadows
+  hover: 'hover:bg-white/25 hover:shadow-[0_12px_48px_rgba(0,0,0,0.12)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] hover:scale-[1.02] hover:brightness-105 hover:saturate-110',
   focus: 'focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:filter focus-visible:brightness-110 focus-visible:saturate-105',
   
-  // Elevation variants with translucent backgrounds
-  elevation50: 'bg-white/2 backdrop-blur-[8px] shadow-sm',
-  elevation100: 'bg-white/5 backdrop-blur-[12px] shadow-sm',
-  elevation200: 'bg-white/8 backdrop-blur-[16px] shadow-md',
-  elevation300: 'bg-white/12 backdrop-blur-[20px] shadow-md',
-  elevation400: 'bg-white/18 backdrop-blur-[24px] shadow-lg',
+  // Elevation variants with softer shadows
+  elevation50: 'bg-white/2 backdrop-blur-[8px] shadow-[0_2px_8px_rgba(0,0,0,0.04)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]',
+  elevation100: 'bg-white/5 backdrop-blur-[12px] shadow-[0_4px_16px_rgba(0,0,0,0.06)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]',
+  elevation200: 'bg-white/8 backdrop-blur-[16px] shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]',
+  elevation300: 'bg-white/12 backdrop-blur-[20px] shadow-[0_12px_48px_rgba(0,0,0,0.12)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]',
+  elevation400: 'bg-white/18 backdrop-blur-[24px] shadow-[0_16px_64px_rgba(0,0,0,0.1)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]',
 } as const;
 
 /**

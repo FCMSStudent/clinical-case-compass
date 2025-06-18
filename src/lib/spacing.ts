@@ -37,12 +37,33 @@ export const borderRadius = {
 
 /** Shadow System */
 export const shadows = {
-  sm: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
-  md: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
-  lg: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
-  xl: '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)',
-  glass: '0 8px 32px rgba(0, 0, 0, 0.1)',
-  glassElevated: '0 12px 40px rgba(0, 0, 0, 0.15)',
+  // Base shadows - softer and more diffuse
+  sm: '0 1px 3px 0 rgba(0, 0, 0, 0.08)',
+  md: '0 4px 12px -2px rgba(0, 0, 0, 0.08), 0 2px 6px -4px rgba(0, 0, 0, 0.06)',
+  lg: '0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 10px -6px rgba(0, 0, 0, 0.06)',
+  xl: '0 20px 40px -5px rgba(0, 0, 0, 0.08), 0 8px 16px -8px rgba(0, 0, 0, 0.06)',
+  
+  // Glass-specific shadows - very soft and diffuse
+  glass: '0 8px 32px rgba(0, 0, 0, 0.08)',
+  glassElevated: '0 12px 48px rgba(0, 0, 0, 0.12)',
+  glassFloating: '0 16px 64px rgba(0, 0, 0, 0.1)',
+  glassModal: '0 24px 80px rgba(0, 0, 0, 0.15)',
+  
+  // Ultra-soft shadows for subtle elevation
+  soft: '0 2px 8px rgba(0, 0, 0, 0.04)',
+  softer: '0 4px 16px rgba(0, 0, 0, 0.06)',
+  softest: '0 8px 24px rgba(0, 0, 0, 0.08)',
+  
+  // Inner highlights for glass panels (like macOS windows)
+  innerHighlight: 'inset 0 1px 0 rgba(255, 255, 255, 0.3)',
+  innerHighlightMedium: 'inset 0 2px 4px rgba(255, 255, 255, 0.2)',
+  innerHighlightStrong: 'inset 0 4px 8px rgba(255, 255, 255, 0.15)',
+  
+  // Combined glass effects
+  glassWithHighlight: '0 8px 32px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
+  glassElevatedWithHighlight: '0 12px 48px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
+  glassFloatingWithHighlight: '0 16px 64px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
+  glassModalWithHighlight: '0 24px 80px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
 } as const;
 
 /** Layout System */
