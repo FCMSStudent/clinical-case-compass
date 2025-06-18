@@ -14,29 +14,30 @@ export const glassmorphic = `backdrop-blur-md border-white/20 transition-all dur
 /** Enhanced glassmorphic backgrounds with Apple liquid glass effects */
 export const glass = {
   // Base glass variants
-  subtle: `${glassmorphic} bg-white/5 shadow-sm backdrop-blur-[20px] brightness-110`,
-  elevated: `${glassmorphic} bg-white/15 shadow-md border-white/25 backdrop-blur-[30px] saturate-150 brightness-105`,
+  subtle: `${glassmorphic} bg-white/5 backdrop-blur-[12px] brightness-105 shadow-sm`,
+  elevated: `${glassmorphic} bg-white/12 backdrop-blur-[24px] saturate-160 brightness-108 shadow-md`,
   overlay: `backdrop-blur-xl border-white/25 bg-white/10 shadow-lg backdrop-blur-[40px] saturate-180 contrast-110`,
   
   // Card variants with enhanced glass effects
-  card: `${glassmorphic} bg-white/8 rounded-xl shadow-sm border backdrop-blur-[20px] brightness-110`,
-  cardElevated: `${glassmorphic} bg-white/12 rounded-xl shadow-md border backdrop-blur-[30px] saturate-150 brightness-105`,
+  card: `${glassmorphic} bg-white/8 rounded-xl shadow-sm border backdrop-blur-[18px] saturate-140 brightness-106`,
+  cardElevated: `${glassmorphic} bg-white/12 rounded-xl shadow-md border backdrop-blur-[24px] saturate-160 brightness-108`,
   
   // Contextual glass variants
-  navigation: `${glassmorphic} bg-white/18 rounded-xl shadow-md border backdrop-blur-[30px] saturate-150 brightness-105`,
-  modal: `${glassmorphic} bg-white/25 rounded-xl shadow-lg border backdrop-blur-[50px] saturate-180 contrast-110`,
+  navigation: `${glassmorphic} bg-white/18 rounded-xl shadow-md border backdrop-blur-[24px] saturate-160 brightness-108`,
+  modal: `${glassmorphic} bg-white/25 rounded-xl shadow-lg border backdrop-blur-[45px] saturate-190 contrast-112`,
   alert: `${glassmorphic} bg-white/20 rounded-xl shadow-md border backdrop-blur-[30px] saturate-150 brightness-105`,
+  dropdown: `${glassmorphic} bg-white/15 rounded-xl shadow-md border backdrop-blur-[28px] saturate-170 brightness-107`,
   
   // Interactive glass variants with enhanced hover states
   interactive: `${glassmorphic} bg-white/10 rounded-xl shadow-sm border hover:bg-white/25 hover:shadow-xl hover:shadow-white/10 hover:scale-[1.02] hover:brightness-105 hover:saturate-110 cursor-pointer transition-all duration-300 ease-out`,
-  featured: `${glassmorphic} bg-white/15 ring-1 ring-white/30 shadow-lg shadow-white/5 backdrop-blur-[30px] saturate-150 brightness-105`,
+  featured: `${glassmorphic} bg-white/15 ring-1 ring-white/30 shadow-lg shadow-white/5 backdrop-blur-[24px] saturate-160 brightness-108`,
   
-  // Surface elevation variants
-  elevation50: `${glassmorphic} bg-white/2 shadow-sm`,
-  elevation100: `${glassmorphic} bg-white/5 shadow-sm`,
-  elevation200: `${glassmorphic} bg-white/8 shadow-md`,
-  elevation300: `${glassmorphic} bg-white/12 shadow-md`,
-  elevation400: `${glassmorphic} bg-white/18 shadow-lg`,
+  // Surface elevation variants with translucent backgrounds
+  elevation50: `${glassmorphic} bg-white/2 backdrop-blur-[8px] shadow-sm`,
+  elevation100: `${glassmorphic} bg-white/5 backdrop-blur-[12px] shadow-sm`,
+  elevation200: `${glassmorphic} bg-white/8 backdrop-blur-[16px] shadow-md`,
+  elevation300: `${glassmorphic} bg-white/12 backdrop-blur-[20px] shadow-md`,
+  elevation400: `${glassmorphic} bg-white/18 backdrop-blur-[24px] shadow-lg`,
 } as const;
 
 /** Base styles for buttons with enhanced glass effects */
@@ -86,7 +87,7 @@ export const button = {
 /** Input System with enhanced glass effects */
 export const input = {
   base: `flex w-full rounded-lg text-sm text-white placeholder:text-white/60 
-         bg-white/10 backdrop-blur-md border border-white/20 
+         bg-white/10 backdrop-blur-[16px] saturate-130 brightness-105 border border-white/20 
          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 
          focus-visible:ring-offset-2 focus-visible:ring-offset-transparent 
          focus-visible:filter focus-visible:brightness-110 focus-visible:saturate-105
@@ -104,14 +105,14 @@ export const input = {
 export const card = {
   base: `backdrop-blur-md border border-white/20 transition-all duration-300 ease-out rounded-xl`,
   variant: {
-    default: 'bg-white/8 shadow-sm backdrop-blur-[20px] brightness-110',
-    elevated: 'bg-white/12 shadow-md border-white/25 backdrop-blur-[30px] saturate-150 brightness-105',
-    interactive: 'bg-white/10 shadow-md hover:bg-white/25 hover:shadow-xl hover:shadow-white/10 hover:scale-[1.02] hover:brightness-105 hover:saturate-110 cursor-pointer transition-all duration-300 ease-out backdrop-blur-[20px] brightness-110',
-    featured: 'bg-white/15 ring-1 ring-white/30 shadow-lg shadow-white/5 backdrop-blur-[30px] saturate-150 brightness-105',
-    compact: 'bg-white/8 shadow-sm backdrop-blur-[20px] brightness-110',
-    navigation: 'bg-white/18 shadow-md backdrop-blur-[30px] saturate-150 brightness-105',
-    modal: 'bg-white/25 shadow-lg backdrop-blur-[50px] saturate-180 contrast-110',
-    alert: 'bg-white/20 shadow-md backdrop-blur-[30px] saturate-150 brightness-105',
+    default: 'bg-white/8 backdrop-blur-[18px] saturate-140 brightness-106 shadow-sm',
+    elevated: 'bg-white/12 backdrop-blur-[24px] saturate-160 brightness-108 shadow-md',
+    interactive: 'bg-white/10 shadow-md hover:bg-white/25 hover:shadow-xl hover:shadow-white/10 hover:scale-[1.02] hover:brightness-105 hover:saturate-110 cursor-pointer transition-all duration-300 ease-out backdrop-blur-[18px] saturate-140 brightness-106',
+    featured: 'bg-white/15 ring-1 ring-white/30 shadow-lg shadow-white/5 backdrop-blur-[24px] saturate-160 brightness-108',
+    compact: 'bg-white/8 backdrop-blur-[18px] saturate-140 brightness-106 shadow-sm',
+    navigation: 'bg-white/18 backdrop-blur-[24px] saturate-160 brightness-108 shadow-md',
+    modal: 'bg-white/25 backdrop-blur-[45px] saturate-190 contrast-112 shadow-lg',
+    alert: 'bg-white/20 backdrop-blur-[30px] saturate-150 brightness-105 shadow-md',
   },
   padding: {
     sm: 'p-3',

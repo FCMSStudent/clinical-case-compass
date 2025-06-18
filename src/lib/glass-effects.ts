@@ -27,13 +27,19 @@ export const liquidGlassEffects = {
   },
 
   /**
-   * Enhanced backdrop filters
+   * Enhanced backdrop filters with Apple-style frosted glass
    */
   backdrop: {
     light: "blur(20px) brightness(1.1)",
     medium: "blur(30px) saturate(150%) brightness(1.05)",
     heavy: "blur(50px) saturate(180%) contrast(1.1)",
     frosted: "blur(40px) saturate(180%)",
+    ultra: "blur(60px) saturate(200%) contrast(1.15)",
+    subtle: "blur(12px) brightness(1.05)",
+    navigation: "blur(24px) saturate(160%) brightness(1.08)",
+    modal: "blur(45px) saturate(190%) contrast(1.12)",
+    card: "blur(18px) saturate(140%) brightness(1.06)",
+    dropdown: "blur(28px) saturate(170%) brightness(1.07)",
   },
 
   /**
@@ -260,23 +266,26 @@ export const liquidGlassClasses = {
   // Base glass classes
   base: 'backdrop-blur-md border border-white/20 transition-all duration-300 ease-out',
   
-  // Contextual variants
-  card: 'bg-white/8 backdrop-blur-[20px] brightness-110 shadow-sm',
-  navigation: 'bg-white/18 backdrop-blur-[30px] saturate-150 brightness-105 shadow-md',
-  modal: 'bg-white/25 backdrop-blur-[50px] saturate-180 contrast-110 shadow-lg',
+  // Contextual variants with enhanced translucent backgrounds
+  card: 'bg-white/8 backdrop-blur-[18px] saturate-140 brightness-106 shadow-sm',
+  navigation: 'bg-white/18 backdrop-blur-[24px] saturate-160 brightness-108 shadow-md',
+  modal: 'bg-white/25 backdrop-blur-[45px] saturate-190 contrast-112 shadow-lg',
   alert: 'bg-white/20 backdrop-blur-[30px] saturate-150 brightness-105 shadow-md',
   button: 'bg-white/15 backdrop-blur-[20px] brightness-110 shadow-md',
+  dropdown: 'bg-white/15 backdrop-blur-[28px] saturate-170 brightness-107 shadow-md',
+  overlay: 'bg-white/10 backdrop-blur-[40px] saturate-180 contrast-110 shadow-lg',
+  input: 'bg-white/10 backdrop-blur-[16px] saturate-130 brightness-105 shadow-sm',
   
   // Interactive states
   hover: 'hover:bg-white/25 hover:shadow-xl hover:shadow-white/10 hover:scale-[1.02] hover:brightness-105 hover:saturate-110',
   focus: 'focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:filter focus-visible:brightness-110 focus-visible:saturate-105',
   
-  // Elevation variants
-  elevation50: 'bg-white/2 shadow-sm',
-  elevation100: 'bg-white/5 shadow-sm',
-  elevation200: 'bg-white/8 shadow-md',
-  elevation300: 'bg-white/12 shadow-md',
-  elevation400: 'bg-white/18 shadow-lg',
+  // Elevation variants with translucent backgrounds
+  elevation50: 'bg-white/2 backdrop-blur-[8px] shadow-sm',
+  elevation100: 'bg-white/5 backdrop-blur-[12px] shadow-sm',
+  elevation200: 'bg-white/8 backdrop-blur-[16px] shadow-md',
+  elevation300: 'bg-white/12 backdrop-blur-[20px] shadow-md',
+  elevation400: 'bg-white/18 backdrop-blur-[24px] shadow-lg',
 } as const;
 
 /**
@@ -298,4 +307,54 @@ export const getGlassClasses = (
   }
   
   return classes;
-}; 
+};
+
+/**
+ * Enhanced translucent background variants with Apple-style frosted glass
+ */
+export const translucentBackgrounds = {
+  // Ultra-light translucent backgrounds
+  ultraLight: {
+    white: "bg-white/5 backdrop-blur-[12px] brightness-105",
+    gray: "bg-gray-500/5 backdrop-blur-[12px] brightness-105",
+    tinted: "bg-white/3 backdrop-blur-[12px] brightness-105",
+  },
+  
+  // Light translucent backgrounds
+  light: {
+    white: "bg-white/8 backdrop-blur-[18px] saturate-140 brightness-106",
+    gray: "bg-gray-500/8 backdrop-blur-[18px] saturate-140 brightness-106",
+    tinted: "bg-white/6 backdrop-blur-[18px] saturate-140 brightness-106",
+  },
+  
+  // Medium translucent backgrounds
+  medium: {
+    white: "bg-white/12 backdrop-blur-[24px] saturate-160 brightness-108",
+    gray: "bg-gray-500/12 backdrop-blur-[24px] saturate-160 brightness-108",
+    tinted: "bg-white/10 backdrop-blur-[24px] saturate-160 brightness-108",
+  },
+  
+  // Heavy translucent backgrounds
+  heavy: {
+    white: "bg-white/18 backdrop-blur-[30px] saturate-150 brightness-105",
+    gray: "bg-gray-500/18 backdrop-blur-[30px] saturate-150 brightness-105",
+    tinted: "bg-white/15 backdrop-blur-[30px] saturate-150 brightness-105",
+  },
+  
+  // Ultra-heavy translucent backgrounds
+  ultraHeavy: {
+    white: "bg-white/25 backdrop-blur-[45px] saturate-190 contrast-112",
+    gray: "bg-gray-500/25 backdrop-blur-[45px] saturate-190 contrast-112",
+    tinted: "bg-white/20 backdrop-blur-[45px] saturate-190 contrast-112",
+  },
+  
+  // Context-specific translucent backgrounds
+  navigation: "bg-white/18 backdrop-blur-[24px] saturate-160 brightness-108",
+  modal: "bg-white/25 backdrop-blur-[45px] saturate-190 contrast-112",
+  card: "bg-white/8 backdrop-blur-[18px] saturate-140 brightness-106",
+  dropdown: "bg-white/15 backdrop-blur-[28px] saturate-170 brightness-107",
+  overlay: "bg-white/10 backdrop-blur-[40px] saturate-180 contrast-110",
+  alert: "bg-white/20 backdrop-blur-[30px] saturate-150 brightness-105",
+  button: "bg-white/15 backdrop-blur-[20px] brightness-110",
+  input: "bg-white/10 backdrop-blur-[16px] saturate-130 brightness-105",
+} as const; 

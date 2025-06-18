@@ -116,7 +116,7 @@ const EnhancedNavbar: React.FC = () => {
     <motion.nav
       className={cn(
         "w-full rounded-2xl",
-        "bg-white/12 backdrop-blur-[24px] saturate-[1.8] brightness-[1.15] border border-white/20 shadow-lg",
+        "bg-white/18 backdrop-blur-[24px] saturate-160 brightness-108 border border-white/20 shadow-lg",
         liquidGlassClasses.navigation
       )}
       variants={getGlassTransitionVariants('medium')}
@@ -188,7 +188,7 @@ const EnhancedNavbar: React.FC = () => {
               }}
               transition={{ duration: 0.3 }}
             >
-              <div className="absolute inset-0 bg-white/12 backdrop-blur-[24px] saturate-[1.8] brightness-[1.15] rounded-xl border border-white/20 shadow-lg"></div>
+              <div className="absolute inset-0 bg-white/10 backdrop-blur-[16px] saturate-130 brightness-105 rounded-xl border border-white/20 shadow-lg"></div>
               <div className="relative flex items-center">
                 <Search className="h-4 w-4 text-white/70 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
@@ -212,7 +212,7 @@ const EnhancedNavbar: React.FC = () => {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -10, scale: 0.95 }}
                   transition={{ duration: 0.3, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
-                  className="absolute top-full left-0 right-0 mt-2 bg-white/15 backdrop-blur-[32px] saturate-[1.9] brightness-[1.1] rounded-2xl border border-white/20 shadow-2xl z-50"
+                  className="absolute top-full left-0 right-0 mt-2 bg-white/15 backdrop-blur-[28px] saturate-170 brightness-107 rounded-2xl border border-white/20 shadow-2xl z-50"
                 >
                   {searchResults.length > 0 ? (
                     <div className="py-2">
@@ -292,7 +292,7 @@ const EnhancedNavbar: React.FC = () => {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
                     transition={{ duration: 0.3, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
-                    className="absolute right-0 mt-2 w-48 bg-white/18 backdrop-blur-[30px] saturate-150 brightness-105 rounded-xl border border-white/25 shadow-xl py-2 z-20"
+                    className="absolute right-0 mt-2 w-48 bg-white/15 backdrop-blur-[28px] saturate-170 brightness-107 rounded-xl border border-white/25 shadow-xl py-2 z-20"
                   >
                     <motion.button
                       className="w-full px-4 py-2 text-left text-white flex items-center space-x-2 transition-all duration-300 hover:bg-white/20 hover:brightness-105 hover:saturate-110 focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-transparent"
