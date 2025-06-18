@@ -7,36 +7,37 @@ import FeaturesSection from '@/features/landing/components/FeaturesSection';
 import CtaSection from '@/features/landing/components/CtaSection';
 import Footer from '@/features/landing/components/Footer';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { motion } from "framer-motion"; // Added motion
+import { motion } from "framer-motion";
 import {
   pageTransitionVariants,
   reducedMotionPageTransitionVariants,
   getMotionVariants
-} from "@/lib/motion"; // Added motion imports
+} from "@/lib/motion";
 
 const LandingPage = () => {
   // Get page transition variants, respecting reduced motion settings.
   const variants = getMotionVariants(pageTransitionVariants, reducedMotionPageTransitionVariants);
 
   return (
-    <div className="text-white"> {/* Base container, non-animated, for elements like UnifiedBackground. */}
+    <div className="text-white">
       <UnifiedBackground />
-      {/* This motion.div applies page transition animations to the main content of the landing page. */}
-      {/* It's keyed by the route in App.tsx's AnimatePresence setup. */}
+      
+      {/* Simplified motion wrapper with improved transitions */}
       <motion.div
-        className="relative z-10 flex flex-col min-h-screen" // Ensures consistent layout during transitions.
+        className="relative z-10 flex flex-col min-h-screen"
         variants={variants}
-        initial="initial" // Start state from pageTransitionVariants (e.g., opacity 0, off-screen).
-        animate="animate" // End state from pageTransitionVariants (e.g., opacity 1, on-screen).
-        exit="exit"       // Exit state from pageTransitionVariants (e.g., opacity 0, off-screen).
+        initial="initial"
+        animate="animate"
+        exit="exit"
       >
         <LandingNavbar />
-        {/* ScrollArea contains the bulk of the page content and should fill available vertical space. */}
+        
+        {/* Remove ScrollArea transitions to prevent conflicts */}
         <ScrollArea className="flex-1 w-full">
           <main>
             <HeroSection />
             <FeaturesSection />
-          <CtaSection />
+            <CtaSection />
           </main>
           <Footer />
         </ScrollArea>

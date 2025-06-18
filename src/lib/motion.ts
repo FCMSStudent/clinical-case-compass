@@ -690,3 +690,5 @@ export const useThemeAwareMotion = (isDark: boolean = true) => {
     },
   };
 };
+
+</edits_to_apply>

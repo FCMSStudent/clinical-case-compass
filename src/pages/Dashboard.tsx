@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserRound, TrendingUp, Activity, BookOpen, Users, Target, Plus, Eye } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -6,12 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/app/AuthContext";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { MetricCardSkeleton } from "@/components/ui/dashboard-skeleton";
 import { DynamicRecentActivity } from "@/features/dashboard/components/DynamicRecentActivity";
 import { RecentCasesCarousel } from "@/components/ui/recent-cases-carousel";
 import { 
-  animations, 
   getComponentStyles, 
   card, 
   button, 
@@ -20,17 +20,38 @@ import {
 import { typo, responsiveType } from "@/lib/typography";
 import { cn } from "@/lib/utils";
 
+// Simplified staggered animations that work well with page transitions
+const staggeredContainer = {
+  hidden: { opacity: 1 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.05, // Reduced stagger for smoother feel
+      delayChildren: 0.1, // Shorter delay
+    },
+  },
+};
+
+const staggeredItem = {
+  hidden: {
+    opacity: 0,
+    y: 10, // Reduced movement
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.2, // Faster individual animations
+      ease: "easeOut",
+    },
+  },
+};
+
 const Dashboard = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { currentTheme } = useTheme();
   const { data, isLoading, error } = useDashboardData();
-  
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
 
   if (error) {
     return (
@@ -46,17 +67,9 @@ const Dashboard = () => {
   }
 
   return (
-    <motion.div
-      className="container mx-auto px-4 py-8 space-y-8"
-      variants={animations.fadeIn}
-      initial="hidden"
-      animate={isVisible ? "visible" : "hidden"}
-    >
-      {/* Welcome Header */}
-      <motion.div
-        variants={animations.staggeredItem}
-        className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4"
-      >
+    <div className="container mx-auto px-4 py-8 space-y-8">
+      {/* Welcome Header - no individual animation, relies on page transition */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
           <h1 className={cn(typo.h1, responsiveType.h1, "text-white mb-2")}>
             Welcome back, {user?.user_metadata?.full_name || 'Doctor'}!
@@ -83,11 +96,13 @@ const Dashboard = () => {
             View All
           </Button>
         </div>
-      </motion.div>
+      </div>
 
-      {/* Metrics Grid */}
+      {/* Metrics Grid with subtle staggered animation */}
       <motion.div
-        variants={animations.staggeredContainer}
+        variants={staggeredContainer}
+        initial="hidden"
+        animate="visible"
         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
       >
         {isLoading ? (
@@ -98,7 +113,7 @@ const Dashboard = () => {
         ) : (
           // Actual metrics
           <>
-            <motion.div variants={animations.staggeredItem}>
+            <motion.div variants={staggeredItem}>
               <Card className={getComponentStyles('card', 'default', 'md')}>
                 <CardContent className="pt-6">
                   <div className="flex items-center justify-between">
@@ -116,7 +131,7 @@ const Dashboard = () => {
               </Card>
             </motion.div>
 
-            <motion.div variants={animations.staggeredItem}>
+            <motion.div variants={staggeredItem}>
               <Card className={getComponentStyles('card', 'default', 'md')}>
                 <CardContent className="pt-6">
                   <div className="flex items-center justify-between">
@@ -134,7 +149,7 @@ const Dashboard = () => {
               </Card>
             </motion.div>
 
-            <motion.div variants={animations.staggeredItem}>
+            <motion.div variants={staggeredItem}>
               <Card className={getComponentStyles('card', 'default', 'md')}>
                 <CardContent className="pt-6">
                   <div className="flex items-center justify-between">
@@ -152,7 +167,7 @@ const Dashboard = () => {
               </Card>
             </motion.div>
 
-            <motion.div variants={animations.staggeredItem}>
+            <motion.div variants={staggeredItem}>
               <Card className={getComponentStyles('card', 'default', 'md')}>
                 <CardContent className="pt-6">
                   <div className="flex items-center justify-between">
@@ -173,13 +188,15 @@ const Dashboard = () => {
         )}
       </motion.div>
 
-      {/* Main Content Grid */}
+      {/* Main Content Grid - simplified animations */}
       <motion.div
-        variants={animations.staggeredContainer}
+        variants={staggeredContainer}
+        initial="hidden"
+        animate="visible"
         className="grid grid-cols-1 lg:grid-cols-3 gap-8"
       >
         {/* Recent Cases */}
-        <motion.div variants={animations.staggeredItem} className="lg:col-span-2">
+        <motion.div variants={staggeredItem} className="lg:col-span-2">
           <Card className={getComponentStyles('card', 'elevated', 'lg')}>
             <CardHeader>
               <div className="flex items-center justify-between">
@@ -196,7 +213,7 @@ const Dashboard = () => {
         </motion.div>
 
         {/* Recent Activity */}
-        <motion.div variants={animations.staggeredItem}>
+        <motion.div variants={staggeredItem}>
           <Card className={getComponentStyles('card', 'elevated', 'lg')}>
             <CardHeader>
               <CardTitle className="text-white">Recent Activity</CardTitle>
@@ -209,7 +226,11 @@ const Dashboard = () => {
       </motion.div>
 
       {/* Quick Actions */}
-      <motion.div variants={animations.staggeredItem}>
+      <motion.div
+        variants={staggeredItem}
+        initial="hidden"
+        animate="visible"
+      >
         <Card className={getComponentStyles('card', 'interactive', 'lg')}>
           <CardHeader>
             <CardTitle className="text-white">Quick Actions</CardTitle>
@@ -244,7 +265,7 @@ const Dashboard = () => {
           </CardContent>
         </Card>
       </motion.div>
-    </motion.div>
+    </div>
   );
 };
 
