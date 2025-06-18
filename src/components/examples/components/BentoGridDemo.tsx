@@ -4,8 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Users, TrendingUp } from 'lucide-react';
 import { StaggeredItem } from '@/components/ui/animation';
-import { getBentoStyles, getComponentStyles } from '@/lib/design-system';
-import { card } from "@/lib/components";
+import { getBentoStyles, getComponentStyles, card } from '@/lib/design-system';
 
 export function BentoGridDemo() {
   return (

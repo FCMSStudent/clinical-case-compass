@@ -1,78 +1,30 @@
-// -----------------------------------------------------------------------------
-// Input – Liquid Glass Edition
-// -----------------------------------------------------------------------------
-// 1. Adds `glass` variants (`glass-subtle`, `glass`, `glass-elevated`) that
-//    automatically adopt design-system blur, border & shadow tokens.
-// 2. Uses Framer Motion for a smooth focus ring scale/opacity transition that
-//    respects reduced-motion preferences.
-// -----------------------------------------------------------------------------
 
-import * as React from "react";
-import { motion } from "framer-motion";
-import { cva, type VariantProps } from "class-variance-authority";
+import * as React from "react"
+import { cn } from "@/lib/utils"
+import { inputVariants as unifiedInputVariants, componentSizes } from "@/lib/component-system"
 
-import { cn } from "@/lib/utils";
-import {
-  inputVariants as legacyInputVariants,
-  componentSizes,
-} from "@/lib/component-system";
-import {
-  getMotionVariants,
-  subtleInputInteraction,
-  reducedMotionInputInteraction,
-} from "@/lib/motion";
-
-// ─── Tailwind variant generator ──────────────────────────────────────────────
-const inputVariants = cva("rounded-lg flex w-full bg-transparent", {
-  variants: {
-    variant: {
-      // Brand / status (legacy)
-      ...legacyInputVariants,
-
-      // Glass presets
-      "glass-subtle": cn("glass-subtle text-white/90 placeholder:text-white/50"),
-      glass: cn("glass text-white placeholder:text-white/70"),
-      "glass-elevated": cn("glass-elevated text-white placeholder:text-white/80"),
-    },
-    size: {
-      xs: componentSizes.input.xs,
-      sm: componentSizes.input.sm,
-      md: componentSizes.input.md,
-      lg: componentSizes.input.lg,
-    },
-  },
-  defaultVariants: {
-    variant: "default",
-    size: "md",
-  },
-});
-
-// ─── Props --------------------------------------------------------------------
 export interface InputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>,
-    VariantProps<typeof inputVariants> {}
+  extends React.InputHTMLAttributes<HTMLInputElement> {
+  variant?: keyof typeof unifiedInputVariants
+}
 
-// ─── Component ----------------------------------------------------------------
-export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, variant, size = 'md', type = "text", ...props }, ref) => {
-    const animationVariants = getMotionVariants(
-      subtleInputInteraction,
-      reducedMotionInputInteraction,
-    );
-
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  ({ className, type, variant = "default", ...props }, ref) => {
     return (
-      <motion.input
-        ref={ref}
+      <input
         type={type}
-        className={cn(inputVariants({ variant, size: size as 'xs' | 'sm' | 'md' | 'lg', className }))}
-        variants={animationVariants as any}
-        initial="initial"
-        whileFocus="focus"
-        {...(props as any)}
+        className={cn(
+          "flex w-full rounded-lg",
+          unifiedInputVariants[variant],
+          componentSizes.input.md,
+          className
+        )}
+        ref={ref}
+        {...props}
       />
-    );
-  },
-);
-Input.displayName = "Input";
+    )
+  }
+)
+Input.displayName = "Input"
 
-export { inputVariants };
+export { Input }

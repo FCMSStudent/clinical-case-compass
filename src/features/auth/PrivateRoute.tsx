@@ -1,4 +1,3 @@
-
 import { Navigate } from "react-router-dom";
 import { useAuth } from "@/app/AuthContext";
 
@@ -7,17 +6,10 @@ interface PrivateRouteProps {
 }
 
 export function PrivateRoute({ children }: PrivateRouteProps) {
-  const { user, loading, session } = useAuth();
-  
-  console.log("[PrivateRoute] Auth state:", { 
-    hasUser: !!user, 
-    hasSession: !!session,
-    loading,
-    userEmail: user?.email 
-  });
+  const { user, loading } = useAuth();
+  console.log("[PrivateRoute] Received state:", { user, loading });
   
   if (loading) {
-    console.log("[PrivateRoute] Still loading, showing spinner");
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
@@ -25,11 +17,9 @@ export function PrivateRoute({ children }: PrivateRouteProps) {
     );
   }
   
-  if (!user || !session) {
-    console.log("[PrivateRoute] No user/session, redirecting to /auth");
+  if (!user) {
     return <Navigate to="/auth" replace />;
   }
   
-  console.log("[PrivateRoute] User authenticated, rendering children");
   return <>{children}</>;
 }
