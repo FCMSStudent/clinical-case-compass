@@ -38,32 +38,41 @@ export const liquidGlassEffects = {
     ultra: "blur(60px) saturate(200%) contrast(1.15)",
     subtle: "blur(12px) brightness(1.05)",
     navigation: "blur(24px) saturate(160%) brightness(1.08)",
-    modal: "blur(45px) saturate(190%) contrast(1.12)",
+    modal: "blur(50px) saturate(200%) contrast(1.15)",
     card: "blur(18px) saturate(140%) brightness(1.06)",
     dropdown: "blur(28px) saturate(170%) brightness(1.07)",
+    overlay: "blur(20px) brightness(1.05)",
+    popover: "blur(40px) saturate(200%) contrast(1.15)",
   },
 
   /**
-   * Glass hover states with micro-interactions - updated with softer shadows
+   * Enhanced overlay backdrop filters for frosted glass panels
+   */
+  overlayBackdrop: {
+    light: "blur(20px) brightness(1.05)",
+    medium: "blur(30px) saturate(150%) brightness(1.08)",
+    heavy: "blur(40px) saturate(180%) contrast(1.1)",
+    ultra: "blur(50px) saturate(200%) contrast(1.15)",
+  },
+
+  /**
+   * Glass hover effects with enhanced frosted glass
    */
   hover: {
     subtle: {
-      scale: 1.02,
+      scale: 1.01,
       filter: "brightness(1.05) saturate(1.1)",
-      boxShadow: shadows.glassWithHighlight,
-      transition: { duration: 0.3, ease: motionTokens.glassHover }
+      transition: { duration: 0.2, ease: motionTokens.glassHover }
     },
     medium: {
-      scale: 1.03,
-      filter: "brightness(1.1) saturate(1.15)",
-      boxShadow: shadows.glassElevatedWithHighlight,
+      scale: 1.02,
+      filter: "brightness(1.08) saturate(1.15)",
       transition: { duration: 0.3, ease: motionTokens.glassHover }
     },
     strong: {
-      scale: 1.05,
-      filter: "brightness(1.15) saturate(1.2)",
-      boxShadow: shadows.glassFloatingWithHighlight,
-      transition: { duration: 0.3, ease: motionTokens.glassHover }
+      scale: 1.03,
+      filter: "brightness(1.1) saturate(1.2)",
+      transition: { duration: 0.4, ease: motionTokens.glassHover }
     }
   },
 
@@ -86,20 +95,35 @@ export const liquidGlassEffects = {
   },
 
   /**
-   * Glass entrance animations
+   * Glass entrance animations with enhanced frosted glass effects
    */
   enter: {
     subtle: {
       opacity: 1,
       scale: 1,
       filter: "blur(0px)",
-      transition: { duration: 0.4, ease: motionTokens.glassEnter }
+      transition: { 
+        duration: 0.3, 
+        ease: motionTokens.glassEnter 
+      }
     },
     medium: {
       opacity: 1,
       scale: 1,
       filter: "blur(0px)",
-      transition: { duration: 0.6, ease: motionTokens.glassEnter }
+      transition: { 
+        duration: 0.4, 
+        ease: motionTokens.glassEnter 
+      }
+    },
+    strong: {
+      opacity: 1,
+      scale: 1,
+      filter: "blur(0px)",
+      transition: { 
+        duration: 0.5, 
+        ease: motionTokens.glassEnter 
+      }
     }
   },
 
@@ -111,13 +135,28 @@ export const liquidGlassEffects = {
       opacity: 0,
       scale: 0.95,
       filter: "blur(4px)",
-      transition: { duration: 0.3, ease: motionTokens.glassExit }
+      transition: { 
+        duration: 0.2, 
+        ease: motionTokens.glassExit 
+      }
     },
     medium: {
       opacity: 0,
+      scale: 0.95,
+      filter: "blur(4px)",
+      transition: { 
+        duration: 0.3, 
+        ease: motionTokens.glassExit 
+      }
+    },
+    strong: {
+      opacity: 0,
       scale: 0.9,
       filter: "blur(8px)",
-      transition: { duration: 0.4, ease: motionTokens.glassExit }
+      transition: { 
+        duration: 0.4, 
+        ease: motionTokens.glassExit 
+      }
     }
   },
 
@@ -273,12 +312,18 @@ export const liquidGlassClasses = {
   // Contextual variants with enhanced translucent backgrounds and softer shadows
   card: 'bg-white/8 backdrop-blur-[18px] saturate-140 brightness-106 shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] rounded-2xl',
   navigation: 'bg-white/18 backdrop-blur-[24px] saturate-160 brightness-108 shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] rounded-2xl',
-  modal: 'bg-white/25 backdrop-blur-[45px] saturate-190 contrast-112 shadow-[0_24px_80px_rgba(0,0,0,0.15)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] rounded-2xl',
+  modal: 'bg-white/25 backdrop-blur-[50px] saturate-200 contrast-115 shadow-[0_16px_64px_rgba(0,0,0,0.2)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] rounded-2xl',
   alert: 'bg-white/20 backdrop-blur-[30px] saturate-150 brightness-105 shadow-[0_12px_48px_rgba(0,0,0,0.12)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] rounded-2xl',
   button: 'bg-white/15 backdrop-blur-[20px] brightness-110 shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] rounded-xl',
   dropdown: 'bg-white/15 backdrop-blur-[28px] saturate-170 brightness-107 shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] rounded-xl',
   overlay: 'bg-white/10 backdrop-blur-[40px] saturate-180 contrast-110 shadow-[0_16px_64px_rgba(0,0,0,0.1)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] rounded-2xl',
   input: 'bg-white/10 backdrop-blur-[16px] saturate-130 brightness-105 shadow-[0_2px_8px_rgba(0,0,0,0.04)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] rounded-xl',
+  
+  // Enhanced frosted glass overlay variants
+  frostedOverlay: 'bg-white/25 backdrop-blur-[50px] saturate-200 contrast-115 shadow-[0_16px_64px_rgba(0,0,0,0.2)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] rounded-2xl border border-white/25',
+  frostedModal: 'bg-white/25 backdrop-blur-[50px] saturate-200 contrast-115 shadow-[0_16px_64px_rgba(0,0,0,0.2)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] rounded-2xl border border-white/25',
+  frostedPanel: 'bg-white/20 backdrop-blur-[40px] saturate-180 contrast-110 shadow-[0_12px_48px_rgba(0,0,0,0.15)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] rounded-2xl border border-white/25',
+  frostedPopover: 'bg-white/25 backdrop-blur-[40px] saturate-200 contrast-115 shadow-[0_16px_64px_rgba(0,0,0,0.2)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] rounded-xl border border-white/25',
   
   // Interactive states with enhanced shadows
   hover: 'hover:bg-white/25 hover:shadow-[0_12px_48px_rgba(0,0,0,0.12)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] hover:scale-[1.02] hover:brightness-105 hover:saturate-110',
@@ -354,11 +399,18 @@ export const translucentBackgrounds = {
   
   // Context-specific translucent backgrounds
   navigation: "bg-white/18 backdrop-blur-[24px] saturate-160 brightness-108",
-  modal: "bg-white/25 backdrop-blur-[45px] saturate-190 contrast-112",
+  modal: "bg-white/25 backdrop-blur-[50px] saturate-200 contrast-115",
   card: "bg-white/8 backdrop-blur-[18px] saturate-140 brightness-106",
   dropdown: "bg-white/15 backdrop-blur-[28px] saturate-170 brightness-107",
   overlay: "bg-white/10 backdrop-blur-[40px] saturate-180 contrast-110",
   alert: "bg-white/20 backdrop-blur-[30px] saturate-150 brightness-105",
   button: "bg-white/15 backdrop-blur-[20px] brightness-110",
   input: "bg-white/10 backdrop-blur-[16px] saturate-130 brightness-105",
+  
+  // Enhanced frosted glass overlay variants
+  frostedOverlay: "bg-white/25 backdrop-blur-[50px] saturate-200 contrast-115",
+  frostedModal: "bg-white/25 backdrop-blur-[50px] saturate-200 contrast-115",
+  frostedPanel: "bg-white/20 backdrop-blur-[40px] saturate-180 contrast-110",
+  frostedPopover: "bg-white/25 backdrop-blur-[40px] saturate-200 contrast-115",
+  frostedSheet: "bg-white/25 backdrop-blur-[50px] saturate-200 contrast-115",
 } as const; 
