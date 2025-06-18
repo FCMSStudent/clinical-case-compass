@@ -7,6 +7,7 @@ import { useSupabaseCases } from "@/hooks/use-supabase-cases";
 import { useAuth } from "@/app/AuthContext";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { liquidGlassClasses, getGlassHoverVariants, getGlassTransitionVariants } from "@/lib/glass-effects";
 import type { MedicalCase } from "@/types/case";
 
 const NAV_ITEMS = [
@@ -119,35 +120,49 @@ const EnhancedNavbar: React.FC = () => {
   };
 
   return (
-    <nav className="w-full bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl">
+    <motion.nav 
+      className={cn("w-full rounded-2xl", liquidGlassClasses.navigation)}
+      variants={getGlassTransitionVariants('medium')}
+      initial="initial"
+      animate="animate"
+    >
       <div className="px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex items-center">
-            <NavLink to="/dashboard" className="text-2xl font-bold text-white transition-colors">
+          <motion.div 
+            className="flex items-center"
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.2 }}
+          >
+            <NavLink to="/dashboard" className="text-2xl font-bold text-white transition-all duration-300 hover:brightness-110">
               Medica
             </NavLink>
-          </div>
+          </motion.div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {NAV_ITEMS.map((item) => {
               const isActive = location.pathname === item.to;
               return (
-                <NavLink
+                <motion.div
                   key={item.to}
-                  to={item.to}
-                  className={cn(
-                    "flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200",
-                    "text-white/80",
-                    isActive 
-                      ? "bg-white/20 text-white shadow-sm" 
-                      : "text-white/80"
-                  )}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                 >
-                  <item.icon className="h-4 w-4" />
-                  <span>{item.label}</span>
-                </NavLink>
+                  <NavLink
+                    to={item.to}
+                    className={cn(
+                      "flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300",
+                      "text-white/80 hover:text-white hover:bg-white/20 hover:brightness-105 hover:saturate-110",
+                      isActive 
+                        ? "bg-white/25 text-white shadow-md backdrop-blur-[20px] brightness-110 saturate-105" 
+                        : "text-white/80"
+                    )}
+                  >
+                    <item.icon className="h-4 w-4" />
+                    <span>{item.label}</span>
+                  </NavLink>
+                </motion.div>
               );
             })}
           </div>
@@ -160,8 +175,12 @@ const EnhancedNavbar: React.FC = () => {
               isSearchFocused ? "w-80" : "w-64"
             )}
           >
-            <div className="relative">
-              <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
+            <motion.div 
+              className="relative"
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="absolute inset-0 bg-white/15 backdrop-blur-[20px] brightness-110 rounded-xl border border-white/25 shadow-sm"></div>
               <div className="relative flex items-center">
                 <Search className="h-4 w-4 text-white/70 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
@@ -170,31 +189,34 @@ const EnhancedNavbar: React.FC = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => setIsSearchFocused(true)}
-                  className="bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 pl-10 pr-4 py-2 rounded-xl text-sm focus:outline-none w-full"
+                  className="bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 pl-10 pr-4 py-2 rounded-xl text-sm focus:outline-none w-full transition-all duration-300 focus:brightness-110 focus:saturate-105"
                 />
               </div>
-            </div>
+            </motion.div>
 
             {/* Search Results Dropdown */}
             <AnimatePresence>
               {isSearchFocused && (searchQuery || searchResults.length > 0) && (
                 <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="absolute top-full left-0 right-0 mt-2 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 z-50"
+                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                  transition={{ duration: 0.3, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
+                  className="absolute top-full left-0 right-0 mt-2 bg-white/18 backdrop-blur-[30px] saturate-150 brightness-105 rounded-xl border border-white/25 shadow-xl z-50"
                 >
                   {searchResults.length > 0 ? (
                     <div className="py-2">
                       {searchResults.map((result) => (
-                        <button
+                        <motion.button
                           key={result.id}
                           onClick={() => handleSearchResultClick(result)}
-                          className="w-full px-4 py-3 text-left transition-colors"
+                          className="w-full px-4 py-3 text-left transition-all duration-300 hover:bg-white/20 hover:brightness-105 hover:saturate-110"
+                          whileHover={{ x: 4 }}
+                          whileTap={{ scale: 0.98 }}
                         >
                           <div className="font-medium text-white text-sm">{result.title}</div>
                           <div className="text-white/70 text-xs mt-1">{result.subtitle}</div>
-                        </button>
+                        </motion.button>
                       ))}
                     </div>
                   ) : searchQuery ? (
@@ -204,13 +226,15 @@ const EnhancedNavbar: React.FC = () => {
                       <div className="text-white/70 text-xs mb-2">Quick suggestions</div>
                       <div className="space-y-1">
                         {["Recent cases", "Cardiology", "Emergency"].map((suggestion) => (
-                          <button
+                          <motion.button
                             key={suggestion}
                             onClick={() => setSearchQuery(suggestion)}
-                            className="block w-full text-left px-2 py-1 text-white/60 text-sm rounded"
+                            className="block w-full text-left px-2 py-1 text-white/60 text-sm rounded transition-all duration-300 hover:bg-white/20 hover:text-white/80 hover:brightness-105"
+                            whileHover={{ x: 4 }}
+                            whileTap={{ scale: 0.98 }}
                           >
                             {suggestion}
-                          </button>
+                          </motion.button>
                         ))}
                       </div>
                     </div>
@@ -223,38 +247,45 @@ const EnhancedNavbar: React.FC = () => {
           {/* User Menu */}
           <div className="hidden md:block">
             <div className="relative" ref={userMenuRef}>
-              <button
+              <motion.button
                 onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                className="flex items-center space-x-2 px-3 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl transition-colors"
+                className="flex items-center space-x-2 px-3 py-2 bg-white/15 backdrop-blur-[20px] brightness-110 border border-white/25 rounded-xl transition-all duration-300 hover:bg-white/25 hover:brightness-105 hover:saturate-110"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
                 <User className="h-4 w-4 text-white" />
                 <span className="text-white text-sm">{getUserDisplayName()}</span>
                 <ChevronDown className="h-3 w-3 text-white/70" />
-              </button>
+              </motion.button>
 
               <AnimatePresence>
                 {isUserMenuOpen && (
                   <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
-                    className="absolute right-0 mt-2 w-48 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 py-2 z-20"
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    transition={{ duration: 0.3, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
+                    className="absolute right-0 mt-2 w-48 bg-white/18 backdrop-blur-[30px] saturate-150 brightness-105 rounded-xl border border-white/25 shadow-xl py-2 z-20"
                   >
-                    <button
-                      className="w-full px-4 py-2 text-left text-white flex items-center space-x-2 transition-colors hover:bg-white/20"
+                    <motion.button
+                      className="w-full px-4 py-2 text-left text-white flex items-center space-x-2 transition-all duration-300 hover:bg-white/20 hover:brightness-105 hover:saturate-110"
                       onClick={() => { navigate('/account'); setIsUserMenuOpen(false); }}
+                      whileHover={{ x: 4 }}
+                      whileTap={{ scale: 0.98 }}
                     >
                       <User className="h-4 w-4" />
                       <span>Account</span>
-                    </button>
+                    </motion.button>
                     <div className="h-px bg-white/20 my-2" />
-                    <button
-                      className="w-full px-4 py-2 text-left text-red-300 flex items-center space-x-2 transition-colors"
+                    <motion.button
+                      className="w-full px-4 py-2 text-left text-red-300 flex items-center space-x-2 transition-all duration-300 hover:bg-white/20 hover:brightness-105 hover:saturate-110"
                       onClick={handleSignOut}
+                      whileHover={{ x: 4 }}
+                      whileTap={{ scale: 0.98 }}
                     >
                       <LogOut className="h-4 w-4" />
                       <span>Sign out</span>
-                    </button>
+                    </motion.button>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -263,16 +294,18 @@ const EnhancedNavbar: React.FC = () => {
 
           {/* Mobile Menu Button */}
           <div className="md:hidden">
-            <button
+            <motion.button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="flex items-center justify-center p-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl transition-colors"
+              className="flex items-center justify-center p-2 bg-white/15 backdrop-blur-[20px] brightness-110 border border-white/25 rounded-xl transition-all duration-300 hover:bg-white/25 hover:brightness-105 hover:saturate-110"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               {isMobileMenuOpen ? (
                 <X className="h-5 w-5 text-white" />
               ) : (
                 <Menu className="h-5 w-5 text-white" />
               )}
-            </button>
+            </motion.button>
           </div>
         </div>
 
@@ -280,24 +313,29 @@ const EnhancedNavbar: React.FC = () => {
         <AnimatePresence>
           {isMobileMenuOpen && (
             <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
+              initial={{ opacity: 0, height: 0, scale: 0.95 }}
+              animate={{ opacity: 1, height: "auto", scale: 1 }}
+              exit={{ opacity: 0, height: 0, scale: 0.95 }}
+              transition={{ duration: 0.3, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
               className="md:hidden border-t border-white/20 mt-4 pt-4 pb-4"
             >
               {/* Mobile Search */}
               <div className="mb-4">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20"></div>
+                <motion.div 
+                  className="relative"
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <div className="absolute inset-0 bg-white/15 backdrop-blur-[20px] brightness-110 rounded-xl border border-white/25"></div>
                   <div className="relative flex items-center">
                     <Search className="h-4 w-4 text-white/70 absolute left-3 top-1/2 -translate-y-1/2" />
                     <input
                       type="text"
                       placeholder="Search cases, patients..."
-                      className="bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 pl-10 pr-4 py-3 rounded-xl text-sm focus:outline-none w-full"
+                      className="bg-transparent border-0 text-white placeholder:text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0 pl-10 pr-4 py-3 rounded-xl text-sm focus:outline-none w-full transition-all duration-300 focus:brightness-110 focus:saturate-105"
                     />
                   </div>
-                </div>
+                </motion.div>
               </div>
 
               {/* Mobile Navigation Items */}
@@ -305,46 +343,56 @@ const EnhancedNavbar: React.FC = () => {
                 {NAV_ITEMS.map((item) => {
                   const isActive = location.pathname === item.to;
                   return (
-                    <NavLink
+                    <motion.div
                       key={item.to}
-                      to={item.to}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className={cn(
-                        "flex items-center space-x-3 px-4 py-3 rounded-xl transition-colors",
-                        isActive 
-                          ? "bg-white/20 text-white" 
-                          : "text-white/80"
-                      )}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                     >
-                      <item.icon className="h-5 w-5" />
-                      <span className="font-medium">{item.label}</span>
-                    </NavLink>
+                      <NavLink
+                        to={item.to}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className={cn(
+                          "flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300",
+                          "text-white/80 hover:text-white hover:bg-white/20 hover:brightness-105 hover:saturate-110",
+                          isActive 
+                            ? "bg-white/25 text-white shadow-md backdrop-blur-[20px] brightness-110 saturate-105" 
+                            : "text-white/80"
+                        )}
+                      >
+                        <item.icon className="h-5 w-5" />
+                        <span className="font-medium">{item.label}</span>
+                      </NavLink>
+                    </motion.div>
                   );
                 })}
               </div>
 
               {/* Mobile User Menu */}
               <div className="border-t border-white/20 mt-4 pt-4">
-                <button
-                  className="w-full flex items-center space-x-3 px-4 py-3 text-white/80 rounded-xl transition-colors hover:bg-white/20"
+                <motion.button
+                  className="w-full flex items-center space-x-3 px-4 py-3 text-white/80 rounded-xl transition-all duration-300 hover:bg-white/20 hover:brightness-105 hover:saturate-110"
                   onClick={() => { navigate('/account'); setIsMobileMenuOpen(false); }}
+                  whileHover={{ x: 4 }}
+                  whileTap={{ scale: 0.98 }}
                 >
                   <User className="h-5 w-5" />
                   <span>Account</span>
-                </button>
-                <button
-                  className="w-full flex items-center space-x-3 px-4 py-3 text-red-300 rounded-xl transition-colors hover:bg-white/20"
+                </motion.button>
+                <motion.button
+                  className="w-full flex items-center space-x-3 px-4 py-3 text-red-300 rounded-xl transition-all duration-300 hover:bg-white/20 hover:brightness-105 hover:saturate-110"
                   onClick={() => { handleSignOut(); setIsMobileMenuOpen(false); }}
+                  whileHover={{ x: 4 }}
+                  whileTap={{ scale: 0.98 }}
                 >
                   <LogOut className="h-5 w-5" />
                   <span>Sign out</span>
-                </button>
+                </motion.button>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
-    </nav>
+    </motion.nav>
   );
 };
 
