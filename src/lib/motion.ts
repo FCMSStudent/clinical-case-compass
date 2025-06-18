@@ -63,22 +63,31 @@ export const subtleButtonHoverTap: Variants = {
 };
 
 /**
- * Page transition variants for smooth routing
+ * Improved page transition variants with vertical movement and better easing
  */
 export const pageTransitionVariants: Variants = {
   initial: {
     opacity: 0,
-    x: "-20px", // Slide in from left
+    y: 20, // Subtle upward movement instead of horizontal sliding
+    scale: 0.98, // Very subtle scale for smoother feel
   },
   animate: {
     opacity: 1,
-    x: "0px",
-    transition: { duration: 0.4, ease: "easeInOut" }
+    y: 0,
+    scale: 1,
+    transition: { 
+      duration: 0.3, 
+      ease: [0.23, 1, 0.32, 1] // Smooth cubic-bezier easing
+    }
   },
   exit: {
     opacity: 0,
-    x: "20px", // Slide out to right
-    transition: { duration: 0.3, ease: "easeInOut" }
+    y: -10, // Subtle upward exit movement
+    scale: 0.98,
+    transition: { 
+      duration: 0.3, 
+      ease: [0.23, 1, 0.32, 1] // Consistent easing
+    }
   }
 };
 
@@ -88,8 +97,8 @@ export const pageTransitionVariants: Variants = {
  */
 export const reducedMotionPageTransitionVariants: Variants = {
   initial: { opacity: 0 },
-  animate: { opacity: 1, transition: { duration: 0.01 } },
-  exit: { opacity: 0, transition: { duration: 0.01 } }
+  animate: { opacity: 1, transition: { duration: 0.15 } },
+  exit: { opacity: 0, transition: { duration: 0.15 } }
 };
 
 /**
