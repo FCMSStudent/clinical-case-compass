@@ -2,7 +2,7 @@ import React from "react";
 import { X } from "lucide-react";
 import { cn } from '@/lib/utils';
 import { getInteractionStates, getGlassmorphicStyles } from '@/lib/component-system';
-import { EnhancedIcon } from '@/lib/iconography';
+import { EnhancedIcon } from '@/lib/iconography.tsx';
 
 interface SidebarHeaderProps {
   collapsed: boolean;
@@ -52,4 +52,4 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
       )}
     </div>
   );
-}; 
+};

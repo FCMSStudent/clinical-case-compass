@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -8,7 +9,6 @@ import { cn } from "@/lib/utils"
 import { buttonVariants as unifiedButtonVariants } from "@/lib/design-system"
 import { componentTypography } from "@/lib/typography"
 import { getGlassHoverVariants } from "@/lib/glass-effects"
-import { EnhancedIcon } from "@/lib/iconography"
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center whitespace-nowrap rounded-xl transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/30 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:filter focus-visible:brightness-110 focus-visible:saturate-105 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed",
@@ -59,7 +59,7 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
   loading?: boolean
-  glassIntensity?: 'subtle' | 'medium' | 'strong'
+  glassIntensity?: 'subtle' | 'medium'
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -76,18 +76,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         initial="initial"
         whileHover="hover"
         whileTap="tap"
-        whileFocus="focus"
         {...props}
       >
         {loading && (
-          <EnhancedIcon
-            icon={Loader2}
-            size="sm"
-            weight="regular"
-            color="default"
-            animation="rotate"
-            className="mr-2"
-          />
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
         )}
         {children}
       </Comp>

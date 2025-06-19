@@ -205,4 +205,26 @@ export const isThemeAccessible = (theme: ThemeColors): boolean => {
   
   // WCAG AA standard requires 4.5:1 for normal text and 3:1 for large text
   return textContrast >= 4.5 && secondaryTextContrast >= 3;
-}; 
+};
+
+export const applyGlassmorphicStyles = (
+  element: HTMLElement,
+  config: GlassmorphicConfig = {}
+): void => {
+  const {
+    blur = 16,
+    saturation = 1.4,
+    brightness = 1.05,
+    borderOpacity = 0.2,
+    shadow = "0 8px 32px rgba(0,0,0,0.1)",
+    borderRadius = "16px"
+  } = config;
+
+  // Handle shadow - if it's an object, use the medium value
+  const shadowValue = typeof shadow === 'string' ? shadow : shadow.medium || "0 8px 32px rgba(0,0,0,0.1)";
+
+  element.style.backdropFilter = `blur(${blur}px) saturate(${saturation}) brightness(${brightness})`;
+  element.style.borderColor = `rgba(255, 255, 255, ${borderOpacity})`;
+  element.style.boxShadow = shadowValue;
+  element.style.borderRadius = borderRadius;
+};

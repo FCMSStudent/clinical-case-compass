@@ -5,7 +5,7 @@ import { ICON_SIZE } from "@/constants/ui";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { EnhancedIcon, LoadingIcon } from "@/lib/iconography";
+import { EnhancedIcon, LoadingIcon } from "@/lib/iconography.tsx";
 
 type SearchPanelProps = {
   value: string;

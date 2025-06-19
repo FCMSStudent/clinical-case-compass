@@ -10,12 +10,12 @@ const Card = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & {
     variant?: keyof typeof card.variant
-    glassIntensity?: 'subtle' | 'medium' | 'strong'
+    glassIntensity?: 'subtle' | 'medium'
     interactive?: boolean
   }
 >(({ className, variant = "default", glassIntensity = 'medium', interactive = false, ...props }, ref) => {
   const glassVariants = interactive ? getGlassHoverVariants(glassIntensity) : getGlassTransitionVariants(glassIntensity)
-  const Comp = interactive ? motion.div : motion.div
+  const Comp = motion.div
   
   return (
     <Comp
@@ -31,7 +31,6 @@ const Card = React.forwardRef<
       animate="animate"
       whileHover={interactive ? "hover" : undefined}
       whileTap={interactive ? "tap" : undefined}
-      whileFocus={interactive ? "focus" : undefined}
       {...props}
     />
   )

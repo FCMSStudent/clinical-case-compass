@@ -1,256 +1,234 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation, NavLink } from "react-router-dom";
+import { motion } from "framer-motion";
 import { useAuth } from "@/app/AuthContext";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-} from "@/components/ui/card";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
-import { useToast } from "@/hooks/use-toast";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "@/components/ui/alert";
-import { CheckCircle2 } from "lucide-react";
-import UnifiedBackground from "@/components/backgrounds/UnifiedBackground";
-import { useTheme } from "@/lib/design-system";
-import {
-  pageTransitionVariants as globalPageTransitionVariants,
-  reducedMotionPageTransitionVariants as globalReducedMotionPageVariants,
-  getMotionVariants
-} from "@/lib/motion";
-import { getGlassTransitionVariants, liquidGlassClasses } from "@/lib/glass-effects";
+  getGlassHoverVariants,
+  getGlassTransitionVariants,
+  liquidGlassClasses,
+} from "@/lib/glass-effects";
 import { cn } from "@/lib/utils";
+import { typography } from "@/lib/typography";
 
-import type { LoginFormData, SignupFormData } from "@/features/auth/authSchemas";
-import LoginForm from "@/features/auth/components/LoginForm";
-import SignupForm from "@/features/auth/components/SignupForm";
+const Auth: React.FC = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-const Auth = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState("login");
-  const [verificationSent, setVerificationSent] = useState(false);
-  const { signIn, signUp } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const { toast } = useToast();
-  const { currentTheme } = useTheme();
+  const { signIn, signUp, user } = useAuth();
 
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    if (params.get("verified") === "true") {
-      toast({
-        title: "Email verified",
-        description: "Your email has been verified. You can now log in.",
-        variant: "default",
-      });
+    if (user) {
+      // Redirect to the intended page after authentication
+      const redirectPath = location.state?.from || "/dashboard";
+      navigate(redirectPath, { replace: true });
     }
-  }, [location.search, toast]);
+  }, [user, navigate, location]);
 
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        if (document.activeElement instanceof HTMLElement) {
-          document.activeElement.blur();
-        }
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      if (isSignUp) {
+        await signUp(email, password, fullName);
+      } else {
+        await signIn(email, password, rememberMe);
       }
-    };
-    
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, []);
-
-  const onLoginSubmit = async (data: LoginFormData) => {
-    setIsLoading(true);
-    try {
-      await signIn(data.email, data.password);
-      navigate("/");
-      toast({
-        title: "Welcome back!",
-        description: "You have successfully logged in.",
-        variant: "default",
-      });
-    } catch (error) {
-      console.error("Login error:", error);
+    } catch (authError: any) {
+      setError(authError.message || "Authentication failed");
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
-
-  const onSignupSubmit = async (data: SignupFormData) => {
-    setIsLoading(true);
-    try {
-      await signUp(data.email, data.password, data.fullName);
-      setVerificationSent(true);
-    } catch (error) {
-      console.error("Signup error:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Get page transition variants, respecting reduced motion settings.
-  const pageVariants = getMotionVariants(globalPageTransitionVariants, globalReducedMotionPageVariants);
 
   return (
-    <motion.div
-      className="min-h-screen relative overflow-hidden"
-      style={{ background: currentTheme.colors.background }}
-      variants={pageVariants}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-    >
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 px-4 py-2 rounded-lg z-50 focus:outline-none focus:ring-2 focus:ring-white/30 transition-all duration-300"
-        style={{ 
-          backgroundColor: currentTheme.colors.primary,
-          color: currentTheme.colors.text
-        }}
+    <div className="relative flex flex-col items-center justify-center min-h-screen overflow-hidden">
+      {/* Background Bubbles */}
+      <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+        {[...Array(5)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute rounded-full bg-primary-500 opacity-10 filter blur-xl"
+            style={{
+              top: `${Math.random() * 100}vh`,
+              left: `${Math.random() * 100}vw`,
+              width: `${Math.random() * 50 + 50}px`,
+              height: `${Math.random() * 50 + 50}px`,
+            }}
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 0.2, scale: 1 }}
+            transition={{
+              duration: 5,
+              ease: "easeInOut",
+              repeat: Infinity,
+              repeatType: "reverse",
+              delay: Math.random() * 2,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Authentication Card */}
+      <motion.div
+        className="relative w-full max-w-md bg-white/10 backdrop-blur-xl border-white/20 shadow-2xl"
+        variant="modal"
+        glassIntensity="medium"
       >
-        Skip to main content
-      </a>
-
-      <UnifiedBackground />
-
-      <div id="main-content" className="relative z-10 min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.6, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
-          className="w-full max-w-sm sm:max-w-md lg:max-w-lg"
-        >
-          <Card 
-            className={cn("border shadow-2xl transition-all duration-300 hover:border-opacity-30", liquidGlassClasses.modal)}
-            variants={getGlassTransitionVariants('medium')}
+        <div className="z-10 p-8 md:p-12">
+          {/* Title */}
+          <motion.h2
+            className={cn(
+              typography.title,
+              "mb-4 text-center text-white tracking-tight"
+            )}
+            variants={getGlassHoverVariants("medium")}
             initial="initial"
             animate="animate"
           >
-            <CardHeader className="text-center pb-8">
-              <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2, duration: 0.5, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
-                className="text-center mb-6"
-              >
-                <motion.div 
-                  className="flex items-center justify-center gap-3 mb-4"
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <h1 className="text-3xl font-bold tracking-wide transition-all duration-300 hover:brightness-110" style={{ color: currentTheme.colors.text }}>
-                    Medica
-                  </h1>
-                </motion.div>
-                <p className="text-base font-light" style={{ color: currentTheme.colors.textSecondary }}>
-                  Sign in to your account or create a new one
-                </p>
-              </motion.div>
-            </CardHeader>
+            {isSignUp ? "Create Account" : "Welcome Back"}
+          </motion.h2>
 
-            <CardContent className="px-8 pb-8 space-y-8">
-              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList 
-                  className={cn("grid w-full grid-cols-2 rounded-2xl p-1 mb-8 relative overflow-hidden", liquidGlassClasses.card)}
-                >
-                  <motion.div
-                    className="absolute inset-y-1 rounded-xl shadow-sm"
-                    style={{
-                      backgroundColor: currentTheme.colors.glass.contextual.navigation,
-                    }}
-                    initial={false}
-                    animate={{
-                      x: activeTab === "login" ? "2px" : "calc(50% - 2px)",
-                      width: "calc(50% - 2px)",
-                    }}
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          {/* Subtitle */}
+          <motion.p
+            className={cn(
+              typography.body,
+              "mb-6 text-center text-white/70 tracking-wide"
+            )}
+            variants={getGlassHoverVariants("medium")}
+            initial="initial"
+            animate="animate"
+          >
+            {isSignUp
+              ? "Join our community and start your journey."
+              : "Sign in to access your dashboard."}
+          </motion.p>
+
+          {/* Error Message */}
+          {error && (
+            <motion.div
+              className="mb-4 rounded-md bg-red-500/10 p-4 text-sm text-red-500"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              {error}
+            </motion.div>
+          )}
+
+          {/* Authentication Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {isSignUp && (
+              <div>
+                <Label htmlFor="fullName" className="text-white/80">
+                  Full Name
+                </Label>
+                <Input
+                  type="text"
+                  id="fullName"
+                  placeholder="Enter your full name"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  className="bg-white/5 border-white/10 text-white placeholder:text-white/50"
+                  required
+                />
+              </div>
+            )}
+
+            <div>
+              <Label htmlFor="email" className="text-white/80">
+                Email
+              </Label>
+              <Input
+                type="email"
+                id="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="bg-white/5 border-white/10 text-white placeholder:text-white/50"
+                required
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="password" className="text-white/80">
+                Password
+              </Label>
+              <Input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="bg-white/5 border-white/10 text-white placeholder:text-white/50"
+                required
+              />
+            </div>
+
+            {!isSignUp && (
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="remember"
+                    checked={rememberMe}
+                    onCheckedChange={setRememberMe}
+                    className="border-white/20 focus-visible:ring-0"
                   />
-                  <TabsTrigger 
-                    value="login" 
-                    className="relative z-10 rounded-xl text-sm font-medium transition-all duration-300 data-[state=active]:text-opacity-100 hover:brightness-105 hover:saturate-110"
-                    style={{ 
-                      color: `${currentTheme.colors.text}90`,
-                    }}
-                    aria-label="Sign in to your account"
+                  <Label
+                    htmlFor="remember"
+                    className="text-sm font-medium leading-none text-white/60"
                   >
-                    Sign In
-                  </TabsTrigger>
-                  <TabsTrigger 
-                    value="signup" 
-                    className="relative z-10 rounded-xl text-sm font-medium transition-all duration-300 data-[state=active]:text-opacity-100 hover:brightness-105 hover:saturate-110"
-                    style={{ 
-                      color: `${currentTheme.colors.text}90`,
-                    }}
-                    aria-label="Create a new account"
-                  >
-                    Sign Up
-                  </TabsTrigger>
-                </TabsList>
+                    Remember me
+                  </Label>
+                </div>
+                <NavLink
+                  to="/forgot-password"
+                  className="text-sm text-white/60 hover:text-white/80 transition-colors"
+                >
+                  Forgot password?
+                </NavLink>
+              </div>
+            )}
 
-                <AnimatePresence mode="wait">
-                  <TabsContent value="login" className="space-y-6">
-                    <motion.div
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: 20 }}
-                      transition={{ duration: 0.3, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
-                    >
-                      <LoginForm isLoading={isLoading} onLoginSubmit={onLoginSubmit} />
-                    </motion.div>
-                  </TabsContent>
+            <Button
+              type="submit"
+              className="w-full"
+              loading={loading}
+              disabled={loading}
+            >
+              {isSignUp ? "Create Account" : "Sign In"}
+            </Button>
+          </form>
 
-                  <TabsContent value="signup" className="space-y-6">
-                    <motion.div
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                      transition={{ duration: 0.3, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
-                    >
-                      <SignupForm isLoading={isLoading} onSignupSubmit={onSignupSubmit} />
-                    </motion.div>
-                  </TabsContent>
-                </AnimatePresence>
-              </Tabs>
-
-              <AnimatePresence>
-                {verificationSent && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -20, scale: 0.95 }}
-                    transition={{ duration: 0.4, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
-                    className="mt-6"
-                    role="alert"
-                    aria-live="polite"
-                  >
-                    <Alert 
-                      className={cn("rounded-xl", liquidGlassClasses.alert)}
-                    >
-                      <CheckCircle2 className="h-4 w-4" style={{ color: currentTheme.colors.status.success }} aria-hidden="true" />
-                      <AlertTitle style={{ color: currentTheme.colors.status.success }} className="font-medium">
-                        Verification Email Sent
-                      </AlertTitle>
-                      <AlertDescription style={{ color: `${currentTheme.colors.status.success}CC` }} className="font-light">
-                        Please check your email to verify your account before signing in.
-                      </AlertDescription>
-                    </Alert>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
-    </motion.div>
+          {/* Toggle Authentication Mode */}
+          <div className="mt-6 text-center">
+            <p className="text-sm text-white/60">
+              {isSignUp ? "Already have an account?" : "Don't have an account?"}
+              <Button
+                variant="link"
+                className="text-sm text-primary-500 hover:text-primary-400 px-1"
+                onClick={() => setIsSignUp(!isSignUp)}
+              >
+                {isSignUp ? "Sign In" : "Create Account"}
+              </Button>
+            </p>
+          </div>
+        </div>
+      </motion.div>
+    </div>
   );
 };
 
