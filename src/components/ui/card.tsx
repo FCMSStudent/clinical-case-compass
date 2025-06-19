@@ -1,9 +1,8 @@
+
 import * as React from "react"
-import { motion } from "framer-motion"
 
 import { cn } from "@/lib/utils"
 import { card } from "@/lib/design-system"
-import { getGlassHoverVariants, getGlassTransitionVariants } from "@/lib/glass-effects"
 import { componentTypography } from "@/lib/typography"
 
 const Card = React.forwardRef<
@@ -14,11 +13,8 @@ const Card = React.forwardRef<
     interactive?: boolean
   }
 >(({ className, variant = "default", glassIntensity = 'medium', interactive = false, ...props }, ref) => {
-  const glassVariants = interactive ? getGlassHoverVariants(glassIntensity) : getGlassTransitionVariants(glassIntensity)
-  const Comp = motion.div
-  
   return (
-    <Comp
+    <div
       ref={ref}
       className={cn(
         card.base,
@@ -26,11 +22,6 @@ const Card = React.forwardRef<
         interactive && "cursor-pointer",
         className
       )}
-      variants={glassVariants}
-      initial="initial"
-      animate="animate"
-      whileHover={interactive ? "hover" : undefined}
-      whileTap={interactive ? "tap" : undefined}
       {...props}
     />
   )

@@ -48,6 +48,8 @@ export const typography = {
   
   // Add missing properties
   measurement: "text-lg md:text-xl font-mono tabular-nums font-medium leading-snug",
+  hero: "text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-semibold leading-tight tracking-[-0.02em]",
+  display: "text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-semibold leading-tight tracking-[-0.01em]",
 } as const;
 
 // Medical-specific typography
@@ -100,6 +102,14 @@ export const statusTypography = {
   neutral: "font-normal text-gray-500",
 } as const;
 
+// Accessible typography with high contrast
+export const accessibleTypography = {
+  critical: "font-bold text-red-400 bg-red-900/20 px-2 py-1 rounded",
+  warning: "font-semibold text-amber-400 bg-amber-900/20 px-2 py-1 rounded",
+  success: "font-semibold text-green-400 bg-green-900/20 px-2 py-1 rounded",
+  vital: "font-medium font-mono text-lg bg-slate-800/50 px-2 py-1 rounded",
+} as const;
+
 // Helper functions for dynamic styling
 export const vitalSignsText = (status: 'normal' | 'elevated' | 'critical') => {
   const base = "font-medium font-mono tabular-nums";
@@ -149,13 +159,19 @@ export const createTypographyClass = (variant: keyof typeof typography, addition
   return `${typography[variant]} ${additionalClasses || ''}`.trim();
 };
 
-export const responsiveType = (baseClass: string, responsive?: { sm?: string; md?: string; lg?: string }) => {
-  let classes = baseClass;
-  if (responsive?.sm) classes += ` sm:${responsive.sm}`;
-  if (responsive?.md) classes += ` md:${responsive.md}`;
-  if (responsive?.lg) classes += ` lg:${responsive.lg}`;
-  return classes;
-};
+// Responsive typography utility - now returns objects with proper properties
+export const responsiveType = {
+  hero: "text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-semibold leading-tight tracking-[-0.02em]",
+  display: "text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-semibold leading-tight tracking-[-0.01em]",
+  h1: "text-2xl md:text-3xl lg:text-4xl font-semibold leading-tight tracking-[-0.01em]",
+  h2: "text-xl md:text-2xl lg:text-3xl font-semibold leading-tight tracking-[-0.01em]",
+  h3: "text-lg md:text-xl lg:text-2xl font-semibold leading-snug tracking-[0.01em]",
+  h4: "text-base md:text-lg lg:text-xl font-semibold leading-snug tracking-[0.01em]",
+  body: "text-sm md:text-base lg:text-lg font-normal leading-relaxed tracking-[0.01em]",
+  bodyLarge: "text-base md:text-lg lg:text-xl font-normal leading-relaxed tracking-[0.01em]",
+  caption: "text-xs md:text-sm font-normal leading-normal tracking-[0.025em]",
+  small: "text-xs font-normal leading-normal tracking-[0.025em]",
+} as const;
 
 export const formatMedicalMeasurement = (value: number, unit: string) => {
   return `${value} ${unit}`;
@@ -166,7 +182,11 @@ export const fontWeight = {
   medium: 'font-medium',
   semibold: 'font-semibold',
   bold: 'font-bold',
+  regular: 'font-normal', // Add regular alias
 } as const;
+
+// Legacy alias for backward compatibility
+export const typo = typography;
 
 // Typography tokens for design system integration
 export const typographyTokens = {
