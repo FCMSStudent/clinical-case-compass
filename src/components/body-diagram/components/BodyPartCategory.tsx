@@ -1,9 +1,8 @@
 
-
 import React from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { typography } from "@/lib/typography";
+import { typo } from "@/lib/typography";
 import type { BodyPart, BodyPartCategory as BodyPartCategoryType, BodyPartConfig } from "../types/bodyPartTypes";
 import { BodyPartButton } from "./BodyPartButton";
 import { CATEGORY_LABEL } from "../data/bodyPartData";
@@ -54,7 +53,7 @@ export const BodyPartCategory: React.FC<BodyPartCategoryComponentProps> = ({
       animate="visible"
       className="space-y-3"
     >
-      <h4 className={cn(typography.labelSmall, "text-muted-foreground capitalize tracking-wide")}>
+      <h4 className={cn(typo.labelSmall, "text-muted-foreground capitalize tracking-wide")}>
         {CATEGORY_LABEL[category]}
       </h4>
       <div className={cn(
@@ -87,4 +86,3 @@ export const BodyPartCategory: React.FC<BodyPartCategoryComponentProps> = ({
     </motion.div>
   );
 }; 
-

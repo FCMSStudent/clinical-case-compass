@@ -2,30 +2,24 @@
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
-import { card } from "@/lib/design-system"
-import { componentTypography } from "@/lib/typography"
+import { cardVariants as unifiedCardVariants, componentSizes } from "@/lib/component-system"
 
 const Card = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & {
-    variant?: keyof typeof card.variant
-    glassIntensity?: 'subtle' | 'medium'
-    interactive?: boolean
+    variant?: keyof typeof unifiedCardVariants
   }
->(({ className, variant = "default", glassIntensity = 'medium', interactive = false, ...props }, ref) => {
-  return (
-    <div
-      ref={ref}
-      className={cn(
-        card.base,
-        card.variant[variant],
-        interactive && "cursor-pointer",
-        className
-      )}
-      {...props}
-    />
-  )
-})
+>(({ className, variant = "default", ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn(
+      "rounded-xl transition-all duration-200 ease-out",
+      unifiedCardVariants[variant],
+      className
+    )}
+    {...props}
+  />
+))
 Card.displayName = "Card"
 
 const CardHeader = React.forwardRef<
@@ -34,7 +28,7 @@ const CardHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex flex-col space-y-2 p-4", className)}
+    className={cn("flex flex-col space-y-1.5", componentSizes.card.md, className)}
     {...props}
   />
 ))
@@ -47,7 +41,7 @@ const CardTitle = React.forwardRef<
   <h3
     ref={ref}
     className={cn(
-      componentTypography.cardTitle,
+      "text-lg font-semibold text-white",
       className
     )}
     {...props}
@@ -61,7 +55,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn(componentTypography.cardCaption, className)}
+    className={cn("text-sm text-white/70", className)}
     {...props}
   />
 ))
@@ -71,7 +65,7 @@ const CardContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("pt-0 p-4", className)} {...props} />
+  <div ref={ref} className={cn("pt-0", componentSizes.card.md, className)} {...props} />
 ))
 CardContent.displayName = "CardContent"
 
@@ -81,7 +75,7 @@ const CardFooter = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex items-center pt-0 p-4", className)}
+    className={cn("flex items-center pt-0", componentSizes.card.md, className)}
     {...props}
   />
 ))

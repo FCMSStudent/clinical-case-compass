@@ -1,14 +1,14 @@
+
 import React from "react";
 import { BentoCard } from "@/components/ui/bento-card";
 import { TestTube, Scan } from "lucide-react";
 import { SimpleLabs } from "@/features/cases/create/SimpleLabs";
 import { SimpleImaging } from "@/features/cases/create/SimpleImaging";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LabTest, RadiologyStudy } from "@/types/case";
 
 interface DiagnosticsCardProps {
-  onLabChange: (labs: LabTest[]) => void;
-  onImagingChange: (imaging: RadiologyStudy[]) => void;
+  onLabChange: (labs: any) => void;
+  onImagingChange: (imaging: any) => void;
 }
 
 export const DiagnosticsCard: React.FC<DiagnosticsCardProps> = ({ 

@@ -1,3 +1,4 @@
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Activity, Clock, Plus, Edit, Eye, FileText } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -37,7 +38,7 @@ const activityColors = {
 export function DynamicRecentActivity() {
   const { getRecentCases, isLoading } = useDashboardData();
   const navigate = useNavigate();
-  const recentCases = getRecentCases(5) || [];
+  const recentCases = getRecentCases(5);
 
   // Generate activity items from actual case data
   const activityItems = recentCases.map((caseItem, index) => {

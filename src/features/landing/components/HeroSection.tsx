@@ -1,8 +1,8 @@
+
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { buttonVariants, typography } from '@/lib/ui-styles';
-import { responsiveType } from '@/lib/typography';
 import { ArrowRight, BookOpen, User, BrainCircuit } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { BentoCard } from '@/components/ui/bento-card';
@@ -21,7 +21,7 @@ const HeroSection = () => {
           <h1 className={cn(typography.h1, "text-4xl md:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-b from-white to-white/70")}>
             Master Clinical Cases, Faster.
           </h1>
-          <p className={cn(responsiveType.bodyLarge, "mt-6 max-w-3xl mx-auto text-white/80")}>
+          <p className={cn(typography.body.large, "mt-6 max-w-3xl mx-auto text-white/80")}>
             Medica is your all-in-one platform to document, analyze, and learn from every patient encounter. Turn daily practice into a powerful knowledge base.
           </p>
           <div className="mt-10 flex justify-center items-center gap-4">
@@ -46,7 +46,7 @@ const HeroSection = () => {
               title="Organize Cases"
               className="hover:border-blue-400/50"
             >
-              <p className={cn(responsiveType.caption, 'text-white/80')}>
+              <p className={cn(typography.body.small, 'text-white/80')}>
                 Effortlessly document and categorize your clinical encounters for easy review and learning.
               </p>
             </BentoCard>
@@ -58,7 +58,7 @@ const HeroSection = () => {
               title="Track Patients"
               className="hover:border-green-400/50"
             >
-              <p className={cn(responsiveType.caption, 'text-white/80')}>
+              <p className={cn(typography.body.small, 'text-white/80')}>
                 Manage patient information and timelines securely, linking multiple cases to a single profile.
               </p>
             </BentoCard>
@@ -70,7 +70,7 @@ const HeroSection = () => {
               title="Extract Insights"
               className="hover:border-purple-400/50"
             >
-              <p className={cn(responsiveType.caption, 'text-white/80')}>
+              <p className={cn(typography.body.small, 'text-white/80')}>
                 Identify key learning points and patterns from your cases to accelerate your professional growth.
               </p>
             </BentoCard>

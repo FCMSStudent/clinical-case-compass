@@ -1,11 +1,10 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { typography } from "@/lib/typography";
-import type { BodyPart } from "../types/bodyPartTypes";
+import { typo } from "@/lib/typography";
 
 interface BodyDiagramHintProps {
-  selectedParts: Set<BodyPart>;
+  selectedParts: Set<any>;
   multiSelect: boolean;
   disabled: boolean;
 }
@@ -22,7 +21,7 @@ export const BodyDiagramHint: React.FC<BodyDiagramHintProps> = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
-          className={cn("text-center text-muted-foreground border-t pt-4", typography.bodySmall)}
+          className={cn("text-center text-muted-foreground border-t pt-4", typo.bodySmall)}
         >
           {multiSelect ? "Click to select multiple body parts" : "Click to select a body part"}
         </motion.div>

@@ -1,7 +1,6 @@
 import React from "react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -29,7 +28,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { useDashboardData } from "@/features/dashboard/hooks/use-dashboard-data";
 import { typo, responsiveType } from "@/lib/typography";
 import { cn } from "@/lib/utils";
-import { liquidGlassClasses, getGlassTransitionVariants, getGlassHoverVariants } from "@/lib/glass-effects";
 
 const Account = () => {
   const { user, signOut } = useAuth();
@@ -102,58 +100,34 @@ const Account = () => {
 
   if (!user) {
     return (
-      <motion.div 
-        className="flex items-center justify-center min-h-[400px]"
-        variants={getGlassTransitionVariants('medium')}
-        initial="initial"
-        animate="animate"
-      >
+      <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
           <h2 className={cn(typo.h2, "text-white mb-2")}>Access Denied</h2>
           <p className={cn(typo.body, "text-white/70")}>Please sign in to view your account</p>
         </div>
-      </motion.div>
+      </div>
     );
   }
 
   return (
-    <motion.div 
-      className="space-y-6"
-      variants={getGlassTransitionVariants('medium')}
-      initial="initial"
-      animate="animate"
-    >
+    <div className="space-y-6">
       {/* Header */}
-      <motion.div 
-        className="text-center space-y-2"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
-      >
+      <div className="text-center space-y-2">
         <h1 className={cn(responsiveType.h1, "text-white")}>Account Settings</h1>
         <p className={cn(typo.body, "text-white/70")}>Manage your profile and preferences</p>
-      </motion.div>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Profile Overview */}
-        <motion.div 
-          className="lg:col-span-1"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.1, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
-        >
-          <Card className={cn(liquidGlassClasses.card)}>
+        <div className="lg:col-span-1">
+          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
             <CardHeader className="text-center">
-              <motion.div 
-                className="mx-auto w-24 h-24 mb-4"
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.2 }}
-              >
+              <div className="mx-auto w-24 h-24 mb-4">
                 <Avatar className="w-24 h-24">
                   <AvatarImage src={user.user_metadata?.avatar_url} />
                   <AvatarFallback className={cn("bg-blue-500/20", typo.vital)}>{displayName ? getInitials(displayName) : "U"}</AvatarFallback>
                 </Avatar>
-              </motion.div>
+              </div>
               <CardTitle className={cn(typo.h2, "text-white")}>{displayName || "No name set"}</CardTitle>
               <p className={cn(typo.body, "text-white/70")}>{email}</p>
               <Badge variant="success" className="mx-auto">
@@ -166,7 +140,7 @@ const Account = () => {
               <div className="space-y-3">
                 <div>
                   <Label className={cn(typo.caption, "text-white/70 uppercase tracking-wide")}>User ID</Label>
-                  <p className={cn(typo.code, "bg-white/5 p-3 rounded-lg break-all border border-white/10 backdrop-blur-sm")}>{user.id}</p>
+                  <p className={cn(typo.code, "bg-white/5 p-3 rounded-lg break-all border border-white/10")}>{user.id}</p>
                 </div>
                 
                 <div>
@@ -187,17 +161,12 @@ const Account = () => {
               </div>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
 
         {/* Settings */}
-        <motion.div 
-          className="lg:col-span-2 space-y-6"
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.2, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
-        >
+        <div className="lg:col-span-2 space-y-6">
           {/* Preferences */}
-          <Card className={cn(liquidGlassClasses.card)}>
+          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
             <CardHeader>
               <CardTitle className={cn(typo.h3, "text-white flex items-center gap-2")}>
                 <Settings className="w-5 h-5" />
@@ -205,46 +174,34 @@ const Account = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <motion.div 
-                className="flex items-center justify-between p-3 rounded-lg hover:bg-white/10 transition-all duration-300"
-                whileHover={{ x: 4 }}
-                transition={{ duration: 0.2 }}
-              >
+              <div className="flex items-center justify-between">
                 <div>
                   <h4 className={cn(typo.label, "text-white")}>Email Notifications</h4>
                   <p className={cn(typo.bodySmall, "text-white/60")}>Receive updates about your cases</p>
                 </div>
                 <Switch checked={notifications} onCheckedChange={setNotifications} />
-              </motion.div>
+              </div>
               
-              <motion.div 
-                className="flex items-center justify-between p-3 rounded-lg hover:bg-white/10 transition-all duration-300"
-                whileHover={{ x: 4 }}
-                transition={{ duration: 0.2 }}
-              >
+              <div className="flex items-center justify-between">
                 <div>
                   <h4 className={cn(typo.label, "text-white")}>Dark Theme</h4>
                   <p className={cn(typo.bodySmall, "text-white/60")}>Toggle dark theme appearance</p>
                 </div>
                 <Switch checked={darkMode} onCheckedChange={setDarkMode} />
-              </motion.div>
+              </div>
               
-              <motion.div 
-                className="flex items-center justify-between p-3 rounded-lg hover:bg-white/10 transition-all duration-300"
-                whileHover={{ x: 4 }}
-                transition={{ duration: 0.2 }}
-              >
+              <div className="flex items-center justify-between">
                 <div>
                   <h4 className={cn(typo.label, "text-white")}>Auto Sync</h4>
                   <p className={cn(typo.bodySmall, "text-white/60")}>Sync data across devices</p>
                 </div>
                 <Switch checked={autoSync} onCheckedChange={setAutoSync} />
-              </motion.div>
+              </div>
             </CardContent>
           </Card>
 
           {/* Data Management */}
-          <Card className={cn(liquidGlassClasses.card)}>
+          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
             <CardHeader>
               <CardTitle className={cn(typo.h3, "text-white flex items-center gap-2")}>
                 <Shield className="w-5 h-5" />
@@ -252,78 +209,65 @@ const Account = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <motion.div 
-                className="flex items-center justify-between p-3 rounded-lg hover:bg-white/10 transition-all duration-300"
-                whileHover={{ x: 4 }}
-                transition={{ duration: 0.2 }}
-              >
+              <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10">
                 <div>
                   <h4 className={cn(typo.label, "text-white")}>Export Data</h4>
-                  <p className={cn(typo.bodySmall, "text-white/60")}>Download all your case data</p>
+                  <p className={cn(typo.bodySmall, "text-white/70")}>Download all your data as JSON</p>
                 </div>
-                <Button 
-                  onClick={handleExportData} 
+                <Button
+                  onClick={handleExportData}
                   disabled={isExporting}
-                  className="bg-white/20 border-white/30 text-white hover:bg-white/30 transition-all duration-300"
+                  variant="outline"
+                  className="bg-white/10 border-white/30 text-white hover:bg-white/20"
                 >
                   <Download className="w-4 h-4 mr-2" />
                   {isExporting ? "Exporting..." : "Export"}
                 </Button>
-              </motion.div>
+              </div>
               
-              <motion.div 
-                className="flex items-center justify-between p-3 rounded-lg hover:bg-white/10 transition-all duration-300"
-                whileHover={{ x: 4 }}
-                transition={{ duration: 0.2 }}
-              >
+              <div className="flex items-center justify-between p-4 bg-red-500/10 rounded-lg border border-red-400/30">
                 <div>
-                  <h4 className={cn(typo.label, "text-white")}>Clear Data</h4>
-                  <p className={cn(typo.bodySmall, "text-white/60")}>Permanently delete all your data</p>
+                  <h4 className={cn(typo.label, "text-white")}>Clear All Data</h4>
+                  <p className={cn(typo.bodySmall, "text-white/70")}>Permanently delete all local data</p>
                 </div>
-                <Button 
-                  onClick={handleClearData} 
+                <Button
+                  onClick={handleClearData}
                   disabled={isClearing}
                   variant="destructive"
-                  className="bg-red-500/20 border-red-400/30 text-red-300 hover:bg-red-500/30 transition-all duration-300"
+                  className="bg-red-500/20 border-red-400/30 text-red-300 hover:bg-red-500/30"
                 >
                   <Trash2 className="w-4 h-4 mr-2" />
                   {isClearing ? "Clearing..." : "Clear"}
                 </Button>
-              </motion.div>
+              </div>
             </CardContent>
           </Card>
 
           {/* Account Actions */}
-          <Card className={cn(liquidGlassClasses.card)}>
+          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
             <CardHeader>
-              <CardTitle className={cn(typo.h3, "text-white flex items-center gap-2")}>
-                <User className="w-5 h-5" />
-                Account Actions
-              </CardTitle>
+              <CardTitle className={cn(typo.h3, "text-white")}>Account Actions</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <motion.div 
-                className="flex items-center justify-between p-3 rounded-lg hover:bg-white/10 transition-all duration-300"
-                whileHover={{ x: 4 }}
-                transition={{ duration: 0.2 }}
-              >
+            <CardContent>
+              <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10">
                 <div>
-                  <h4 className={cn(typo.label, "text-white")}>Sign Out</h4>
-                  <p className={cn(typo.bodySmall, "text-white/60")}>Sign out of your account</p>
+                  <h3 className={cn(typo.label, "text-white")}>Sign Out</h3>
+                  <p className={cn(typo.bodySmall, "text-white/70")}>Sign out of your account on this device</p>
                 </div>
-                <Button 
+                <Button
                   onClick={handleSignOut}
-                  className="bg-white/20 border-white/30 text-white hover:bg-white/30 transition-all duration-300"
+                  variant="outline"
+                  className="bg-white/10 border-white/30 text-white hover:bg-white/20"
                 >
                   <LogOut className="w-4 h-4 mr-2" />
                   Sign Out
                 </Button>
-              </motion.div>
+              </div>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

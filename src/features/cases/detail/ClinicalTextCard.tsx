@@ -1,6 +1,7 @@
+
 import React from "react";
 import { BentoCard } from "@/components/ui/bento-card";
-import { typography, responsiveType } from "@/lib/typography";
+import { typography, spacing } from "@/lib/ui-styles";
 import { cn } from "@/lib/utils";
 
 interface ClinicalTextCardProps {
@@ -27,11 +28,11 @@ export const ClinicalTextCard: React.FC<ClinicalTextCardProps> = ({
     >
       <div className="space-y-2">
         {content ? (
-          <div className={cn(typography.body, "leading-relaxed")}>
+          <div className={cn(typography.body.default, "leading-relaxed")}>
             {content}
           </div>
         ) : (
-          <div className={cn(responsiveType.caption, "text-white/60 p-4 bg-white/5 rounded-lg border border-white/10")}>
+          <div className={cn(typography.body.small, "text-white/60 p-4 bg-white/5 rounded-lg border border-white/10")}>
             {placeholder}
           </div>
         )}

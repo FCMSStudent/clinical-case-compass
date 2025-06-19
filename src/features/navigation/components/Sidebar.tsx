@@ -6,7 +6,6 @@ import { SidebarNavItem } from './SidebarNavItem';
 import { SidebarUserProfile } from './SidebarUserProfile';
 import { SidebarCollapseToggle } from './SidebarCollapseToggle';
 import { navItems } from '../constants/navItems';
-import { liquidGlassClasses } from '@/lib/glass-effects';
 
 const Sidebar = React.memo(function Sidebar() {
   const { open, isMobile, collapsed, closeSidebar, toggleCollapsed } = useSidebar();
@@ -79,16 +78,16 @@ const Sidebar = React.memo(function Sidebar() {
   if (isMobile) {
     return (
       <>
-        {/* Backdrop with enhanced glass effect */}
+        {/* Backdrop */}
         {open && (
           <div
-            className="fixed inset-0 z-40 bg-black/50 backdrop-blur-[20px] saturate-150 brightness-105 transition-opacity duration-300"
+            className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity"
             onClick={closeSidebar}
             aria-hidden="true"
           />
         )}
 
-        {/* Mobile Sidebar with Apple-inspired glass effects */}
+        {/* Mobile Sidebar */}
         <aside
           className={cn(
             "fixed inset-y-0 left-0 z-50 w-[var(--sidebar-width-mobile)] transform transition-transform duration-300 ease-in-out",
@@ -99,8 +98,8 @@ const Sidebar = React.memo(function Sidebar() {
           aria-hidden={!open}
         >
           <div className="relative h-full w-full">
-            <div className="absolute inset-0 bg-white/18 backdrop-blur-[24px] saturate-160 brightness-108 border-r border-white/20 shadow-xl"></div>
-            <div className={cn("relative h-full", liquidGlassClasses.navigation)}>
+            <div className="absolute inset-0 bg-white/10 backdrop-blur-xl border-r border-white/20 shadow-xl"></div>
+            <div className="relative bg-white/10 backdrop-blur-md border-r border-white/20 h-full">
               {content}
             </div>
           </div>
@@ -124,8 +123,8 @@ const Sidebar = React.memo(function Sidebar() {
       aria-hidden={!open}
     >
       <div className="relative h-full w-full">
-        <div className="absolute inset-0 bg-white/18 backdrop-blur-[24px] saturate-160 brightness-108 border-r border-white/20 shadow-xl"></div>
-        <div className={cn("relative h-full", liquidGlassClasses.navigation)}>
+        <div className="absolute inset-0 bg-white/10 backdrop-blur-xl border-r border-white/20 shadow-xl"></div>
+        <div className="relative bg-white/10 backdrop-blur-md border-r border-white/20 h-full">
           {content}
         </div>
       </div>

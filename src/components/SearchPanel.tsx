@@ -5,7 +5,6 @@ import { ICON_SIZE } from "@/constants/ui";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { EnhancedIcon, LoadingIcon } from "@/lib/iconography.tsx";
 
 type SearchPanelProps = {
   value: string;
@@ -68,14 +67,11 @@ export const SearchPanel: React.FC<SearchPanelProps> = React.memo(
                 }}
                 className="flex items-center gap-2"
               >
-                <LoadingIcon
-                  icon={Search}
-                  isLoading={isLoading}
-                  loadingIcon={Loader2}
-                  size="md"
-                  weight="regular"
-                  color={isLoading ? "primary" : "muted"}
-                />
+                {isLoading ? (
+                  <Loader2 className="h-5 w-5 text-primary animate-spin" />
+                ) : (
+                  <Search className="h-5 w-5 text-muted-foreground" />
+                )}
                 {isFocused && (
                   <motion.div
                     initial={{ opacity: 0, scale: 0 }}
@@ -83,12 +79,7 @@ export const SearchPanel: React.FC<SearchPanelProps> = React.memo(
                     exit={{ opacity: 0, scale: 0 }}
                     className="flex items-center gap-1"
                   >
-                    <EnhancedIcon
-                      icon={Sparkles}
-                      size="sm"
-                      weight="regular"
-                      color="primary"
-                    />
+                    <Sparkles className="h-3 w-3 text-primary" />
                   </motion.div>
                 )}
               </motion.div>
@@ -130,13 +121,7 @@ export const SearchPanel: React.FC<SearchPanelProps> = React.memo(
                     className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground hover:bg-muted/50"
                     aria-label="Clear search"
                   >
-                    <EnhancedIcon
-                      icon={X}
-                      size="sm"
-                      weight="regular"
-                      color="muted"
-                      animation="scale"
-                    />
+                    <X className="h-4 w-4" />
                   </Button>
                 </motion.div>
               )}
@@ -158,13 +143,7 @@ export const SearchPanel: React.FC<SearchPanelProps> = React.memo(
                     className="h-6 w-6 p-0 text-muted-foreground hover:text-primary hover:bg-primary/10"
                     aria-label="Filter options"
                   >
-                    <EnhancedIcon
-                      icon={Filter}
-                      size="sm"
-                      weight="regular"
-                      color="muted"
-                      animation="scale"
-                    />
+                    <Filter className="h-4 w-4" />
                   </Button>
                 </motion.div>
               )}
@@ -223,5 +202,3 @@ export const SearchPanel: React.FC<SearchPanelProps> = React.memo(
     );
   }
 );
-
-SearchPanel.displayName = "SearchPanel";

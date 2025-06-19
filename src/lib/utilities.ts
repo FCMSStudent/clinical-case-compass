@@ -4,16 +4,6 @@
 
 import { ThemeColors } from './colors';
 
-/** Configuration for glassmorphic effects */
-interface GlassmorphicConfig {
-  blur?: number;
-  saturation?: number;
-  brightness?: number;
-  borderOpacity?: number;
-  shadow?: string | { light: string; medium: string; heavy: string };
-  borderRadius?: string;
-}
-
 /** Check for reduced motion preference */
 export const prefersReducedMotion = () => {
   if (typeof window === "undefined") return false;
@@ -22,15 +12,9 @@ export const prefersReducedMotion = () => {
 
 /** Get glassmorphic styles */
 export const getGlassmorphicStyles = (themeColors: ThemeColors, variant: "default" | "elevated" | "subtle" | "light" = "default") => {
-  // Handle backdrop as string or object
-  const getBackdrop = (backdrop: string | { light: string; medium: string; heavy: string }) => {
-    if (typeof backdrop === 'string') return backdrop;
-    return backdrop.medium;
-  };
-
   const baseStyles = {
     backgroundColor: themeColors.glass.background,
-    backdropFilter: getBackdrop(themeColors.glass.backdrop),
+    backdropFilter: themeColors.glass.backdrop,
     border: themeColors.glass.border,
     boxShadow: themeColors.glass.shadow,
   };
@@ -80,7 +64,7 @@ export const applyThemeToDocument = (themeColors: ThemeColors) => {
     "--theme-glass-bg": themeColors.glass.background,
     "--theme-glass-border": themeColors.glass.border,
     "--theme-glass-shadow": themeColors.glass.shadow,
-    "--theme-glass-backdrop": typeof themeColors.glass.backdrop === 'string' ? themeColors.glass.backdrop : themeColors.glass.backdrop.medium,
+    "--theme-glass-backdrop": themeColors.glass.backdrop,
     "--theme-blur": "blur(20px)",
     "--theme-shadow": "0 8px 32px rgba(0, 0, 0, 0.1)",
     "--theme-border-width": "1px solid rgba(255, 255, 255, 0.2)",
@@ -112,7 +96,7 @@ export const generateThemeCSSProperties = (themeColors: ThemeColors) => {
     "--theme-glass-bg": themeColors.glass.background,
     "--theme-glass-border": themeColors.glass.border,
     "--theme-glass-shadow": themeColors.glass.shadow,
-    "--theme-glass-backdrop": typeof themeColors.glass.backdrop === 'string' ? themeColors.glass.backdrop : themeColors.glass.backdrop.medium,
+    "--theme-glass-backdrop": themeColors.glass.backdrop,
     "--theme-blur": "blur(20px)",
     "--theme-shadow": "0 8px 32px rgba(0, 0, 0, 0.1)",
     "--theme-border-width": "1px solid rgba(255, 255, 255, 0.2)",
@@ -121,10 +105,7 @@ export const generateThemeCSSProperties = (themeColors: ThemeColors) => {
 };
 
 /** Validate theme configuration */
-export const validateTheme = (theme: unknown): theme is ThemeColors => {
-  if (!theme || typeof theme !== 'object') return false;
-  
-  const themeObj = theme as Record<string, unknown>;
+export const validateTheme = (theme: any): theme is ThemeColors => {
   const requiredKeys = [
     'primary', 'secondary', 'accent', 'background', 'surface', 
     'text', 'textSecondary', 'border', 'glass', 'gradient', 'status'
@@ -135,13 +116,10 @@ export const validateTheme = (theme: unknown): theme is ThemeColors => {
   const requiredStatusKeys = ['success', 'warning', 'error', 'info'];
   
   return (
-    requiredKeys.every(key => key in themeObj) &&
-    themeObj.glass && typeof themeObj.glass === 'object' &&
-    requiredGlassKeys.every(key => key in (themeObj.glass as Record<string, unknown>)) &&
-    themeObj.gradient && typeof themeObj.gradient === 'object' &&
-    requiredGradientKeys.every(key => key in (themeObj.gradient as Record<string, unknown>)) &&
-    themeObj.status && typeof themeObj.status === 'object' &&
-    requiredStatusKeys.every(key => key in (themeObj.status as Record<string, unknown>))
+    requiredKeys.every(key => key in theme) &&
+    requiredGlassKeys.every(key => key in theme.glass) &&
+    requiredGradientKeys.every(key => key in theme.gradient) &&
+    requiredStatusKeys.every(key => key in theme.status)
   );
 };
 
@@ -227,26 +205,4 @@ export const isThemeAccessible = (theme: ThemeColors): boolean => {
   
   // WCAG AA standard requires 4.5:1 for normal text and 3:1 for large text
   return textContrast >= 4.5 && secondaryTextContrast >= 3;
-};
-
-export const applyGlassmorphicStyles = (
-  element: HTMLElement,
-  config: GlassmorphicConfig = {}
-): void => {
-  const {
-    blur = 16,
-    saturation = 1.4,
-    brightness = 1.05,
-    borderOpacity = 0.2,
-    shadow = "0 8px 32px rgba(0,0,0,0.1)",
-    borderRadius = "16px"
-  } = config;
-
-  // Handle shadow - if it's an object, use the medium value
-  const shadowValue = typeof shadow === 'string' ? shadow : shadow.medium || "0 8px 32px rgba(0,0,0,0.1)";
-
-  element.style.backdropFilter = `blur(${blur}px) saturate(${saturation}) brightness(${brightness})`;
-  element.style.borderColor = `rgba(255, 255, 255, ${borderOpacity})`;
-  element.style.boxShadow = shadowValue;
-  element.style.borderRadius = borderRadius;
-};
+}; 

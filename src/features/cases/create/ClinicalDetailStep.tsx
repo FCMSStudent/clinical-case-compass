@@ -1,3 +1,4 @@
+
 import React, { memo, useCallback, useMemo } from "react";
 import { useFormContext, Controller, Path, FieldValues } from "react-hook-form";
 import { z } from "zod";
@@ -119,7 +120,7 @@ const SystemsReviewTab = memo(() => {
     });
   }, [setValue]);
 
-  const handleVitalsChange = useCallback((vitals: Record<string, unknown>) => {
+  const handleVitalsChange = useCallback((vitals: any) => {
     setValue(FORM_FIELDS.VITALS as Path<ClinicalDetailFormData>, vitals, {
       shouldValidate: true,
       shouldDirty: true

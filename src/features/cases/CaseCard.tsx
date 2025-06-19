@@ -1,3 +1,4 @@
+
 import React, { memo, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Tag } from "lucide-react";
@@ -79,10 +80,10 @@ export const CaseCard: React.FC<CaseCardProps> = memo(
           onHoverEnd={() => setIsHovered(false)}
         >
           <div className="relative">
-            <div className="absolute inset-0 bg-white/8 backdrop-blur-[18px] saturate-140 brightness-106 rounded-2xl border border-white/20 shadow-xl"></div>
+            <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
             <div className={cn(
-              "relative bg-white/8 backdrop-blur-[18px] saturate-140 brightness-106 rounded-2xl border border-white/20 p-6 h-full flex flex-col overflow-hidden transition-all duration-200",
-              "hover:bg-white/12 hover:border-white/30 hover:scale-[1.02] hover:shadow-2xl",
+              "relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 h-full flex flex-col overflow-hidden transition-all duration-200",
+              "hover:bg-white/15 hover:border-white/30 hover:scale-[1.02]",
               "focus-within:ring-2 focus-within:ring-white/20 focus-within:ring-offset-2",
               className
             )}>

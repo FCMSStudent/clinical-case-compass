@@ -20,7 +20,7 @@ interface StatusFieldCardProps {
   actions?: React.ReactNode;
   isHighlighted?: boolean;
   isDisabled?: boolean;
-  fieldValue?: unknown; // Used for auto-status determination
+  fieldValue?: any; // Used for auto-status determination
   hasError?: boolean; // Used for auto-status determination
 }
 

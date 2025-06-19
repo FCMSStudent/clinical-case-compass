@@ -1,9 +1,9 @@
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { NavLink } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { buttonVariants, typography } from '@/lib/design-system';
-import { responsiveType } from '@/lib/typography';
 import { ArrowRight } from 'lucide-react';
 
 const CtaSection = () => {
@@ -20,7 +20,7 @@ const CtaSection = () => {
           <h2 className={cn(typography.h2, "text-3xl md:text-5xl font-extrabold")}>
             Ready to Transform Your Clinical Workflow?
           </h2>
-          <p className={cn(responsiveType.bodyLarge, "mt-6 max-w-3xl mx-auto text-white/80")}>
+          <p className={cn(typography.body.large, "mt-6 max-w-3xl mx-auto text-white/80")}>
             Join hundreds of clinicians who are already using Medica to enhance their practice, accelerate learning, and provide better patient care.
           </p>
           <div className="mt-10">

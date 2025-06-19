@@ -2,7 +2,7 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
-import { componentTypography, accessibleTypography } from "@/lib/typography"
+import { typography } from "@/lib/typography"
 
 const alertVariants = cva(
   "relative w-full rounded-xl border border-white/20 bg-white/10 backdrop-blur-xl p-4 [&>svg~*]:pl-7 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-white",
@@ -41,16 +41,11 @@ Alert.displayName = "Alert"
 
 const AlertTitle = React.forwardRef<
   HTMLParagraphElement,
-  React.HTMLAttributes<HTMLHeadingElement> & { variant?: 'destructive' | 'default' }
->(({ className, variant, ...props }, ref) => (
+  React.HTMLAttributes<HTMLHeadingElement>
+>(({ className, ...props }, ref) => (
   <h5
     ref={ref}
-    className={cn(
-      componentTypography.alertTitle,
-      variant === 'destructive' && accessibleTypography.critical,
-      "mb-1 text-white",
-      className
-    )}
+    className={cn(typography.h6, "mb-1 text-white", className)}
     {...props}
   />
 ))
@@ -62,7 +57,7 @@ const AlertDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn(componentTypography.alertBody, "text-white/70 [&_p]:leading-relaxed", className)}
+    className={cn(typography.body.small, "text-white/70 [&_p]:leading-relaxed", className)}
     {...props}
   />
 ))

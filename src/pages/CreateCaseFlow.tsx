@@ -1,3 +1,4 @@
+
 import React, {
   useState,
   useCallback,
@@ -20,7 +21,6 @@ import { useSupabaseCases } from "@/hooks/use-supabase-cases";
 import { useAuth } from "@/app/AuthContext";
 import { FileText, Heart, TestTube } from "lucide-react";
 import { z } from "zod";
-import { LabTest, RadiologyStudy } from "@/types/case";
 
 // Define form data types
 interface FormData {
@@ -32,7 +32,7 @@ interface FormData {
   caseTitle: string;
   chiefComplaint: string;
   specialty: string;
-  clinicalDetails: unknown;
+  clinicalDetails: any;
   learningPoints: string;
   generalNotes: string;
   resourceLinks: Array<{ url: string; description: string }>;
@@ -59,7 +59,7 @@ const combinedSchema = z.object({
   chiefComplaint: z.string().optional(),
   specialty: z.string().optional(),
   // Clinical details step
-  clinicalDetails: z.unknown().optional(),
+  clinicalDetails: z.any().optional(),
   // Learning points step
   learningPoints: z.string().optional(),
   generalNotes: z.string().optional(),
@@ -214,7 +214,7 @@ const CreateCaseFlow = () => {
       const formData = form.getValues();
 
       // Extract clinicalDetails fields if present
-      const clinical = (formData.clinicalDetails as Record<string, unknown>) || {};
+      const clinical = formData.clinicalDetails || {};
 
       // Prepare case data for Supabase
       const caseData = {
@@ -230,12 +230,12 @@ const CreateCaseFlow = () => {
           status: "draft" as const,
           chiefComplaint: formData.chiefComplaint || "",
           chiefComplaintAnalysis: undefined,
-          history: (clinical.patientHistory as string) ?? formData.medicalHistory ?? "", // Clinical patientHistory > overview medicalHistory
-          physicalExam: (clinical.physicalExam as string) ?? "", // Clinical physicalExam
-          symptoms: (clinical.systemSymptoms as Record<string, string[]>) ?? {},   // Clinical systemSymptoms (review of systems)
-          vitals: (clinical.vitals as Record<string, string>) ?? {},             // Clinical vitals
-          labTests: (clinical.labResults as LabTest[]) ?? [],       // Clinical labResults
-          radiologyStudies: (clinical.radiologyStudies as RadiologyStudy[]) ?? [], // Clinical radiologyStudies
+          history: clinical.patientHistory ?? formData.medicalHistory ?? "", // Clinical patientHistory > overview medicalHistory
+          physicalExam: clinical.physicalExam ?? "", // Clinical physicalExam
+          symptoms: clinical.systemSymptoms ?? {},   // Clinical systemSymptoms (review of systems)
+          vitals: clinical.vitals ?? {},             // Clinical vitals
+          labTests: clinical.labResults ?? [],       // Clinical labResults
+          radiologyStudies: clinical.radiologyStudies ?? [], // Clinical radiologyStudies
           learningPoints: formData.learningPoints,
           urinarySymptoms: [], // currently not handled in form, keep as empty array
         },

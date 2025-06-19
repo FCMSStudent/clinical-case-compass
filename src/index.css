@@ -1,3 +1,4 @@
+
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
 @tailwind base;
 @tailwind components;
@@ -40,7 +41,7 @@
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 199 98% 39%;
-    --radius: 1rem;
+    --radius: 0.75rem;
     
     /* Chart colors */
     --chart-1: 12 76% 61%;

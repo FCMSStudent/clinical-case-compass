@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import * as RechartsPrimitive from "recharts"
 import { cn } from "@/lib/utils"
@@ -108,20 +109,6 @@ const ChartTooltipContent = React.forwardRef<
     indicator?: "line" | "dot" | "dashed"
     nameKey?: string
     labelKey?: string
-    active?: boolean
-    payload?: Array<{
-      value: unknown;
-      name?: string;
-      dataKey?: string;
-      color?: string;
-      payload?: Record<string, unknown>;
-      [key: string]: unknown;
-    }>
-    label?: string;
-    labelFormatter?: (label: unknown, payload: unknown[]) => React.ReactNode;
-    labelClassName?: string;
-    formatter?: (value: unknown, name: string, props: unknown, index: number, payload: unknown) => React.ReactNode;
-    color?: string;
   }
 >(
   (
@@ -139,7 +126,7 @@ const ChartTooltipContent = React.forwardRef<
       color,
       nameKey,
       labelKey,
-    },
+    }: any,
     ref
   ) => {
     const { config } = useChart()
@@ -189,7 +176,7 @@ const ChartTooltipContent = React.forwardRef<
           </p>
         ) : null}
         <div className="grid gap-1.5">
-          {payload.map((item, index: number) => {
+          {payload.map((item: any, index: number) => {
             const key = `${nameKey || item.name || item.dataKey || "value"}`
             const itemConfig = getPayloadConfigFromPayload(config, item, key)
             const indicatorColor = color || item.payload?.fill || item.color
@@ -242,7 +229,7 @@ const ChartTooltipContent = React.forwardRef<
                         </span>
                         {!hideLabel && item.value !== undefined ? (
                           <span className="font-mono font-medium tabular-nums text-foreground">
-                            {String(item.value)}
+                            {item.value}
                           </span>
                         ) : null}
                       </div>
@@ -263,12 +250,7 @@ const ChartLegendContent = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"div"> & {
     hideIcon?: boolean
-    payload?: Array<{
-      value: string;
-      color: string;
-      dataKey?: string;
-      [key: string]: unknown;
-    }>
+    payload?: Array<any>
     verticalAlign?: "top" | "bottom"
     nameKey?: string
   }

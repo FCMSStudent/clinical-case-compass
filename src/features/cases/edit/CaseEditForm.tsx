@@ -1,3 +1,4 @@
+
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
 import { Form } from "@/components/ui/form";
@@ -9,15 +10,14 @@ import { CaseTextSection } from "./CaseTextSection";
 import { CaseLabsSection } from "./CaseLabsSection";
 import { CaseRadiologySection } from "./CaseRadiologySection";
 import { spacing, layouts, buttonVariants, iconWithText } from "@/lib/ui-styles";
-import { MedicalCase, LabTest, RadiologyStudy } from "@/types/case";
 
 interface CaseEditFormProps {
-  form: UseFormReturn<MedicalCase>;
-  onSubmit: (values: MedicalCase) => void;
+  form: UseFormReturn<any>;
+  onSubmit: (values: any) => void;
   isSaving: boolean;
   onVitalsChange: (vitals: Record<string, string>) => void;
-  onLabChange: (labResults: LabTest[]) => void;
-  onImagingChange: (radiologyStudies: RadiologyStudy[]) => void;
+  onLabChange: (labResults: any[]) => void;
+  onImagingChange: (radiologyStudies: any[]) => void;
   initialVitals?: Record<string, string>;
   patientAge?: number;
 }

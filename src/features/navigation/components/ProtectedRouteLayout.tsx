@@ -1,32 +1,26 @@
 import React from "react";
-import { UnifiedAppLayout } from "@/features/navigation/components/UnifiedAppLayout";
+import { EnhancedAppLayout } from "@/features/navigation/components/EnhancedAppLayout";
 import { PrivateRoute } from "@/features/auth/PrivateRoute";
+import { OfflineBanner } from "@/components/ui/OfflineBanner";
+import { useAuth } from "@/app/AuthContext"; // Import useAuth
 
 interface ProtectedRouteLayoutProps {
   children: React.ReactNode;
-  showBreadcrumbs?: boolean;
-  showNavbar?: boolean;
-  className?: string;
 }
 
-/**
- * Protected Route Layout - Simplified wrapper using UnifiedAppLayout
- */
-const ProtectedRouteLayout: React.FC<ProtectedRouteLayoutProps> = ({ 
-  children,
-  showBreadcrumbs = true,
-  showNavbar = true,
-  className
-}) => {
+const ProtectedRouteLayout: React.FC<ProtectedRouteLayoutProps> = ({ children }) => {
+  const { isOfflineMode } = useAuth(); // Get isOfflineMode from useAuth
+
   return (
     <PrivateRoute>
-      <UnifiedAppLayout 
-        showBreadcrumbs={showBreadcrumbs}
-        showNavbar={showNavbar}
-        className={className}
-      >
+      <EnhancedAppLayout>
+        {isOfflineMode && (
+          <div className="mb-4">
+            <OfflineBanner />
+          </div>
+        )}
         {children}
-      </UnifiedAppLayout>
+      </EnhancedAppLayout>
     </PrivateRoute>
   );
 };

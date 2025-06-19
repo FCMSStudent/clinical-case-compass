@@ -53,12 +53,11 @@ export const PatientStep = memo(function PatientStep<
     watchFields: ["patientName", "medicalRecordNumber", "patientAge", "patientSex", "medicalHistory"],
   });
 
-  const watchedValues = localWatchedValues as Record<string, unknown>;
-  const patientNameValue = watchedValues?.patientName;
-  const medicalRecordNumberValue = watchedValues?.medicalRecordNumber;
-  const patientAgeValue = watchedValues?.patientAge;
-  const patientSexValue = watchedValues?.patientSex;
-  const medicalHistoryValue = watchedValues?.medicalHistory;
+  const patientNameValue = (localWatchedValues as any)?.patientName;
+  const medicalRecordNumberValue = (localWatchedValues as any)?.medicalRecordNumber;
+  const patientAgeValue = (localWatchedValues as any)?.patientAge;
+  const patientSexValue = (localWatchedValues as any)?.patientSex;
+  const medicalHistoryValue = (localWatchedValues as any)?.medicalHistory;
 
   return (
     <div className={cn("space-y-6", className)}> {/* Reduced space-y from 8 to 6 for consistency */}

@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/sonner";
 import { AnimatePresence } from "framer-motion";
 import { AuthProvider, useAuth } from "./AuthContext";
-import { UnifiedThemeProvider } from "@/lib/unified-theme-system";
+import { ThemeProvider } from "@/lib/design-system";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 import { ProtectedRouteLayout } from "@/features/navigation";
 import LoadingScreen from "@/components/ui/loading-screen";
@@ -127,46 +127,18 @@ const AppRoutes = () => {
   );
 };
 
-// Main App component with proper provider hierarchy
-const App: React.FC = () => {
+const App = () => {
   return (
-    <ErrorBoundary
-      fallback={
-        <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-900 to-blue-700">
-          <div className="text-center p-8">
-            <h1 className="text-2xl font-bold text-white mb-4">Something went wrong</h1>
-            <p className="text-white/70 mb-4">Please refresh the page or try again later.</p>
-            <button
-              onClick={() => window.location.reload()}
-              className="px-4 py-2 bg-white/20 text-white rounded-lg hover:bg-white/30 transition-colors"
-            >
-              Reload App
-            </button>
-          </div>
-        </div>
-      }
-    >
+    <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <UnifiedThemeProvider>
+        <ThemeProvider>
           <AuthProvider>
             <Router>
-              <div className="min-h-screen">
-                <AppRoutes />
-                <Toaster
-                  position="top-right"
-                  toastOptions={{
-                    style: {
-                      background: 'rgba(255, 255, 255, 0.1)',
-                      backdropFilter: 'blur(20px)',
-                      border: '1px solid rgba(255, 255, 255, 0.2)',
-                      color: 'white',
-                    },
-                  }}
-                />
-              </div>
+              <AppRoutes />
             </Router>
+            <Toaster position="top-right" />
           </AuthProvider>
-        </UnifiedThemeProvider>
+        </ThemeProvider>
       </QueryClientProvider>
     </ErrorBoundary>
   );

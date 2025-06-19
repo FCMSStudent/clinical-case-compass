@@ -53,34 +53,33 @@ export const LearningPointsStep = memo(function LearningPointsStep<
     ],
   });
 
-  const watchedValues = watchedFields as Record<string, unknown>;
-  const learningPointsValue = watchedValues?.learningPoints;
-  const generalNotesValue = watchedValues?.generalNotes;
-  const resourceLinksValue = (watchedValues?.resourceLinks as ResourceLink[]) || [];
+  const learningPointsValue = (watchedFields as any)?.learningPoints;
+  const generalNotesValue = (watchedFields as any)?.generalNotes;
+  const resourceLinksValue = (watchedFields as any)?.resourceLinks || [];
 
   const addResourceLink = () => {
-    const currentLinks = (watch("resourceLinks" as Path<T>) as ResourceLink[]) || [];
+    const currentLinks = watch("resourceLinks" as Path<T>) || [];
     const newLinks = [...currentLinks, { url: "", description: "" }];
-    setValue("resourceLinks" as Path<T>, newLinks as T[Path<T>], {
+    setValue("resourceLinks" as Path<T>, newLinks as any, {
       shouldValidate: true,
       shouldDirty: true
     });
   };
 
   const removeResourceLink = (index: number) => {
-    const currentLinks = (watch("resourceLinks" as Path<T>) as ResourceLink[]) || [];
+    const currentLinks = watch("resourceLinks" as Path<T>) || [];
     const newLinks = currentLinks.filter((_, i) => i !== index);
-    setValue("resourceLinks" as Path<T>, newLinks as T[Path<T>], {
+    setValue("resourceLinks" as Path<T>, newLinks as any, {
       shouldValidate: true,
       shouldDirty: true
     });
   };
 
   const updateResourceLink = (index: number, field: 'url' | 'description', value: string) => {
-    const currentLinks = (watch("resourceLinks" as Path<T>) as ResourceLink[]) || [];
+    const currentLinks = watch("resourceLinks" as Path<T>) || [];
     const newLinks = [...currentLinks];
     newLinks[index] = { ...newLinks[index], [field]: value };
-    setValue("resourceLinks" as Path<T>, newLinks as T[Path<T>], {
+    setValue("resourceLinks" as Path<T>, newLinks as any, {
       shouldValidate: true,
       shouldDirty: true
     });

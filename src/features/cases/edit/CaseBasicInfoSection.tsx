@@ -1,3 +1,4 @@
+
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,11 +17,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { medicalSection, formField, layouts } from "@/lib/ui-styles";
-import { MedicalCase } from "@/types/case";
 
 interface CaseBasicInfoSectionProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  form: UseFormReturn<any>; // Form uses flattened field names, not nested MedicalCase structure
+  form: UseFormReturn<any>;
 }
 
 export const CaseBasicInfoSection: React.FC<CaseBasicInfoSectionProps> = ({ form }) => {

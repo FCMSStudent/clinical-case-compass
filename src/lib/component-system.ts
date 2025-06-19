@@ -538,7 +538,7 @@ export const getComponentStyles = (
   
   const sizeClass = size && componentSizesMap[size as keyof typeof componentSizesMap] 
     ? componentSizesMap[size as keyof typeof componentSizesMap] 
-    : componentSizesMap.md || (componentSizesMap as Record<string, string>).default;
+    : componentSizesMap.md || (componentSizesMap as any).default;
   
   return `${variantClass} ${sizeClass}`.trim();
 };

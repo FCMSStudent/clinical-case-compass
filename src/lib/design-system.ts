@@ -1,5 +1,6 @@
+
 // ────────────────────────────────────────────────────────────────────────────────
-// DESIGN SYSTEM - MODULAR ENTRY POINT - APPLE LIQUID GLASS ENHANCED
+// DESIGN SYSTEM - MODULAR ENTRY POINT
 // ────────────────────────────────────────────────────────────────────────────────
 
 // Re-export all design system modules for backward compatibility
@@ -8,13 +9,11 @@ export * from './spacing';
 export * from './components';
 export * from './theme-system.tsx';
 export * from './typography';
+export * from './design-tokens';
 export * from './background-config';
 
 // Re-export existing animation system
 export * from './motion';
-
-// Re-export new Apple-inspired liquid glass effects
-export * from './glass-effects';
 
 // Legacy exports for backward compatibility
 import type { ThemeColors } from './colors';
@@ -50,16 +49,6 @@ import { typography } from './typography';
 import { typographyTokens } from './design-tokens';
 import { backgroundConfig } from './background-config';
 import { animations } from './animations';
-import { 
-  liquidGlassEffects, 
-  applyLiquidGlass, 
-  getGlassHoverVariants, 
-  getGlassTransitionVariants,
-  getPulseAnimation,
-  getParallaxEffect,
-  liquidGlassClasses,
-  getGlassClasses
-} from './glass-effects';
 
 // Consolidated exports for easy access
 export const designSystem = {
@@ -115,16 +104,6 @@ export const designSystem = {
   
   // Animations
   animations,
-  
-  // Apple-inspired Liquid Glass Effects
-  liquidGlassEffects,
-  applyLiquidGlass,
-  getGlassHoverVariants,
-  getGlassTransitionVariants,
-  getPulseAnimation,
-  getParallaxEffect,
-  liquidGlassClasses,
-  getGlassClasses,
 } as const;
 
 // Default export for backward compatibility

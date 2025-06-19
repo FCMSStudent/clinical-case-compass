@@ -96,15 +96,14 @@ export const CaseOverviewStep = memo(function CaseOverviewStep<
     ],
   });
 
-  const watchedValues = watchedFields as Record<string, unknown>;
-  const patientNameValue = watchedValues?.patientName;
-  const medicalRecordNumberValue = watchedValues?.medicalRecordNumber;
-  const patientAgeValue = watchedValues?.patientAge;
-  const patientSexValue = watchedValues?.patientSex;
-  const medicalHistoryValue = watchedValues?.medicalHistory;
-  const caseTitleValue = watchedValues?.caseTitle;
-  const chiefComplaintValue = watchedValues?.chiefComplaint;
-  const specialtyValue = watchedValues?.specialty;
+  const patientNameValue = (watchedFields as any)?.patientName;
+  const medicalRecordNumberValue = (watchedFields as any)?.medicalRecordNumber;
+  const patientAgeValue = (watchedFields as any)?.patientAge;
+  const patientSexValue = (watchedFields as any)?.patientSex;
+  const medicalHistoryValue = (watchedFields as any)?.medicalHistory;
+  const caseTitleValue = (watchedFields as any)?.caseTitle;
+  const chiefComplaintValue = (watchedFields as any)?.chiefComplaint;
+  const specialtyValue = (watchedFields as any)?.specialty;
 
   return (
     <div className={cn("space-y-6", className)}>
