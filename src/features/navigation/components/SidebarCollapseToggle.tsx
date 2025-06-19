@@ -2,44 +2,39 @@ import React from "react";
 import { ChevronLeft } from "lucide-react";
 import { cn } from '@/lib/utils';
 import { getInteractionStates, getGlassmorphicStyles } from '@/lib/component-system';
-import { EnhancedIcon } from '@/lib/iconography';
+
+const ICON_SIZE = "w-5 h-5";
 
 interface SidebarCollapseToggleProps {
   collapsed: boolean;
   onToggle: () => void;
-  className?: string;
 }
 
-export const SidebarCollapseToggle: React.FC<SidebarCollapseToggleProps> = ({
-  collapsed,
-  onToggle,
-  className
+export const SidebarCollapseToggle: React.FC<SidebarCollapseToggleProps> = ({ 
+  collapsed, 
+  onToggle 
 }) => {
   return (
-    <button
-      onClick={onToggle}
-      className={cn(
-        "flex items-center justify-center w-8 h-8 rounded-lg",
-        "bg-white/10 backdrop-blur-sm border border-white/20",
-        "hover:bg-white/20 hover:border-white/30",
-        "transition-all duration-200 ease-out",
-        "focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-transparent",
-        className
-      )}
-      aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-    >
-      <EnhancedIcon
-        icon={ChevronLeft}
-        size="sm"
-        weight="regular"
-        color="default"
-        animation="rotate"
-        interactive
-        style={{
-          transform: collapsed ? 'rotate(180deg)' : 'rotate(0deg)',
-          transition: 'transform 0.2s ease-out'
-        }}
-      />
-    </button>
+    <div className="border-t border-white/20 p-2">
+      <button
+        onClick={onToggle}
+        className={cn(
+          "flex w-full items-center justify-center rounded-xl p-2 text-white",
+          getGlassmorphicStyles('light'),
+          getInteractionStates('medium', 'default', 'subtle')
+        )}
+        aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+        aria-describedby="collapse-description"
+      >
+        <ChevronLeft className={cn(
+          ICON_SIZE,
+          "transition-transform duration-200 text-white",
+          collapsed && "rotate-180"
+        )} aria-hidden="true" />
+        <span id="collapse-description" className="sr-only">
+          {collapsed ? "Expand sidebar to show full navigation" : "Collapse sidebar to show icons only"}
+        </span>
+      </button>
+    </div>
   );
 }; 

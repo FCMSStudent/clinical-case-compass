@@ -2,36 +2,31 @@ import React from "react";
 import { Menu } from "lucide-react";
 import { cn } from '@/lib/utils';
 import { useSidebar } from './SidebarContext';
-import { EnhancedIcon } from '@/lib/iconography';
+
+const ICON_SIZE = "w-5 h-5";
 
 interface SidebarTriggerProps {
   className?: string;
 }
 
 export const SidebarTrigger: React.FC<SidebarTriggerProps> = ({ className }) => {
-  const { toggle } = useSidebar();
-
+  const { toggle, open } = useSidebar();
+  
   return (
     <button
-      onClick={toggle}
+      type="button"
       className={cn(
-        "flex items-center justify-center w-10 h-10 rounded-lg",
-        "bg-white/10 backdrop-blur-sm border border-white/20",
-        "hover:bg-white/20 hover:border-white/30",
-        "transition-all duration-200 ease-out",
-        "focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-transparent",
+        "inline-flex items-center justify-center p-2 rounded-xl transition-colors",
+        "bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20",
+        "focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2",
         className
       )}
-      aria-label="Toggle sidebar"
+      onClick={toggle}
+      aria-label={open ? "Close sidebar" : "Open sidebar"}
+      aria-expanded={open}
+      aria-controls="sidebar-navigation"
     >
-      <EnhancedIcon
-        icon={Menu}
-        size="md"
-        weight="regular"
-        color="default"
-        animation="scale"
-        interactive
-      />
+      <Menu className={cn(ICON_SIZE, "text-white")} aria-hidden="true" />
     </button>
   );
 }; 
