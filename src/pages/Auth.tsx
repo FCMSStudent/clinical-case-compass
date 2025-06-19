@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation, NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -49,8 +48,9 @@ const Auth: React.FC = () => {
       } else {
         await signIn(email, password);
       }
-    } catch (authError: any) {
-      setError(authError.message || "Authentication failed");
+    } catch (authError: unknown) {
+      const errorMessage = authError instanceof Error ? authError.message : "Authentication failed";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

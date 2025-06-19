@@ -1,9 +1,10 @@
 import React, { memo } from "react";
 import { AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { MedicalCase } from "@/types/case";
 
 interface CaseCardErrorProps {
-  medicalCase: any;
+  medicalCase: MedicalCase | null;
   className?: string;
 }
 

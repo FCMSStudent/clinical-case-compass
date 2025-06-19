@@ -49,6 +49,7 @@ const CaseEdit = () => {
 
   // State for specialized inputs
   const [vitals, setVitals] = useState<Record<string, string>>({});
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [labResults, setLabResults] = useState<any[]>([]); // Consider typing this if structure is known
   const [radiologyStudies, setRadiologyStudies] = useState<RadiologyStudy[]>([]);
 

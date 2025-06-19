@@ -121,7 +121,10 @@ export const generateThemeCSSProperties = (themeColors: ThemeColors) => {
 };
 
 /** Validate theme configuration */
-export const validateTheme = (theme: any): theme is ThemeColors => {
+export const validateTheme = (theme: unknown): theme is ThemeColors => {
+  if (!theme || typeof theme !== 'object') return false;
+  
+  const themeObj = theme as Record<string, unknown>;
   const requiredKeys = [
     'primary', 'secondary', 'accent', 'background', 'surface', 
     'text', 'textSecondary', 'border', 'glass', 'gradient', 'status'
@@ -132,10 +135,13 @@ export const validateTheme = (theme: any): theme is ThemeColors => {
   const requiredStatusKeys = ['success', 'warning', 'error', 'info'];
   
   return (
-    requiredKeys.every(key => key in theme) &&
-    requiredGlassKeys.every(key => key in theme.glass) &&
-    requiredGradientKeys.every(key => key in theme.gradient) &&
-    requiredStatusKeys.every(key => key in theme.status)
+    requiredKeys.every(key => key in themeObj) &&
+    themeObj.glass && typeof themeObj.glass === 'object' &&
+    requiredGlassKeys.every(key => key in (themeObj.glass as Record<string, unknown>)) &&
+    themeObj.gradient && typeof themeObj.gradient === 'object' &&
+    requiredGradientKeys.every(key => key in (themeObj.gradient as Record<string, unknown>)) &&
+    themeObj.status && typeof themeObj.status === 'object' &&
+    requiredStatusKeys.every(key => key in (themeObj.status as Record<string, unknown>))
   );
 };
 

@@ -12,7 +12,7 @@ export interface ValidationResult {
  * Validates form fields and returns completion statistics
  */
 export function validateFormFields<T extends FieldValues>(
-  fields: Record<string, any>,
+  fields: Record<string, unknown>,
   errors: FieldErrors<T>,
   requiredFields?: string[]
 ): ValidationResult {
@@ -64,7 +64,7 @@ export function validateFormFields<T extends FieldValues>(
 /**
  * Validates a single field value
  */
-export function validateField(value: any, fieldName: string): { isValid: boolean; error?: string } {
+export function validateField(value: unknown, fieldName: string): { isValid: boolean; error?: string } {
   if (value === undefined || value === null) {
     return { isValid: false, error: `${fieldName} is required` };
   }

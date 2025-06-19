@@ -9,9 +9,11 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { medicalSection, formField } from "@/lib/ui-styles";
+import { MedicalCase } from "@/types/case";
 
 interface CaseTextSectionProps {
-  form: UseFormReturn<any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  form: UseFormReturn<any>; // Dynamic field names require flexible typing
   fieldName: string;
   title: string;
   placeholder: string;

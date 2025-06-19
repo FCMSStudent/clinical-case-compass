@@ -1,4 +1,3 @@
-
 import React, { memo } from "react";
 import { useFormContext, Path, FieldValues } from "react-hook-form";
 import { FileText, Stethoscope, Tag } from "lucide-react";
@@ -81,10 +80,10 @@ export const CaseInfoStep = memo(function CaseInfoStep<
   // or rely on watchedFields from useFormValidation if that's sufficient.
   // For fieldValue prop, it's better to use the values from useFormValidation 
   // as they are synchronized with the validation logic.
-  // If `localWatchedValues` is an object:
-  const caseTitleValue = (localWatchedValues as any)?.caseTitle;
-  const chiefComplaintValue = (localWatchedValues as any)?.chiefComplaint;
-  const specialtyValue = (localWatchedValues as any)?.specialty;
+  const watchedValues = localWatchedValues as Record<string, unknown>;
+  const caseTitleValue = watchedValues?.caseTitle;
+  const chiefComplaintValue = watchedValues?.chiefComplaint;
+  const specialtyValue = watchedValues?.specialty;
 
   return (
     <div className={cn("space-y-6", className)}>

@@ -123,8 +123,11 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     else if (success) finalVariant = "success";
     else if (!finalVariant) finalVariant = "default";
 
+    // Filter out HTML drag events that conflict with Framer Motion
+    const { onDrag, onDragEnd, onDragStart, onDragEnter, onDragLeave, onDragOver, onDrop, ...filteredProps } = props;
+
     return (
-      <motion.textarea
+      <textarea
         ref={ref}
         className={cn(
           textareaVariants({ 
@@ -133,10 +136,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           }),
           className
         )}
-        variants={animationVariants as any}
-        initial="initial"
-        whileFocus="focus"
-        {...(props as any)}
+        {...filteredProps}
       />
     );
   },

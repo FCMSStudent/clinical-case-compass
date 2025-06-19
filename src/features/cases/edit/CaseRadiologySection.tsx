@@ -1,12 +1,12 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Scan } from "lucide-react";
 import { SimpleImaging } from "@/features/cases/create/SimpleImaging";
 import { medicalSection, iconWithText } from "@/lib/ui-styles";
+import { RadiologyStudy } from "@/types/case";
 
 interface CaseRadiologySectionProps {
-  onImagingChange: (radiologyStudies: any[]) => void;
+  onImagingChange: (radiologyStudies: RadiologyStudy[]) => void;
 }
 
 export const CaseRadiologySection: React.FC<CaseRadiologySectionProps> = ({
