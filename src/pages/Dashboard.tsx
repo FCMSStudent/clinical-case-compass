@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserRound, TrendingUp, Activity, BookOpen, Users, Target, Plus, Eye } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -52,13 +53,29 @@ const Dashboard = () => {
   const { currentTheme } = useTheme();
   const { data, isLoading, error } = useDashboardData();
 
+  // Defensive check for data
+  const safeData = data || {
+    totalCases: 0,
+    activeCases: 0,
+    monthlyCases: 0,
+    totalPatients: 0
+  };
+
   if (error) {
+    console.error('Dashboard data error:', error);
     return (
       <div className="p-8 text-center">
         <Card className={getComponentStyles('card', 'error', 'lg')}>
           <CardContent className="pt-6">
             <h2 className="text-xl font-semibold text-white mb-2">Dashboard Error</h2>
             <p className="text-white/70">There was an error loading the dashboard data.</p>
+            <Button 
+              onClick={() => window.location.reload()} 
+              className="mt-4"
+              variant="outline"
+            >
+              Refresh Page
+            </Button>
           </CardContent>
         </Card>
       </div>
@@ -121,7 +138,7 @@ const Dashboard = () => {
                       <div>
                         <p className="text-sm font-medium text-white/70">Total Cases</p>
                         <p className="text-2xl font-bold text-white">
-                          {data?.totalCases || 0}
+                          {safeData.totalCases || 0}
                         </p>
                       </div>
                       <div className="p-3 rounded-lg bg-blue-500/20">
@@ -139,7 +156,7 @@ const Dashboard = () => {
                       <div>
                         <p className="text-sm font-medium text-white/70">Active Cases</p>
                         <p className="text-2xl font-bold text-white">
-                          {data?.activeCases || 0}
+                          {safeData.activeCases || 0}
                         </p>
                       </div>
                       <div className="p-3 rounded-lg bg-green-500/20">
@@ -157,7 +174,7 @@ const Dashboard = () => {
                       <div>
                         <p className="text-sm font-medium text-white/70">This Month</p>
                         <p className="text-2xl font-bold text-white">
-                          {data?.monthlyCases || 0}
+                          {safeData.monthlyCases || 0}
                         </p>
                       </div>
                       <div className="p-3 rounded-lg bg-purple-500/20">
@@ -175,7 +192,7 @@ const Dashboard = () => {
                       <div>
                         <p className="text-sm font-medium text-white/70">Patients</p>
                         <p className="text-2xl font-bold text-white">
-                          {data?.totalPatients || 0}
+                          {safeData.totalPatients || 0}
                         </p>
                       </div>
                       <div className="p-3 rounded-lg bg-orange-500/20">
@@ -210,14 +227,7 @@ const Dashboard = () => {
 
           {/* Recent Activity */}
           <motion.div variants={staggeredItem}>
-            <Card className={getComponentStyles('card', 'elevated', 'lg')}>
-              <CardHeader>
-                <CardTitle className="text-white">Recent Activity</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <DynamicRecentActivity />
-              </CardContent>
-            </Card>
+            <DynamicRecentActivity />
           </motion.div>
         </motion.div>
       </div>

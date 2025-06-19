@@ -6,14 +6,31 @@ export function useDashboardData() {
   const { cases, isLoading, error } = useSupabaseCases();
 
   const getRecentCases = (limit: number = 5): MedicalCase[] => {
+    if (!cases || !Array.isArray(cases)) {
+      return [];
+    }
     return cases
       .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
       .slice(0, limit);
   };
 
   const getStatistics = () => {
+    if (!cases || !Array.isArray(cases)) {
+      return {
+        totalCases: 0,
+        totalResources: 0,
+        casesWithLearningPoints: 0,
+        thisWeekCases: 0,
+        activeCases: 0,
+        monthlyCases: 0,
+        totalPatients: 0
+      };
+    }
+
     const totalCases = cases.length;
-    const totalResources = cases.reduce((acc, curr) => acc + curr.resources.length, 0);
+    const totalResources = cases.reduce((acc, curr) => {
+      return acc + (curr.resources ? curr.resources.length : 0);
+    }, 0);
     const casesWithLearningPoints = cases.filter(c => c.learningPoints && c.learningPoints.length > 0).length;
     
     const thisWeekCases = cases.filter(c => {
@@ -24,22 +41,44 @@ export function useDashboardData() {
       return date >= weekAgo && date <= now;
     }).length;
 
+    const thisMonthCases = cases.filter(c => {
+      const date = new Date(c.createdAt);
+      const now = new Date();
+      const monthAgo = new Date();
+      monthAgo.setMonth(now.getMonth() - 1);
+      return date >= monthAgo && date <= now;
+    }).length;
+
+    // Get unique patients
+    const uniquePatients = new Set(cases.map(c => c.patient?.id)).size;
+
     return {
       totalCases,
       totalResources,
       casesWithLearningPoints,
-      thisWeekCases
+      thisWeekCases,
+      activeCases: totalCases, // All cases are considered active for now
+      monthlyCases: thisMonthCases,
+      totalPatients: uniquePatients
     };
   };
 
   const getSpecialtyProgress = () => {
+    if (!cases || !Array.isArray(cases)) {
+      return [];
+    }
+
     const specialtyCount = cases.reduce((acc, caseItem) => {
-      caseItem.tags.forEach(tag => {
-        if (!acc[tag.name]) {
-          acc[tag.name] = 0;
-        }
-        acc[tag.name]++;
-      });
+      if (caseItem.tags && Array.isArray(caseItem.tags)) {
+        caseItem.tags.forEach(tag => {
+          if (tag && tag.name) {
+            if (!acc[tag.name]) {
+              acc[tag.name] = 0;
+            }
+            acc[tag.name]++;
+          }
+        });
+      }
       return acc;
     }, {} as Record<string, number>);
 
@@ -49,11 +88,12 @@ export function useDashboardData() {
   };
 
   return {
-    cases,
+    cases: cases || [],
     isLoading,
     error,
     getRecentCases,
     getStatistics,
-    getSpecialtyProgress
+    getSpecialtyProgress,
+    data: getStatistics() // Add the data object that Dashboard expects
   };
 }
