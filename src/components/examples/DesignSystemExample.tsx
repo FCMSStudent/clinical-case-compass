@@ -11,6 +11,7 @@ import { ComponentShowcaseDemo } from './components/ComponentShowcaseDemo';
 import { BentoGridDemo } from './components/BentoGridDemo';
 import { AnimationSystemDemo } from './components/AnimationSystemDemo';
 import { UsageExamplesDemo } from './components/UsageExamplesDemo';
+import { IconographyDemo } from './IconographyDemo';
 
 export const DesignSystemExample: React.FC = () => {
   return (
@@ -32,6 +33,9 @@ export const DesignSystemExample: React.FC = () => {
 
       {/* Theme Switcher */}
       <ThemeSwitcherDemo />
+
+      {/* Iconography System */}
+      <IconographyDemo />
 
       {/* Component Showcase */}
       <ComponentShowcaseDemo />
