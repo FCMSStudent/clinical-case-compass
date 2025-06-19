@@ -1,4 +1,3 @@
-
 // ────────────────────────────────────────────────────────────────────────────────
 // DESIGN SYSTEM UTILITIES
 // ────────────────────────────────────────────────────────────────────────────────
@@ -81,7 +80,7 @@ export const applyThemeToDocument = (themeColors: ThemeColors) => {
     "--theme-glass-bg": themeColors.glass.background,
     "--theme-glass-border": themeColors.glass.border,
     "--theme-glass-shadow": themeColors.glass.shadow,
-    "--theme-glass-backdrop": themeColors.glass.backdrop,
+    "--theme-glass-backdrop": typeof themeColors.glass.backdrop === 'string' ? themeColors.glass.backdrop : themeColors.glass.backdrop.medium,
     "--theme-blur": "blur(20px)",
     "--theme-shadow": "0 8px 32px rgba(0, 0, 0, 0.1)",
     "--theme-border-width": "1px solid rgba(255, 255, 255, 0.2)",
@@ -113,7 +112,7 @@ export const generateThemeCSSProperties = (themeColors: ThemeColors) => {
     "--theme-glass-bg": themeColors.glass.background,
     "--theme-glass-border": themeColors.glass.border,
     "--theme-glass-shadow": themeColors.glass.shadow,
-    "--theme-glass-backdrop": themeColors.glass.backdrop,
+    "--theme-glass-backdrop": typeof themeColors.glass.backdrop === 'string' ? themeColors.glass.backdrop : themeColors.glass.backdrop.medium,
     "--theme-blur": "blur(20px)",
     "--theme-shadow": "0 8px 32px rgba(0, 0, 0, 0.1)",
     "--theme-border-width": "1px solid rgba(255, 255, 255, 0.2)",
