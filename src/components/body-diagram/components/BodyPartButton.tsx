@@ -61,7 +61,7 @@ export const BodyPartButton: React.FC<BodyPartButtonProps> = ({
     >
       <Button
         variant={variant}
-        size={compact ? "sm" : "md"}
+        size={compact ? "sm" : "default"}
         className={cn(
           baseClasses,
           selectedClasses,

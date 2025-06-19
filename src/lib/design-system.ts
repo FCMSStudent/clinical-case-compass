@@ -8,7 +8,6 @@ export * from './spacing';
 export * from './components';
 export * from './theme-system.tsx';
 export * from './typography';
-export * from './design-tokens';
 export * from './background-config';
 
 // Re-export existing animation system

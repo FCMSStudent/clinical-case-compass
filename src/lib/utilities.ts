@@ -12,9 +12,15 @@ export const prefersReducedMotion = () => {
 
 /** Get glassmorphic styles */
 export const getGlassmorphicStyles = (themeColors: ThemeColors, variant: "default" | "elevated" | "subtle" | "light" = "default") => {
+  // Handle backdrop as string or object
+  const getBackdrop = (backdrop: string | { light: string; medium: string; heavy: string }) => {
+    if (typeof backdrop === 'string') return backdrop;
+    return backdrop.medium;
+  };
+
   const baseStyles = {
     backgroundColor: themeColors.glass.background,
-    backdropFilter: themeColors.glass.backdrop,
+    backdropFilter: getBackdrop(themeColors.glass.backdrop),
     border: themeColors.glass.border,
     boxShadow: themeColors.glass.shadow,
   };

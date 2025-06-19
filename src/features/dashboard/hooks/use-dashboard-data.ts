@@ -1,4 +1,3 @@
-
 import { useSupabaseCases } from '@/hooks/use-supabase-cases';
 import { MedicalCase } from '@/types/case';
 
@@ -41,25 +40,23 @@ export function useDashboardData() {
       return date >= weekAgo && date <= now;
     }).length;
 
-    const thisMonthCases = cases.filter(c => {
+    const activeCases = cases.filter(c => c.status === 'active').length;
+    const now = new Date();
+    const monthlyCases = cases.filter(c => {
       const date = new Date(c.createdAt);
-      const now = new Date();
-      const monthAgo = new Date();
-      monthAgo.setMonth(now.getMonth() - 1);
-      return date >= monthAgo && date <= now;
+      return date.getFullYear() === now.getFullYear() && date.getMonth() === now.getMonth();
     }).length;
-
-    // Get unique patients
-    const uniquePatients = new Set(cases.map(c => c.patient?.id)).size;
+    const patientIds = new Set(cases.map(c => c.patient.id));
+    const totalPatients = patientIds.size;
 
     return {
       totalCases,
       totalResources,
       casesWithLearningPoints,
       thisWeekCases,
-      activeCases: totalCases, // All cases are considered active for now
-      monthlyCases: thisMonthCases,
-      totalPatients: uniquePatients
+      activeCases,
+      monthlyCases,
+      totalPatients
     };
   };
 
@@ -93,7 +90,6 @@ export function useDashboardData() {
     error,
     getRecentCases,
     getStatistics,
-    getSpecialtyProgress,
-    data: getStatistics() // Add the data object that Dashboard expects
+    getSpecialtyProgress
   };
 }

@@ -3,7 +3,7 @@ import { BentoCard } from "@/components/ui/bento-card";
 import { Badge } from "@/components/ui/badge";
 import { Stethoscope, AlertCircle } from "lucide-react";
 import { MedicalCase } from "@/types/case";
-import { typography, spacing } from "@/lib/ui-styles";
+import { typography, responsiveType } from "@/lib/typography";
 import { cn } from "@/lib/utils";
 
 interface DiagnosisCardProps {
@@ -24,7 +24,7 @@ export const DiagnosisCard: React.FC<DiagnosisCardProps> = ({ medicalCase }) => 
             {medicalCase.diagnoses.map((diagnosis) => (
               <div key={diagnosis.id} className="space-y-2">
                 <div className="flex items-start justify-between gap-3">
-                  <div className={cn(typography.body.default, "font-medium leading-relaxed")}>
+                  <div className={cn(typography.body, "font-medium leading-relaxed")}>
                     {diagnosis.name}
                   </div>
                   <Badge 
@@ -35,7 +35,7 @@ export const DiagnosisCard: React.FC<DiagnosisCardProps> = ({ medicalCase }) => 
                   </Badge>
                 </div>
                 {diagnosis.notes && (
-                  <div className={cn(typography.body.small, "text-white/70 leading-relaxed")}>
+                  <div className={cn(responsiveType.caption, "text-white/70 leading-relaxed")}>
                     <span className="text-white/60 font-medium">Note:</span> {diagnosis.notes}
                   </div>
                 )}
@@ -45,7 +45,7 @@ export const DiagnosisCard: React.FC<DiagnosisCardProps> = ({ medicalCase }) => 
         ) : (
           <div className="flex items-center gap-3 text-white/60 p-4 bg-white/5 rounded-lg border border-white/10">
             <AlertCircle className="h-5 w-5 flex-shrink-0" />
-            <span className={typography.body.small}>No diagnoses recorded for this case</span>
+            <span className={responsiveType.caption}>No diagnoses recorded for this case</span>
           </div>
         )}
       </div>

@@ -158,7 +158,7 @@ export const SofterShadowsDemo: React.FC = () => {
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-white/80">Buttons</label>
                   <div className="flex flex-wrap gap-2">
-                    <Button variant="primary">Primary</Button>
+                    <Button variant="default">Primary</Button>
                     <Button variant="secondary">Secondary</Button>
                     <Button variant="outline">Outline</Button>
                   </div>

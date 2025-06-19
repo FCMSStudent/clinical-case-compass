@@ -1,9 +1,9 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { BookOpen, User, BrainCircuit } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { typography } from '@/lib/design-system';
+import { responsiveType } from '@/lib/typography';
 
 const FeatureCard = ({ icon, title, description, image, reverse = false }: { icon: React.ReactNode, title: string, description: string, image: string, reverse?: boolean }) => {
   const imageContent = (
@@ -34,7 +34,7 @@ const FeatureCard = ({ icon, title, description, image, reverse = false }: { ico
         </div>
         <h3 className={cn(typography.h3, "text-2xl")}>{title}</h3>
       </div>
-      <p className={cn(typography.body.large, "text-white/80")}>{description}</p>
+      <p className={cn(responsiveType.bodyLarge, "text-white/80")}>{description}</p>
     </motion.div>
   );
 
@@ -60,7 +60,7 @@ const FeaturesSection = () => {
           <h2 className={cn(typography.h2, "text-3xl md:text-5xl font-extrabold")}>
             A Smarter Way to Practice Medicine
           </h2>
-          <p className={cn(typography.body.large, "mt-4 max-w-3xl mx-auto text-white/80")}>
+          <p className={cn(responsiveType.bodyLarge, "mt-4 max-w-3xl mx-auto text-white/80")}>
             Medica is more than just a digital notebook. It's an intelligent partner designed to enhance your clinical skills.
           </p>
         </motion.div>

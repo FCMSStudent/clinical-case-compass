@@ -1,4 +1,3 @@
-
 import React from "react";
 import { BentoCard } from "@/components/ui/bento-card";
 import { Button } from "@/components/ui/button";
@@ -21,7 +20,7 @@ export const ActionsCard: React.FC<ActionsCardProps> = ({ onEdit, onDelete }) =>
         <Button
           onClick={onEdit}
           size="sm"
-          variant="primary"
+          variant="default"
           className="w-full justify-start gap-2 text-sm font-medium"
         >
           <Edit className="h-4 w-4" />

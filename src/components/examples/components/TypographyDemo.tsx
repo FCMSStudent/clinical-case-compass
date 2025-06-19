@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
@@ -9,7 +8,9 @@ import {
   treatmentStatusText,
   formatMedicalMeasurement,
   responsiveType,
-  createTypographyClass
+  createTypographyClass,
+  medicalTypography,
+  componentTypography
 } from '@/lib/typography';
 import { 
   Heart, 
@@ -70,11 +71,11 @@ export const TypographyDemo: React.FC = () => {
             </div>
             <div className="flex items-center gap-3">
               <Pill className="h-5 w-5 text-blue-400" />
-              <span className={typography.dosage}>500mg</span>
-              <span className={typography.label}>twice daily</span>
+              <span className={medicalTypography.dosage}>500mg</span>
+              <span className={componentTypography.label}>twice daily</span>
             </div>
-            <div className={typography.diagnosis}>Primary Diagnosis: Hypertension</div>
-            <div className={typography.note}>Patient reports feeling dizzy in the morning</div>
+            <div className={medicalTypography.diagnosis}>Primary Diagnosis: Hypertension</div>
+            <div className={medicalTypography.clinicalNotes}>Patient reports feeling dizzy in the morning</div>
           </CardContent>
         </Card>
       </div>

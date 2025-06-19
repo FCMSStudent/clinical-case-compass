@@ -1,4 +1,3 @@
-
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -11,7 +10,7 @@ import { ProtectedRouteLayout } from "@/features/navigation";
 import LoadingScreen from "@/components/ui/loading-screen";
 
 // Pages
-import { Dashboard } from "@/pages/Dashboard";
+import Dashboard from "@/pages/Dashboard";
 import Cases from "@/pages/Cases";
 import CaseDetail from "@/pages/CaseDetail";
 import CaseEdit from "@/pages/CaseEdit";
