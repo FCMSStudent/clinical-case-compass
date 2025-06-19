@@ -1,8 +1,19 @@
+
 // ────────────────────────────────────────────────────────────────────────────────
 // DESIGN SYSTEM UTILITIES
 // ────────────────────────────────────────────────────────────────────────────────
 
 import { ThemeColors } from './colors';
+
+/** Configuration for glassmorphic effects */
+interface GlassmorphicConfig {
+  blur?: number;
+  saturation?: number;
+  brightness?: number;
+  borderOpacity?: number;
+  shadow?: string | { light: string; medium: string; heavy: string };
+  borderRadius?: string;
+}
 
 /** Check for reduced motion preference */
 export const prefersReducedMotion = () => {

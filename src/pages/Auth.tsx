@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation, NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -44,9 +45,9 @@ const Auth: React.FC = () => {
 
     try {
       if (isSignUp) {
-        await signUp(email, password, fullName);
+        await signUp(email, password);
       } else {
-        await signIn(email, password, rememberMe);
+        await signIn(email, password);
       }
     } catch (authError: any) {
       setError(authError.message || "Authentication failed");
@@ -84,9 +85,10 @@ const Auth: React.FC = () => {
 
       {/* Authentication Card */}
       <motion.div
-        className="relative w-full max-w-md bg-white/10 backdrop-blur-xl border-white/20 shadow-2xl"
-        variant="modal"
-        glassIntensity="medium"
+        className="relative w-full max-w-md bg-white/10 backdrop-blur-xl border-white/20 shadow-2xl rounded-2xl"
+        variants={getGlassTransitionVariants('medium')}
+        initial="initial"
+        animate="animate"
       >
         <div className="z-10 p-8 md:p-12">
           {/* Title */}
@@ -184,7 +186,7 @@ const Auth: React.FC = () => {
                   <Checkbox
                     id="remember"
                     checked={rememberMe}
-                    onCheckedChange={setRememberMe}
+                    onCheckedChange={(checked) => setRememberMe(checked === true)}
                     className="border-white/20 focus-visible:ring-0"
                   />
                   <Label
@@ -206,10 +208,9 @@ const Auth: React.FC = () => {
             <Button
               type="submit"
               className="w-full"
-              loading={loading}
               disabled={loading}
             >
-              {isSignUp ? "Create Account" : "Sign In"}
+              {loading ? "Loading..." : (isSignUp ? "Create Account" : "Sign In")}
             </Button>
           </form>
 

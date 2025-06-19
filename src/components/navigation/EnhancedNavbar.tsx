@@ -168,7 +168,7 @@ const EnhancedNavbar: React.FC = () => {
                       "focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-transparent"
                     )}
                   >
-                    <IconComponent className="h-4 w-4" />
+                    <IconComponent />
                     <span className="font-medium tracking-[0.01em]">{item.label}</span>
                     {item.hasNotifications && <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse" />}
                   </NavLink>
