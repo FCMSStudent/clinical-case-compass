@@ -1,3 +1,4 @@
+import React from "react";
 import { LucideIcon, LucideProps } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -422,7 +423,4 @@ export const useIconState = (initialState: IconState = "default") => {
     setDisabled,
     setSelected
   };
-};
-
-// Export React for the components
-import React from "react"; 
+}; 
