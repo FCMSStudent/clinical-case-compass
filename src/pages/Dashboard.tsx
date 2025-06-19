@@ -1,6 +1,6 @@
 import React from "react";
 import { useSupabaseCases } from "@/hooks/use-supabase-cases";
-import { useDashboardData } from "@/hooks/use-dashboard-data";
+import { useDashboardData } from "@/features/dashboard/hooks/use-dashboard-data";
 import { StatCards } from "@/features/dashboard/components/StatCards";
 import { QuickStartPanel } from "@/features/dashboard/components/QuickStartPanel";
 import { RecentActivity } from "@/features/dashboard/components/RecentActivity";
