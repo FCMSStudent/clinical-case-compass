@@ -1,12 +1,12 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
-import { typo, medicalText, accessible } from "@/lib/typography"
+import { typography, statusTypography, accessibleTypography } from "@/lib/typography"
 
 const badgeVariants = cva(
   cn(
     "inline-flex items-center rounded-full border px-2 py-1 transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2",
-    typo.caption
+    typography.caption1
   ),
   {
     variants: {
@@ -25,12 +25,12 @@ const badgeVariants = cva(
           "border-warning/30 bg-warning/20 text-warning backdrop-blur-sm",
         info:
           "border-info/30 bg-info/20 text-info backdrop-blur-sm",
-        critical: medicalText.critical + ' bg-red-900/20 border-red-400/30',
-        stable: medicalText.stable + ' bg-green-900/20 border-green-400/30',
-        warningMedical: medicalText.warning + ' bg-amber-900/20 border-amber-400/30',
-        inactive: medicalText.inactive + ' bg-white/10 border-white/20',
-        accessibleCritical: accessible.critical,
-        accessibleVital: accessible.vital,
+        critical: statusTypography.critical + ' bg-red-900/20 border-red-400/30',
+        stable: statusTypography.success + ' bg-green-900/20 border-green-400/30',
+        warningMedical: statusTypography.warning + ' bg-amber-900/20 border-amber-400/30',
+        inactive: statusTypography.neutral + ' bg-white/10 border-white/20',
+        accessibleCritical: accessibleTypography.critical,
+        accessibleVital: accessibleTypography.vital,
       },
     },
     defaultVariants: {

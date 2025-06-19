@@ -6,7 +6,7 @@ import { motion } from "framer-motion"
 
 import { cn } from "@/lib/utils"
 import { buttonVariants as unifiedButtonVariants } from "@/lib/design-system"
-import { typography } from "@/lib/typography"
+import { componentTypography } from "@/lib/typography"
 import { getGlassHoverVariants } from "@/lib/glass-effects"
 import { EnhancedIcon } from "@/lib/iconography"
 
@@ -34,17 +34,17 @@ const buttonVariants = cva(
         // Legacy variants for backward compatibility
         default: unifiedButtonVariants.primary,
         destructive: unifiedButtonVariants.error,
-        link: cn(typography.link, "text-white underline-offset-4 hover:underline"),
+        link: cn(componentTypography.buttonDefault, "text-white underline-offset-4 hover:underline"),
       },
       size: {
         // Apple-inspired sizes with 8pt grid alignment and 44px minimum touch targets
-        xs: 'h-8 px-2 text-xs font-medium',           // 32px height + 8px padding = 40px touch target
-        sm: 'h-9 px-3 text-sm font-medium',           // 36px height + 12px padding = 48px touch target
-        default: 'h-11 px-4 text-sm font-medium',     // 44px height + 16px padding = 60px touch target (Apple standard)
-        md: 'h-11 px-4 text-sm font-medium',          // 44px height + 16px padding = 60px touch target
-        lg: 'h-12 px-6 text-base font-medium',        // 48px height + 24px padding = 72px touch target
-        xl: 'h-14 px-8 text-lg font-semibold',        // 56px height + 32px padding = 88px touch target
-        icon: "h-11 w-11",                            // 44px x 44px - Apple's minimum touch target
+        xs: cn('h-8 px-2', componentTypography.buttonSmall),           // 32px height + 8px padding = 40px touch target
+        sm: cn('h-9 px-3', componentTypography.buttonDefault),          // 36px height + 12px padding = 48px touch target
+        default: cn('h-11 px-4', componentTypography.buttonDefault),    // 44px height + 16px padding = 60px touch target (Apple standard)
+        md: cn('h-11 px-4', componentTypography.buttonDefault),         // 44px height + 16px padding = 60px touch target
+        lg: cn('h-12 px-6', componentTypography.buttonLarge),           // 48px height + 24px padding = 72px touch target
+        xl: cn('h-14 px-8', componentTypography.buttonLarge),           // 56px height + 32px padding = 88px touch target
+        icon: "h-11 w-11",                                              // 44px x 44px - Apple's minimum touch target
       },
     },
     defaultVariants: {

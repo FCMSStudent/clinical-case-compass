@@ -15,12 +15,12 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 import { input } from "@/lib/design-system"
 import { getGlassHoverVariants } from "@/lib/glass-effects"
-import { typography } from "@/lib/typography"
+import { componentTypography } from "@/lib/typography"
 
 // ─── Tailwind variant generator ──────────────────────────────────────────────
 const inputVariants = cva(
   // Base styles - unified across all inputs with enhanced glass effects
-  cn("flex w-full rounded-lg transition-all duration-300 ease-out backdrop-blur-md", typography.body.default),
+  cn("flex w-full rounded-lg transition-all duration-300 ease-out backdrop-blur-md", componentTypography.input),
   {
     variants: {
       variant: {
@@ -80,11 +80,11 @@ const inputVariants = cva(
       },
       size: {
         // Apple-inspired sizes with 8pt grid alignment and comfortable touch targets
-        xs: 'h-8 px-2 text-xs',           // 32px height + 8px padding = 40px touch target
-        sm: 'h-9 px-3 text-sm',           // 36px height + 12px padding = 48px touch target
-        md: 'h-11 px-4 text-sm',          // 44px height + 16px padding = 60px touch target (Apple standard)
-        lg: 'h-12 px-4 text-base',        // 48px height + 16px padding = 64px touch target
-        xl: 'h-14 px-6 text-lg',          // 56px height + 24px padding = 80px touch target
+        xs: cn('h-8 px-2', componentTypography.input),           // 32px height + 8px padding = 40px touch target
+        sm: cn('h-9 px-3', componentTypography.input),           // 36px height + 12px padding = 48px touch target
+        md: cn('h-11 px-4', componentTypography.input),          // 44px height + 16px padding = 60px touch target (Apple standard)
+        lg: cn('h-12 px-4', componentTypography.input),          // 48px height + 16px padding = 64px touch target
+        xl: cn('h-14 px-6', componentTypography.input),          // 56px height + 24px padding = 80px touch target
       },
     },
     defaultVariants: {
