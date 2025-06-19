@@ -1,12 +1,12 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TestTube } from "lucide-react";
 import { SimpleLabs } from "@/features/cases/create/SimpleLabs";
 import { medicalSection, iconWithText } from "@/lib/ui-styles";
+import { LabTest } from "@/types/case";
 
 interface CaseLabsSectionProps {
-  onLabChange: (labResults: any[]) => void;
+  onLabChange: (labResults: LabTest[]) => void;
 }
 
 export const CaseLabsSection: React.FC<CaseLabsSectionProps> = ({

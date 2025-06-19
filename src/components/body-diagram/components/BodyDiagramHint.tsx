@@ -1,11 +1,11 @@
-
 import React from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { typography } from "@/lib/typography";
+import type { BodyPart } from "../types/bodyPartTypes";
 
 interface BodyDiagramHintProps {
-  selectedParts: Set<any>;
+  selectedParts: Set<BodyPart>;
   multiSelect: boolean;
   disabled: boolean;
 }

@@ -135,6 +135,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       className
     );
 
+    // Filter out HTML drag events that conflict with Framer Motion
+    const { onDrag, onDragEnd, onDragStart, onDragEnter, onDragLeave, onDragOver, onDrop, ...filteredProps } = props;
+
     return (
       <div className="relative">
         {leftIcon && (
@@ -145,14 +148,11 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           </div>
         )}
         
-        <motion.input
+        <input
           ref={ref}
           type={type}
           className={inputClasses}
-          variants={glassVariants}
-          initial="initial"
-          whileFocus="focus"
-          {...(props as any)}
+          {...filteredProps}
         />
         
         {rightIcon && (

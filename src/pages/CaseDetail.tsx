@@ -1,4 +1,3 @@
-
 // Remove: import { getCaseById } from "@/data/mock-data";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -85,11 +84,11 @@ const CaseDetail = () => {
     console.log("Vitals updated:", vitals);
   };
 
-  const handleLabsChange = (labs: any) => {
+  const handleLabsChange = (labs: import("@/types/case").LabTest[]) => {
     console.log("Labs updated:", labs);
   };
 
-  const handleImagingChange = (imaging: any) => {
+  const handleImagingChange = (imaging: import("@/types/case").RadiologyStudy[]) => {
     console.log("Imaging updated:", imaging);
   };
 

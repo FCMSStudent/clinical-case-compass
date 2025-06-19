@@ -28,6 +28,11 @@ export type ChartTooltipContentProps = React.ComponentProps<"div"> & {
 export type ChartLegendContentProps = React.ComponentProps<"div"> & {
   hideIcon?: boolean
   nameKey?: string
-  payload?: any[]
+  payload?: Array<{
+    value: string;
+    color: string;
+    dataKey: string;
+    [key: string]: unknown;
+  }>
   verticalAlign?: "top" | "bottom"
 } 

@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import type { BodyPart, SimpleBodyPartSelectorProps } from "./types/bodyPartTypes";
+import type { BodyPart, SimpleBodyPartSelectorProps, BodyPartCategory as BodyPartCategoryType } from "./types/bodyPartTypes";
 import { getCategorizedParts } from "./data/bodyPartData";
 import { BodyDiagramHeader } from "./components/BodyDiagramHeader";
 import { BodyPartCategory } from "./components/BodyPartCategory";
@@ -93,7 +93,7 @@ export const SimpleBodyPartSelector: React.FC<SimpleBodyPartSelectorProps> = Rea
         {Object.entries(categorizedParts).map(([category, parts]) => (
           <BodyPartCategory
             key={category}
-            category={category as any}
+            category={category as BodyPartCategoryType}
             parts={parts}
             selectedParts={selectedParts}
             highlightedParts={highlightedSet}

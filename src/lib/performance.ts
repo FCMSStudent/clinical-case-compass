@@ -218,7 +218,7 @@ export const useListOptimization = <T>(
 /**
  * Lazy component wrapper with performance optimizations
  */
-export const createLazyComponent = <T extends React.ComponentType<any>>(
+export const createLazyComponent = <T extends React.ComponentType<Record<string, unknown>>>(
   importFunc: () => Promise<{ default: T }>,
   fallback?: React.ReactNode
 ) => {
@@ -228,6 +228,7 @@ export const createLazyComponent = <T extends React.ComponentType<any>>(
     return React.createElement(
       React.Suspense,
       { fallback: fallback || React.createElement('div', null, 'Loading...') },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       React.createElement(LazyComponent, props as any)
     );
   };
@@ -418,6 +419,7 @@ export const useComputationCache = <K, V>(
     const newValue = compute();
     cacheRef.current!.set(key, newValue);
     return newValue;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key, compute, dependencies.length, ...dependencies]);
   
   return computedValue;
