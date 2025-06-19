@@ -1,8 +1,9 @@
+
 import React from "react";
 import { Menu } from "lucide-react";
 import { cn } from '@/lib/utils';
 import { useSidebar } from './SidebarContext';
-import { EnhancedIcon } from '@/lib/iconography';
+import { EnhancedIcon } from '@/lib/iconography.tsx';
 
 interface SidebarTriggerProps {
   className?: string;
@@ -34,4 +35,4 @@ export const SidebarTrigger: React.FC<SidebarTriggerProps> = ({ className }) => 
       />
     </button>
   );
-}; 
+};

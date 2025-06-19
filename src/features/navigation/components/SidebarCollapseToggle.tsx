@@ -1,8 +1,8 @@
+
 import React from "react";
 import { ChevronLeft } from "lucide-react";
 import { cn } from '@/lib/utils';
-import { getInteractionStates, getGlassmorphicStyles } from '@/lib/component-system';
-import { EnhancedIcon } from '@/lib/iconography';
+import { EnhancedIcon } from '@/lib/iconography.tsx';
 
 interface SidebarCollapseToggleProps {
   collapsed: boolean;
@@ -42,4 +42,4 @@ export const SidebarCollapseToggle: React.FC<SidebarCollapseToggleProps> = ({
       />
     </button>
   );
-}; 
+};

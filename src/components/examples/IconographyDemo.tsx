@@ -1,320 +1,230 @@
 
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
+import { Badge } from '@/components/ui/badge';
 import { 
-  EnhancedIcon, 
-  StateIcon, 
-  ToggleIcon, 
-  LoadingIcon, 
-  BadgeIcon,
-  useIconState,
-  getIconConfig
-} from '@/lib/iconography';
-import { 
+  Settings, 
+  Search, 
   Heart, 
-  HeartOff,
-  Star,
-  StarOff,
-  Bell,
-  BellOff,
-  Settings,
-  User,
-  Search,
-  Plus,
-  CheckCircle,
-  AlertCircle,
-  Clock,
-  Loader2,
+  Star, 
+  Bell, 
+  User, 
+  Home, 
+  Plus, 
+  CheckCircle, 
   Mail,
-  MessageSquare,
-  FileText,
-  BookOpen,
-  Activity,
-  TrendingUp,
-  Target,
-  Zap,
-  Sparkles,
-  Home,
-  ChevronRight,
-  ChevronDown,
-  RotateCcw,
-  Play,
-  Pause,
-  Volume2,
-  VolumeX,
-  RefreshCw,
-  Download,
-  Upload
+  Loader2
 } from 'lucide-react';
-import { createTypographyClass } from '@/lib/typography';
+import { EnhancedIcon, StateIcon, ToggleIcon, LoadingIcon, BadgeIcon } from '@/lib/iconography.tsx';
+import { cn } from '@/lib/utils';
+import { typography } from '@/lib/typography';
 
 export const IconographyDemo: React.FC = () => {
-  const [isFilled, setIsFilled] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSelected, setIsSelected] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(false);
-  const [badgeCount, setBadgeCount] = useState(5);
-  const { state, setHover, setActive, setDefault } = useIconState();
+  const [isLiked, setIsLiked] = useState(false);
+  const [isStarred, setIsStarred] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
 
   return (
-    <section className="space-y-8">
-      <div className="space-y-4">
-        <h2 className={createTypographyClass('h2', 'text-white')}>
+    <section className="space-y-6">
+      <div className="space-y-2">
+        <h2 className={cn(typography.subtitle, 'text-white')}>
           Apple-Inspired Iconography System
         </h2>
-        <p className={createTypographyClass('body', 'text-white/70')}>
-          Consistent weight, monochromatic treatment, state variations, and smooth animations
+        <p className={cn(typography.body, 'text-white/70')}>
+          Consistent icon weights, monochromatic treatment, and smooth animations
         </p>
       </div>
 
-      {/* Icon Weights */}
-      <Card className="bg-white/10 backdrop-blur-xl border-white/20">
-        <CardHeader>
-          <CardTitle className="text-white">Icon Weights</CardTitle>
-          <CardDescription className="text-white/70">
-            Consistent stroke weights matching Apple's SF Symbols approach
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {(['thin', 'regular', 'medium', 'bold'] as const).map((weight) => (
-              <div key={weight} className="flex flex-col items-center space-y-2">
-                <EnhancedIcon
-                  icon={Settings}
-                  weight={weight}
-                  size="lg"
-                  color="default"
-                />
-                <span className="text-sm text-white/70 capitalize">{weight}</span>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Icon Weights */}
+        <Card className="bg-white/10 backdrop-blur-xl border-white/20">
+          <CardHeader>
+            <CardTitle className="text-white">Icon Weights</CardTitle>
+            <CardDescription className="text-white/70">
+              Consistent stroke weights for visual hierarchy
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center gap-4">
+              <EnhancedIcon icon={Settings} weight="thin" size="lg" />
+              <span className="text-white">Thin - Subtle elements</span>
+            </div>
+            <div className="flex items-center gap-4">
+              <EnhancedIcon icon={Settings} weight="regular" size="lg" />
+              <span className="text-white">Regular - Standard usage</span>
+            </div>
+            <div className="flex items-center gap-4">
+              <EnhancedIcon icon={Settings} weight="medium" size="lg" />
+              <span className="text-white">Medium - Primary actions</span>
+            </div>
+            <div className="flex items-center gap-4">
+              <EnhancedIcon icon={Settings} weight="bold" size="lg" />
+              <span className="text-white">Bold - Strong emphasis</span>
+            </div>
+          </CardContent>
+        </Card>
 
-      {/* Toggle Icons (Outline/Filled) */}
-      <Card className="bg-white/10 backdrop-blur-xl border-white/20">
-        <CardHeader>
-          <CardTitle className="text-white">Toggle Icons</CardTitle>
-          <CardDescription className="text-white/70">
-            SF Symbols-style outline to filled transitions
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-            <div className="flex flex-col items-center space-y-2">
-              <ToggleIcon
-                icon={Heart}
-                outlineIcon={Heart}
-                filledIcon={HeartOff}
-                isFilled={isFilled}
+        {/* Icon Sizes */}
+        <Card className="bg-white/10 backdrop-blur-xl border-white/20">
+          <CardHeader>
+            <CardTitle className="text-white">Icon Sizes</CardTitle>
+            <CardDescription className="text-white/70">
+              Scalable sizes for different contexts
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center gap-4">
+              <EnhancedIcon icon={Home} size="xs" />
+              <span className="text-white">XS - Fine details</span>
+            </div>
+            <div className="flex items-center gap-4">
+              <EnhancedIcon icon={Home} size="sm" />
+              <span className="text-white">SM - Secondary elements</span>
+            </div>
+            <div className="flex items-center gap-4">
+              <EnhancedIcon icon={Home} size="md" />
+              <span className="text-white">MD - Standard icons</span>
+            </div>
+            <div className="flex items-center gap-4">
+              <EnhancedIcon icon={Home} size="lg" />
+              <span className="text-white">LG - Primary elements</span>
+            </div>
+            <div className="flex items-center gap-4">
+              <EnhancedIcon icon={Home} size="xl" />
+              <span className="text-white">XL - Headers</span>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Interactive States */}
+        <Card className="bg-white/10 backdrop-blur-xl border-white/20">
+          <CardHeader>
+            <CardTitle className="text-white">Interactive States</CardTitle>
+            <CardDescription className="text-white/70">
+              Hover and selection states with smooth transitions
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center gap-4">
+              <EnhancedIcon 
+                icon={Plus} 
+                size="lg" 
+                animation="bounce" 
+                interactive 
+                color="primary"
+              />
+              <span className="text-white">Interactive with bounce animation</span>
+            </div>
+            <div className="flex items-center gap-4">
+              <StateIcon 
+                icon={CheckCircle} 
+                state="selected" 
+                size="lg" 
+                color="success"
+              />
+              <span className="text-white">Selected state</span>
+            </div>
+            <div className="flex items-center gap-4">
+              <StateIcon 
+                icon={User} 
+                state="disabled" 
                 size="lg"
-                weight="regular"
+              />
+              <span className="text-white">Disabled state</span>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Special Components */}
+        <Card className="bg-white/10 backdrop-blur-xl border-white/20">
+          <CardHeader>
+            <CardTitle className="text-white">Special Components</CardTitle>
+            <CardDescription className="text-white/70">
+              Toggle icons, loading states, and badges
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="flex items-center gap-4">
+              <ToggleIcon
+                outlineIcon={Heart}
+                filledIcon={Heart}
+                isFilled={isLiked}
+                size="lg"
                 color="error"
                 interactive
-                onClick={() => setIsFilled(!isFilled)}
+                onClick={() => setIsLiked(!isLiked)}
               />
-              <span className="text-sm text-white/70">Heart</span>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => setIsLiked(!isLiked)}
+                className="text-white hover:text-white/80"
+              >
+                {isLiked ? 'Unlike' : 'Like'}
+              </Button>
             </div>
             
-            <div className="flex flex-col items-center space-y-2">
+            <div className="flex items-center gap-4">
               <ToggleIcon
-                icon={Star}
                 outlineIcon={Star}
-                filledIcon={StarOff}
-                isFilled={isFilled}
+                filledIcon={Star}
+                isFilled={isStarred}
                 size="lg"
-                weight="regular"
                 color="warning"
                 interactive
-                onClick={() => setIsFilled(!isFilled)}
+                onClick={() => setIsStarred(!isStarred)}
               />
-              <span className="text-sm text-white/70">Star</span>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => setIsStarred(!isStarred)}
+                className="text-white hover:text-white/80"
+              >
+                {isStarred ? 'Unstar' : 'Star'}
+              </Button>
             </div>
             
-            <div className="flex flex-col items-center space-y-2">
-              <ToggleIcon
-                icon={Bell}
-                outlineIcon={Bell}
-                filledIcon={BellOff}
-                isFilled={isFilled}
+            <div className="flex items-center gap-4">
+              <LoadingIcon
+                icon={Search}
+                isLoading={isSearching}
+                loadingIcon={Loader2}
                 size="lg"
-                weight="regular"
-                color="info"
-                interactive
-                onClick={() => setIsFilled(!isFilled)}
+                color="primary"
               />
-              <span className="text-sm text-white/70">Bell</span>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => setIsSearching(!isSearching)}
+                className="text-white hover:text-white/80"
+              >
+                {isSearching ? 'Stop Search' : 'Start Search'}
+              </Button>
             </div>
-          </div>
-          
-          <div className="flex items-center justify-center space-x-4">
-            <Switch
-              checked={isFilled}
-              onCheckedChange={setIsFilled}
-              className="data-[state=checked]:bg-primary"
-            />
-            <span className="text-sm text-white/70">
-              Toggle Filled State
-            </span>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Loading States */}
-      <Card className="bg-white/10 backdrop-blur-xl border-white/20">
-        <CardHeader>
-          <CardTitle className="text-white">Loading States</CardTitle>
-          <CardDescription className="text-white/70">
-            Smooth loading animations with state transitions
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {([
-              { icon: Search, label: 'Search' },
-              { icon: RefreshCw, label: 'Refresh' },
-              { icon: Download, label: 'Download' },
-              { icon: Upload, label: 'Upload' }
-            ]).map(({ icon: Icon, label }) => (
-              <div key={label} className="flex flex-col items-center space-y-2">
-                <LoadingIcon
-                  icon={Icon}
-                  isLoading={isLoading}
-                  loadingIcon={Loader2}
-                  size="lg"
-                  weight="regular"
-                  color="primary"
-                />
-                <span className="text-sm text-white/70">{label}</span>
-              </div>
-            ))}
-          </div>
-          
-          <div className="flex items-center justify-center space-x-4">
-            <Button
-              variant="outline"
-              onClick={() => setIsLoading(!isLoading)}
-              className="border-white/20 text-white hover:bg-white/10"
-            >
-              Toggle Loading
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Badge Icons */}
-      <Card className="bg-white/10 backdrop-blur-xl border-white/20">
-        <CardHeader>
-          <CardTitle className="text-white">Badge Icons</CardTitle>
-          <CardDescription className="text-white/70">
-            Notification badges with smooth animations
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className="flex flex-col items-center space-y-2">
+            
+            <div className="flex items-center gap-4">
               <BadgeIcon
                 icon={Mail}
-                badge={badgeCount}
+                badge={5}
                 badgeColor="error"
-                badgeSize="sm"
                 size="lg"
-                weight="regular"
-                color="default"
               />
-              <span className="text-sm text-white/70">Mail</span>
+              <span className="text-white">Mail with notification badge</span>
             </div>
             
-            <div className="flex flex-col items-center space-y-2">
-              <BadgeIcon
-                icon={MessageSquare}
-                badge="New"
-                badgeColor="success"
-                badgeSize="md"
-                size="lg"
-                weight="regular"
-                color="default"
-              />
-              <span className="text-sm text-white/70">Messages</span>
-            </div>
-            
-            <div className="flex flex-col items-center space-y-2">
+            <div className="flex items-center gap-4">
               <BadgeIcon
                 icon={Bell}
-                badge={99}
-                badgeColor="warning"
-                badgeSize="lg"
+                badge="NEW"
+                badgeColor="success"
                 size="lg"
-                weight="regular"
-                color="default"
               />
-              <span className="text-sm text-white/70">Notifications</span>
+              <span className="text-white">Bell with text badge</span>
             </div>
-            
-            <div className="flex flex-col items-center space-y-2">
-              <BadgeIcon
-                icon={Activity}
-                badge="!"
-                badgeColor="error"
-                badgeSize="sm"
-                size="lg"
-                weight="regular"
-                color="default"
-              />
-              <span className="text-sm text-white/70">Alerts</span>
-            </div>
-          </div>
-          
-          <div className="flex items-center justify-center space-x-4">
-            <Button
-              variant="outline"
-              onClick={() => setBadgeCount(prev => Math.max(0, prev - 1))}
-              className="border-white/20 text-white hover:bg-white/10"
-            >
-              Decrease
-            </Button>
-            <span className="text-sm text-white/70">Badge Count: {badgeCount}</span>
-            <Button
-              variant="outline"
-              onClick={() => setBadgeCount(prev => prev + 1)}
-              className="border-white/20 text-white hover:bg-white/10"
-            >
-              Increase
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Interactive State Management */}
-      <Card className="bg-white/10 backdrop-blur-xl border-white/20">
-        <CardHeader>
-          <CardTitle className="text-white">Interactive State Management</CardTitle>
-          <CardDescription className="text-white/70">
-            Programmatic state control with the useIconState hook
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="flex flex-col items-center space-y-4">
-            <EnhancedIcon
-              icon={Settings}
-              state={state}
-              size="xl"
-              weight="regular"
-              color="primary"
-              interactive
-              onMouseEnter={setHover}
-              onMouseLeave={setDefault}
-              onMouseDown={setActive}
-              onMouseUp={setDefault}
-            />
-            <span className="text-sm text-white/70">Current State: {state}</span>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
     </section>
   );
-}; 
+};
