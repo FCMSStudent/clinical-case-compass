@@ -5,6 +5,7 @@
 // 2. Enhanced glassmorphic variants with consistent design tokens
 // 3. Improved focus states, hover effects, and accessibility
 // 4. Framer Motion integration for smooth glass interactions
+// 5. 8pt grid spacing system with Apple-inspired touch targets
 // -----------------------------------------------------------------------------
 
 import * as React from "react"
@@ -78,11 +79,12 @@ const inputVariants = cva(
         ),
       },
       size: {
-        xs: 'h-6 px-2 text-xs',
-        sm: 'h-8 px-3 text-sm',
-        md: 'h-10 px-4 text-base md:text-lg',
-        lg: 'h-12 px-4 text-lg md:text-xl',
-        xl: 'h-14 px-6 text-xl md:text-2xl',
+        // Apple-inspired sizes with 8pt grid alignment and comfortable touch targets
+        xs: 'h-8 px-2 text-xs',           // 32px height + 8px padding = 40px touch target
+        sm: 'h-9 px-3 text-sm',           // 36px height + 12px padding = 48px touch target
+        md: 'h-11 px-4 text-sm',          // 44px height + 16px padding = 60px touch target (Apple standard)
+        lg: 'h-12 px-4 text-base',        // 48px height + 16px padding = 64px touch target
+        xl: 'h-14 px-6 text-lg',          // 56px height + 24px padding = 80px touch target
       },
     },
     defaultVariants: {

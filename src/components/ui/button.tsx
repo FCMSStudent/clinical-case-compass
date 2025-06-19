@@ -37,13 +37,14 @@ const buttonVariants = cva(
         link: cn(typography.link, "text-white underline-offset-4 hover:underline"),
       },
       size: {
-        xs: 'h-6 px-2 text-xs font-medium',
-        sm: 'h-9 rounded-lg px-3',
-        default: 'h-10 px-4 py-2',
-        md: 'h-10 px-4 text-sm md:text-base font-medium',
-        lg: 'h-11 rounded-xl px-8',
-        xl: 'h-14 px-8 text-lg md:text-xl font-bold',
-        icon: "h-10 w-10",
+        // Apple-inspired sizes with 8pt grid alignment and 44px minimum touch targets
+        xs: 'h-8 px-2 text-xs font-medium',           // 32px height + 8px padding = 40px touch target
+        sm: 'h-9 px-3 text-sm font-medium',           // 36px height + 12px padding = 48px touch target
+        default: 'h-11 px-4 text-sm font-medium',     // 44px height + 16px padding = 60px touch target (Apple standard)
+        md: 'h-11 px-4 text-sm font-medium',          // 44px height + 16px padding = 60px touch target
+        lg: 'h-12 px-6 text-base font-medium',        // 48px height + 24px padding = 72px touch target
+        xl: 'h-14 px-8 text-lg font-semibold',        // 56px height + 32px padding = 88px touch target
+        icon: "h-11 w-11",                            // 44px x 44px - Apple's minimum touch target
       },
     },
     defaultVariants: {
