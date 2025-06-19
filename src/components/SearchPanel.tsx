@@ -75,7 +75,6 @@ export const SearchPanel: React.FC<SearchPanelProps> = React.memo(
                   size="md"
                   weight="regular"
                   color={isLoading ? "primary" : "muted"}
-                  animation={isLoading ? "rotate" : "none"}
                 />
                 {isFocused && (
                   <motion.div

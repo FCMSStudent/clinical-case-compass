@@ -1,4 +1,3 @@
-
 // ────────────────────────────────────────────────────────────────────────────────
 // APPLE-INSPIRED TYPOGRAPHY SYSTEM
 // Based on Apple's Human Interface Guidelines with San Francisco fonts
@@ -46,6 +45,9 @@ export const typography = {
   label: "text-sm md:text-base font-medium leading-none tracking-[0.01em]",
   vital: "text-lg md:text-xl font-mono tabular-nums font-medium leading-snug",
   note: "text-base md:text-lg font-normal leading-relaxed tracking-[0.01em]",
+  
+  // Add missing properties
+  measurement: "text-lg md:text-xl font-mono tabular-nums font-medium leading-snug",
 } as const;
 
 // Medical-specific typography
@@ -141,6 +143,30 @@ export const treatmentStatusText = (status: 'complete' | 'ongoing' | 'pending' |
     default: return `${base} text-gray-500`;
   }
 };
+
+// Additional utility functions that components expect
+export const createTypographyClass = (variant: keyof typeof typography, additionalClasses?: string) => {
+  return `${typography[variant]} ${additionalClasses || ''}`.trim();
+};
+
+export const responsiveType = (baseClass: string, responsive?: { sm?: string; md?: string; lg?: string }) => {
+  let classes = baseClass;
+  if (responsive?.sm) classes += ` sm:${responsive.sm}`;
+  if (responsive?.md) classes += ` md:${responsive.md}`;
+  if (responsive?.lg) classes += ` lg:${responsive.lg}`;
+  return classes;
+};
+
+export const formatMedicalMeasurement = (value: number, unit: string) => {
+  return `${value} ${unit}`;
+};
+
+export const fontWeight = {
+  normal: 'font-normal',
+  medium: 'font-medium',
+  semibold: 'font-semibold',
+  bold: 'font-bold',
+} as const;
 
 // Typography tokens for design system integration
 export const typographyTokens = {

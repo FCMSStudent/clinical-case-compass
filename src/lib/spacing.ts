@@ -192,6 +192,11 @@ export const layout = {
       stretch: 'items-stretch',
     },
   },
+  
+  // Add missing size properties
+  xs: '6rem',      // 96px
+  sm: '8rem',      // 128px  
+  md: '10rem',     // 160px
 } as const;
 
 /** Component Size System (Apple-inspired) */
@@ -334,4 +339,4 @@ export const responsiveSpacing = {
     desktop: 'gap-8',    // 32px on desktop
     wide: 'gap-12',      // 48px on wide screens
   },
-} as const; 
+} as const;
