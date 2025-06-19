@@ -24,20 +24,16 @@ export const glass = {
   
   // Contextual glass variants
   navigation: `${glassmorphic} bg-white/18 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] border backdrop-blur-[24px] saturate-160 brightness-108`,
-  modal: `${glassmorphic} bg-white/25 rounded-2xl shadow-[0_24px_80px_rgba(0,0,0,0.15)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] border backdrop-blur-[45px] saturate-190 contrast-112`,
+  modal: `${glassmorphic} bg-white/25 rounded-2xl shadow-[0_16px_64px_rgba(0,0,0,0.2)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] border backdrop-blur-[50px] saturate-200 contrast-115`,
   alert: `${glassmorphic} bg-white/20 rounded-2xl shadow-[0_12px_48px_rgba(0,0,0,0.12)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] border backdrop-blur-[30px] saturate-150 brightness-105`,
   dropdown: `${glassmorphic} bg-white/15 rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] border backdrop-blur-[28px] saturate-170 brightness-107`,
   
-  // Interactive glass variants with enhanced hover states
-  interactive: `${glassmorphic} bg-white/10 rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] hover:bg-white/25 hover:shadow-[0_12px_48px_rgba(0,0,0,0.12)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] hover:scale-[1.02] hover:brightness-105 hover:saturate-110 cursor-pointer transition-all duration-300 ease-out`,
-  featured: `${glassmorphic} bg-white/15 ring-1 ring-white/30 shadow-[0_16px_64px_rgba(0,0,0,0.1)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] backdrop-blur-[24px] saturate-160 brightness-108`,
-  
-  // Surface elevation variants with softer shadows
-  elevation50: `${glassmorphic} bg-white/2 backdrop-blur-[8px] shadow-[0_2px_8px_rgba(0,0,0,0.04)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]`,
-  elevation100: `${glassmorphic} bg-white/5 backdrop-blur-[12px] shadow-[0_4px_16px_rgba(0,0,0,0.06)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]`,
-  elevation200: `${glassmorphic} bg-white/8 backdrop-blur-[16px] shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]`,
-  elevation300: `${glassmorphic} bg-white/12 backdrop-blur-[20px] shadow-[0_12px_48px_rgba(0,0,0,0.12)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]`,
-  elevation400: `${glassmorphic} bg-white/18 backdrop-blur-[24px] shadow-[0_16px_64px_rgba(0,0,0,0.1)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]`,
+  // Enhanced frosted glass overlay variants
+  frostedOverlay: `${glassmorphic} bg-white/25 rounded-2xl shadow-[0_16px_64px_rgba(0,0,0,0.2)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] border border-white/25 backdrop-blur-[50px] saturate-200 contrast-115`,
+  frostedModal: `${glassmorphic} bg-white/25 rounded-2xl shadow-[0_16px_64px_rgba(0,0,0,0.2)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] border border-white/25 backdrop-blur-[50px] saturate-200 contrast-115`,
+  frostedPanel: `${glassmorphic} bg-white/20 rounded-2xl shadow-[0_12px_48px_rgba(0,0,0,0.15)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] border border-white/25 backdrop-blur-[40px] saturate-180 contrast-110`,
+  frostedPopover: `${glassmorphic} bg-white/25 rounded-xl shadow-[0_16px_64px_rgba(0,0,0,0.2)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] border border-white/25 backdrop-blur-[40px] saturate-200 contrast-115`,
+  frostedSheet: `${glassmorphic} bg-white/25 rounded-2xl shadow-[0_16px_64px_rgba(0,0,0,0.2)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] border border-white/25 backdrop-blur-[50px] saturate-200 contrast-115`,
 } as const;
 
 /** Base styles for buttons with enhanced glass effects */
