@@ -56,7 +56,7 @@ const activityColors = {
 
 const RecentActivityList: React.FC = () => {
   const { getRecentCases } = useDashboardData();
-  const recentCases = getRecentCases(5);
+  const recentCases = getRecentCases(5) || [];
 
   // Generate activity items from recent cases
   const activityItems = recentCases.length > 0 ? 

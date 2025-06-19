@@ -5,30 +5,30 @@ import { typography, statusTypography, accessibleTypography } from "@/lib/typogr
 
 const badgeVariants = cva(
   cn(
-    "inline-flex items-center rounded-full border px-2 py-1 transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2",
+    "inline-flex items-center rounded-full border px-2 py-1 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:ring-offset-2",
     typography.caption1
   ),
   {
     variants: {
       variant: {
         default:
-          "border-transparent bg-white/20 text-white backdrop-blur-sm",
+          "border-slate-300 bg-slate-100 text-slate-700",
         secondary:
-          "border-white/20 bg-white/10 text-white/90 backdrop-blur-sm",
+          "border-slate-200 bg-slate-50 text-slate-600",
         destructive:
-          "border-error/30 bg-error/20 text-error backdrop-blur-sm",
+          "border-error-200 bg-error-100 text-error-700",
         outline: 
-          "border-white/20 text-white/90 bg-white/5 backdrop-blur-sm",
+          "border-slate-300 text-slate-600 bg-transparent",
         success:
-          "border-success/30 bg-success/20 text-success backdrop-blur-sm",
+          "border-success-200 bg-success-100 text-success-700",
         warning:
-          "border-warning/30 bg-warning/20 text-warning backdrop-blur-sm",
+          "border-warning-200 bg-warning-100 text-warning-700",
         info:
-          "border-info/30 bg-info/20 text-info backdrop-blur-sm",
-        critical: statusTypography.critical + ' bg-red-900/20 border-red-400/30',
-        stable: statusTypography.success + ' bg-green-900/20 border-green-400/30',
-        warningMedical: statusTypography.warning + ' bg-amber-900/20 border-amber-400/30',
-        inactive: statusTypography.neutral + ' bg-white/10 border-white/20',
+          "border-info-200 bg-info-100 text-info-700",
+        critical: statusTypography.critical + ' bg-error-100 border-error-200 text-error-700',
+        stable: statusTypography.success + ' bg-success-100 border-success-200 text-success-700',
+        warningMedical: statusTypography.warning + ' bg-warning-100 border-warning-200 text-warning-700',
+        inactive: statusTypography.neutral + ' bg-slate-100 border-slate-200 text-slate-600',
         accessibleCritical: accessibleTypography.critical,
         accessibleVital: accessibleTypography.vital,
       },

@@ -11,30 +11,30 @@ import { getGlassHoverVariants } from "@/lib/glass-effects"
 import { EnhancedIcon } from "@/lib/iconography"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-xl transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:filter focus-visible:brightness-110 focus-visible:saturate-105 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-xl transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/30 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:filter focus-visible:brightness-110 focus-visible:saturate-105 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed",
   {
     variants: {
       variant: {
-        // Primary variants with enhanced glass effects
-        primary: unifiedButtonVariants.primary,
-        secondary: unifiedButtonVariants.secondary,
-        outline: unifiedButtonVariants.outline,
-        ghost: unifiedButtonVariants.ghost,
+        // Apple-inspired primary variants
+        primary: "bg-primary-500 hover:bg-primary-600 text-white shadow-sm hover:shadow-md transition-all duration-200",
+        secondary: "bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 hover:border-slate-400",
+        outline: "border border-slate-300 text-slate-700 hover:bg-slate-50 hover:border-slate-400",
+        ghost: "text-slate-600 hover:bg-slate-100 hover:text-slate-700",
         
-        // Status variants with enhanced glass effects
-        success: unifiedButtonVariants.success,
-        warning: unifiedButtonVariants.warning,
-        error: unifiedButtonVariants.error,
-        info: unifiedButtonVariants.info,
+        // Apple-inspired status variants (desaturated)
+        success: "bg-success-500 hover:bg-success-600 text-white shadow-sm hover:shadow-md",
+        warning: "bg-warning-500 hover:bg-warning-600 text-white shadow-sm hover:shadow-md",
+        error: "bg-error-500 hover:bg-error-600 text-white shadow-sm hover:shadow-md",
+        info: "bg-info-500 hover:bg-info-600 text-white shadow-sm hover:shadow-md",
         
-        // Medical-specific variants with enhanced glass effects
-        medical: unifiedButtonVariants.medical,
-        critical: unifiedButtonVariants.critical,
+        // Medical-specific variants
+        medical: "bg-primary-500 hover:bg-primary-600 text-white shadow-sm hover:shadow-md",
+        critical: "bg-error-500 hover:bg-error-600 text-white shadow-sm hover:shadow-md",
         
         // Legacy variants for backward compatibility
-        default: unifiedButtonVariants.primary,
-        destructive: unifiedButtonVariants.error,
-        link: cn(componentTypography.buttonDefault, "text-white underline-offset-4 hover:underline"),
+        default: "bg-primary-500 hover:bg-primary-600 text-white shadow-sm hover:shadow-md",
+        destructive: "bg-error-500 hover:bg-error-600 text-white shadow-sm hover:shadow-md",
+        link: cn(componentTypography.buttonDefault, "text-primary-600 underline-offset-4 hover:underline hover:text-primary-700"),
       },
       size: {
         // Apple-inspired sizes with 8pt grid alignment and 44px minimum touch targets

@@ -63,7 +63,7 @@ const specialtyColors = {
   }
 };
 
-export const SpecialtyProgress = ({ data }: SpecialtyProgressProps) => {
+export const SpecialtyProgress = ({ data = [] }: SpecialtyProgressProps) => {
   if (data.length === 0) {
     return (
       <div className="relative">

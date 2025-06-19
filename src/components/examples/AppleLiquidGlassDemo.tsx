@@ -1,308 +1,455 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { 
-  liquidGlassEffects, 
-  getGlassHoverVariants, 
-  getGlassTransitionVariants,
-  getPulseAnimation,
-  getParallaxEffect,
-  liquidGlassClasses,
-  getGlassClasses
-} from '@/lib/glass-effects';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { colors, themeColors } from '@/lib/colors';
 
-export const AppleLiquidGlassDemo = () => {
+export default function AppleLiquidGlassDemo() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 p-8">
-      <div className="max-w-7xl mx-auto space-y-12">
-        
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-slate-100 to-slate-200 p-8">
+      <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center space-y-4"
-        >
-          <h1 className="text-4xl font-bold text-white">
-            Apple-Inspired Liquid Glass Effects
+        <div className="text-center space-y-4">
+          <h1 className="text-4xl font-bold text-slate-900">
+            Apple Liquid Glass Color System
           </h1>
-          <p className="text-xl text-white/70 max-w-2xl mx-auto">
-            Experience the enhanced glassmorphic design system with Apple's signature liquid glass aesthetics, 
-            featuring adaptive glass effects, micro-interactions, and contextual variants.
+          <p className="text-lg text-slate-600 max-w-3xl mx-auto">
+            Sophisticated neutral palette with minimal accents, featuring Apple's signature translucency 
+            and refined color harmony for a polished, professional interface.
           </p>
-        </motion.div>
-
-        {/* Glass Effect Categories */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          
-          {/* Contextual Glass Variants */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4, delay: 0.1 }}
-          >
-            <Card className={getGlassClasses('card', true, true)}>
-              <CardHeader>
-                <CardTitle>Contextual Glass Variants</CardTitle>
-                <CardDescription>
-                  Different glass effects for different contexts
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className={getGlassClasses('navigation', false, false)}>
-                  <p className="p-3 text-sm">Navigation Glass</p>
-                </div>
-                <div className={getGlassClasses('modal', false, false)}>
-                  <p className="p-3 text-sm">Modal Glass</p>
-                </div>
-                <div className={getGlassClasses('alert', false, false)}>
-                  <p className="p-3 text-sm">Alert Glass</p>
-                </div>
-                <div className={getGlassClasses('button', false, false)}>
-                  <p className="p-3 text-sm">Button Glass</p>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          {/* Interactive Components */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4, delay: 0.2 }}
-          >
-            <Card className={getGlassClasses('card', true, true)}>
-              <CardHeader>
-                <CardTitle>Interactive Components</CardTitle>
-                <CardDescription>
-                  Enhanced hover and focus states
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Button 
-                  variant="primary" 
-                  glassIntensity="medium"
-                  className="w-full"
-                >
-                  Enhanced Button
-                </Button>
-                <Input 
-                  placeholder="Enhanced Input" 
-                  glassIntensity="medium"
-                />
-                <Card 
-                  variant="interactive" 
-                  glassIntensity="medium"
-                  interactive={true}
-                  className="p-4"
-                >
-                  <p className="text-sm">Interactive Card</p>
-                </Card>
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          {/* Micro-interactions */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4, delay: 0.3 }}
-          >
-            <Card className={getGlassClasses('card', true, true)}>
-              <CardHeader>
-                <CardTitle>Micro-interactions</CardTitle>
-                <CardDescription>
-                  Pulsing effects and animations
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <motion.div
-                  className="bg-red-500/20 border border-red-400/30 rounded-lg p-3"
-                  animate={getPulseAnimation('critical')}
-                >
-                  <p className="text-red-200 text-sm">Critical Alert</p>
-                </motion.div>
-                <motion.div
-                  className="bg-yellow-500/20 border border-yellow-400/30 rounded-lg p-3"
-                  animate={getPulseAnimation('attention')}
-                >
-                  <p className="text-yellow-200 text-sm">Attention Alert</p>
-                </motion.div>
-                <motion.div
-                  className="bg-blue-500/20 border border-blue-400/30 rounded-lg p-3"
-                  animate={getPulseAnimation('gentle')}
-                >
-                  <p className="text-blue-200 text-sm">Gentle Pulse</p>
-                </motion.div>
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          {/* Enhanced Backdrop Effects */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4, delay: 0.4 }}
-          >
-            <Card className={getGlassClasses('card', true, true)}>
-              <CardHeader>
-                <CardTitle>Backdrop Effects</CardTitle>
-                <CardDescription>
-                  Different blur and filter intensities
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div 
-                  className="p-3 rounded-lg border border-white/20"
-                  style={{ backdropFilter: liquidGlassEffects.backdrop.light }}
-                >
-                  <p className="text-sm">Light Backdrop</p>
-                </div>
-                <div 
-                  className="p-3 rounded-lg border border-white/20"
-                  style={{ backdropFilter: liquidGlassEffects.backdrop.medium }}
-                >
-                  <p className="text-sm">Medium Backdrop</p>
-                </div>
-                <div 
-                  className="p-3 rounded-lg border border-white/20"
-                  style={{ backdropFilter: liquidGlassEffects.backdrop.heavy }}
-                >
-                  <p className="text-sm">Heavy Backdrop</p>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          {/* Surface Elevation */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4, delay: 0.5 }}
-          >
-            <Card className={getGlassClasses('card', true, true)}>
-              <CardHeader>
-                <CardTitle>Surface Elevation</CardTitle>
-                <CardDescription>
-                  Layered depth with opacity variants
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className={liquidGlassClasses.elevation50 + " p-3 rounded-lg border border-white/20"}>
-                  <p className="text-sm">Elevation 50</p>
-                </div>
-                <div className={liquidGlassClasses.elevation100 + " p-3 rounded-lg border border-white/20"}>
-                  <p className="text-sm">Elevation 100</p>
-                </div>
-                <div className={liquidGlassClasses.elevation200 + " p-3 rounded-lg border border-white/20"}>
-                  <p className="text-sm">Elevation 200</p>
-                </div>
-                <div className={liquidGlassClasses.elevation300 + " p-3 rounded-lg border border-white/20"}>
-                  <p className="text-sm">Elevation 300</p>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          {/* Parallax Effects */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4, delay: 0.6 }}
-          >
-            <Card className={getGlassClasses('card', true, true)}>
-              <CardHeader>
-                <CardTitle>Parallax Effects</CardTitle>
-                <CardDescription>
-                  Depth layers with motion
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <motion.div
-                  className="bg-white/10 border border-white/20 rounded-lg p-3"
-                  animate={getParallaxEffect('subtle')}
-                >
-                  <p className="text-sm">Subtle Parallax</p>
-                </motion.div>
-                <motion.div
-                  className="bg-white/15 border border-white/25 rounded-lg p-3"
-                  animate={getParallaxEffect('medium')}
-                >
-                  <p className="text-sm">Medium Parallax</p>
-                </motion.div>
-                <motion.div
-                  className="bg-white/20 border border-white/30 rounded-lg p-3"
-                  animate={getParallaxEffect('strong')}
-                >
-                  <p className="text-sm">Strong Parallax</p>
-                </motion.div>
-              </CardContent>
-            </Card>
-          </motion.div>
-
         </div>
 
-        {/* Feature Highlights */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.7 }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-8"
-        >
-          <Card className={getGlassClasses('card', true, true)}>
+        {/* Color Palette Showcase */}
+        <section className="space-y-6">
+          <h2 className="text-2xl font-semibold text-slate-800">Color Palette</h2>
+          
+          {/* Apple Blue */}
+          <Card className="backdrop-blur-md bg-white/60 border-slate-200/50 shadow-glass">
             <CardHeader>
-              <CardTitle>Enhanced Glass Effects</CardTitle>
+              <CardTitle className="text-slate-800">Apple Blue</CardTitle>
+              <CardDescription>
+                Refined to match iOS 15+ system blue - deeper, less teal than traditional blues
+              </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                <span className="text-sm">Adaptive glass based on content underneath</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                <span className="text-sm">Enhanced backdrop filters with saturation and contrast</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                <span className="text-sm">Contextual glass variants for different UI elements</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                <span className="text-sm">Surface elevation colors for layered depth</span>
+            <CardContent>
+              <div className="grid grid-cols-5 gap-4">
+                {Object.entries(colors.primary).map(([shade, color]) => (
+                  <div key={shade} className="text-center space-y-2">
+                    <div 
+                      className="h-16 rounded-lg shadow-inner-highlight"
+                      style={{ backgroundColor: color }}
+                    />
+                    <div className="text-xs font-medium text-slate-600">
+                      {shade}
+                    </div>
+                    <div className="text-xs text-slate-500 font-mono">
+                      {color}
+                    </div>
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>
 
-          <Card className={getGlassClasses('card', true, true)}>
+          {/* Neutral Grays */}
+          <Card className="backdrop-blur-md bg-white/60 border-slate-200/50 shadow-glass">
             <CardHeader>
-              <CardTitle>Apple-Inspired Interactions</CardTitle>
+              <CardTitle className="text-slate-800">Neutral Grays</CardTitle>
+              <CardDescription>
+                Apple-inspired grays with blue undertones for sophisticated backgrounds
+              </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                <span className="text-sm">Apple's signature easing curves</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                <span className="text-sm">Micro-interactions with pulsing effects</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                <span className="text-sm">Subtle parallax effects for depth</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                <span className="text-sm">Enhanced hover states with brightness and saturation</span>
+            <CardContent>
+              <div className="grid grid-cols-5 gap-4">
+                {Object.entries(colors.gray).map(([shade, color]) => (
+                  <div key={shade} className="text-center space-y-2">
+                    <div 
+                      className="h-16 rounded-lg shadow-inner-highlight"
+                      style={{ backgroundColor: color }}
+                    />
+                    <div className="text-xs font-medium text-slate-600">
+                      {shade}
+                    </div>
+                    <div className="text-xs text-slate-500 font-mono">
+                      {color}
+                    </div>
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>
-        </motion.div>
 
+          {/* Slate Grays */}
+          <Card className="backdrop-blur-md bg-white/60 border-slate-200/50 shadow-glass">
+            <CardHeader>
+              <CardTitle className="text-slate-800">Slate Grays</CardTitle>
+              <CardDescription>
+                Apple's preferred neutral palette for sophisticated backgrounds and text
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-5 gap-4">
+                {Object.entries(colors.slate).map(([shade, color]) => (
+                  <div key={shade} className="text-center space-y-2">
+                    <div 
+                      className="h-16 rounded-lg shadow-inner-highlight"
+                      style={{ backgroundColor: color }}
+                    />
+                    <div className="text-xs font-medium text-slate-600">
+                      {shade}
+                    </div>
+                    <div className="text-xs text-slate-500 font-mono">
+                      {color}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Status Colors */}
+          <Card className="backdrop-blur-md bg-white/60 border-slate-200/50 shadow-glass">
+            <CardHeader>
+              <CardTitle className="text-slate-800">Status Colors</CardTitle>
+              <CardDescription>
+                Desaturated status colors for sophisticated, non-intrusive feedback
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-4 gap-6">
+                {Object.entries({
+                  success: colors.success,
+                  warning: colors.warning,
+                  error: colors.error,
+                  info: colors.info
+                }).map(([status, colorScale]) => (
+                  <div key={status} className="space-y-4">
+                    <h3 className="font-medium text-slate-700 capitalize">{status}</h3>
+                    <div className="grid grid-cols-2 gap-2">
+                      {Object.entries(colorScale).slice(0, 6).map(([shade, color]) => (
+                        <div key={shade} className="text-center space-y-1">
+                          <div 
+                            className="h-12 rounded-md shadow-inner-highlight"
+                            style={{ backgroundColor: color }}
+                          />
+                          <div className="text-xs text-slate-500 font-mono">
+                            {color}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+
+        {/* Glass Effects Showcase */}
+        <section className="space-y-6">
+          <h2 className="text-2xl font-semibold text-slate-800">Glass Effects</h2>
+          
+          {/* Light Glass Variants */}
+          <Card className="backdrop-blur-md bg-white/60 border-slate-200/50 shadow-glass">
+            <CardHeader>
+              <CardTitle className="text-slate-800">Light Glass Variants</CardTitle>
+              <CardDescription>
+                Translucent panels with varying opacity levels for different contexts
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="space-y-4">
+                  <div className="h-32 rounded-xl bg-glass-white backdrop-blur-md border border-white/20 shadow-glass">
+                    <div className="p-4">
+                      <h4 className="font-medium text-slate-800">Standard Glass</h4>
+                      <p className="text-sm text-slate-600">80% opacity</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="h-32 rounded-xl bg-glass-white-subtle backdrop-blur-md border border-white/10 shadow-glass">
+                    <div className="p-4">
+                      <h4 className="font-medium text-slate-800">Subtle Glass</h4>
+                      <p className="text-sm text-slate-600">40% opacity</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="h-32 rounded-xl bg-glass-white-vibrant backdrop-blur-md border border-white/30 shadow-glass-elevated">
+                    <div className="p-4">
+                      <h4 className="font-medium text-slate-800">Vibrant Glass</h4>
+                      <p className="text-sm text-slate-600">90% opacity</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="h-32 rounded-xl bg-glass-slate backdrop-blur-md border border-slate-200/20 shadow-glass">
+                    <div className="p-4">
+                      <h4 className="font-medium text-slate-800">Slate Glass</h4>
+                      <p className="text-sm text-slate-600">Neutral tint</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Dark Glass Variants */}
+          <Card className="backdrop-blur-md bg-slate-800/60 border-slate-700/50 shadow-glass-dark">
+            <CardHeader>
+              <CardTitle className="text-slate-100">Dark Glass Variants</CardTitle>
+              <CardDescription className="text-slate-300">
+                Dark mode glass effects with sophisticated translucency
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="space-y-4">
+                  <div className="h-32 rounded-xl bg-glass-dark backdrop-blur-md border border-slate-600/20 shadow-glass-dark">
+                    <div className="p-4">
+                      <h4 className="font-medium text-slate-100">Dark Glass</h4>
+                      <p className="text-sm text-slate-300">80% opacity</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="h-32 rounded-xl bg-glass-dark-subtle backdrop-blur-md border border-slate-600/10 shadow-glass-dark">
+                    <div className="p-4">
+                      <h4 className="font-medium text-slate-100">Subtle Dark</h4>
+                      <p className="text-sm text-slate-300">40% opacity</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="h-32 rounded-xl bg-glass-dark-vibrant backdrop-blur-md border border-slate-600/30 shadow-glass-dark-elevated">
+                    <div className="p-4">
+                      <h4 className="font-medium text-slate-100">Vibrant Dark</h4>
+                      <p className="text-sm text-slate-300">90% opacity</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="h-32 rounded-xl bg-backdrop-dark backdrop-blur-md border border-slate-600/20 shadow-glass-dark">
+                    <div className="p-4">
+                      <h4 className="font-medium text-slate-100">Backdrop Dark</h4>
+                      <p className="text-sm text-slate-300">Light overlay</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+
+        {/* Component Examples */}
+        <section className="space-y-6">
+          <h2 className="text-2xl font-semibold text-slate-800">Component Examples</h2>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Buttons */}
+            <Card className="backdrop-blur-md bg-white/60 border-slate-200/50 shadow-glass">
+              <CardHeader>
+                <CardTitle className="text-slate-800">Buttons</CardTitle>
+                <CardDescription>
+                  Apple-inspired button styles with refined colors
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex flex-wrap gap-3">
+                  <Button className="bg-primary-500 hover:bg-primary-600 text-white">
+                    Primary Action
+                  </Button>
+                  <Button variant="outline" className="border-slate-300 text-slate-700 hover:bg-slate-50">
+                    Secondary
+                  </Button>
+                  <Button variant="ghost" className="text-slate-600 hover:bg-slate-100">
+                    Ghost
+                  </Button>
+                </div>
+                
+                <div className="flex flex-wrap gap-3">
+                  <Button size="sm" className="bg-success-500 hover:bg-success-600 text-white">
+                    Success
+                  </Button>
+                  <Button size="sm" className="bg-warning-500 hover:bg-warning-600 text-white">
+                    Warning
+                  </Button>
+                  <Button size="sm" className="bg-error-500 hover:bg-error-600 text-white">
+                    Error
+                  </Button>
+                  <Button size="sm" className="bg-info-500 hover:bg-info-600 text-white">
+                    Info
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Badges */}
+            <Card className="backdrop-blur-md bg-white/60 border-slate-200/50 shadow-glass">
+              <CardHeader>
+                <CardTitle className="text-slate-800">Badges & Status</CardTitle>
+                <CardDescription>
+                  Refined status indicators with Apple's color philosophy
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex flex-wrap gap-3">
+                  <Badge className="bg-success-100 text-success-700 border-success-200">
+                    Success
+                  </Badge>
+                  <Badge className="bg-warning-100 text-warning-700 border-warning-200">
+                    Warning
+                  </Badge>
+                  <Badge className="bg-error-100 text-error-700 border-error-200">
+                    Error
+                  </Badge>
+                  <Badge className="bg-info-100 text-info-700 border-info-200">
+                    Info
+                  </Badge>
+                </div>
+                
+                <div className="flex flex-wrap gap-3">
+                  <Badge variant="outline" className="border-slate-300 text-slate-600">
+                    Neutral
+                  </Badge>
+                  <Badge variant="outline" className="border-primary-300 text-primary-600">
+                    Primary
+                  </Badge>
+                  <Badge variant="secondary" className="bg-slate-100 text-slate-700">
+                    Secondary
+                  </Badge>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        {/* Theme Comparison */}
+        <section className="space-y-6">
+          <h2 className="text-2xl font-semibold text-slate-800">Theme Comparison</h2>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Medical Theme */}
+            <Card className="backdrop-blur-md bg-white/60 border-slate-200/50 shadow-glass">
+              <CardHeader>
+                <CardTitle className="text-slate-800">Medical Theme</CardTitle>
+                <CardDescription>
+                  Neutral base with subtle blue accents
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div 
+                  className="h-24 rounded-lg"
+                  style={{ background: themeColors.medical.background }}
+                />
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-slate-600">Primary:</span>
+                    <span className="font-mono text-slate-500">{themeColors.medical.primary}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-slate-600">Background:</span>
+                    <span className="font-mono text-slate-500">Neutral gradient</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Apple Light Theme */}
+            <Card className="backdrop-blur-md bg-white/60 border-slate-200/50 shadow-glass">
+              <CardHeader>
+                <CardTitle className="text-slate-800">Apple Light</CardTitle>
+                <CardDescription>
+                  Pure Apple-inspired light theme
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div 
+                  className="h-24 rounded-lg bg-slate-100"
+                />
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-slate-600">Primary:</span>
+                    <span className="font-mono text-slate-500">{themeColors.apple.primary}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-slate-600">Background:</span>
+                    <span className="font-mono text-slate-500">{themeColors.apple.background}</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Apple Dark Theme */}
+            <Card className="backdrop-blur-md bg-slate-800/60 border-slate-700/50 shadow-glass-dark">
+              <CardHeader>
+                <CardTitle className="text-slate-100">Apple Dark</CardTitle>
+                <CardDescription className="text-slate-300">
+                  Apple's sophisticated dark mode
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div 
+                  className="h-24 rounded-lg bg-slate-900"
+                />
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-slate-300">Primary:</span>
+                    <span className="font-mono text-slate-400">{themeColors.appleDark.primary}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-slate-300">Background:</span>
+                    <span className="font-mono text-slate-400">{themeColors.appleDark.background}</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        {/* Design Principles */}
+        <section className="space-y-6">
+          <h2 className="text-2xl font-semibold text-slate-800">Design Principles</h2>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card className="backdrop-blur-md bg-white/60 border-slate-200/50 shadow-glass">
+              <CardHeader>
+                <CardTitle className="text-slate-800">Neutral Base, Minimal Accents</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <ul className="space-y-2 text-sm text-slate-600">
+                  <li>• Slate grays provide sophisticated neutral foundation</li>
+                  <li>• Apple Blue (#0A84FF) for primary actions only</li>
+                  <li>• Desaturated status colors for subtle feedback</li>
+                  <li>• Pure white reserved for content, not backgrounds</li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card className="backdrop-blur-md bg-white/60 border-slate-200/50 shadow-glass">
+              <CardHeader>
+                <CardTitle className="text-slate-800">Translucency & Depth</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <ul className="space-y-2 text-sm text-slate-600">
+                  <li>• Contextual glass opacity levels</li>
+                  <li>• Subtle backdrop blur for depth</li>
+                  <li>• Inner highlights for glass realism</li>
+                  <li>• Adaptive glass based on content underneath</li>
+                </ul>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
       </div>
     </div>
   );
-};
-
-export default AppleLiquidGlassDemo; 
+} 

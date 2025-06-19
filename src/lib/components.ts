@@ -100,16 +100,16 @@ export const input = {
 
 /** Card System with enhanced Apple-inspired glass effects */
 export const card = {
-  base: `backdrop-blur-md border border-white/20 transition-all duration-300 ease-out rounded-2xl`,
+  base: `backdrop-blur-md border border-slate-200/50 transition-all duration-300 ease-out rounded-2xl`,
   variant: {
-    default: 'bg-white/8 backdrop-blur-[18px] saturate-140 brightness-106 shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]',
-    elevated: 'bg-white/12 backdrop-blur-[24px] saturate-160 brightness-108 shadow-[0_12px_48px_rgba(0,0,0,0.12)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]',
-    interactive: 'bg-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] hover:bg-white/25 hover:shadow-[0_12px_48px_rgba(0,0,0,0.12)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] hover:scale-[1.02] hover:brightness-105 hover:saturate-110 cursor-pointer transition-all duration-300 ease-out backdrop-blur-[18px] saturate-140 brightness-106',
-    featured: 'bg-white/15 ring-1 ring-white/30 shadow-[0_16px_64px_rgba(0,0,0,0.1)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] backdrop-blur-[24px] saturate-160 brightness-108',
-    compact: 'bg-white/8 backdrop-blur-[18px] saturate-140 brightness-106 shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]',
-    navigation: 'bg-white/18 backdrop-blur-[24px] saturate-160 brightness-108 shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]',
-    modal: 'bg-white/25 backdrop-blur-[45px] saturate-190 contrast-112 shadow-[0_24px_80px_rgba(0,0,0,0.15)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]',
-    alert: 'bg-white/20 backdrop-blur-[30px] saturate-150 brightness-105 shadow-[0_12px_48px_rgba(0,0,0,0.12)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]',
+    default: 'bg-white/60 backdrop-blur-md shadow-glass border-slate-200/50',
+    elevated: 'bg-white/70 backdrop-blur-lg shadow-glass-elevated border-slate-200/60',
+    interactive: 'bg-white/60 shadow-glass border-slate-200/50 hover:bg-white/80 hover:shadow-glass-elevated hover:border-slate-300/60 hover:scale-[1.02] hover:brightness-105 hover:saturate-110 cursor-pointer transition-all duration-300 ease-out backdrop-blur-md',
+    featured: 'bg-white/80 ring-1 ring-slate-300/50 shadow-glass-heavy border-slate-200/70 backdrop-blur-lg',
+    compact: 'bg-white/60 backdrop-blur-md shadow-glass border-slate-200/50',
+    navigation: 'bg-white/85 backdrop-blur-lg shadow-glass border-slate-200/70',
+    modal: 'bg-white/95 backdrop-blur-xl shadow-glass-heavy border-slate-300/80',
+    alert: 'bg-white/80 backdrop-blur-lg shadow-glass-elevated border-slate-200/70',
   },
   padding: {
     sm: 'p-3',

@@ -59,12 +59,37 @@ export default {
 				bold: typographyTokens.fontWeight.bold,
 			},
 			colors: {
+				// Apple-inspired color palette
 				primary: colors.primary,
 				gray: colors.gray,
+				slate: colors.slate, // Apple's preferred neutral
 				success: colors.success,
 				warning: colors.warning,
 				error: colors.error,
 				info: colors.info,
+				
+				// Apple-inspired glass colors
+				glass: {
+					white: 'rgba(255, 255, 255, 0.8)',
+					'white-subtle': 'rgba(255, 255, 255, 0.4)',
+					'white-vibrant': 'rgba(255, 255, 255, 0.9)',
+					slate: 'rgba(248, 250, 252, 0.8)',
+					'slate-subtle': 'rgba(248, 250, 252, 0.4)',
+					'slate-vibrant': 'rgba(248, 250, 252, 0.9)',
+					dark: 'rgba(30, 41, 59, 0.8)',
+					'dark-subtle': 'rgba(30, 41, 59, 0.4)',
+					'dark-vibrant': 'rgba(30, 41, 59, 0.9)',
+				},
+				
+				// Apple-inspired backdrop colors
+				backdrop: {
+					light: 'rgba(248, 250, 252, 0.12)',
+					medium: 'rgba(248, 250, 252, 0.18)',
+					heavy: 'rgba(248, 250, 252, 0.25)',
+					dark: 'rgba(15, 23, 42, 0.06)',
+					'dark-medium': 'rgba(15, 23, 42, 0.12)',
+					'dark-heavy': 'rgba(15, 23, 42, 0.18)',
+				},
 			},
 			fontSize: {
 				'2xs': typographyTokens.fontSize['2xs'],
@@ -95,6 +120,27 @@ export default {
 			minHeight: {
 				'touch': '2.75rem',       // 44px - Apple's minimum touch target
 				'touch-lg': '3rem',       // 48px - larger touch target
+			},
+			// Apple-inspired backdrop blur utilities
+			backdropBlur: {
+				'xs': '2px',
+				'sm': '4px',
+				'DEFAULT': '8px',
+				'md': '12px',
+				'lg': '16px',
+				'xl': '24px',
+				'2xl': '40px',
+				'3xl': '64px',
+			},
+			// Apple-inspired box shadows
+			boxShadow: {
+				'glass': '0 8px 32px rgba(15, 23, 42, 0.08)',
+				'glass-elevated': '0 12px 40px rgba(15, 23, 42, 0.12)',
+				'glass-heavy': '0 16px 48px rgba(15, 23, 42, 0.16)',
+				'glass-dark': '0 8px 32px rgba(0, 0, 0, 0.3)',
+				'glass-dark-elevated': '0 12px 40px rgba(0, 0, 0, 0.4)',
+				'inner-highlight': 'inset 0 1px 0 rgba(255, 255, 255, 0.4)',
+				'inner-highlight-dark': 'inset 0 1px 0 rgba(255, 255, 255, 0.1)',
 			},
 		}
 	},
