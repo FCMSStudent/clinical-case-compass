@@ -1,53 +1,74 @@
 // ────────────────────────────────────────────────────────────────────────────────
-// COMPONENT STYLES SYSTEM
+// COMPONENT STYLES SYSTEM - APPLE LIQUID GLASS ENHANCED
 // ────────────────────────────────────────────────────────────────────────────────
 
-/** Enhanced focus ring for interactive elements */
-export const focusRing = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent";
+/** Enhanced focus ring for interactive elements with glass enhancement */
+export const focusRing = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:filter focus-visible:brightness-110 focus-visible:saturate-105";
 
 /** Disabled state styling */
 export const disabledState = "disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed";
 
-/** Enhanced glassmorphic effect */
-export const glassmorphic = `backdrop-blur-md border-white/20 transition-all duration-200 ease-out`;
+/** Enhanced glassmorphic effect with Apple-inspired enhancements */
+export const glassmorphic = `backdrop-blur-md border-white/20 transition-all duration-300 ease-out`;
 
-/** Enhanced glassmorphic backgrounds with better depth */
+/** Enhanced glassmorphic backgrounds with Apple liquid glass effects */
 export const glass = {
-  subtle: `${glassmorphic} bg-white/10 shadow-sm`,
-  elevated: `${glassmorphic} bg-white/15 shadow-md border-white/25`,
-  overlay: `backdrop-blur-xl border-white/25 bg-white/10 shadow-lg`,
-  card: `${glassmorphic} bg-white/10 rounded-xl shadow-sm border`,
-  cardElevated: `${glassmorphic} bg-white/15 rounded-xl shadow-md border`
+  // Base glass variants with softer shadows
+  subtle: `${glassmorphic} bg-white/5 backdrop-blur-[12px] brightness-105 shadow-[0_2px_8px_rgba(0,0,0,0.04)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]`,
+  elevated: `${glassmorphic} bg-white/12 backdrop-blur-[24px] saturate-160 brightness-108 shadow-[0_12px_48px_rgba(0,0,0,0.12)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]`,
+  overlay: `backdrop-blur-xl border-white/25 bg-white/10 shadow-[0_16px_64px_rgba(0,0,0,0.1)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] backdrop-blur-[40px] saturate-180 contrast-110`,
+  
+  // Card variants with enhanced glass effects
+  card: `${glassmorphic} bg-white/8 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] border backdrop-blur-[18px] saturate-140 brightness-106`,
+  cardElevated: `${glassmorphic} bg-white/12 rounded-2xl shadow-[0_12px_48px_rgba(0,0,0,0.12)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] border backdrop-blur-[24px] saturate-160 brightness-108`,
+  
+  // Contextual glass variants
+  navigation: `${glassmorphic} bg-white/18 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] border backdrop-blur-[24px] saturate-160 brightness-108`,
+  modal: `${glassmorphic} bg-white/25 rounded-2xl shadow-[0_24px_80px_rgba(0,0,0,0.15)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] border backdrop-blur-[45px] saturate-190 contrast-112`,
+  alert: `${glassmorphic} bg-white/20 rounded-2xl shadow-[0_12px_48px_rgba(0,0,0,0.12)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] border backdrop-blur-[30px] saturate-150 brightness-105`,
+  dropdown: `${glassmorphic} bg-white/15 rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] border backdrop-blur-[28px] saturate-170 brightness-107`,
+  
+  // Interactive glass variants with enhanced hover states
+  interactive: `${glassmorphic} bg-white/10 rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] hover:bg-white/25 hover:shadow-[0_12px_48px_rgba(0,0,0,0.12)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] hover:scale-[1.02] hover:brightness-105 hover:saturate-110 cursor-pointer transition-all duration-300 ease-out`,
+  featured: `${glassmorphic} bg-white/15 ring-1 ring-white/30 shadow-[0_16px_64px_rgba(0,0,0,0.1)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] backdrop-blur-[24px] saturate-160 brightness-108`,
+  
+  // Surface elevation variants with softer shadows
+  elevation50: `${glassmorphic} bg-white/2 backdrop-blur-[8px] shadow-[0_2px_8px_rgba(0,0,0,0.04)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]`,
+  elevation100: `${glassmorphic} bg-white/5 backdrop-blur-[12px] shadow-[0_4px_16px_rgba(0,0,0,0.06)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]`,
+  elevation200: `${glassmorphic} bg-white/8 backdrop-blur-[16px] shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]`,
+  elevation300: `${glassmorphic} bg-white/12 backdrop-blur-[20px] shadow-[0_12px_48px_rgba(0,0,0,0.12)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]`,
+  elevation400: `${glassmorphic} bg-white/18 backdrop-blur-[24px] shadow-[0_16px_64px_rgba(0,0,0,0.1)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]`,
 } as const;
 
-/** Base styles for buttons */
+/** Base styles for buttons with enhanced glass effects */
 export const buttonBase = `
   inline-flex items-center justify-center whitespace-nowrap rounded-xl 
-  text-sm font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent ${disabledState}
-  h-10 px-4
+  text-sm font-medium transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:filter focus-visible:brightness-110 focus-visible:saturate-105 ${disabledState}
+  h-10 px-4 backdrop-blur-md
 `.trim();
 
-/** Button variants using the design system */
+/** Button variants using the enhanced design system with Apple-inspired effects */
 export const buttonVariants = {
-  primary: `${buttonBase} bg-white/15 backdrop-blur-md text-white border border-white/20 hover:bg-white/25 shadow-md`,
-  secondary: `${buttonBase} bg-white/10 backdrop-blur-md text-white/70 border border-white/20 hover:bg-white/20`,
-  outline: `${buttonBase} bg-transparent text-white border border-white/20 hover:bg-white/10`,
-  ghost: `${buttonBase} bg-transparent text-white/70 hover:bg-white/10`,
-  destructive: `${buttonBase} bg-red-500/10 text-red-300 border border-red-400/30 hover:bg-red-500/20`,
-  success: `${buttonBase} bg-green-500/10 text-green-300 border border-green-400/30 hover:bg-green-500/20`,
-  warning: `${buttonBase} bg-yellow-500/20 text-yellow-300 border border-yellow-400/30 hover:bg-yellow-500/20`,
-  error: `${buttonBase} bg-red-500/20 text-red-300 border border-red-400/30 hover:bg-red-500/20`,
-  info: `${buttonBase} bg-blue-500/20 text-blue-300 border border-blue-400/30 hover:bg-blue-500/20`,
-  medical: `${buttonBase} bg-sky-500/20 text-sky-300 border border-sky-400/30 hover:bg-sky-500/20`,
-  critical: `${buttonBase} bg-red-600 text-white border border-red-500 hover:bg-red-700 font-bold`,
+  primary: `${buttonBase} bg-white/15 backdrop-blur-md text-white border border-white/20 hover:bg-white/25 hover:shadow-[0_12px_48px_rgba(0,0,0,0.12)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] hover:scale-[1.02] hover:brightness-105 hover:saturate-110 shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] transition-all duration-300 ease-out`,
+  secondary: `${buttonBase} bg-white/10 backdrop-blur-md text-white/70 border border-white/20 hover:bg-white/20 hover:brightness-105 hover:saturate-110 hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] transition-all duration-300 ease-out`,
+  outline: `${buttonBase} bg-transparent text-white border border-white/20 hover:bg-white/10 hover:brightness-105 hover:saturate-110 hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] transition-all duration-300 ease-out`,
+  ghost: `${buttonBase} bg-transparent text-white/70 hover:bg-white/10 hover:brightness-105 hover:saturate-110 hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] transition-all duration-300 ease-out`,
+  destructive: `${buttonBase} bg-red-500/10 text-red-300 border border-red-400/30 hover:bg-red-500/20 hover:brightness-105 hover:saturate-110 hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] transition-all duration-300 ease-out`,
+  success: `${buttonBase} bg-green-500/10 text-green-300 border border-green-400/30 hover:bg-green-500/20 hover:brightness-105 hover:saturate-110 hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] transition-all duration-300 ease-out`,
+  warning: `${buttonBase} bg-yellow-500/20 text-yellow-300 border border-yellow-400/30 hover:bg-yellow-500/20 hover:brightness-105 hover:saturate-110 hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] transition-all duration-300 ease-out`,
+  error: `${buttonBase} bg-red-500/20 text-red-300 border border-red-400/30 hover:bg-red-500/20 hover:brightness-105 hover:saturate-110 hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] transition-all duration-300 ease-out`,
+  info: `${buttonBase} bg-blue-500/20 text-blue-300 border border-blue-400/30 hover:bg-blue-500/20 hover:brightness-105 hover:saturate-110 hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] transition-all duration-300 ease-out`,
+  medical: `${buttonBase} bg-sky-500/20 text-sky-300 border border-sky-400/30 hover:bg-sky-500/20 hover:brightness-105 hover:saturate-110 hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] transition-all duration-300 ease-out`,
+  critical: `${buttonBase} bg-red-600 text-white border border-red-500 hover:bg-red-700 hover:brightness-105 hover:saturate-110 hover:shadow-[0_12px_48px_rgba(0,0,0,0.12)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] font-bold transition-all duration-300 ease-out`,
 } as const;
 
-/** Button System */
+/** Button System with enhanced glass effects */
 export const button = {
-  base: `inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium 
-         transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 
-         focus-visible:ring-blue-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent 
-         disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed`,
+  base: `inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium 
+         transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 
+         focus-visible:ring-white/30 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent 
+         focus-visible:filter focus-visible:brightness-110 focus-visible:saturate-105
+         disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed backdrop-blur-md`,
   size: {
     default: 'h-10 px-4 text-sm',
     sm: 'h-8 px-3 text-xs',
@@ -55,22 +76,24 @@ export const button = {
     lg: 'h-12 px-6 text-base',
   },
   variant: {
-    primary: 'bg-white/15 backdrop-blur-md text-white border border-white/20 hover:bg-white/25 shadow-md',
-    secondary: 'bg-white/10 backdrop-blur-md text-white/70 border border-white/20 hover:bg-white/20',
-    outline: 'bg-transparent text-white border border-white/20 hover:bg-white/10',
-    ghost: 'bg-transparent text-white/70 hover:bg-white/10',
-    destructive: 'bg-red-500/10 text-red-300 border border-red-400/30 hover:bg-red-500/20',
+    primary: 'bg-white/15 backdrop-blur-md text-white border border-white/20 hover:bg-white/25 hover:shadow-[0_12px_48px_rgba(0,0,0,0.12)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] hover:scale-[1.02] hover:brightness-105 hover:saturate-110 shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] transition-all duration-300 ease-out',
+    secondary: 'bg-white/10 backdrop-blur-md text-white/70 border border-white/20 hover:bg-white/20 hover:brightness-105 hover:saturate-110 hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] transition-all duration-300 ease-out',
+    outline: 'bg-transparent text-white border border-white/20 hover:bg-white/10 hover:brightness-105 hover:saturate-110 hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] transition-all duration-300 ease-out',
+    ghost: 'bg-transparent text-white/70 hover:bg-white/10 hover:brightness-105 hover:saturate-110 hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] transition-all duration-300 ease-out',
+    destructive: 'bg-red-500/10 text-red-300 border border-red-400/30 hover:bg-red-500/20 hover:brightness-105 hover:saturate-110 hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] transition-all duration-300 ease-out',
   },
 };
 
-/** Input System */
+/** Input System with enhanced glass effects */
 export const input = {
-  base: `flex w-full rounded-lg text-sm text-white placeholder:text-white/60 
-         bg-white/10 backdrop-blur-md border border-white/20 
-         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 
+  base: `flex w-full rounded-xl text-sm text-white placeholder:text-white/60 
+         bg-white/10 backdrop-blur-[16px] saturate-130 brightness-105 border border-white/20 
+         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 
          focus-visible:ring-offset-2 focus-visible:ring-offset-transparent 
+         focus-visible:filter focus-visible:brightness-110 focus-visible:saturate-105
          disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed 
-         hover:bg-white/20 hover:border-white/30 transition-all duration-200 ease-out`,
+         hover:bg-white/20 hover:border-white/30 transition-all duration-300 ease-out
+         shadow-[0_2px_8px_rgba(0,0,0,0.04)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]`,
   size: {
     default: 'h-10 px-4 text-sm',
     sm: 'h-8 px-3 text-xs',
@@ -79,15 +102,18 @@ export const input = {
   },
 };
 
-/** Card System */
+/** Card System with enhanced Apple-inspired glass effects */
 export const card = {
-  base: `backdrop-blur-md border border-white/20 transition-all duration-200 ease-out rounded-xl`,
+  base: `backdrop-blur-md border border-white/20 transition-all duration-300 ease-out rounded-2xl`,
   variant: {
-    default: 'bg-white/10 shadow-sm',
-    elevated: 'bg-white/15 shadow-md border-white/25',
-    interactive: 'bg-white/15 shadow-md hover:bg-white/25 hover:shadow-xl hover:shadow-white/10 cursor-pointer hover:scale-[1.01]',
-    featured: 'bg-white/15 ring-1 ring-white/30 shadow-lg shadow-white/5',
-    compact: 'bg-white/10 shadow-sm',
+    default: 'bg-white/8 backdrop-blur-[18px] saturate-140 brightness-106 shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]',
+    elevated: 'bg-white/12 backdrop-blur-[24px] saturate-160 brightness-108 shadow-[0_12px_48px_rgba(0,0,0,0.12)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]',
+    interactive: 'bg-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] hover:bg-white/25 hover:shadow-[0_12px_48px_rgba(0,0,0,0.12)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] hover:scale-[1.02] hover:brightness-105 hover:saturate-110 cursor-pointer transition-all duration-300 ease-out backdrop-blur-[18px] saturate-140 brightness-106',
+    featured: 'bg-white/15 ring-1 ring-white/30 shadow-[0_16px_64px_rgba(0,0,0,0.1)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] backdrop-blur-[24px] saturate-160 brightness-108',
+    compact: 'bg-white/8 backdrop-blur-[18px] saturate-140 brightness-106 shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]',
+    navigation: 'bg-white/18 backdrop-blur-[24px] saturate-160 brightness-108 shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]',
+    modal: 'bg-white/25 backdrop-blur-[45px] saturate-190 contrast-112 shadow-[0_24px_80px_rgba(0,0,0,0.15)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]',
+    alert: 'bg-white/20 backdrop-blur-[30px] saturate-150 brightness-105 shadow-[0_12px_48px_rgba(0,0,0,0.12)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]',
   },
   padding: {
     sm: 'p-3',

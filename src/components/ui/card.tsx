@@ -1,25 +1,41 @@
-
 import * as React from "react"
+import { motion } from "framer-motion"
 
 import { cn } from "@/lib/utils"
-import { cardVariants as unifiedCardVariants, componentSizes } from "@/lib/component-system"
+import { card } from "@/lib/design-system"
+import { getGlassHoverVariants, getGlassTransitionVariants } from "@/lib/glass-effects"
+import { typography } from "@/lib/typography"
 
 const Card = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & {
-    variant?: keyof typeof unifiedCardVariants
+    variant?: keyof typeof card.variant
+    glassIntensity?: 'subtle' | 'medium' | 'strong'
+    interactive?: boolean
   }
->(({ className, variant = "default", ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      "rounded-xl transition-all duration-200 ease-out",
-      unifiedCardVariants[variant],
-      className
-    )}
-    {...props}
-  />
-))
+>(({ className, variant = "default", glassIntensity = 'medium', interactive = false, ...props }, ref) => {
+  const glassVariants = interactive ? getGlassHoverVariants(glassIntensity) : getGlassTransitionVariants(glassIntensity)
+  const Comp = interactive ? motion.div : motion.div
+  
+  return (
+    <Comp
+      ref={ref}
+      className={cn(
+        card.base,
+        card.variant[variant],
+        interactive && "cursor-pointer",
+        className
+      )}
+      variants={glassVariants}
+      initial="initial"
+      animate="animate"
+      whileHover={interactive ? "hover" : undefined}
+      whileTap={interactive ? "tap" : undefined}
+      whileFocus={interactive ? "focus" : undefined}
+      {...props}
+    />
+  )
+})
 Card.displayName = "Card"
 
 const CardHeader = React.forwardRef<
@@ -28,7 +44,7 @@ const CardHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex flex-col space-y-1.5", componentSizes.card.md, className)}
+    className={cn("flex flex-col space-y-1.5 p-4", className)}
     {...props}
   />
 ))
@@ -41,7 +57,7 @@ const CardTitle = React.forwardRef<
   <h3
     ref={ref}
     className={cn(
-      "text-lg font-semibold text-white",
+      typography.h4,
       className
     )}
     {...props}
@@ -55,7 +71,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-sm text-white/70", className)}
+    className={cn(typography.body.small, className)}
     {...props}
   />
 ))
@@ -65,7 +81,7 @@ const CardContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("pt-0", componentSizes.card.md, className)} {...props} />
+  <div ref={ref} className={cn("pt-0 p-4", className)} {...props} />
 ))
 CardContent.displayName = "CardContent"
 
@@ -75,7 +91,7 @@ const CardFooter = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex items-center pt-0", componentSizes.card.md, className)}
+    className={cn("flex items-center pt-0 p-4", className)}
     {...props}
   />
 ))

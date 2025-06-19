@@ -1,10 +1,10 @@
 // -----------------------------------------------------------------------------
-// Input – Unified Glass Edition
+// Input – Apple Liquid Glass Enhanced
 // -----------------------------------------------------------------------------
-// 1. Unified input system that consolidates all styling approaches
-// 2. Glassmorphic variants with consistent design tokens
-// 3. Proper focus states, hover effects, and accessibility
-// 4. Framer Motion integration for smooth interactions
+// 1. Unified input system with Apple-inspired liquid glass effects
+// 2. Enhanced glassmorphic variants with consistent design tokens
+// 3. Improved focus states, hover effects, and accessibility
+// 4. Framer Motion integration for smooth glass interactions
 // -----------------------------------------------------------------------------
 
 import * as React from "react"
@@ -12,31 +12,23 @@ import { motion } from "framer-motion"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
-import { inputVariants as unifiedInputVariants, componentSizes } from "@/lib/component-system"
-
-import {
-  inputVariants as legacyInputVariants,
-  componentSizes,
-} from "@/lib/component-system"
-import {
-  getMotionVariants,
-  subtleInputInteraction,
-  reducedMotionInputInteraction,
-} from "@/lib/motion"
+import { input } from "@/lib/design-system"
+import { getGlassHoverVariants } from "@/lib/glass-effects"
+import { typography } from "@/lib/typography"
 
 // ─── Tailwind variant generator ──────────────────────────────────────────────
 const inputVariants = cva(
-  // Base styles - unified across all inputs
-  "flex w-full rounded-lg text-sm font-medium transition-all duration-200 ease-out",
+  // Base styles - unified across all inputs with enhanced glass effects
+  cn("flex w-full rounded-lg transition-all duration-300 ease-out backdrop-blur-md", typography.body.default),
   {
     variants: {
       variant: {
-        // Default glassmorphic variant
+        // Default glassmorphic variant with Apple-inspired effects
         default: cn(
           "bg-white/10 backdrop-blur-md border border-white/20",
           "text-white placeholder:text-white/60",
           "hover:bg-white/20 hover:border-white/30",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:filter focus-visible:brightness-110 focus-visible:saturate-105",
           "disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed"
         ),
         
@@ -45,7 +37,7 @@ const inputVariants = cva(
           "bg-white/5 backdrop-blur-md border border-white/10",
           "text-white/90 placeholder:text-white/40",
           "hover:bg-white/10 hover:border-white/20",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/30 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:filter focus-visible:brightness-110 focus-visible:saturate-105",
           "disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed"
         ),
         
@@ -54,7 +46,7 @@ const inputVariants = cva(
           "bg-white/15 backdrop-blur-md border border-white/25 shadow-sm",
           "text-white placeholder:text-white/70",
           "hover:bg-white/25 hover:border-white/35 hover:shadow-md",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:filter focus-visible:brightness-110 focus-visible:saturate-105",
           "disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed"
         ),
         
@@ -63,7 +55,7 @@ const inputVariants = cva(
           "bg-blue-500/10 backdrop-blur-md border border-blue-400/30",
           "text-blue-100 placeholder:text-blue-200/60",
           "hover:bg-blue-500/15 hover:border-blue-400/40",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:filter focus-visible:brightness-110 focus-visible:saturate-105",
           "disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed"
         ),
         
@@ -72,7 +64,7 @@ const inputVariants = cva(
           "bg-red-500/10 backdrop-blur-md border border-red-400/30",
           "text-red-100 placeholder:text-red-200/60",
           "hover:bg-red-500/15 hover:border-red-400/40",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:filter focus-visible:brightness-110 focus-visible:saturate-105",
           "disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed"
         ),
         
@@ -81,19 +73,16 @@ const inputVariants = cva(
           "bg-green-500/10 backdrop-blur-md border border-green-400/30",
           "text-green-100 placeholder:text-green-200/60",
           "hover:bg-green-500/15 hover:border-green-400/40",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:filter focus-visible:brightness-110 focus-visible:saturate-105",
           "disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed"
         ),
-        
-        // Legacy variants for backward compatibility
-        ...legacyInputVariants,
       },
       size: {
-        xs: componentSizes.input.xs,
-        sm: componentSizes.input.sm,
-        md: componentSizes.input.md,
-        lg: componentSizes.input.lg,
-        xl: componentSizes.input.xl,
+        xs: 'h-6 px-2 text-xs',
+        sm: 'h-8 px-3 text-sm',
+        md: 'h-10 px-4 text-base md:text-lg',
+        lg: 'h-12 px-4 text-lg md:text-xl',
+        xl: 'h-14 px-6 text-xl md:text-2xl',
       },
     },
     defaultVariants: {
@@ -112,6 +101,7 @@ export interface InputProps
   rightIcon?: React.ReactNode;
   error?: boolean;
   success?: boolean;
+  glassIntensity?: 'subtle' | 'medium' | 'strong';
 }
 
 // ─── Component ----------------------------------------------------------------
@@ -125,12 +115,10 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     rightIcon,
     error,
     success,
+    glassIntensity = 'medium',
     ...props 
   }, ref) => {
-    const animationVariants = getMotionVariants(
-      subtleInputInteraction,
-      reducedMotionInputInteraction,
-    );
+    const glassVariants = getGlassHoverVariants(glassIntensity);
 
     // Determine variant based on props
     let finalVariant = variant;
@@ -149,7 +137,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <div className="relative">
         {leftIcon && (
           <div className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center justify-center w-12 h-12 pointer-events-none">
-            <div className="text-white/60 group-focus-within:text-white/80 transition-colors">
+            <div className="text-white/60 group-focus-within:text-white/80 transition-colors duration-300">
               {leftIcon}
             </div>
           </div>
@@ -159,7 +147,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           type={type}
           className={inputClasses}
-          variants={animationVariants as any}
+          variants={glassVariants}
           initial="initial"
           whileFocus="focus"
           {...(props as any)}
@@ -167,7 +155,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         
         {rightIcon && (
           <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center justify-center w-12 h-12 pointer-events-none">
-            <div className="text-white/60 group-focus-within:text-white/80 transition-colors">
+            <div className="text-white/60 group-focus-within:text-white/80 transition-colors duration-300">
               {rightIcon}
             </div>
           </div>
