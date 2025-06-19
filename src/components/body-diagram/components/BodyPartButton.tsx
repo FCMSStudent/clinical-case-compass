@@ -1,8 +1,9 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { typo } from "@/lib/typography";
+import { typography } from "@/lib/typography";
 import type { BodyPart, BodyPartConfig } from "../types/bodyPartTypes";
 
 interface BodyPartButtonProps {
@@ -76,13 +77,13 @@ export const BodyPartButton: React.FC<BodyPartButtonProps> = ({
         onMouseLeave={onMouseLeave}
         data-testid={`bodypart-${partConfig.id}`}
       >
-        <span className={cn(typo.vital, "text-lg")} role="img" aria-hidden="true">
+        <span className={cn(typography.vital, "text-lg")} role="img" aria-hidden="true">
           {partConfig.icon}
         </span>
         <div className="flex-1 text-left">
-          <div className={cn(typo.label)}>{partConfig.label}</div>
+          <div className={cn(typography.label)}>{partConfig.label}</div>
           {showDescriptions && !compact && (
-            <div className={cn(typo.caption, "opacity-70 mt-1")}>
+            <div className={cn(typography.caption1, "opacity-70 mt-1")}>
               {partConfig.description}
             </div>
           )}

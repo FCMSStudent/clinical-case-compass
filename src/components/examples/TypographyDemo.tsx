@@ -1,563 +1,315 @@
-import React from 'react';
+
+import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { 
   typography, 
+  fontWeight,
   medicalTypography, 
   componentTypography, 
   statusTypography,
   responsiveType,
-  vitalSignsText,
-  medicalPriorityText,
-  clinicalStatusText,
-  treatmentStatusText,
-  formatMedicalMeasurement
+  createTypographyClass
 } from '@/lib/typography';
+import { 
+  Type, 
+  Palette, 
+  Layout, 
+  Layers,
+  Monitor,
+  Smartphone,
+  Tablet
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
 
-export default function TypographyDemo() {
+export const TypographyDemo: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6">
-      <div className="max-w-6xl mx-auto space-y-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4 sm:p-6 lg:p-8">
+      <div className="max-w-7xl mx-auto space-y-12">
         
-        {/* Header */}
-        <div className="text-center space-y-4">
-          <h1 className={typography.largeTitle + " text-white"}>
-            Apple-Inspired Typography System
-          </h1>
-          <p className={typography.body + " text-white/80 max-w-3xl mx-auto"}>
+        {/* Hero Section */}
+        <section className="text-center space-y-6">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <Type className="h-8 w-8 text-blue-400" />
+            <h1 className={cn(typography.largeTitle, "text-white")}>
+              Apple-Inspired Typography
+            </h1>
+          </div>
+          <p className={cn(typography.body, "text-white/80 max-w-4xl mx-auto")}>
             A comprehensive typography system based on Apple's Human Interface Guidelines, 
-            featuring San Francisco fonts, proper hierarchy, and medical-specific styles.
+            featuring San Francisco fonts, consistent spacing, and perfect readability across all devices.
           </p>
-        </div>
+        </section>
 
-        {/* Core Typography Hierarchy */}
-        <Card className="backdrop-blur-xl bg-white/10 border-white/20">
-          <CardHeader>
-            <CardTitle className={componentTypography.cardTitle + " text-white"}>
-              Core Typography Hierarchy
-            </CardTitle>
-            <CardDescription className={componentTypography.cardCaption + " text-white/70"}>
-              Apple's HIG-inspired text styles with proper weights and spacing
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="space-y-4">
-              <div>
-                <h2 className={typography.largeTitle + " text-white mb-2"}>
-                  Large Title (34pt Semibold)
-                </h2>
-                <p className={typography.caption1 + " text-white/60"}>
-                  Used for the most prominent text, like navigation titles
-                </p>
+        {/* Typography Hierarchy */}
+        <section className="space-y-8">
+          <Card className="backdrop-blur-md bg-white/10 border-white/20">
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <Layers className="h-6 w-6 text-blue-400" />
+                <CardTitle className="text-white">Typography Hierarchy</CardTitle>
               </div>
+              <CardDescription className="text-white/70">
+                Apple's HIG-inspired text styles with proper scaling and spacing
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-8">
               
-              <div>
-                <h3 className={typography.title + " text-white mb-2"}>
-                  Title (28pt Semibold)
-                </h3>
-                <p className={typography.caption1 + " text-white/60"}>
-                  Used for section headers and important content titles
-                </p>
-              </div>
-              
-              <div>
-                <h4 className={typography.headline + " text-white mb-2"}>
-                  Headline (17pt Semibold)
-                </h4>
-                <p className={typography.caption1 + " text-white/60"}>
-                  Used for card titles and prominent labels
-                </p>
-              </div>
-              
-              <div>
-                <p className={typography.body + " text-white mb-2"}>
-                  Body (17pt Regular) - This is the primary text style for content. 
-                  It features comfortable line height and proper letter spacing for optimal readability.
-                </p>
-                <p className={typography.caption1 + " text-white/60"}>
-                  Used for main content and descriptions
-                </p>
-              </div>
-              
-              <div>
-                <p className={typography.callout + " text-white mb-2"}>
-                  Callout (16pt Regular) - Used for highlighted content and important notes.
-                </p>
-                <p className={typography.caption1 + " text-white/60"}>
-                  Used for highlighted content and important notes
-                </p>
-              </div>
-              
-              <div>
-                <p className={typography.subheadline + " text-white mb-2"}>
-                  Subheadline (15pt Regular) - Secondary content and supporting text.
-                </p>
-                <p className={typography.caption1 + " text-white/60"}>
-                  Used for secondary content and supporting text
-                </p>
-              </div>
-              
-              <div>
-                <p className={typography.footnote + " text-white mb-2"}>
-                  Footnote (13pt Regular) - Additional information and citations.
-                </p>
-                <p className={typography.caption1 + " text-white/60"}>
-                  Used for additional information and citations
-                </p>
-              </div>
-              
-              <div>
-                <p className={typography.caption1 + " text-white mb-2"}>
-                  Caption 1 (12pt Regular) - Small labels and metadata.
-                </p>
-                <p className={typography.caption2 + " text-white/60"}>
-                  Caption 2 (11pt Regular) - Even smaller text for fine details.
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Medical Typography */}
-        <Card className="backdrop-blur-xl bg-white/10 border-white/20">
-          <CardHeader>
-            <CardTitle className={componentTypography.cardTitle + " text-white"}>
-              Medical Typography
-            </CardTitle>
-            <CardDescription className={componentTypography.cardCaption + " text-white/70"}>
-              Specialized typography for medical content with proper hierarchy
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="space-y-4">
-              <div>
-                <h3 className={medicalTypography.patientName + " text-white mb-2"}>
-                  John Smith, 45
-                </h3>
-                <p className={typography.caption1 + " text-white/60"}>
-                  Patient Name - Large Title weight for prominence
-                </p>
-              </div>
-              
-              <div>
-                <h4 className={medicalTypography.diagnosis + " text-white mb-2"}>
-                  Acute Myocardial Infarction
-                </h4>
-                <p className={typography.caption1 + " text-white/60"}>
-                  Diagnosis - Title weight for medical conditions
-                </p>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <p className={medicalTypography.vitals + " text-white"}>
-                    BP: 140/90
-                  </p>
-                  <p className={typography.caption1 + " text-white/60"}>
-                    Vital Signs - Monospace for numbers
-                  </p>
+              {/* Apple HIG Styles */}
+              <div className="space-y-6">
+                <div className="border-b border-white/20 pb-4">
+                  <h4 className="text-white font-medium mb-4">Apple HIG Styles</h4>
                 </div>
                 
-                <div className="space-y-2">
-                  <p className={medicalTypography.labResults + " text-white"}>
-                    HbA1c: 6.2%
-                  </p>
-                  <p className={typography.caption1 + " text-white/60"}>
-                    Lab Results - Monospace for precision
-                  </p>
-                </div>
-                
-                <div className="space-y-2">
-                  <p className={medicalTypography.medication + " text-white"}>
-                    Metformin 500mg
-                  </p>
-                  <p className={typography.caption1 + " text-white/60"}>
-                    Medication - Medium weight for clarity
-                  </p>
-                </div>
-              </div>
-              
-              <div>
-                <p className={medicalTypography.clinicalNotes + " text-white mb-2"}>
-                  Patient presents with chest pain radiating to left arm. 
-                  ECG shows ST elevation in leads II, III, aVF. 
-                  Immediate intervention required.
-                </p>
-                <p className={typography.caption1 + " text-white/60"}>
-                  Clinical Notes - Body weight for detailed documentation
-                </p>
-              </div>
-              
-              <div className="flex flex-wrap gap-2">
-                <Badge className={medicalTypography.dosage + " bg-blue-500/20 text-blue-300 border-blue-500/30"}>
-                  500mg BID
-                </Badge>
-                <Badge className={medicalTypography.status + " bg-green-500/20 text-green-300 border-green-500/30"}>
-                  Stable
-                </Badge>
-                <Badge className={medicalTypography.status + " bg-amber-500/20 text-amber-300 border-amber-500/30"}>
-                  Monitoring
-                </Badge>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Component Typography */}
-        <Card className="backdrop-blur-xl bg-white/10 border-white/20">
-          <CardHeader>
-            <CardTitle className={componentTypography.cardTitle + " text-white"}>
-              Component Typography
-            </CardTitle>
-            <CardDescription className={componentTypography.cardCaption + " text-white/70"}>
-              Typography styles optimized for specific UI components
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="space-y-4">
-              <div>
-                <h4 className={componentTypography.navTitle + " text-white mb-2"}>
-                  Navigation Title
-                </h4>
-                <p className={componentTypography.navItem + " text-white/80 mb-4"}>
-                  Navigation Item
-                </p>
-              </div>
-              
-              <div className="flex flex-wrap gap-3">
-                <button className={`px-4 py-2 rounded-lg bg-blue-500/20 border border-blue-500/30 ${componentTypography.buttonLarge} text-white hover:bg-blue-500/30 transition-colors`}>
-                  Large Button
-                </button>
-                <button className={`px-3 py-2 rounded-lg bg-blue-500/20 border border-blue-500/30 ${componentTypography.buttonDefault} text-white hover:bg-blue-500/30 transition-colors`}>
-                  Default Button
-                </button>
-                <button className={`px-2 py-1 rounded-md bg-blue-500/20 border border-blue-500/30 ${componentTypography.buttonSmall} text-white hover:bg-blue-500/30 transition-colors`}>
-                  Small Button
-                </button>
-              </div>
-              
-              <div className="space-y-2">
-                <label className={`block ${componentTypography.label} text-white`}>
-                  Form Label
-                </label>
-                <input 
-                  type="text" 
-                  placeholder="Input placeholder text"
-                  className={`w-full px-3 py-2 rounded-lg bg-white/10 border border-white/20 ${componentTypography.input} text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50`}
-                />
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <h5 className={componentTypography.cardTitle + " text-white mb-2"}>
-                    Card Title
-                  </h5>
-                  <p className={componentTypography.cardBody + " text-white/80 mb-2"}>
-                    Card body text with proper line height and spacing for optimal readability.
-                  </p>
-                  <p className={componentTypography.cardCaption + " text-white/60"}>
-                    Card caption for additional context
-                  </p>
-                </div>
-                
-                <div>
-                  <h6 className={componentTypography.tableHeader + " text-white mb-2"}>
-                    Table Header
-                  </h6>
-                  <p className={componentTypography.tableCell + " text-white/80"}>
-                    Table cell content with appropriate sizing
-                  </p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Status Typography */}
-        <Card className="backdrop-blur-xl bg-white/10 border-white/20">
-          <CardHeader>
-            <CardTitle className={componentTypography.cardTitle + " text-white"}>
-              Status Typography
-            </CardTitle>
-            <CardDescription className={componentTypography.cardCaption + " text-white/70"}>
-              Color-coded typography for different status levels
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <p className={statusTypography.critical}>
-                    Critical Status
-                  </p>
-                  <p className={typography.caption1 + " text-white/60"}>
-                    Semibold red text for critical information
-                  </p>
-                </div>
-                
-                <div className="space-y-2">
-                  <p className={statusTypography.warning}>
-                    Warning Status
-                  </p>
-                  <p className={typography.caption1 + " text-white/60"}>
-                    Medium amber text for warnings
-                  </p>
-                </div>
-                
-                <div className="space-y-2">
-                  <p className={statusTypography.success}>
-                    Success Status
-                  </p>
-                  <p className={typography.caption1 + " text-white/60"}>
-                    Medium green text for success states
-                  </p>
-                </div>
-                
-                <div className="space-y-2">
-                  <p className={statusTypography.info}>
-                    Info Status
-                  </p>
-                  <p className={typography.caption1 + " text-white/60"}>
-                    Medium blue text for informational content
-                  </p>
-                </div>
-                
-                <div className="space-y-2">
-                  <p className={statusTypography.neutral}>
-                    Neutral Status
-                  </p>
-                  <p className={typography.caption1 + " text-white/60"}>
-                    Regular gray text for neutral information
-                  </p>
-                </div>
-              </div>
-              
-              <Separator className="bg-white/20" />
-              
-              <div className="space-y-4">
-                <h5 className={typography.headline + " text-white"}>
-                  Medical Status Examples
-                </h5>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <p className={vitalSignsText('normal')}>
-                      Normal: 120/80 mmHg
-                    </p>
-                    <p className={vitalSignsText('elevated')}>
-                      Elevated: 140/90 mmHg
-                    </p>
-                    <p className={vitalSignsText('critical')}>
-                      Critical: 180/110 mmHg
-                    </p>
+                <div className="space-y-4">
+                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                    <div className={typography.largeTitle + " text-white"}>Large Title</div>
+                    <Badge variant="outline" className="self-start lg:self-center">34pt Semibold</Badge>
                   </div>
                   
-                  <div className="space-y-2">
-                    <p className={medicalPriorityText('low')}>
-                      Low Priority
-                    </p>
-                    <p className={medicalPriorityText('medium')}>
-                      Medium Priority
-                    </p>
-                    <p className={medicalPriorityText('high')}>
-                      High Priority
-                    </p>
-                    <p className={medicalPriorityText('urgent')}>
-                      Urgent Priority
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <p className={clinicalStatusText('stable')}>
-                      Stable Condition
-                    </p>
-                    <p className={clinicalStatusText('monitoring')}>
-                      Under Monitoring
-                    </p>
-                    <p className={clinicalStatusText('acute')}>
-                      Acute Condition
-                    </p>
-                    <p className={clinicalStatusText('chronic')}>
-                      Chronic Condition
-                    </p>
+                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                    <div className={typography.title + " text-white"}>Title</div>
+                    <Badge variant="outline" className="self-start lg:self-center">28pt Semibold</Badge>
                   </div>
                   
-                  <div className="space-y-2">
-                    <p className={treatmentStatusText('complete')}>
-                      Treatment Complete
-                    </p>
-                    <p className={treatmentStatusText('ongoing')}>
-                      Treatment Ongoing
-                    </p>
-                    <p className={treatmentStatusText('pending')}>
-                      Treatment Pending
-                    </p>
-                    <p className={treatmentStatusText('emergency')}>
-                      Emergency Treatment
-                    </p>
+                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                    <div className={typography.headline + " text-white"}>Headline</div>
+                    <Badge variant="outline" className="self-start lg:self-center">17pt Semibold</Badge>
+                  </div>
+                  
+                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                    <div className={typography.body + " text-white"}>Body text with comfortable line height for readability</div>
+                    <Badge variant="outline" className="self-start lg:self-center">17pt Regular</Badge>
+                  </div>
+                  
+                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                    <div className={typography.callout + " text-white"}>Callout text for highlighted content</div>
+                    <Badge variant="outline" className="self-start lg:self-center">16pt Regular</Badge>
+                  </div>
+                  
+                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                    <div className={typography.subheadline + " text-white"}>Subheadline for secondary content</div>
+                    <Badge variant="outline" className="self-start lg:self-center">15pt Regular</Badge>
+                  </div>
+                  
+                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                    <div className={typography.footnote + " text-white"}>Footnote for additional information</div>
+                    <Badge variant="outline" className="self-start lg:self-center">13pt Regular</Badge>
+                  </div>
+                  
+                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                    <div className={typography.caption1 + " text-white"}>Caption for minimal text</div>
+                    <Badge variant="outline" className="self-start lg:self-center">12pt Regular</Badge>
                   </div>
                 </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </section>
+
+        {/* Font Weight System */}
+        <section className="space-y-8">
+          <Card className="backdrop-blur-md bg-white/10 border-white/20">
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <Palette className="h-6 w-6 text-purple-400" />
+                <CardTitle className="text-white">Font Weight System</CardTitle>
+              </div>
+              <CardDescription className="text-white/70">
+                Consistent weight hierarchy avoiding extreme weights
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="text-center space-y-3">
+                  <div className={`text-2xl text-white ${fontWeight.regular}`}>Regular</div>
+                  <Badge variant="outline">400 - Body text</Badge>
+                </div>
+                
+                <div className="text-center space-y-3">
+                  <div className={`text-2xl text-white ${fontWeight.medium}`}>Medium</div>
+                  <Badge variant="outline">500 - Labels</Badge>
+                </div>
+                
+                <div className="text-center space-y-3">
+                  <div className={`text-2xl text-white ${fontWeight.semibold}`}>Semibold</div>
+                  <Badge variant="outline">600 - Headings</Badge>
+                </div>
+                
+                <div className="text-center space-y-3">
+                  <div className={`text-2xl text-white ${fontWeight.bold}`}>Bold</div>
+                  <Badge variant="outline">700 - Emphasis</Badge>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
 
         {/* Responsive Typography */}
-        <Card className="backdrop-blur-xl bg-white/10 border-white/20">
-          <CardHeader>
-            <CardTitle className={componentTypography.cardTitle + " text-white"}>
-              Responsive Typography
-            </CardTitle>
-            <CardDescription className={componentTypography.cardCaption + " text-white/70"}>
-              Fluid typography that scales across different screen sizes
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="space-y-4">
-              <div>
-                <h2 className={responsiveType.hero + " " + fontWeight.semibold + " text-white leading-tight tracking-[-0.02em] mb-2"}>
-                  Hero Text
-                </h2>
-                <p className={typography.caption1 + " text-white/60"}>
-                  Scales from 1.875rem to 4.5rem across breakpoints
-                </p>
+        <section className="space-y-8">
+          <Card className="backdrop-blur-md bg-white/10 border-white/20">
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <Layout className="h-6 w-6 text-green-400" />
+                <CardTitle className="text-white">Responsive Typography</CardTitle>
               </div>
+              <CardDescription className="text-white/70">
+                Fluid scaling across different devices and screen sizes
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
               
-              <div>
-                <h3 className={responsiveType.display + " " + fontWeight.semibold + " text-white leading-tight tracking-[-0.01em] mb-2"}>
-                  Display Text
-                </h3>
-                <p className={typography.caption1 + " text-white/60"}>
-                  Scales from 1.5rem to 3rem across breakpoints
-                </p>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <h4 className={responsiveType.h1 + " " + fontWeight.semibold + " text-white leading-snug mb-2"}>
-                    Heading 1
-                  </h4>
-                  <p className={typography.caption1 + " text-white/60"}>
-                    Responsive heading scale
-                  </p>
+              <div className="space-y-6">
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <Monitor className="h-5 w-5 text-blue-400" />
+                    <h4 className="text-white font-medium">Desktop Scale</h4>
+                  </div>
+                  <div className={responsiveType.hero + " text-white"}>Hero Text Scale</div>
+                  <div className={responsiveType.h1 + " text-white"}>Heading Scale</div>
+                  <div className={responsiveType.body + " text-white"}>Body text scales perfectly across screen sizes</div>
                 </div>
                 
-                <div>
-                  <h5 className={responsiveType.h2 + " " + fontWeight.semibold + " text-white leading-snug mb-2"}>
-                    Heading 2
-                  </h5>
-                  <p className={typography.caption1 + " text-white/60"}>
-                    Responsive heading scale
-                  </p>
+                <Separator className="bg-white/20" />
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="flex items-center gap-3">
+                    <Smartphone className="h-5 w-5 text-green-400" />
+                    <span className="text-white">Mobile Optimized</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Tablet className="h-5 w-5 text-purple-400" />
+                    <span className="text-white">Tablet Friendly</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Monitor className="h-5 w-5 text-blue-400" />
+                    <span className="text-white">Desktop Ready</span>
+                  </div>
                 </div>
               </div>
+            </CardContent>
+          </Card>
+        </section>
+
+        {/* Medical Typography */}
+        <section className="space-y-8">
+          <Card className="backdrop-blur-md bg-white/10 border-white/20">
+            <CardHeader>
+              <CardTitle className="text-white">Medical Typography</CardTitle>
+              <CardDescription className="text-white/70">
+                Specialized typography for clinical and medical applications
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
               
-              <div>
-                <p className={responsiveType.body + " " + fontWeight.regular + " text-white leading-relaxed tracking-[0.01em] mb-2"}>
-                  Responsive body text that scales from 0.875rem to 1.125rem across different screen sizes, 
-                  maintaining optimal readability and visual hierarchy.
-                </p>
-                <p className={typography.caption1 + " text-white/60"}>
-                  Scales from 0.875rem to 1.125rem across breakpoints
-                </p>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="space-y-4">
+                  <h4 className="text-white font-medium">Patient Information</h4>
+                  <div className={medicalTypography.patientName + " text-white"}>John Smith, 45</div>
+                  <div className={medicalTypography.diagnosis + " text-white"}>Primary Hypertension</div>
+                  <div className={medicalTypography.clinicalNotes + " text-white"}>
+                    Patient presents with elevated blood pressure. No acute distress noted.
+                  </div>
+                </div>
+                
+                <div className="space-y-4">
+                  <h4 className="text-white font-medium">Vital Signs & Measurements</h4>
+                  <div className="space-y-2">
+                    <div className={medicalTypography.vitals + " text-green-400"}>120/80 mmHg</div>
+                    <div className={medicalTypography.labResults + " text-blue-400"}>Glucose: 95 mg/dL</div>
+                    <div className={medicalTypography.medication + " text-white"}>Lisinopril 10mg</div>
+                    <div className={medicalTypography.dosage + " text-white/70"}>Once daily with food</div>
+                  </div>
+                </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </section>
 
-        {/* Medical Measurement Examples */}
-        <Card className="backdrop-blur-xl bg-white/10 border-white/20">
-          <CardHeader>
-            <CardTitle className={componentTypography.cardTitle + " text-white"}>
-              Medical Measurement Formatting
-            </CardTitle>
-            <CardDescription className={componentTypography.cardCaption + " text-white/70"}>
-              Properly formatted medical measurements with status indicators
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {[
-                { value: '120', unit: 'mmHg', status: 'normal' as const },
-                { value: '140', unit: 'mmHg', status: 'elevated' as const },
-                { value: '180', unit: 'mmHg', status: 'critical' as const }
-              ].map((measurement, index) => {
-                const formatted = formatMedicalMeasurement(measurement.value, measurement.unit, measurement.status);
-                return (
-                  <div key={index} className="text-center p-4 rounded-lg bg-white/5 border border-white/10">
-                    <div className={formatted.className + " text-2xl font-mono tabular-nums"}>
-                      {formatted.value}/{formatted.unit}
-                    </div>
-                    <p className={typography.caption1 + " text-white/60 mt-1"}>
-                      Blood Pressure
-                    </p>
+        {/* Component Typography */}
+        <section className="space-y-8">
+          <Card className="backdrop-blur-md bg-white/10 border-white/20">
+            <CardHeader>
+              <CardTitle className="text-white">Component Typography</CardTitle>
+              <CardDescription className="text-white/70">
+                Consistent typography for UI components
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              
+              <div className="space-y-6">
+                <div className="space-y-4">
+                  <h4 className="text-white font-medium">Buttons & Actions</h4>
+                  <div className="flex flex-wrap gap-4">
+                    <Button size="sm" className={componentTypography.buttonSmall}>Small Button</Button>
+                    <Button size="default" className={componentTypography.buttonDefault}>Default Button</Button>
+                    <Button size="lg" className={componentTypography.buttonLarge}>Large Button</Button>
                   </div>
-                );
-              })}
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {[
-                { value: '98.6', unit: '°F', status: 'normal' as const },
-                { value: '101.2', unit: '°F', status: 'elevated' as const },
-                { value: '104.5', unit: '°F', status: 'critical' as const }
-              ].map((measurement, index) => {
-                const formatted = formatMedicalMeasurement(measurement.value, measurement.unit, measurement.status);
-                return (
-                  <div key={index} className="text-center p-4 rounded-lg bg-white/5 border border-white/10">
-                    <div className={formatted.className + " text-2xl font-mono tabular-nums"}>
-                      {formatted.value} {formatted.unit}
+                </div>
+                
+                <Separator className="bg-white/20" />
+                
+                <div className="space-y-4">
+                  <h4 className="text-white font-medium">Cards & Content</h4>
+                  <div className="bg-white/5 p-6 rounded-lg border border-white/10">
+                    <div className={componentTypography.cardTitle + " text-white mb-2"}>Card Title</div>
+                    <div className={componentTypography.cardBody + " text-white/90 mb-3"}>
+                      This is the card body content with proper typography scaling and line height.
                     </div>
-                    <p className={typography.caption1 + " text-white/60 mt-1"}>
-                      Temperature
-                    </p>
+                    <div className={componentTypography.cardCaption + " text-white/60"}>
+                      Card caption with metadata information
+                    </div>
                   </div>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
 
-        {/* Font Stack Information */}
-        <Card className="backdrop-blur-xl bg-white/10 border-white/20">
-          <CardHeader>
-            <CardTitle className={componentTypography.cardTitle + " text-white"}>
-              Font Stack Information
-            </CardTitle>
-            <CardDescription className={componentTypography.cardCaption + " text-white/70"}>
-              Apple's system font stack automatically uses San Francisco on Apple devices
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <h4 className={typography.headline + " text-white mb-2"}>
-                Sans Serif Font Stack
-              </h4>
-              <p className={typography.body + " text-white/80 mb-2"}>
-                -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif
-              </p>
-              <p className={typography.caption1 + " text-white/60"}>
-                Automatically uses San Francisco on Apple devices, falls back to system fonts on other platforms
-              </p>
-            </div>
-            
-            <div>
-              <h4 className={typography.headline + " text-white mb-2"}>
-                Monospace Font Stack
-              </h4>
-              <p className={typography.body + " text-white/80 mb-2"}>
-                "SF Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace
-              </p>
-              <p className={typography.caption1 + " text-white/60"}>
-                Uses SF Mono on Apple devices for code and numerical data
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Status Typography */}
+        <section className="space-y-8">
+          <Card className="backdrop-blur-md bg-white/10 border-white/20">
+            <CardHeader>
+              <CardTitle className="text-white">Status Typography</CardTitle>
+              <CardDescription className="text-white/70">
+                Color-coded typography for different status levels
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                <div className="text-center space-y-2">
+                  <div className={statusTypography.critical}>Critical</div>
+                  <Badge variant="destructive">High Priority</Badge>
+                </div>
+                
+                <div className="text-center space-y-2">
+                  <div className={statusTypography.warning}>Warning</div>
+                  <Badge variant="warning">Attention</Badge>
+                </div>
+                
+                <div className="text-center space-y-2">
+                  <div className={statusTypography.success}>Success</div>
+                  <Badge variant="success">Completed</Badge>
+                </div>
+                
+                <div className="text-center space-y-2">
+                  <div className={statusTypography.info}>Information</div>
+                  <Badge variant="info">Notice</Badge>
+                </div>
+                
+                <div className="text-center space-y-2">
+                  <div className={statusTypography.neutral}>Neutral</div>
+                  <Badge variant="outline">Default</Badge>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
       </div>
     </div>
   );
-} 
+}; 

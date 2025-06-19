@@ -1,8 +1,9 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { typo } from "@/lib/typography";
+import { typography } from "@/lib/typography";
 import type { BodyPart } from "../types/bodyPartTypes";
 
 interface BodyDiagramHeaderProps {
@@ -24,7 +25,7 @@ export const BodyDiagramHeader: React.FC<BodyDiagramHeaderProps> = ({
     <div className="flex items-center justify-between">
       <div>
         <h3 className={cn(
-          typo.h3,
+          typography.h3,
           "tracking-tight",
           compact && "text-lg"
         )}>
@@ -34,7 +35,7 @@ export const BodyDiagramHeader: React.FC<BodyDiagramHeaderProps> = ({
           <motion.p
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
-            className={cn(typo.bodySmall, "text-muted-foreground mt-1")}
+            className={cn(typography.bodySmall, "text-muted-foreground mt-1")}
           >
             {selectedParts.size} part{selectedParts.size !== 1 ? 's' : ''} selected
           </motion.p>

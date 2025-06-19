@@ -38,6 +38,27 @@ export const typography = {
   
   // Caption 2 (iOS) - 11pt Regular
   caption2: `text-xs leading-tight tracking-[0.025em] ${fontWeight.regular}`,
+
+  // Backward compatibility aliases
+  h1: `text-2xl md:text-3xl lg:text-4xl ${fontWeight.semibold} leading-tight tracking-[-0.01em]`,
+  h2: `text-xl md:text-2xl lg:text-3xl ${fontWeight.semibold} leading-snug tracking-[0.01em]`,
+  h3: `text-lg md:text-xl ${fontWeight.semibold} leading-snug tracking-[0.01em]`,
+  h4: `text-base md:text-lg ${fontWeight.semibold} leading-normal tracking-[0.01em]`,
+  h5: `text-sm md:text-base ${fontWeight.semibold} leading-normal tracking-[0.01em]`,
+  h6: `text-xs md:text-sm ${fontWeight.semibold} leading-normal tracking-[0.025em]`,
+  
+  bodyDefault: `text-base md:text-lg leading-relaxed tracking-[0.01em] ${fontWeight.regular}`,
+  bodySmall: `text-sm md:text-base leading-normal tracking-[0.01em] ${fontWeight.regular}`,
+  caption: `text-xs leading-normal tracking-[0.025em] ${fontWeight.regular}`,
+  label: `text-sm md:text-base ${fontWeight.medium} leading-none tracking-[0.01em]`,
+  labelSmall: `text-xs md:text-sm ${fontWeight.medium} leading-none tracking-[0.025em]`,
+  
+  // Medical-specific additions
+  vital: `text-lg md:text-xl font-mono tabular-nums ${fontWeight.medium} leading-snug`,
+  measurement: `text-base md:text-lg font-mono tabular-nums ${fontWeight.regular} leading-relaxed`,
+  dosage: `text-xs md:text-sm font-mono tabular-nums ${fontWeight.regular} leading-normal`,
+  diagnosis: `text-xl md:text-2xl ${fontWeight.semibold} leading-snug tracking-[0.01em]`,
+  note: `text-base md:text-lg ${fontWeight.regular} leading-relaxed tracking-[0.01em]`,
 } as const;
 
 // Medical-specific typography with Apple-inspired hierarchy

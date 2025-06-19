@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -94,116 +95,6 @@ export const IconographyDemo: React.FC = () => {
         </CardContent>
       </Card>
 
-      {/* Icon Sizes */}
-      <Card className="bg-white/10 backdrop-blur-xl border-white/20">
-        <CardHeader>
-          <CardTitle className="text-white">Icon Sizes</CardTitle>
-          <CardDescription className="text-white/70">
-            Responsive sizing for different contexts and hierarchies
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="flex items-center justify-between">
-            {(['xs', 'sm', 'md', 'lg', 'xl', '2xl'] as const).map((size) => (
-              <div key={size} className="flex flex-col items-center space-y-2">
-                <EnhancedIcon
-                  icon={User}
-                  size={size}
-                  weight="regular"
-                  color="default"
-                />
-                <span className="text-xs text-white/70">{size}</span>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Monochromatic Colors */}
-      <Card className="bg-white/10 backdrop-blur-xl border-white/20">
-        <CardHeader>
-          <CardTitle className="text-white">Monochromatic Colors</CardTitle>
-          <CardDescription className="text-white/70">
-            Apple-style color treatment with semantic meaning
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {([
-              { color: 'default', icon: User, label: 'Default' },
-              { color: 'muted', icon: Settings, label: 'Muted' },
-              { color: 'primary', icon: Search, label: 'Primary' },
-              { color: 'success', icon: CheckCircle, label: 'Success' },
-              { color: 'warning', icon: AlertCircle, label: 'Warning' },
-              { color: 'error', icon: AlertCircle, label: 'Error' },
-              { color: 'info', icon: Clock, label: 'Info' },
-              { color: 'accent', icon: Sparkles, label: 'Accent' }
-            ] as const).map(({ color, icon: Icon, label }) => (
-              <div key={color} className="flex flex-col items-center space-y-2">
-                <EnhancedIcon
-                  icon={Icon}
-                  color={color}
-                  size="lg"
-                  weight="regular"
-                />
-                <span className="text-sm text-white/70">{label}</span>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* State Variations */}
-      <Card className="bg-white/10 backdrop-blur-xl border-white/20">
-        <CardHeader>
-          <CardTitle className="text-white">State Variations</CardTitle>
-          <CardDescription className="text-white/70">
-            Interactive states with smooth transitions
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
-            {([
-              { state: 'default', label: 'Default' },
-              { state: 'hover', label: 'Hover' },
-              { state: 'active', label: 'Active' },
-              { state: 'selected', label: 'Selected' },
-              { state: 'disabled', label: 'Disabled' }
-            ] as const).map(({ state, label }) => (
-              <div key={state} className="flex flex-col items-center space-y-2">
-                <StateIcon
-                  icon={Settings}
-                  state={state}
-                  size="lg"
-                  weight="regular"
-                  color="default"
-                  isSelected={state === 'selected'}
-                  isDisabled={state === 'disabled'}
-                />
-                <span className="text-sm text-white/70">{label}</span>
-              </div>
-            ))}
-          </div>
-          
-          <div className="flex items-center justify-center space-x-4">
-            <Button
-              variant="outline"
-              onClick={() => setIsSelected(!isSelected)}
-              className="border-white/20 text-white hover:bg-white/10"
-            >
-              Toggle Selection
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => setIsDisabled(!isDisabled)}
-              className="border-white/20 text-white hover:bg-white/10"
-            >
-              Toggle Disabled
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
       {/* Toggle Icons (Outline/Filled) */}
       <Card className="bg-white/10 backdrop-blur-xl border-white/20">
         <CardHeader>
@@ -216,6 +107,7 @@ export const IconographyDemo: React.FC = () => {
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
             <div className="flex flex-col items-center space-y-2">
               <ToggleIcon
+                icon={Heart}
                 outlineIcon={Heart}
                 filledIcon={HeartOff}
                 isFilled={isFilled}
@@ -230,6 +122,7 @@ export const IconographyDemo: React.FC = () => {
             
             <div className="flex flex-col items-center space-y-2">
               <ToggleIcon
+                icon={Star}
                 outlineIcon={Star}
                 filledIcon={StarOff}
                 isFilled={isFilled}
@@ -244,6 +137,7 @@ export const IconographyDemo: React.FC = () => {
             
             <div className="flex flex-col items-center space-y-2">
               <ToggleIcon
+                icon={Bell}
                 outlineIcon={Bell}
                 filledIcon={BellOff}
                 isFilled={isFilled}
@@ -395,72 +289,6 @@ export const IconographyDemo: React.FC = () => {
         </CardContent>
       </Card>
 
-      {/* Animation Examples */}
-      <Card className="bg-white/10 backdrop-blur-xl border-white/20">
-        <CardHeader>
-          <CardTitle className="text-white">Micro-Interactions</CardTitle>
-          <CardDescription className="text-white/70">
-            Apple-style physics-based animations
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
-            {([
-              { animation: 'bounce', icon: Plus, label: 'Bounce' },
-              { animation: 'pulse', icon: Activity, label: 'Pulse' },
-              { animation: 'scale', icon: Target, label: 'Scale' },
-              { animation: 'rotate', icon: RotateCcw, label: 'Rotate' },
-              { animation: 'slide', icon: ChevronRight, label: 'Slide' }
-            ] as const).map(({ animation, icon: Icon, label }) => (
-              <div key={animation} className="flex flex-col items-center space-y-2">
-                <EnhancedIcon
-                  icon={Icon}
-                  animation={animation}
-                  size="lg"
-                  weight="regular"
-                  color="primary"
-                  interactive
-                />
-                <span className="text-sm text-white/70">{label}</span>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Context-Based Configurations */}
-      <Card className="bg-white/10 backdrop-blur-xl border-white/20">
-        <CardHeader>
-          <CardTitle className="text-white">Context Configurations</CardTitle>
-          <CardDescription className="text-white/70">
-            Pre-configured icon styles for different UI contexts
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
-            {([
-              { context: 'navigation', icon: Home, label: 'Navigation' },
-              { context: 'button', icon: Plus, label: 'Button' },
-              { context: 'card', icon: FileText, label: 'Card' },
-              { context: 'status', icon: CheckCircle, label: 'Status' },
-              { context: 'action', icon: Zap, label: 'Action' }
-            ] as const).map(({ context, icon: Icon, label }) => {
-              const config = getIconConfig(context);
-              return (
-                <div key={context} className="flex flex-col items-center space-y-2">
-                  <EnhancedIcon
-                    icon={Icon}
-                    {...config}
-                    size="lg"
-                  />
-                  <span className="text-sm text-white/70">{label}</span>
-                </div>
-              );
-            })}
-          </div>
-        </CardContent>
-      </Card>
-
       {/* Interactive State Management */}
       <Card className="bg-white/10 backdrop-blur-xl border-white/20">
         <CardHeader>
@@ -484,30 +312,6 @@ export const IconographyDemo: React.FC = () => {
               onMouseUp={setDefault}
             />
             <span className="text-sm text-white/70">Current State: {state}</span>
-          </div>
-          
-          <div className="flex items-center justify-center space-x-4">
-            <Button
-              variant="outline"
-              onClick={setDefault}
-              className="border-white/20 text-white hover:bg-white/10"
-            >
-              Default
-            </Button>
-            <Button
-              variant="outline"
-              onClick={setHover}
-              className="border-white/20 text-white hover:bg-white/10"
-            >
-              Hover
-            </Button>
-            <Button
-              variant="outline"
-              onClick={setActive}
-              className="border-white/20 text-white hover:bg-white/10"
-            >
-              Active
-            </Button>
           </div>
         </CardContent>
       </Card>

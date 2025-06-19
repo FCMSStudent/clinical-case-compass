@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { spacingUtilities, responsiveSpacing, layoutSpacing } from '@/lib/spacing';
+import { cn } from '@/lib/utils';
 import { typography } from '@/lib/typography';
 
 export const SpacingLayoutDemo: React.FC = () => {
@@ -21,7 +21,7 @@ export const SpacingLayoutDemo: React.FC = () => {
           <h1 className={cn(typography.h1, "text-white")}>
             8pt Grid Spacing System
           </h1>
-          <p className={cn(typography.body.large, "text-white/80 max-w-3xl mx-auto")}>
+          <p className={cn(typography.body, "text-white/80 max-w-3xl mx-auto")}>
             Apple-inspired spacing and layout principles with consistent 8pt grid alignment, 
             generous margins, and fluid responsive design.
           </p>
@@ -395,4 +395,4 @@ const cn = (...classes: (string | undefined | null | false)[]) => {
   return classes.filter(Boolean).join(' ');
 };
 
-export default SpacingLayoutDemo; 
+export default SpacingLayoutDemo;

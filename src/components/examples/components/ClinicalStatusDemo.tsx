@@ -1,110 +1,127 @@
+
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
 import { 
-  typo, 
-  clinicalStatusText, 
-  treatmentStatusText,
-  formatMedicalMeasurement,
-  createTypographyClass
-} from '@/lib/typography';
-import { 
+  Heart, 
+  Activity, 
+  TrendingUp, 
+  AlertTriangle,
+  CheckCircle2,
+  Clock,
   User,
-  Stethoscope,
-  AlertTriangle
+  Calendar,
+  Stethoscope
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { typography } from '@/lib/typography';
 
 export const ClinicalStatusDemo: React.FC = () => {
   return (
     <section className="space-y-6">
-      <h2 className={createTypographyClass('h2', 'text-white')}>
-        Clinical Status Examples
-      </h2>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Patient Status Card */}
+      <div className="space-y-2">
+        <h2 className={cn(typography.h2, 'text-white')}>
+          Clinical Status Components
+        </h2>
+        <p className={cn(typography.body, 'text-white/70')}>
+          Specialized components for displaying medical information and patient status
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Vital Signs Card */}
         <Card className="bg-white/10 backdrop-blur-xl border-white/20">
           <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
-              <User className="h-5 w-5" />
-              Patient Status
-            </CardTitle>
+            <div className="flex items-center gap-3">
+              <Heart className="h-5 w-5 text-red-400" />
+              <CardTitle className="text-white">Vital Signs</CardTitle>
+            </div>
+            <CardDescription className="text-white/70">
+              Real-time patient monitoring
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-white/80">Overall Status</span>
-              <span className={clinicalStatusText('stable')}>Stable</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-white/80">Monitoring Level</span>
-              <span className={clinicalStatusText('monitoring')}>Active Monitoring</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-white/80">Condition Type</span>
-              <span className={clinicalStatusText('chronic')}>Chronic</span>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <h6 className={cn(typography.h6, 'text-white/80')}>Blood Pressure</h6>
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl font-mono text-white">120/80</span>
+                  <Badge variant="success">Normal</Badge>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <h6 className={cn(typography.h6, 'text-white/80')}>Heart Rate</h6>
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl font-mono text-white">72</span>
+                  <Badge variant="success">BPM</Badge>
+                </div>
+              </div>
             </div>
             
-            <div className="pt-4 border-t border-white/20">
-              <h4 className={typo.h6}>Recent Vitals</h4>
-              <div className="mt-2 space-y-2">
-                {(() => {
-                  const bp = formatMedicalMeasurement('120/80', 'mmHg', 'normal');
-                  const hr = formatMedicalMeasurement('72', 'BPM', 'normal');
-                  const temp = formatMedicalMeasurement('98.6', '°F', 'normal');
-                  
-                  return (
-                    <>
-                      <div className="flex justify-between">
-                        <span className="text-white/70">Blood Pressure</span>
-                        <span className={bp.className}>{bp.value} {bp.unit}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-white/70">Heart Rate</span>
-                        <span className={hr.className}>{hr.value} {hr.unit}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-white/70">Temperature</span>
-                        <span className={temp.className}>{temp.value} {temp.unit}</span>
-                      </div>
-                    </>
-                  );
-                })()}
+            <div className="space-y-2">
+              <h6 className={cn(typography.h6, 'text-white/80')}>Oxygen Saturation</h6>
+              <div className="flex items-center gap-3">
+                <Progress value={98} className="flex-1" />
+                <span className="text-lg font-mono text-white">98%</span>
               </div>
+            </div>
+            
+            <div className="flex items-center justify-between pt-4 border-t border-white/20">
+              <div className="flex items-center gap-2 text-white/60">
+                <Clock className="h-4 w-4" />
+                <span className="text-sm">Last updated: 2 min ago</span>
+              </div>
+              <Badge variant="success">Stable</Badge>
             </div>
           </CardContent>
         </Card>
 
-        {/* Treatment Status Card */}
+        {/* Patient Status Card */}
         <Card className="bg-white/10 backdrop-blur-xl border-white/20">
           <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
-              <Stethoscope className="h-5 w-5" />
-              Treatment Status
-            </CardTitle>
+            <div className="flex items-center gap-3">
+              <User className="h-5 w-5 text-blue-400" />
+              <CardTitle className="text-white">Patient Status</CardTitle>
+            </div>
+            <CardDescription className="text-white/70">
+              Overall condition and treatment progress
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-white">Treatment Progress</span>
+              <Badge variant="info">Day 3 of 7</Badge>
+            </div>
+            
+            <Progress value={43} className="w-full" />
+            
             <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-white/80">Medication Therapy</span>
-                <span className={treatmentStatusText('ongoing')}>Ongoing</span>
+              <div className="flex items-center gap-3">
+                <CheckCircle2 className="h-5 w-5 text-green-400" />
+                <span className="text-white/90">Medication administered</span>
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-white/80">Physical Therapy</span>
-                <span className={treatmentStatusText('pending')}>Pending</span>
+              <div className="flex items-center gap-3">
+                <Activity className="h-5 w-5 text-blue-400" />
+                <span className="text-white/90">Vitals monitored</span>
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-white/80">Lab Results</span>
-                <span className={treatmentStatusText('complete')}>Complete</span>
+              <div className="flex items-center gap-3">
+                <AlertTriangle className="h-5 w-5 text-amber-400" />
+                <span className="text-white/90">Follow-up required</span>
               </div>
             </div>
             
-            <Alert className="bg-warning/20 border-warning/30">
-              <AlertTriangle className="h-4 w-4 text-warning" />
-              <AlertTitle className="text-warning">Follow-up Required</AlertTitle>
-              <AlertDescription className="text-warning/80">
-                Patient scheduled for follow-up appointment in 2 weeks
-              </AlertDescription>
-            </Alert>
+            <div className="flex gap-2 pt-4 border-t border-white/20">
+              <Button size="sm" variant="outline" className="flex-1">
+                <Stethoscope className="h-4 w-4 mr-2" />
+                Examine
+              </Button>
+              <Button size="sm" variant="outline" className="flex-1">
+                <Calendar className="h-4 w-4 mr-2" />
+                Schedule
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>
