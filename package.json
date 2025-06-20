@@ -7,9 +7,22 @@
     "dev": "vite --host localhost",
     "build": "vite build",
     "build:dev": "vite build --mode development",
+    "build:analyze": "vite build --mode production && npx vite-bundle-analyzer dist/stats.html",
     "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest --watch",
+    "type-check": "tsc --noEmit",
+    "type-check:watch": "tsc --noEmit --watch",
+    "docs:build": "npm run docs:components && npm run docs:api",
+    "docs:components": "echo 'Building component documentation...'",
+    "docs:api": "echo 'Building API documentation...'",
+    "clean": "rm -rf dist coverage test-results .eslintcache",
+    "precommit": "npm run lint && npm run type-check && npm run test:run"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",

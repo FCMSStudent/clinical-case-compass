@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/shared/components/sonner";
@@ -9,16 +9,23 @@ import { ErrorBoundary } from "./error-boundaries/ErrorBoundary";
 import { ProtectedRouteLayout } from "@/features/navigation";
 import LoadingScreen from "@/shared/components/loading-screen";
 
-// Pages
-import Dashboard from "@/features/dashboard/Dashboard";
-import Cases from "@/features/cases/Cases";
-import CaseDetail from "@/features/cases/CaseDetail";
-import CaseEdit from "@/features/cases/CaseEdit";
-import CreateCaseFlow from "@/features/cases/CreateCaseFlow";
-import Account from "@/features/auth/Account";
-import Auth from "@/features/auth/Auth";
-import NotFound from "@/shared/components/NotFound";
-import LandingPage from "@/features/landing/Landing";
+// Lazy load major components for code splitting
+const Dashboard = React.lazy(() => import("@/features/dashboard/Dashboard"));
+const Cases = React.lazy(() => import("@/features/cases/Cases"));
+const CaseDetail = React.lazy(() => import("@/features/cases/CaseDetail"));
+const CaseEdit = React.lazy(() => import("@/features/cases/CaseEdit"));
+const CreateCaseFlow = React.lazy(() => import("@/features/cases/CreateCaseFlow"));
+const Account = React.lazy(() => import("@/features/auth/Account"));
+const Auth = React.lazy(() => import("@/features/auth/Auth"));
+const NotFound = React.lazy(() => import("@/shared/components/NotFound"));
+const LandingPage = React.lazy(() => import("@/features/landing/Landing"));
+
+// Loading component for Suspense fallback
+const PageLoadingFallback = () => (
+  <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <LoadingScreen />
+  </div>
+);
 
 // Create a client with better error handling
 const queryClient = new QueryClient({
@@ -50,15 +57,35 @@ const AppRoutes = () => {
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         {/* Public Routes */}
-        <Route path="/landing" element={<LandingPage />} />
-        <Route path="/auth" element={session ? <Navigate to="/dashboard" replace /> : <Auth />} />
+        <Route 
+          path="/landing" 
+          element={
+            <Suspense fallback={<PageLoadingFallback />}>
+              <LandingPage />
+            </Suspense>
+          } 
+        />
+        <Route 
+          path="/auth" 
+          element={
+            session ? (
+              <Navigate to="/dashboard" replace />
+            ) : (
+              <Suspense fallback={<PageLoadingFallback />}>
+                <Auth />
+              </Suspense>
+            )
+          } 
+        />
         
         {/* Protected routes */}
         <Route
           path="/dashboard"
           element={
             <ProtectedRouteLayout>
-              <Dashboard />
+              <Suspense fallback={<PageLoadingFallback />}>
+                <Dashboard />
+              </Suspense>
             </ProtectedRouteLayout>
           }
         />
@@ -72,7 +99,9 @@ const AppRoutes = () => {
                   <p className="text-white/70">There was an error loading the cases page.</p>
                 </div>
               }>
-                <Cases />
+                <Suspense fallback={<PageLoadingFallback />}>
+                  <Cases />
+                </Suspense>
               </ErrorBoundary>
             </ProtectedRouteLayout>
           }
@@ -81,7 +110,9 @@ const AppRoutes = () => {
           path="/cases/:id"
           element={
             <ProtectedRouteLayout>
-              <CaseDetail />
+              <Suspense fallback={<PageLoadingFallback />}>
+                <CaseDetail />
+              </Suspense>
             </ProtectedRouteLayout>
           }
         />
@@ -89,7 +120,9 @@ const AppRoutes = () => {
           path="/cases/edit/:id"
           element={
             <ProtectedRouteLayout>
-              <CaseEdit />
+              <Suspense fallback={<PageLoadingFallback />}>
+                <CaseEdit />
+              </Suspense>
             </ProtectedRouteLayout>
           }
         />
@@ -97,7 +130,9 @@ const AppRoutes = () => {
           path="/cases/new"
           element={
             <ProtectedRouteLayout>
-              <CreateCaseFlow />
+              <Suspense fallback={<PageLoadingFallback />}>
+                <CreateCaseFlow />
+              </Suspense>
             </ProtectedRouteLayout>
           }
         />
@@ -105,7 +140,9 @@ const AppRoutes = () => {
           path="/account"
           element={
             <ProtectedRouteLayout>
-              <Account />
+              <Suspense fallback={<PageLoadingFallback />}>
+                <Account />
+              </Suspense>
             </ProtectedRouteLayout>
           }
         />
@@ -115,7 +152,9 @@ const AppRoutes = () => {
           element={
             session ? (
               <ProtectedRouteLayout>
-                <NotFound />
+                <Suspense fallback={<PageLoadingFallback />}>
+                  <NotFound />
+                </Suspense>
               </ProtectedRouteLayout>
             ) : (
               <Navigate to="/landing" replace />
