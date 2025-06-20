@@ -1,7 +1,7 @@
 import React, { createContext, useReducer, useEffect, useContext, useMemo, useCallback } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+import { useToast } from "@/shared/hooks/use-toast";
 import { authReducer, initialAuthState } from "@/shared/utils/authReducer";
 import type { UserMetadata } from "@/shared/types/auth";
 
@@ -21,6 +21,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(authReducer, initialAuthState);
   const { session, user, loading, isOfflineMode } = state;
+  const { toast } = useToast();
 
   useEffect(() => {
     // Get the Supabase URL and key from environment variables
@@ -80,7 +81,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [toast]);
 
   const signIn = useCallback(async (email: string, password: string) => {
     if (isOfflineMode) {
@@ -104,7 +105,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
       throw err;
     }
-  }, [isOfflineMode]);
+  }, [isOfflineMode, toast]);
 
   const signUp = useCallback(async (email: string, password: string, fullName?: string) => {
     if (isOfflineMode) {
@@ -139,7 +140,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
       throw err;
     }
-  }, [isOfflineMode]);
+  }, [isOfflineMode, toast]);
 
   const signOut = useCallback(async () => {
     if (isOfflineMode) {
@@ -156,7 +157,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         description: err.message || "An error occurred during sign out",
       });
     }
-  }, [isOfflineMode]);
+  }, [isOfflineMode, toast]);
 
   const updateProfile = useCallback(async (data: UserMetadata) => {
     if (isOfflineMode) {
@@ -214,7 +215,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
       throw err;
     }
-  }, [isOfflineMode, user, dispatch]);
+  }, [isOfflineMode, toast, user, dispatch]);
 
   const value = useMemo(() => ({
     session,
