@@ -132,14 +132,14 @@ export const BodyDiagramExamples = {
   // Basic usage
   Basic: () => (
     <SimpleBodyPartSelector
-      onSelectionChange={(parts) => console.log('Selected:', parts)}
+      onSelectionChange={() => {}}
     />
   ),
 
   // Single selection mode
   SingleSelect: () => (
     <SimpleBodyPartSelector
-      onSelectionChange={(parts) => console.log('Selected:', parts)}
+      onSelectionChange={() => {}}
       multiSelect={false}
     />
   ),
@@ -147,7 +147,7 @@ export const BodyDiagramExamples = {
   // Compact mode
   Compact: () => (
     <SimpleBodyPartSelector
-      onSelectionChange={(parts) => console.log('Selected:', parts)}
+      onSelectionChange={() => {}}
       compact={true}
     />
   ),
@@ -155,7 +155,7 @@ export const BodyDiagramExamples = {
   // With initial selection and highlights
   Advanced: () => (
     <SimpleBodyPartSelector
-      onSelectionChange={(parts) => console.log('Selected:', parts)}
+      onSelectionChange={() => {}}
       initialSelection={["Head", "Chest"]}
       highlightedParts={["Arms", "Legs"]}
       showDescriptions={true}

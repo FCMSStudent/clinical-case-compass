@@ -1,4 +1,3 @@
-
 import React, { createContext, useReducer, useEffect, useContext, useMemo, useCallback } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
@@ -25,18 +24,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Check if we're in offline mode (missing Supabase credentials)
-    const isCredentialsMissing = 
-      import.meta.env.VITE_SUPABASE_URL === undefined || 
-      import.meta.env.VITE_SUPABASE_ANON_KEY === undefined ||
-      import.meta.env.VITE_SUPABASE_URL === "YOUR_SUPABASE_URL" ||
-      import.meta.env.VITE_SUPABASE_ANON_KEY === "YOUR_SUPABASE_ANON_KEY";
-
-    if (isCredentialsMissing) {
-      dispatch({ type: 'SET_OFFLINE_MODE', payload: true });
+    // Check if Supabase is properly configured
+    if (!supabaseUrl || !supabaseAnonKey) {
       console.warn("Running in offline mode - Supabase credentials not configured");
+      dispatch({ type: 'SET_OFFLINE_MODE', payload: true });
+      dispatch({ type: 'SET_LOADING', payload: false });
       return;
     }
+
+    // Get initial session
+    const getInitialSession = async () => {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error) {
+          console.error("Error getting session:", error);
+          dispatch({ type: 'SET_OFFLINE_MODE', payload: true });
+        } else {
+          dispatch({ type: 'SET_SESSION', payload: session });
+          dispatch({ type: 'SET_USER', payload: session?.user ?? null });
+        }
+      } catch (error) {
+        console.error("Error getting session:", error);
+        dispatch({ type: 'SET_OFFLINE_MODE', payload: true });
+      } finally {
+        dispatch({ type: 'SET_LOADING', payload: false });
+      }
+    };
 
     // Set up auth state listener first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -59,21 +72,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     );
 
-    // Then check for existing session
-    supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
-      const initializedUser = currentSession?.user ?? null;
-      dispatch({ 
-        type: 'INITIALIZE_AUTH', 
-        payload: { 
-          session: currentSession, 
-          user: initializedUser,
-          isOfflineMode: false 
-        } 
-      });
-    }).catch((error) => {
-      console.error("Error getting session:", error);
-      dispatch({ type: 'SET_LOADING', payload: false });
-    });
+    getInitialSession();
 
     return () => {
       subscription.unsubscribe();

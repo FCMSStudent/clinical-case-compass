@@ -1,8 +1,7 @@
+import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import '../index.css';
-
-console.log('main.tsx executing');
 
 // Error boundary component
 const ErrorBoundary = ({ children }: { children: React.ReactNode }) => {
@@ -22,14 +21,12 @@ const ErrorBoundary = ({ children }: { children: React.ReactNode }) => {
 
 try {
   const rootElement = document.getElementById("root");
-  console.log('Root element:', rootElement);
   
   if (!rootElement) {
     throw new Error('Root element not found');
   }
   
   const root = createRoot(rootElement);
-  console.log('React root created');
   
   // Try to render the App component with error boundary
   root.render(
@@ -37,7 +34,6 @@ try {
       <App />
     </ErrorBoundary>
   );
-  console.log('App rendered');
 } catch (error) {
   console.error('Error in main.tsx:', error);
 }
