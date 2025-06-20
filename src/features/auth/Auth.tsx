@@ -148,7 +148,7 @@ const Auth = () => {
                       Medica
                     </h1>
                   </motion.div>
-                  <p className="text-base md:text-lg font-light text-white/80">
+                  <p className="text-base md:text-lg font-light text-white">
                     Sign in to your account or create a new one
                   </p>
                 </motion.div>
@@ -166,10 +166,10 @@ const Auth = () => {
                   <button 
                     onClick={() => setActiveTab("login")}
                     className={cn(
-                      "relative z-10 py-3 px-4 text-sm md:text-base font-medium transition-all duration-300 rounded-xl",
+                      "relative z-10 py-3 px-4 text-sm md:text-base font-medium transition-all duration-300 rounded-xl backdrop-brightness-75",
                       activeTab === "login" 
                         ? "text-white" 
-                        : "text-white/70 hover:text-white/90"
+                        : "text-white/85 hover:text-white"
                     )}
                     aria-label="Sign in to your account"
                   >
@@ -178,10 +178,10 @@ const Auth = () => {
                   <button 
                     onClick={() => setActiveTab("signup")}
                     className={cn(
-                      "relative z-10 py-3 px-4 text-sm md:text-base font-medium transition-all duration-300 rounded-xl",
+                      "relative z-10 py-3 px-4 text-sm md:text-base font-medium transition-all duration-300 rounded-xl backdrop-brightness-75",
                       activeTab === "signup" 
                         ? "text-white" 
-                        : "text-white/70 hover:text-white/90"
+                        : "text-white/85 hover:text-white"
                     )}
                     aria-label="Create a new account"
                   >
