@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { NavLink, useLocation } from 'react-router-dom';
-import { cn } from '@/lib/utils';
+import { cn } from '@/shared/utils/utils';
 
 const ICON_SIZE = "w-5 h-5";
 

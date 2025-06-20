@@ -1,6 +1,6 @@
 
 import React, { memo, ReactNode } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/utils/utils";
 
 /**
  * Lightweight meta-data contract for each form step.

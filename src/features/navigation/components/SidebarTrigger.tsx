@@ -1,6 +1,6 @@
 import React from "react";
 import { Menu } from "lucide-react";
-import { cn } from '@/lib/utils';
+import { cn } from '@/shared/utils/utils';
 import { useSidebar } from './SidebarContext';
 
 const ICON_SIZE = "w-5 h-5";

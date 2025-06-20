@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import { Clipboard, Stethoscope } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { MedicalCase } from "@/types/case";
+import { Badge } from "@/shared/components/badge";
+import { MedicalCase } from "@/shared/types/case";
 
 interface CaseCardBodyProps {
   medicalCase: MedicalCase;

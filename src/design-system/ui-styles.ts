@@ -1,7 +1,6 @@
-
-import { typography } from "./typography";
+import { typography } from "./tokens/typography";
 import { buttonVariants as dsButtonVariants } from "./design-system";
-import { colors, spacing as dsSpacing } from "./design-tokens";
+import { colors, spacing as dsSpacing } from "./tokens/design-tokens";
 
 const medicalSection = {
   container: "p-4 sm:p-6 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl",

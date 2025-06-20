@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/components/button";
 import { AnimatePresence, motion } from "framer-motion";
 import { Plus, X, FileText } from "lucide-react";
-import type { RadiologyStudy } from "@/types/case";
+import type { RadiologyStudy } from "@/shared/types/case";
 import { RadiologyStudyItem } from "./components/RadiologyStudyItem";
 import { AddRadiologyForm } from "./components/AddRadiologyForm";
 import { createRadiologyStudy } from "./utils/radiologyData";

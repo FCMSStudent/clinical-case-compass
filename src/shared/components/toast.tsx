@@ -3,8 +3,8 @@ import * as ToastPrimitives from "@radix-ui/react-toast"
 import { cva, type VariantProps } from "class-variance-authority"
 import { X } from "lucide-react"
 
-import { cn } from "@/lib/utils"
-import { glass, focusRing } from "@/lib/ui-styles"
+import { cn } from "@/shared/utils/utils"
+import { glass, focusRing } from "@/design-system/ui-styles"
 
 const ToastProvider = ToastPrimitives.Provider
 

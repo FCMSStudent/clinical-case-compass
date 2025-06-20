@@ -1,8 +1,8 @@
 
 import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
-import { glass } from '@/lib/ui-styles';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/components/card';
+import { cn } from '@/shared/utils/utils';
+import { glass } from '@/design-system/ui-styles';
 
 interface SettingsCardProps {
   title: string;

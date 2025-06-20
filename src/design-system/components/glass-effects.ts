@@ -2,8 +2,8 @@
 // APPLE-INSPIRED LIQUID GLASS EFFECTS
 // ────────────────────────────────────────────────────────────────────────────────
 
-import { motionTokens } from './motion';
-import { shadows } from './spacing';
+import { motionTokens } from '../animations/motion';
+import { shadows } from '../tokens/spacing';
 
 /**
  * Apple-inspired liquid glass effect utilities

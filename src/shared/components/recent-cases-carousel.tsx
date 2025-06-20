@@ -1,9 +1,9 @@
 
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/shared/components/card";
+import { Badge } from "@/shared/components/badge";
+import { Button } from "@/shared/components/button";
 import { ChevronLeft, ChevronRight, Calendar, User, FileText, Clock } from "lucide-react";
-import { MedicalCase } from "@/types/case";
+import { MedicalCase } from "@/shared/types/case";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";

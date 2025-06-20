@@ -3,24 +3,24 @@
 // ────────────────────────────────────────────────────────────────────────────────
 
 // Re-export all design system modules for backward compatibility
-export * from './colors';
-export * from './spacing';
-export * from './components';
-export * from './theme-system.tsx';
-export * from './typography';
-export * from './design-tokens';
+export * from './tokens/colors';
+export * from './tokens/spacing';
+export * from './components/components';
+export * from './themes/theme-system';
+export * from './tokens/typography';
+export * from './tokens/design-tokens';
 export * from './background-config';
 
 // Re-export existing animation system
-export * from './motion';
+export * from './animations/motion';
 
 // Re-export new Apple-inspired liquid glass effects
-export * from './glass-effects';
+export * from './components/glass-effects';
 
 // Legacy exports for backward compatibility
-import type { ThemeColors } from './colors';
-import { colors, themeColors } from './colors';
-import { spacing, borderRadius, shadows, layout, sizes, zIndex, breakpoints } from './spacing';
+import type { ThemeColors } from './tokens/colors';
+import { colors, themeColors } from './tokens/colors';
+import { spacing, borderRadius, shadows, layout, sizes, zIndex, breakpoints } from './tokens/spacing';
 import { 
   buttonVariants, 
   button, 
@@ -33,7 +33,7 @@ import {
   disabledState,
   glassmorphic,
   glass
-} from './components';
+} from './components/components';
 import { 
   getGlassmorphicStyles, 
   applyThemeToDocument,
@@ -44,13 +44,13 @@ import {
   generateThemeVariations,
   getContrastRatio,
   isThemeAccessible
-} from './utilities';
-import type { ThemeConfig } from './theme-system.tsx';
-import { ThemeProvider, useTheme, ThemeSwitcher, themes } from './theme-system.tsx';
-import { typography } from './typography';
-import { typographyTokens } from './design-tokens';
+} from '../shared/utils/utilities';
+import type { ThemeConfig } from './themes/theme-system';
+import { ThemeProvider, useTheme, ThemeSwitcher, themes } from './themes/theme-system';
+import { typography } from './tokens/typography';
+import { typographyTokens } from './tokens/design-tokens';
 import { backgroundConfig } from './background-config';
-import { animations } from './animations';
+import { animations } from './animations/animations';
 import { 
   liquidGlassEffects, 
   applyLiquidGlass, 
@@ -60,7 +60,7 @@ import {
   getParallaxEffect,
   liquidGlassClasses,
   getGlassClasses
-} from './glass-effects';
+} from './components/glass-effects';
 
 // Consolidated exports for easy access
 export const designSystem = {

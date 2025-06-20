@@ -1,6 +1,6 @@
 
-import { Skeleton } from "@/components/ui/skeleton";
-import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/shared/components/skeleton";
+import { Card, CardContent } from "@/shared/components/card";
 
 export function MetricCardSkeleton() {
   return (

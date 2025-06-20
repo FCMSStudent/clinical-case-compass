@@ -1,10 +1,10 @@
 import { useLocation, Link } from "react-router-dom";
 import { useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Button } from "@/shared/components/button";
+import { Card, CardContent, CardHeader } from "@/shared/components/card";
 import { Home, ArrowLeft, Search, FileQuestion } from "lucide-react";
-import { typo, responsiveType, createTypographyClass } from "@/lib/typography";
-import { cn } from "@/lib/utils";
+import { typo, responsiveType, createTypographyClass } from "@/design-system/tokens/typography";
+import { cn } from "@/shared/utils/utils";
 
 const NotFound = () => {
   const location = useLocation();

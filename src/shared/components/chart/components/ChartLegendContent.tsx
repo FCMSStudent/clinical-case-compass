@@ -1,6 +1,6 @@
 import * as React from "react"
 import * as RechartsPrimitive from "recharts"
-import { cn } from "@/lib/utils"
+import { cn } from "@/shared/utils/utils"
 import { useChart } from "./ChartContext"
 import type { ChartLegendContentProps } from "../types/chartTypes"
 import { getPayloadConfigFromPayload } from "../utils/chartUtils"

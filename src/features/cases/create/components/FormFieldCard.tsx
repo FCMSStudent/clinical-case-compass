@@ -2,16 +2,16 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { LucideIcon, Info, AlertCircle, CheckCircle2, ChevronDown, ChevronUp } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { cn } from "@/shared/utils/utils";
+import { Button } from "@/shared/components/button";
+import { Badge } from "@/shared/components/badge";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+} from "@/shared/components/tooltip";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/shared/components/collapsible";
 
 interface FormFieldCardProps {
   icon: LucideIcon;

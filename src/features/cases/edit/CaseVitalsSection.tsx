@@ -1,9 +1,9 @@
 
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/card";
 import { HeartPulse } from "lucide-react";
 import { InteractiveVitalsCard } from "@/features/cases/InteractiveVitalsCard";
-import { medicalSection, iconWithText } from "@/lib/ui-styles";
+import { medicalSection, iconWithText } from "@/design-system/ui-styles";
 
 interface CaseVitalsSectionProps {
   onVitalsChange: (vitals: Record<string, string>) => void;

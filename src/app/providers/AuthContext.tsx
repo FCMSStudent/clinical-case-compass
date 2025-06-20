@@ -1,9 +1,9 @@
 import React, { createContext, useReducer, useEffect, useContext, useMemo, useCallback } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
-import { authReducer, initialAuthState, type AuthState, type AuthAction } from "@/lib/reducers/authReducer";
-import type { UserMetadata } from "@/types/auth";
+import { useToast } from "@/shared/hooks/use-toast";
+import { authReducer, initialAuthState, type AuthState, type AuthAction } from "@/shared/utils/authReducer";
+import type { UserMetadata } from "@/shared/types/auth";
 
 export type AuthContextType = {
   session: Session | null;

@@ -1,10 +1,10 @@
 
 import React from "react";
-import { BentoCard } from "@/components/ui/bento-card";
+import { BentoCard } from "@/shared/components/bento-card";
 import { TestTube, Scan } from "lucide-react";
 import { SimpleLabs } from "@/features/cases/create/SimpleLabs";
 import { SimpleImaging } from "@/features/cases/create/SimpleImaging";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/tabs";
 
 interface DiagnosticsCardProps {
   onLabChange: (labs: any) => void;

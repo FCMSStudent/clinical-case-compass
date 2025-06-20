@@ -1,9 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/app/AuthContext';
-import { toast } from '@/hooks/use-toast';
+import { useAuth } from '@/app/providers/AuthContext';
+import { toast } from '@/shared/hooks/use-toast';
 import { useErrorHandler } from './use-error-handler';
-import { MedicalCase, Patient, Diagnosis, Resource, CaseTag, LabTest as ComponentLabTest, RadiologyStudy, DiagnosisStatus as ComponentDiagnosisStatus } from '@/types/case';
+import { MedicalCase, Patient, Diagnosis, Resource, CaseTag, LabTest as ComponentLabTest, RadiologyStudy, DiagnosisStatus as ComponentDiagnosisStatus } from '@/shared/types/case';
 import { Database } from '@/integrations/supabase/types';
 
 type DbCase = Database['public']['Tables']['medical_cases']['Row'];

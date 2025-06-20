@@ -1,9 +1,9 @@
 import React, { useState, useCallback, memo } from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
+import { Input } from "@/shared/components/input";
+import { Label } from "@/shared/components/label";
+import { Button } from "@/shared/components/button";
 import { Thermometer, HeartPulse, Activity, Wind, Gauge } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/utils/utils";
 
 interface VitalSignProps {
   label: string;

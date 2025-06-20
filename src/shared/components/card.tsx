@@ -2,10 +2,10 @@
 import * as React from "react"
 import { motion, HTMLMotionProps } from "framer-motion"
 
-import { cn } from "@/lib/utils"
-import { card } from "@/lib/design-system"
-import { getGlassHoverVariants, getGlassTransitionVariants } from "@/lib/glass-effects"
-import { typography } from "@/lib/typography"
+import { cn } from "@/shared/utils/utils"
+import { card } from "@/design-system/design-system"
+import { getGlassHoverVariants, getGlassTransitionVariants } from "@/design-system/components/glass-effects"
+import { typography } from "@/design-system/tokens/typography"
 
 const Card = React.forwardRef<
   HTMLDivElement,

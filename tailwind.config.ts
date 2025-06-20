@@ -1,8 +1,7 @@
-
 import type { Config } from "tailwindcss";
 import tailwindcssAnimate from "tailwindcss-animate";
-import { typographyTokens } from "./src/lib/design-tokens";
-import { colors } from "./src/lib/design-tokens";
+import { typographyTokens } from "./src/design-system/tokens/design-tokens";
+import { colors } from "./src/design-system/tokens/design-tokens";
 
 export default {
 	darkMode: ["class"],

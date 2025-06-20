@@ -1,34 +1,34 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "@/app/AuthContext";
+import { useAuth } from "@/app/providers/AuthContext";
 import {
   Card,
   CardContent,
   CardHeader,
-} from "@/components/ui/card";
+} from "@/shared/components/card";
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@/components/ui/tabs";
-import { useToast } from "@/hooks/use-toast";
+} from "@/shared/components/tabs";
+import { useToast } from "@/shared/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Alert,
   AlertDescription,
   AlertTitle,
-} from "@/components/ui/alert";
+} from "@/shared/components/alert";
 import { CheckCircle2 } from "lucide-react";
-import UnifiedBackground from "@/components/backgrounds/UnifiedBackground";
-import { useTheme } from "@/lib/design-system";
+import UnifiedBackground from "@/shared/components/UnifiedBackground";
+import { useTheme } from "@/design-system/design-system";
 import {
   pageTransitionVariants as globalPageTransitionVariants,
   reducedMotionPageTransitionVariants as globalReducedMotionPageVariants,
   getMotionVariants
-} from "@/lib/motion";
-import { getGlassTransitionVariants, liquidGlassClasses } from "@/lib/glass-effects";
-import { cn } from "@/lib/utils";
+} from "@/design-system/animations/motion";
+import { getGlassTransitionVariants, liquidGlassClasses } from "@/design-system/components/glass-effects";
+import { cn } from "@/shared/utils/utils";
 
 import type { LoginFormData, SignupFormData } from "@/features/auth/authSchemas";
 import LoginForm from "@/features/auth/components/LoginForm";

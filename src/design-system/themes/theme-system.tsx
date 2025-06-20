@@ -4,8 +4,8 @@
 
 import React from "react";
 import { createContext, useContext, useState, useEffect } from "react";
-import { ThemeColors, themeColors } from './colors';
-import { applyThemeToDocument, removeThemeFromDocument } from './utilities';
+import { ThemeColors, themeColors } from '../tokens/colors';
+import { applyThemeToDocument, removeThemeFromDocument } from '../../shared/utils/utilities';
 
 /** Theme Configuration Interface */
 export interface ThemeConfig {

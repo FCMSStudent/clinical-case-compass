@@ -1,14 +1,14 @@
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/card";
 import {
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
-import { medicalSection, formField } from "@/lib/ui-styles";
+} from "@/shared/components/form";
+import { Textarea } from "@/shared/components/textarea";
+import { medicalSection, formField } from "@/design-system/ui-styles";
 
 interface CaseTextSectionProps {
   form: UseFormReturn<any>;

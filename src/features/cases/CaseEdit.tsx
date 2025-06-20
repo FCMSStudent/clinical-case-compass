@@ -7,13 +7,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronLeft } from "lucide-react";
 import { toast } from "sonner";
 
-import { PageHeader } from "@/components/ui/page-header";
-import { useLocalStorage } from "@/hooks/use-local-storage";
-import { MedicalCase, RadiologyStudy } from "@/types/case";
-import { useSupabaseCases } from "@/hooks/use-supabase-cases";
+import { PageHeader } from "@/shared/components/page-header";
+import { useLocalStorage } from "@/shared/hooks/use-local-storage";
+import { MedicalCase, RadiologyStudy } from "@/shared/types/case";
+import { useSupabaseCases } from "@/shared/hooks/use-supabase-cases";
 import { CaseEditForm } from "@/features/cases/edit/CaseEditForm";
-import { typography, layouts } from "@/lib/ui-styles";
-import { colors } from "@/lib/design-tokens";
+import { typography, layouts } from "@/design-system/ui-styles";
+import { colors } from "@/design-system/tokens/design-tokens";
 
 // Define the form schema with optional fields
 const formSchema = z.object({

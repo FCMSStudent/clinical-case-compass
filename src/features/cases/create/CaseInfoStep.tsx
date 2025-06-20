@@ -2,24 +2,24 @@
 import React, { memo } from "react";
 import { useFormContext, Path, FieldValues } from "react-hook-form";
 import { FileText, Stethoscope, Tag } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/utils/utils";
 import { StepHeader, StatusFieldCard } from "./components"; // Changed FormFieldCard to StatusFieldCard
 import { CaseInfoFormData } from "./schemas/case-info-schema";
-import { useFormValidation } from "@/hooks/use-form-validation"; // Added import for useFormValidation
+import { useFormValidation } from "@/shared/hooks/use-form-validation"; // Added import for useFormValidation
 import {
   FormField,
   FormItem,
   FormControl,
   FormMessage,
-} from "@/components/ui/form"; // Added imports for form components
-import { Input } from "@/components/ui/input"; // Added import for Input
+} from "@/shared/components/form"; // Added imports for form components
+import { Input } from "@/shared/components/input"; // Added import for Input
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"; // Added imports for select components
+} from "@/shared/components/select"; // Added imports for select components
 
 /**
  * Constants

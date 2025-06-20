@@ -1,8 +1,8 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/card";
 import { Brain, Heart, Bone, Eye, Stethoscope, TrendingUp, Target, Award } from "lucide-react";
 import { motion } from "framer-motion";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from "@/shared/components/badge";
+import { Button } from "@/shared/components/button";
 import { ComponentType } from "react";
 
 interface SpecialtyProgressProps {

@@ -4,10 +4,10 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { Loader2 } from "lucide-react"
 import { motion, HTMLMotionProps } from "framer-motion"
 
-import { cn } from "@/lib/utils"
-import { buttonVariants as unifiedButtonVariants } from "@/lib/design-system"
-import { typography } from "@/lib/typography"
-import { getGlassHoverVariants } from "@/lib/glass-effects"
+import { cn } from "@/shared/utils/utils"
+import { buttonVariants as unifiedButtonVariants } from "@/design-system/design-system"
+import { typography } from "@/design-system/tokens/typography"
+import { getGlassHoverVariants } from "@/design-system/components/glass-effects"
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center whitespace-nowrap rounded-xl transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:filter focus-visible:brightness-110 focus-visible:saturate-105 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed",

@@ -1,7 +1,7 @@
 
-import { useAuth } from "@/app/AuthContext";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useAuth } from "@/app/providers/AuthContext";
+import { Button } from "@/shared/components/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/avatar";
 import { LogOut, User } from "lucide-react";
 
 export function UserProfileDisplay() {

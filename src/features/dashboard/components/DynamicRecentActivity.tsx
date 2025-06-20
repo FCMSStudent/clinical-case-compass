@@ -1,9 +1,9 @@
 
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/shared/components/card";
 import { Activity, Clock, Plus, Edit, Eye, FileText } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from "@/shared/components/badge";
+import { Button } from "@/shared/components/button";
 import { useDashboardData } from "../hooks/use-dashboard-data";
 import { formatDistanceToNow } from "date-fns";
 import { useNavigate } from "react-router-dom";

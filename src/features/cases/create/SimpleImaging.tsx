@@ -1,13 +1,13 @@
 
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/shared/components/button";
+import { Label } from "@/shared/components/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/select";
+import { Textarea } from "@/shared/components/textarea";
+import { Input } from "@/shared/components/input";
 import { Plus, X, Search, Scan, Camera, Zap, Activity, Monitor } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
+import { cn } from "@/shared/utils/utils";
+import { Badge } from "@/shared/components/badge";
 
 // Organized imaging studies by category
 const IMAGING_CATEGORIES = {

@@ -1,10 +1,10 @@
 import React from "react";
 import { BookOpen, Plus } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/shared/components/card";
+import { Button } from "@/shared/components/button";
 import { Link } from "react-router-dom";
-import { typo } from "@/lib/typography";
-import { cn } from "@/lib/utils";
+import { typo } from "@/design-system/tokens/typography";
+import { cn } from "@/shared/utils/utils";
 
 interface CasesEmptyStateProps {
   searchQuery: string;

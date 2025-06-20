@@ -1,7 +1,7 @@
 
 import React from "react";
-import { BentoCard } from "@/components/ui/bento-card";
-import { Button } from "@/components/ui/button";
+import { BentoCard } from "@/shared/components/bento-card";
+import { Button } from "@/shared/components/button";
 import { Edit, Trash2, Settings } from "lucide-react";
 
 interface ActionsCardProps {

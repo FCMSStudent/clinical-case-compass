@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Check, Save, AlertCircle } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/shared/utils/utils';
 
 interface AutosaveIndicatorProps {
   status: 'idle' | 'saving' | 'saved' | 'error';

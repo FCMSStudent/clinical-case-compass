@@ -1,11 +1,11 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/card";
 import { Briefcase, CheckCircle, FileEdit, TrendingUp, Clock, BookOpen, Target, Zap } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/utils/utils";
 import { ICON_SIZE } from "@/constants/ui";
 import React from "react";
 import { motion } from "framer-motion";
-import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/shared/components/progress";
+import { Badge } from "@/shared/components/badge";
 
 interface StatCardProps {
   title: string;

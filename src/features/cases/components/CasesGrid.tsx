@@ -1,5 +1,5 @@
 import React from "react";
-import { MedicalCase } from "@/types/case";
+import { MedicalCase } from "@/shared/types/case";
 import { CaseCard } from "../CaseCard";
 import { CaseListItem } from "../CaseListItem";
 

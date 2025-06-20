@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Grid, List, Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/components/button";
 import { useNavigate } from "react-router-dom";
 
 interface CasesViewToggleProps {

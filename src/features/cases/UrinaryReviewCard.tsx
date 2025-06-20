@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/card";
+import { Checkbox } from "@/shared/components/checkbox";
+import { Label } from "@/shared/components/label";
 import { Droplet } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { cn } from "@/shared/utils/utils";
+import { Button } from "@/shared/components/button";
 import { Check, X } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/shared/components/badge";
 
 interface UrinaryReviewCardProps {
   onSelectionChange?: (selections: string[]) => void;

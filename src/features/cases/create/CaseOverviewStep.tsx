@@ -5,16 +5,16 @@ import {
   FormItem,
   FormControl,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+} from "@/shared/components/form";
+import { Input } from "@/shared/components/input";
+import { Textarea } from "@/shared/components/textarea";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/shared/components/select";
 import { 
   User, 
   Calendar, 
@@ -23,12 +23,12 @@ import {
   Stethoscope, 
   Tag 
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/utils/utils";
 import { 
   StepHeader, 
   StatusFieldCard 
 } from "./components";
-import { useFormValidation } from "@/hooks/use-form-validation";
+import { useFormValidation } from "@/shared/hooks/use-form-validation";
 
 /**
  * Constants

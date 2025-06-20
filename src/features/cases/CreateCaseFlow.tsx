@@ -15,10 +15,10 @@ import { FormNavigation } from "@/features/cases/create/FormNavigation";
 import { CaseOverviewStep } from "@/features/cases/create/CaseOverviewStep";
 import { ClinicalDetailStep } from "@/features/cases/create/ClinicalDetailStep";
 import { LearningPointsStep } from "@/features/cases/create/LearningPointsStep";
-import { useErrorHandler } from "@/hooks/use-error-handler";
-import { useToast } from "@/hooks/use-toast";
-import { useSupabaseCases } from "@/hooks/use-supabase-cases";
-import { useAuth } from "@/app/AuthContext";
+import { useErrorHandler } from "@/shared/hooks/use-error-handler";
+import { useToast } from "@/shared/hooks/use-toast";
+import { useSupabaseCases } from "@/shared/hooks/use-supabase-cases";
+import { useAuth } from "@/app/providers/AuthContext";
 import { FileText, Heart, TestTube } from "lucide-react";
 import { z } from "zod";
 

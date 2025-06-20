@@ -1,6 +1,6 @@
 import * as React from "react";
-import { cn } from "@/lib/utils";
-import { layoutPrimitives } from "@/lib/component-system";
+import { cn } from "@/shared/utils/utils";
+import { layoutPrimitives } from "@/design-system/components/component-system";
 
 // ────────────────────────────────────────────────────────────────────────────────
 // CONTAINER COMPONENTS

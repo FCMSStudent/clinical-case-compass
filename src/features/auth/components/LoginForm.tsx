@@ -4,11 +4,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Button } from "@/shared/components/button";
+import { Input } from "@/shared/components/input";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/components/form";
 import { loginSchema, type LoginFormData } from "@/features/auth/authSchemas";
-import { useTheme } from "@/lib/design-system";
+import { useTheme } from "@/design-system/design-system";
 
 interface LoginFormProps {
   onLoginSubmit: (data: LoginFormData) => Promise<void>;

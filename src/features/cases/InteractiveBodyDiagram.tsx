@@ -1,12 +1,12 @@
 import React, { useState, useCallback, useMemo, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
-import { Button } from "@/components/ui/button";
+import { Switch } from "@/shared/components/switch";
+import { Label } from "@/shared/components/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/select";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/shared/components/tooltip";
+import { Button } from "@/shared/components/button";
 import { Info, RotateCcw } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/utils/utils";
 import { 
   BODY_PARTS as bodyPartsData, 
   type BodyPartDefinition, 

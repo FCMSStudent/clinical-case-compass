@@ -1,15 +1,15 @@
 
 import React, { memo } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/components/button";
 import { Loader2, Save } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/utils/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/shared/components/tooltip";
 
 export interface FormHeaderProps {
   /** Current (1-based) step index. */

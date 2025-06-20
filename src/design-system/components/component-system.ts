@@ -6,8 +6,8 @@
  */
 
 import { Variants } from "framer-motion";
-import { designTokens } from "./design-tokens";
-import { glassmorphicEntrance as libGlassmorphicEntrance } from "./motion"; // Import from src/lib/motion
+import { designTokens } from "../tokens/design-tokens";
+import { glassmorphicEntrance as libGlassmorphicEntrance } from "../animations/motion"; // Import from src/design-system/animations/motion
 
 // ────────────────────────────────────────────────────────────────────────────────
 // INTERACTION STATE STANDARDS

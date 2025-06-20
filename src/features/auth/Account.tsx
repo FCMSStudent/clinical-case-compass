@@ -2,15 +2,15 @@ import React from "react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { Switch } from "@/components/ui/switch";
-import { Separator } from "@/components/ui/separator";
-import { useAuth } from "@/app/AuthContext";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/avatar";
+import { Button } from "@/shared/components/button";
+import { Input } from "@/shared/components/input";
+import { Label } from "@/shared/components/label";
+import { Badge } from "@/shared/components/badge";
+import { Switch } from "@/shared/components/switch";
+import { Separator } from "@/shared/components/separator";
+import { useAuth } from "@/app/providers/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { 
   User, 
@@ -27,9 +27,9 @@ import {
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useDashboardData } from "@/features/dashboard/hooks/use-dashboard-data";
-import { typo, responsiveType } from "@/lib/typography";
-import { cn } from "@/lib/utils";
-import { liquidGlassClasses, getGlassTransitionVariants, getGlassHoverVariants } from "@/lib/glass-effects";
+import { typo, responsiveType } from "@/design-system/tokens/typography";
+import { cn } from "@/shared/utils/utils";
+import { liquidGlassClasses, getGlassTransitionVariants, getGlassHoverVariants } from "@/design-system/components/glass-effects";
 
 const Account = () => {
   const { user, signOut } = useAuth();

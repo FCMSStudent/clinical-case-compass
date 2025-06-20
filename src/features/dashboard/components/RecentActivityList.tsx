@@ -1,10 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/card";
 import { Activity, Clock, Plus, Edit, CheckCircle, BookOpen, Eye, MessageSquare, Star } from "lucide-react";
 import React from "react";
 import { motion } from "framer-motion";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/shared/components/badge";
 import { useDashboardData } from "../hooks/use-dashboard-data";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/components/button";
 
 const activityIcons = {
   created: Plus,

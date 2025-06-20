@@ -1,6 +1,6 @@
 import * as React from "react";
-import { cn } from "@/lib/utils";
-import { cardVariants as unifiedCardVariants, bentoGrid, componentSizes } from "@/lib/component-system";
+import { cn } from "@/shared/utils/utils";
+import { cardVariants as unifiedCardVariants, bentoGrid, componentSizes } from "@/design-system/components/component-system";
 
 interface BentoCardProps extends React.HTMLAttributes<HTMLDivElement> {
   layout?: keyof typeof bentoGrid.layouts;

@@ -8,7 +8,7 @@ import * as jestDomMatchers from '@testing-library/jest-dom/matchers';
 expect.extend(jestDomMatchers);
 
 import { CaseCard } from '../CaseCard';
-import { MedicalCase } from '@/types/case';
+import { MedicalCase } from '@/shared/types/case';
 
 const mockMedicalCase: MedicalCase = {
   id: '1',

@@ -1,7 +1,7 @@
 import React from "react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
+import { Card, CardContent, CardHeader } from "@/shared/components/card";
+import { Skeleton } from "@/shared/components/skeleton";
+import { cn } from "@/shared/utils/utils";
 
 interface CaseCardSkeletonProps {
   className?: string;

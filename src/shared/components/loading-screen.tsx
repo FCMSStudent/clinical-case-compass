@@ -1,9 +1,9 @@
 
 import React from 'react';
 import { LoadingSpinner } from './loading-spinner';
-import UnifiedBackground from '@/components/backgrounds/UnifiedBackground';
-import { typography } from '@/lib/ui-styles';
-import { cn } from '@/lib/utils';
+import UnifiedBackground from '@/shared/components/UnifiedBackground';
+import { typography } from '@/design-system/ui-styles';
+import { cn } from '@/shared/utils/utils';
 
 const LoadingScreen = () => {
   return (

@@ -1,16 +1,16 @@
 
 import React, { useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
+import { Button } from "@/shared/components/button";
+import { Progress } from "@/shared/components/progress";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Save, Loader2, Keyboard } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/utils/utils";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/shared/components/tooltip";
 
 export interface FormNavigationProps {
   /** 1-based index of the active step. */

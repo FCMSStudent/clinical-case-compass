@@ -1,8 +1,8 @@
 import React, { memo, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Tag } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { MedicalCase } from "@/types/case";
+import { cn } from "@/shared/utils/utils";
+import { MedicalCase } from "@/shared/types/case";
 import { CaseCardHeader } from "./components/CaseCardHeader";
 import { CaseCardBody } from "./components/CaseCardBody";
 import { CaseCardFooter } from "./components/CaseCardFooter";
