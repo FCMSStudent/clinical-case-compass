@@ -1,1 +1,1 @@
-export { SearchPanel } from "@/components/SearchPanel";
+export { SearchPanel } from "@/shared/components/SearchPanel";
