@@ -238,7 +238,6 @@ const Cases = () => {
                         ease: "cubic-bezier(0.16, 1, 0.3, 1)"
                       }}
                       whileHover={{ y: -4 }}
-                      transition={{ duration: 0.2 }}
                     >
                       <CaseCard medicalCase={caseItem} />
                     </motion.div>
