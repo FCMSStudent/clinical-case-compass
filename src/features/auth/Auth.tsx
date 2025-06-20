@@ -13,7 +13,7 @@ import {
   TabsTrigger,
 } from "@/shared/components/tabs";
 import { useToast } from "@/shared/hooks/use-toast";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useSpring } from "framer-motion";
 import {
   Alert,
   AlertDescription,
@@ -44,6 +44,12 @@ const Auth = () => {
   const { toast } = useToast();
   const { currentTheme } = useTheme();
   const [error, setError] = useState<string | null>(null);
+
+  // Spring animation for toggle with natural bounce
+  const springX = useSpring(activeTab === "login" ? 2 : 200, { 
+    stiffness: 200, 
+    damping: 20 
+  });
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -114,139 +120,139 @@ const Auth = () => {
       animate="animate"
       exit="exit"
     >
-      <div id="main-content" className="relative z-10 min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8">
+      <div id="main-content" className="relative z-10 min-h-screen flex items-center justify-center p-6 md:p-8">
         <motion.div
           initial={{ opacity: 0, y: 20, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.6, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
-          className="w-full max-w-sm sm:max-w-md lg:max-w-lg"
+          className="w-full max-w-md lg:max-w-lg"
         >
-          <Card 
-            className={cn("border shadow-2xl transition-all duration-300 hover:border-opacity-30", liquidGlassClasses.modal)}
-          >
-            <CardHeader className="text-center pb-8">
-              <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2, duration: 0.5, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
-                className="text-center mb-6"
-              >
-                <motion.div 
-                  className="flex items-center justify-center gap-3 mb-4"
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ duration: 0.2 }}
+          {/* Enhanced frosted-glass container */}
+          <div className="auth-glass-container">
+            <Card 
+              className="border-0 bg-transparent shadow-none relative z-10"
+            >
+              <CardHeader className="text-center pb-6 pt-8 px-8">
+                <motion.div
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2, duration: 0.5, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
+                  className="text-center"
                 >
-                  <h1 className="text-3xl font-bold tracking-wide transition-all duration-300 hover:brightness-110" style={{ color: currentTheme.colors.text }}>
-                    Medica
-                  </h1>
+                  <motion.div 
+                    className="flex items-center justify-center gap-3 mb-4"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <h1 className="text-3xl md:text-4xl font-bold tracking-wide text-white transition-all duration-300 hover:brightness-110">
+                      Medica
+                    </h1>
+                  </motion.div>
+                  <p className="text-base md:text-lg font-light text-white/80">
+                    Sign in to your account or create a new one
+                  </p>
                 </motion.div>
-                <p className="text-base font-light" style={{ color: currentTheme.colors.textSecondary }}>
-                  Sign in to your account or create a new one
-                </p>
-              </motion.div>
-            </CardHeader>
+              </CardHeader>
 
-            <CardContent className="px-8 pb-8 space-y-8">
-              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList 
-                  className={cn("grid w-full grid-cols-2 rounded-2xl p-1 mb-8 relative overflow-hidden", liquidGlassClasses.card)}
-                >
+              <CardContent className="px-8 pb-8 space-y-6 relative z-10">
+                {/* Enhanced toggle with spring animation */}
+                <div className="auth-glass-toggle">
                   <motion.div
-                    className="absolute inset-y-1 rounded-xl shadow-sm"
+                    className="auth-glass-toggle-indicator"
                     style={{
-                      backgroundColor: currentTheme.colors.glass.contextual.navigation,
+                      x: springX,
                     }}
-                    initial={false}
-                    animate={{
-                      x: activeTab === "login" ? "2px" : "calc(50% - 2px)",
-                      width: "calc(50% - 2px)",
-                    }}
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   />
-                  <TabsTrigger 
-                    value="login" 
-                    className="relative z-10 rounded-xl text-sm font-medium transition-all duration-300 data-[state=active]:text-opacity-100 hover:brightness-105 hover:saturate-110"
-                    style={{ 
-                      color: `${currentTheme.colors.text}90`,
-                    }}
+                  <button 
+                    onClick={() => setActiveTab("login")}
+                    className={cn(
+                      "relative z-10 py-3 px-4 text-sm md:text-base font-medium transition-all duration-300 rounded-xl",
+                      activeTab === "login" 
+                        ? "text-white" 
+                        : "text-white/70 hover:text-white/90"
+                    )}
                     aria-label="Sign in to your account"
                   >
                     Sign In
-                  </TabsTrigger>
-                  <TabsTrigger 
-                    value="signup" 
-                    className="relative z-10 rounded-xl text-sm font-medium transition-all duration-300 data-[state=active]:text-opacity-100 hover:brightness-105 hover:saturate-110"
-                    style={{ 
-                      color: `${currentTheme.colors.text}90`,
-                    }}
+                  </button>
+                  <button 
+                    onClick={() => setActiveTab("signup")}
+                    className={cn(
+                      "relative z-10 py-3 px-4 text-sm md:text-base font-medium transition-all duration-300 rounded-xl",
+                      activeTab === "signup" 
+                        ? "text-white" 
+                        : "text-white/70 hover:text-white/90"
+                    )}
                     aria-label="Create a new account"
                   >
                     Sign Up
-                  </TabsTrigger>
-                </TabsList>
+                  </button>
+                </div>
 
                 <AnimatePresence mode="wait">
-                  <TabsContent value="login" className="space-y-6">
+                  {activeTab === "login" && (
                     <motion.div
+                      key="login"
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: 20 }}
                       transition={{ duration: 0.3, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
+                      className="space-y-4"
                     >
                       <LoginForm isLoading={isLoading} onLoginSubmit={onLoginSubmit} />
                       {error && (
-                        <Alert variant="destructive" className="mt-4">
-                          <AlertDescription>{error}</AlertDescription>
+                        <Alert variant="destructive" className="mt-4 bg-red-500/10 border-red-400/30 backdrop-blur-md">
+                          <AlertDescription className="text-red-100">{error}</AlertDescription>
                         </Alert>
                       )}
                     </motion.div>
-                  </TabsContent>
+                  )}
 
-                  <TabsContent value="signup" className="space-y-6">
+                  {activeTab === "signup" && (
                     <motion.div
+                      key="signup"
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -20 }}
                       transition={{ duration: 0.3, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
+                      className="space-y-4"
                     >
                       <SignupForm isLoading={isLoading} onSignupSubmit={onSignupSubmit} />
                       {error && (
-                        <Alert variant="destructive" className="mt-4">
-                          <AlertDescription>{error}</AlertDescription>
+                        <Alert variant="destructive" className="mt-4 bg-red-500/10 border-red-400/30 backdrop-blur-md">
+                          <AlertDescription className="text-red-100">{error}</AlertDescription>
                         </Alert>
                       )}
                     </motion.div>
-                  </TabsContent>
+                  )}
                 </AnimatePresence>
-              </Tabs>
 
-              <AnimatePresence>
-                {verificationSent && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -20, scale: 0.95 }}
-                    transition={{ duration: 0.4, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
-                    className="mt-6"
-                    role="alert"
-                    aria-live="polite"
-                  >
-                    <Alert 
-                      className={cn("rounded-xl", liquidGlassClasses.alert)}
+                <AnimatePresence>
+                  {verificationSent && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                      transition={{ duration: 0.4, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
+                      className="mt-6"
+                      role="alert"
+                      aria-live="polite"
                     >
-                      <CheckCircle2 className="h-4 w-4" style={{ color: currentTheme.colors.status.success }} aria-hidden="true" />
-                      <AlertTitle style={{ color: currentTheme.colors.status.success }} className="font-medium">
-                        Verification Email Sent
-                      </AlertTitle>
-                      <AlertDescription style={{ color: `${currentTheme.colors.status.success}CC` }} className="font-light">
-                        Please check your email to verify your account before signing in.
-                      </AlertDescription>
-                    </Alert>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </CardContent>
-          </Card>
+                      <Alert className="bg-green-500/10 border-green-400/30 backdrop-blur-md rounded-xl">
+                        <CheckCircle2 className="h-4 w-4 text-green-400" aria-hidden="true" />
+                        <AlertTitle className="text-green-400 font-medium">
+                          Verification Email Sent
+                        </AlertTitle>
+                        <AlertDescription className="text-green-300/90 font-light">
+                          Please check your email to verify your account before signing in.
+                        </AlertDescription>
+                      </Alert>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </CardContent>
+            </Card>
+          </div>
         </motion.div>
       </div>
     </motion.div>

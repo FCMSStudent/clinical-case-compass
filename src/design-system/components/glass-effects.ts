@@ -303,11 +303,23 @@ export const getParallaxEffect = (intensity: 'subtle' | 'medium' | 'strong' = 's
 };
 
 /**
- * CSS classes for liquid glass effects
+ * Enhanced CSS classes for liquid glass effects with pseudo-element shine and depth
  */
 export const liquidGlassClasses = {
   // Base glass classes with softer shadows
   base: 'backdrop-blur-md border border-white/20 transition-all duration-300 ease-out',
+  
+  // Enhanced auth container with frosted glass
+  authContainer: 'bg-white/20 backdrop-blur-md rounded-2xl border-white/30 shadow-lg shadow-[0_8px_32px_rgba(31,38,135,0.2)] relative before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-br before:from-white/20 before:to-transparent before:pointer-events-none before:z-[1] after:absolute after:inset-[1px] after:rounded-[15px] after:bg-gradient-to-b after:from-white/30 after:via-transparent after:to-transparent after:pointer-events-none after:z-[2]',
+  
+  // Enhanced frosted glass input with icon integration
+  authInput: 'bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 pl-12 pr-4 py-3 text-white placeholder:text-white/70 focus:ring-2 focus:ring-blue-300 hover:bg-white/20 transition-all duration-300 relative before:absolute before:inset-0 before:rounded-lg before:bg-gradient-to-r before:from-white/5 before:to-transparent before:pointer-events-none',
+  
+  // Enhanced toggle with spring animation support
+  authToggle: 'grid w-full grid-cols-2 rounded-2xl p-1 mb-8 relative overflow-hidden bg-white/15 backdrop-blur-md border border-white/20 shadow-[0_4px_20px_rgba(255,255,255,0.3)] shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]',
+  
+  // Enhanced button with depth and specular highlights
+  authButton: 'w-full bg-white/15 backdrop-blur-sm rounded-lg border border-white/20 py-3 px-4 text-white font-medium hover:bg-white/25 hover:shadow-[0_12px_48px_rgba(0,0,0,0.12)] hover:scale-[1.02] hover:brightness-105 focus:ring-2 focus:ring-blue-300 transition-all duration-300 relative before:absolute before:inset-0 before:rounded-lg before:bg-gradient-to-b before:from-white/10 before:to-transparent before:pointer-events-none',
   
   // Contextual variants with enhanced translucent backgrounds and softer shadows
   card: 'bg-white/8 backdrop-blur-[18px] saturate-140 brightness-106 shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] rounded-2xl',
