@@ -2,7 +2,7 @@ import React, { createContext, useReducer, useEffect, useContext, useMemo, useCa
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/shared/hooks/use-toast";
-import { authReducer, initialAuthState, type AuthState, type AuthAction } from "@/shared/utils/authReducer";
+import { authReducer, initialAuthState } from "@/shared/utils/authReducer";
 import type { UserMetadata } from "@/shared/types/auth";
 
 export type AuthContextType = {

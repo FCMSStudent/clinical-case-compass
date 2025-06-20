@@ -1,4 +1,4 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { Component, ErrorInfo, ReactNode } from 'react';
 import { Button } from '@/shared/components/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/components/card';
 import { AlertTriangle, RefreshCw, ExternalLink } from 'lucide-react';
@@ -32,7 +32,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   private handleRetry = () => {
-    this.setState({ hasError: false, error: undefined, errorInfo: undefined });
+    this.setState({ hasError: false, error: null, errorInfo: null });
   };
 
   private handleReload = () => {

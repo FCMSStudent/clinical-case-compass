@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/card";
 import { Briefcase, CheckCircle, FileEdit, TrendingUp, Clock, BookOpen, Target, Zap } from "lucide-react";
 import { cn } from "@/shared/utils/utils";
-import { ICON_SIZE } from "@/constants/ui";
+import { ICON_SIZE } from "@/shared/constants/ui";
 import React from "react";
 import { motion } from "framer-motion";
 import { Progress } from "@/shared/components/progress";

@@ -1,5 +1,4 @@
-import React from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import ProtectedRouteLayout from '@/features/navigation/components/ProtectedRouteLayout';
 import LandingPage from '@/features/landing/Landing';
 import Auth from '@/features/auth/Auth';
@@ -22,7 +21,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/app',
-    element: <ProtectedRouteLayout />,
+    element: <ProtectedRouteLayout><Outlet /></ProtectedRouteLayout>,
     children: [
       {
         index: true,

@@ -236,7 +236,7 @@ export class AccessibilityManager {
    * Handle keyboard navigation
    */
   private handleKeyboardNavigation(event: KeyboardEvent) {
-    const { key, ctrlKey, altKey, shiftKey } = event;
+    const { key, ctrlKey } = event;
     
     // Voice control shortcuts
     if (ctrlKey && key === "v") {
@@ -333,6 +333,8 @@ export class AccessibilityManager {
     let closestDistance = Infinity;
     
     focusableElements.forEach((element, index) => {
+      if (!element) return;
+      
       const rect = element.getBoundingClientRect();
       const elementCenterX = rect.left + rect.width / 2;
       const elementCenterY = rect.top + rect.height / 2;
@@ -619,29 +621,35 @@ export class AccessibilityManager {
 /**
  * React hook for accessibility manager
  */
-export const useAccessibility = (options: {
-  enableVoiceControl?: boolean;
-  enableKeyboardNavigation?: boolean;
-  enableFocusIndicators?: boolean;
-  enableEyeTracking?: boolean;
-}) => {
-  const registerVoiceCommand = (command: {
+export const useAccessibility = () => {
+  const [manager, setManager] = useState<AccessibilityManager | null>(null);
+
+  useEffect(() => {
+    const accessibilityManager = new AccessibilityManager();
+    setManager(accessibilityManager);
+
+    return () => {
+      accessibilityManager.destroy();
+    };
+  }, []);
+
+  const registerVoiceCommand = useCallback((command: {
     command: string;
     action: () => void;
     description: string;
     category: string;
   }) => {
-    // Implementation for voice commands
-  };
+    manager?.registerVoiceCommand(command as VoiceCommand);
+  }, [manager]);
 
-  const startVoiceListening = () => {
-    // Implementation for voice listening
-  };
+  const startVoiceListening = useCallback(() => {
+    manager?.startVoiceListening();
+  }, [manager]);
 
   return {
+    manager,
     registerVoiceCommand,
     startVoiceListening,
-    // Add other accessibility methods as needed
   };
 };
 

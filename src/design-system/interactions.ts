@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState, useCallback } from "react";
-import { motion, PanInfo, useMotionValue, useTransform } from "framer-motion";
+import { motion, PanInfo, useTransform } from "framer-motion";
 
 // ────────────────────────────────────────────────────────────────────────────────
 // ADVANCED INTERACTION UTILITIES FOR GLASSY VISIONOS UI

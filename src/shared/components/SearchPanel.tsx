@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Input } from "@/shared/components/input";
 import { Search, Loader2, X, Filter, Sparkles } from "lucide-react";
-import { ICON_SIZE } from "@/constants/ui";
+import { ICON_SIZE } from "@/shared/constants/ui";
 import { cn } from "@/shared/utils/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/shared/components/button";
