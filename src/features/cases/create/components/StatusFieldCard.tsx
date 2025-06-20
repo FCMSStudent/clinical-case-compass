@@ -2,7 +2,7 @@ import React from "react";
 import { LucideIcon } from "lucide-react";
 import { FormFieldCard } from "./FormFieldCard";
 import { StatusIndicator, StatusType } from "./StatusIndicator";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/utils/utils";
 
 interface StatusFieldCardProps {
   icon: LucideIcon;

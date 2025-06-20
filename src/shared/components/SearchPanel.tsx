@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/shared/components/input";
 import { Search, Loader2, X, Filter, Sparkles } from "lucide-react";
 import { ICON_SIZE } from "@/constants/ui";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/utils/utils";
 import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/components/button";
 
 type SearchPanelProps = {
   value: string;

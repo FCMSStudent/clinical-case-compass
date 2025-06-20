@@ -1,8 +1,8 @@
 
 import React, { memo } from "react";
 import { useFormContext, Controller, Path } from "react-hook-form";
-import { TabsContent } from "@/components/ui/tabs";
-import { FormMessage } from "@/components/ui/form";
+import { TabsContent } from "@/shared/components/tabs";
+import { FormMessage } from "@/shared/components/form";
 import { 
   Microscope as MicroscopeIcon,
   Scan as ScanIcon,

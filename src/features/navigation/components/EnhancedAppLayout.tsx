@@ -1,14 +1,13 @@
-
 import React from "react";
-import EnhancedNavbar from "@/components/navigation/EnhancedNavbar";
-import Breadcrumbs from "@/components/navigation/Breadcrumbs";
-import UnifiedBackground from "@/components/backgrounds/UnifiedBackground";
+import EnhancedNavbar from "../EnhancedNavbar";
+import Breadcrumbs from "../Breadcrumbs";
+import UnifiedBackground from "@/shared/components/UnifiedBackground";
 import { motion } from "framer-motion";
 import {
   pageTransitionVariants,
   reducedMotionPageTransitionVariants,
   getMotionVariants
-} from "@/lib/motion";
+} from "@/design-system/animations/motion";
 
 interface EnhancedAppLayoutProps {
   children: React.ReactNode;

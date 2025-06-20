@@ -1,6 +1,6 @@
 import * as React from "react";
-import { cn } from "@/lib/utils";
-import { bentoGrid } from "@/lib/component-system";
+import { cn } from "@/shared/utils/utils";
+import { bentoGrid } from "@/design-system/components/component-system";
 
 interface BentoContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   layout?: keyof typeof bentoGrid.container;

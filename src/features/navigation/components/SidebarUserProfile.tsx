@@ -1,10 +1,10 @@
 import React, { useState, useRef } from "react";
 import { User, LogOut } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
-import { cn } from '@/lib/utils';
-import { useAuth } from '@/app/AuthContext';
-import type { UserMetadata } from '@/types/auth';
-import { getInteractionStates, getGlassmorphicStyles } from '@/lib/component-system';
+import { cn } from '@/shared/utils/utils';
+import { useAuth } from '@/app/providers/AuthContext';
+import type { UserMetadata } from '@/shared/types/auth';
+import { getInteractionStates, getGlassmorphicStyles } from '@/design-system/components/component-system';
 
 interface SidebarUserProfileProps {
   collapsed: boolean;

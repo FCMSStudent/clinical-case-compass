@@ -1,11 +1,11 @@
 import React from "react";
-import { BentoCard } from "@/components/ui/bento-card";
-import { Badge } from "@/components/ui/badge";
+import { BentoCard } from "@/shared/components/bento-card";
+import { Badge } from "@/shared/components/badge";
 import { User, Calendar, FileText } from "lucide-react";
 import { format } from "date-fns";
-import { MedicalCase } from "@/types/case";
-import { typography, spacing } from "@/lib/ui-styles";
-import { cn } from "@/lib/utils";
+import { MedicalCase } from "@/shared/types/case";
+import { typography, spacing } from "@/design-system/ui-styles";
+import { cn } from "@/shared/utils/utils";
 
 interface PatientInfoCardProps {
   medicalCase: MedicalCase;

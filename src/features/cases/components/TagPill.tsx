@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import { Tag } from "lucide-react";
 import { motion } from "framer-motion";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/utils/utils";
 
 interface TagPillProps {
   tag: { id: string; name: string; color: string };

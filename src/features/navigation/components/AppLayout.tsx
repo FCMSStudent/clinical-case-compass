@@ -2,8 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { Search, Settings, LogOut, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate, NavLink, useLocation } from "react-router-dom";
-import { cn } from '@/lib/utils';
-import { getInteractionStates, getGlassmorphicStyles } from '@/lib/component-system';
+import { cn } from '@/shared/utils/utils';
+import { getInteractionStates, getGlassmorphicStyles } from '@/design-system/components/component-system';
 
 interface AppLayoutProps {
   children: React.ReactNode;

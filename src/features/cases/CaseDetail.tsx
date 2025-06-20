@@ -1,9 +1,9 @@
 
 // Remove: import { getCaseById } from "@/data/mock-data";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { PageHeader } from "@/components/ui/page-header";
-import { BentoContainer } from "@/components/ui/bento-container";
+import { Button } from "@/shared/components/button";
+import { PageHeader } from "@/shared/components/page-header";
+import { BentoContainer } from "@/shared/components/bento-container";
 import { ChevronLeft } from "lucide-react";
 import {
   AlertDialog,
@@ -14,13 +14,13 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from "@/shared/components/alert-dialog";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useLocalStorage } from "@/hooks/use-local-storage";
-import { MedicalCase } from "@/types/case";
-import { useSupabaseCases } from "@/hooks/use-supabase-cases";
-import { cn } from "@/lib/utils";
+import { useLocalStorage } from "@/shared/hooks/use-local-storage";
+import { MedicalCase } from "@/shared/types/case";
+import { useSupabaseCases } from "@/shared/hooks/use-supabase-cases";
+import { cn } from "@/shared/utils/utils";
 
 // Import bento card components
 import { PatientInfoCard } from "@/features/cases/detail/PatientInfoCard";

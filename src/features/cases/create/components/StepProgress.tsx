@@ -1,16 +1,16 @@
 
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Progress } from "@/components/ui/progress";
-import { cn } from "@/lib/utils";
+import { Progress } from "@/shared/components/progress";
+import { cn } from "@/shared/utils/utils";
 import { CheckCircle2, AlertCircle, Clock, ChevronRight } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Badge } from "@/components/ui/badge";
+} from "@/shared/components/tooltip";
+import { Badge } from "@/shared/components/badge";
 
 interface StepProgressProps {
   completedFields: number;

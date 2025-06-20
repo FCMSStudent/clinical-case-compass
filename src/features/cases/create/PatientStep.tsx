@@ -5,24 +5,24 @@ import {
   FormItem,
   FormControl,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+} from "@/shared/components/form";
+import { Input } from "@/shared/components/input";
+import { Textarea } from "@/shared/components/textarea";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/shared/components/select";
 import { User, Calendar, FileText as FileTextIcon, UserCheck } from "lucide-react"; // Renamed FileText to FileTextIcon to avoid conflict
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/utils/utils";
 import { 
   StepHeader, 
   StatusFieldCard,
   // ValidationFeedback removed
 } from "./components";
-import { useFormValidation } from "@/hooks/use-form-validation";
+import { useFormValidation } from "@/shared/hooks/use-form-validation";
 import { PatientFormData } from "./schemas/patient-schema";
 
 export interface PatientStepProps<T extends FieldValues = PatientFormData> {

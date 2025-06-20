@@ -1,11 +1,11 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/components/button";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/shared/components/tooltip";
 
 interface VitalsPresetButtonsProps {
   onApplyPreset: (preset: string) => void;

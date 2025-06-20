@@ -1,11 +1,11 @@
 import React, { useState, useCallback } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/card";
+import { Input } from "@/shared/components/input";
+import { Label } from "@/shared/components/label";
+import { Button } from "@/shared/components/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/select";
+import { Alert, AlertDescription } from "@/shared/components/alert";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/shared/components/tooltip";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Plus, 
@@ -18,8 +18,8 @@ import {
   Clock,
   FileText
 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import type { LabTest } from "@/types/case";
+import { cn } from "@/shared/utils/utils";
+import type { LabTest } from "@/shared/types/case";
 
 // Common lab tests with reference ranges
 const COMMON_LAB_TESTS = [

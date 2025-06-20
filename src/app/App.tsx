@@ -1,13 +1,13 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Toaster } from "@/shared/components/ui/sonner";
+import { Toaster } from "@/shared/components/sonner";
 import { AnimatePresence } from "framer-motion";
 import { AuthProvider, useAuth } from "./providers/AuthContext";
 import { ThemeProvider } from "@/design-system/design-system";
 import { ErrorBoundary } from "./error-boundaries/ErrorBoundary";
 import { ProtectedRouteLayout } from "@/features/navigation";
-import LoadingScreen from "@/shared/components/ui/loading-screen";
+import LoadingScreen from "@/shared/components/loading-screen";
 
 // Pages
 import Dashboard from "@/features/dashboard/Dashboard";

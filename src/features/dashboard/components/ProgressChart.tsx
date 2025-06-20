@@ -1,7 +1,7 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/card";
 import { TrendingUp, Target, Award, CheckCircle, Clock, BookOpen, Zap } from "lucide-react";
 import { motion } from "framer-motion";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/shared/components/badge";
 
 interface ProgressChartProps {
   stats: {

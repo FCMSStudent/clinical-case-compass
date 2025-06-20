@@ -8,11 +8,11 @@ import {
   FormItem,
   FormControl,
   FormMessage,
-} from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+} from "@/shared/components/form";
+import { Textarea } from "@/shared/components/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/tabs";
+import { Alert, AlertDescription, AlertTitle } from "@/shared/components/alert";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/shared/components/tooltip";
 import {
   Brain as BrainIcon,
   FileText as FileTextIcon,
@@ -21,7 +21,7 @@ import {
   AlertCircle,
   Info,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/utils/utils";
 import { clinicalDetailStepSchema, type ClinicalDetailFormData, TAB_ITEMS, type TabValue } from "./ClinicalDetailConfig";
 import { SystemReviewChecklist } from "@/features/cases/SystemReviewChecklist";
 import { VitalsCard } from "@/features/cases/VitalsCard";

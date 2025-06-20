@@ -1,6 +1,6 @@
 import React from "react";
-import { Progress } from "@/components/ui/progress";
-import { cn } from "@/lib/utils";
+import { Progress } from "@/shared/components/progress";
+import { cn } from "@/shared/utils/utils";
 
 interface FormProgressIndicatorProps {
   currentStep: number; // 1-based index

@@ -2,15 +2,15 @@
 import React, { memo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Tag, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/shared/components/button";
+import { Badge } from "@/shared/components/badge";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/shared/components/tooltip";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,8 +21,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { MedicalCase } from "@/types/case";
+} from "@/shared/components/alert-dialog";
+import { MedicalCase } from "@/shared/types/case";
 import { TagPill } from "./TagPill";
 
 interface CaseCardFooterProps {

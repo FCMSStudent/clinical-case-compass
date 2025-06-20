@@ -1,12 +1,12 @@
 import React, { useEffect, useRef } from "react";
-import { cn } from '@/lib/utils';
+import { cn } from '@/shared/utils/utils';
 import { useSidebar } from './SidebarContext';
 import { SidebarHeader } from './SidebarHeader';
 import { SidebarNavItem } from './SidebarNavItem';
 import { SidebarUserProfile } from './SidebarUserProfile';
 import { SidebarCollapseToggle } from './SidebarCollapseToggle';
 import { navItems } from '../constants/navItems';
-import { liquidGlassClasses } from '@/lib/glass-effects';
+import { liquidGlassClasses } from '@/design-system/components/glass-effects';
 
 const Sidebar = React.memo(function Sidebar() {
   const { open, isMobile, collapsed, closeSidebar, toggleCollapsed } = useSidebar();

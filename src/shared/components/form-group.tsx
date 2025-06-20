@@ -1,7 +1,7 @@
 import { forwardRef } from 'react';
-import { cn } from '@/lib/utils';
-import { Label } from '@/components/ui/label';
-import { typo } from '@/lib/typography';
+import { cn } from '@/shared/utils/utils';
+import { Label } from '@/shared/components/label';
+import { typo } from '@/design-system/tokens/typography';
 
 interface FormGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   label?: string;

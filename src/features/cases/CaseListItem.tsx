@@ -1,8 +1,8 @@
 import React, { memo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { MedicalCase } from '@/types/case';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { MedicalCase } from '@/shared/types/case';
+import { Card, CardContent } from '@/shared/components/card';
+import { Button } from '@/shared/components/button';
 import { 
   User, 
   Clipboard, 
@@ -17,14 +17,14 @@ import {
   Sparkles
 } from 'lucide-react';
 import { format } from 'date-fns';
-import { cn } from '@/lib/utils';
+import { cn } from '@/shared/utils/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/shared/components/tooltip";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -35,8 +35,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Badge } from "@/components/ui/badge";
+} from "@/shared/components/alert-dialog";
+import { Badge } from "@/shared/components/badge";
 
 interface CaseListItemProps {
   medicalCase: MedicalCase;

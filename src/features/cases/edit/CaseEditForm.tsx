@@ -1,15 +1,15 @@
 
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
-import { Form } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
+import { Form } from "@/shared/components/form";
+import { Button } from "@/shared/components/button";
 import { Save } from "lucide-react";
 import { CaseBasicInfoSection } from "./CaseBasicInfoSection";
 import { CaseVitalsSection } from "./CaseVitalsSection";
 import { CaseTextSection } from "./CaseTextSection";
 import { CaseLabsSection } from "./CaseLabsSection";
 import { CaseRadiologySection } from "./CaseRadiologySection";
-import { spacing, layouts, buttonVariants, iconWithText } from "@/lib/ui-styles";
+import { spacing, layouts, buttonVariants, iconWithText } from "@/design-system/ui-styles";
 
 interface CaseEditFormProps {
   form: UseFormReturn<any>;

@@ -1,7 +1,7 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "@/lib/utils";
-import { typo } from "@/lib/typography";
+import { cn } from "@/shared/utils/utils";
+import { typo } from "@/design-system/tokens/typography";
 import type { BodyPart } from "../types/bodyPartTypes";
 import { BODY_PART_CONFIG } from "../data/bodyPartData";
 

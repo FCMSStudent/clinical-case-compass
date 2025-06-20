@@ -1,7 +1,7 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
-import { cn } from "@/lib/utils"
-import { typo, medicalText, accessible } from "@/lib/typography"
+import { cn } from "@/shared/utils/utils"
+import { typo, medicalText, accessible } from "@/design-system/tokens/typography"
 
 const badgeVariants = cva(
   cn(

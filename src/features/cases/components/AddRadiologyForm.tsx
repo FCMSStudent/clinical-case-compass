@@ -1,10 +1,10 @@
 
 import React from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/shared/components/input";
+import { Label } from "@/shared/components/label";
+import { Button } from "@/shared/components/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/select";
+import { Textarea } from "@/shared/components/textarea";
 import { motion } from "framer-motion";
 import { COMMON_RADIOLOGY_STUDIES, STUDY_TYPES } from "../utils/radiologyData";
 

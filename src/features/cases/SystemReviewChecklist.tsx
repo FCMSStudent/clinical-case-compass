@@ -1,12 +1,12 @@
 
 import React, { useState, useEffect, useMemo } from "react";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Checkbox } from "@/shared/components/checkbox";
+import { Label } from "@/shared/components/label";
+import { Button } from "@/shared/components/button";
+import { Badge } from "@/shared/components/badge";
+import { Input } from "@/shared/components/input";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/shared/components/tooltip";
+import { Alert, AlertDescription } from "@/shared/components/alert";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Check, 
@@ -25,7 +25,7 @@ import {
   Thermometer
 } from "lucide-react";
 import { systemSymptoms } from "./systemSymptoms";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/utils/utils";
 
 interface SystemReviewChecklistProps {
   onSystemSymptomsChange?: (systemSymptoms: Record<string, string[]>) => void;

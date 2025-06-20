@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
-import { typo, responsiveType } from "@/lib/typography";
+import { cn } from "@/shared/utils/utils";
+import { typo, responsiveType } from "@/design-system/tokens/typography";
 
 interface PageHeaderProps {
   title: string;

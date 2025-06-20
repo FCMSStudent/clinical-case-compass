@@ -1,22 +1,22 @@
 
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/card";
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@/shared/components/form";
+import { Input } from "@/shared/components/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { medicalSection, formField, layouts } from "@/lib/ui-styles";
+} from "@/shared/components/select";
+import { medicalSection, formField, layouts } from "@/design-system/ui-styles";
 
 interface CaseBasicInfoSectionProps {
   form: UseFormReturn<any>;

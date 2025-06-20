@@ -1,8 +1,8 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/components/button";
 import { motion } from "framer-motion";
-import { cn } from "@/lib/utils";
-import { typo } from "@/lib/typography";
+import { cn } from "@/shared/utils/utils";
+import { typo } from "@/design-system/tokens/typography";
 import type { BodyPart, BodyPartConfig } from "../types/bodyPartTypes";
 
 interface BodyPartButtonProps {

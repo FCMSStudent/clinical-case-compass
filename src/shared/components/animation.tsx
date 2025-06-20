@@ -1,8 +1,8 @@
 
 import * as React from "react";
 import { motion, type Variants } from "framer-motion";
-import { cn } from "@/lib/utils";
-import { glassmorphicEntrance as libGlassmorphicEntrance } from "@/lib/motion"; // Import the source of truth
+import { cn } from "@/shared/utils/utils";
+import { glassmorphicEntrance as libGlassmorphicEntrance } from "@/design-system/animations/motion"; // Import the source of truth
 
 // ────────────────────────────────────────────────────────────────────────────────
 // ANIMATION VARIANTS

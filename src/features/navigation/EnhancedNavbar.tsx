@@ -4,12 +4,12 @@ import { Search, Menu, X, Home, BookOpen, ChevronDown, User, LogOut } from "luci
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate, NavLink, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { useSupabaseCases } from "@/hooks/use-supabase-cases";
-import { useAuth } from "@/app/AuthContext";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { liquidGlassClasses, getGlassHoverVariants, getGlassTransitionVariants } from "@/lib/glass-effects";
-import type { MedicalCase } from "@/types/case";
+import { useSupabaseCases } from "@/shared/hooks/use-supabase-cases";
+import { useAuth } from "@/app/providers/AuthContext";
+import { cn } from "@/shared/utils/utils";
+import { Button } from "@/shared/components/button";
+import { liquidGlassClasses, getGlassHoverVariants, getGlassTransitionVariants } from "@/design-system/components/glass-effects";
+import type { MedicalCase } from "@/shared/types/case";
 
 interface NavItem {
   label: string;

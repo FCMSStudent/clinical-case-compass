@@ -1,23 +1,23 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/card";
 import { UserRound, TrendingUp, Activity, BookOpen, Users, Target, Plus, Eye } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDashboardData } from "@/features/dashboard/hooks/use-dashboard-data";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/shared/components/button";
+import { Badge } from "@/shared/components/badge";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/app/AuthContext";
+import { useAuth } from "@/app/providers/AuthContext";
 import { motion } from "framer-motion";
-import { MetricCardSkeleton } from "@/components/ui/dashboard-skeleton";
+import { MetricCardSkeleton } from "@/shared/components/dashboard-skeleton";
 import { DynamicRecentActivity } from "@/features/dashboard/components/DynamicRecentActivity";
-import { RecentCasesCarousel } from "@/components/ui/recent-cases-carousel";
+import { RecentCasesCarousel } from "@/shared/components/recent-cases-carousel";
 import { 
   getComponentStyles, 
   card, 
   button, 
   useTheme 
-} from "@/lib/design-system";
-import { typo, responsiveType } from "@/lib/typography";
-import { cn } from "@/lib/utils";
+} from "@/design-system/design-system";
+import { typo, responsiveType } from "@/design-system/tokens/typography";
+import { cn } from "@/shared/utils/utils";
 
 // Simplified staggered animations that work well with page transitions
 const staggeredContainer = {

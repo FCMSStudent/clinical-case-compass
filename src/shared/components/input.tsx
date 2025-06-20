@@ -11,10 +11,10 @@ import * as React from "react"
 import { motion } from "framer-motion"
 import { cva, type VariantProps } from "class-variance-authority"
 
-import { cn } from "@/lib/utils"
-import { input } from "@/lib/design-system"
-import { getGlassHoverVariants } from "@/lib/glass-effects"
-import { typography } from "@/lib/typography"
+import { cn } from "@/shared/utils/utils"
+import { input } from "@/design-system/design-system"
+import { getGlassHoverVariants } from "@/design-system/components/glass-effects"
+import { typography } from "@/design-system/tokens/typography"
 
 // ─── Tailwind variant generator ──────────────────────────────────────────────
 const inputVariants = cva(

@@ -1,7 +1,7 @@
 
 import React from "react";
 import { CheckCircle2, AlertCircle, Clock, X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/utils/utils";
 
 export type StatusType = "default" | "success" | "warning" | "error" | "loading";
 

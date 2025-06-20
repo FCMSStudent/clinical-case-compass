@@ -5,10 +5,10 @@ import {
   FormItem,
   FormControl,
   FormMessage,
-} from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+} from "@/shared/components/form";
+import { Textarea } from "@/shared/components/textarea";
+import { Input } from "@/shared/components/input";
+import { Button } from "@/shared/components/button";
 import { 
   BookOpen, 
   FileText, 
@@ -17,12 +17,12 @@ import {
   X,
   Lightbulb
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/utils/utils";
 import { 
   StepHeader, 
   StatusFieldCard 
 } from "./components";
-import { useFormValidation } from "@/hooks/use-form-validation";
+import { useFormValidation } from "@/shared/hooks/use-form-validation";
 
 interface ResourceLink {
   url: string;

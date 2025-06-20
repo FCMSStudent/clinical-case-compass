@@ -2,8 +2,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { NavLink } from 'react-router-dom';
-import { cn } from '@/lib/utils';
-import { buttonVariants, typography } from '@/lib/design-system';
+import { cn } from '@/shared/utils/utils';
+import { buttonVariants, typography } from '@/design-system/design-system';
 import { ArrowRight } from 'lucide-react';
 
 const CtaSection = () => {

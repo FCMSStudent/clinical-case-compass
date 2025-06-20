@@ -1,21 +1,21 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Search, BookOpen } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/shared/components/button";
+import { Input } from "@/shared/components/input";
+import { Card, CardContent } from "@/shared/components/card";
+import { Alert, AlertDescription } from "@/shared/components/alert";
 import { useNavigate } from "react-router-dom";
-import type { MedicalCase } from "@/types/case";
+import type { MedicalCase } from "@/shared/types/case";
 import { CaseCard } from "@/features/cases/CaseCard";
-import { PageHeader } from "@/components/ui/page-header";
+import { PageHeader } from "@/shared/components/page-header";
 import { CaseGridSkeleton } from "@/features/cases/CaseCardSkeleton";
 import { CasesErrorBoundary } from "@/features/cases/components/CasesErrorBoundary";
-import { useSupabaseCases } from "@/hooks/use-supabase-cases";
-import { useAuth } from "@/app/AuthContext";
-import { typo } from "@/lib/typography";
-import { cn } from "@/lib/utils";
-import { liquidGlassClasses, getGlassTransitionVariants, getGlassHoverVariants } from "@/lib/glass-effects";
+import { useSupabaseCases } from "@/shared/hooks/use-supabase-cases";
+import { useAuth } from "@/app/providers/AuthContext";
+import { typo } from "@/design-system/tokens/typography";
+import { cn } from "@/shared/utils/utils";
+import { liquidGlassClasses, getGlassTransitionVariants, getGlassHoverVariants } from "@/design-system/components/glass-effects";
 
 const Cases = () => {
   const [searchQuery, setSearchQuery] = useState("");

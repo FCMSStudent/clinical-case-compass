@@ -3,8 +3,8 @@ import * as React from "react"
 import * as LabelPrimitive from "@radix-ui/react-label"
 import { cva, type VariantProps } from "class-variance-authority"
 
-import { cn } from "@/lib/utils"
-import { typography } from "@/lib/ui-styles"
+import { cn } from "@/shared/utils/utils"
+import { typography } from "@/design-system/ui-styles"
 
 const labelVariants = cva(
   `${typography.label} leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70`

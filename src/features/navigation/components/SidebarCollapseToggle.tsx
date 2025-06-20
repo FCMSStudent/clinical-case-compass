@@ -1,7 +1,7 @@
 import React from "react";
 import { ChevronLeft } from "lucide-react";
-import { cn } from '@/lib/utils';
-import { getInteractionStates, getGlassmorphicStyles } from '@/lib/component-system';
+import { cn } from '@/shared/utils/utils';
+import { getInteractionStates, getGlassmorphicStyles } from '@/design-system/components/component-system';
 
 const ICON_SIZE = "w-5 h-5";
 

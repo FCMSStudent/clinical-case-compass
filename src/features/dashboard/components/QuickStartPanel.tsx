@@ -1,11 +1,11 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/card";
+import { Button } from "@/shared/components/button";
 import { Plus, BookOpen, Users, Settings, Sparkles, Target, Zap, ArrowRight, Star } from "lucide-react";
 import { ICON_SIZE } from "@/constants/ui";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/shared/components/badge";
 
 const quickActions = [
   {

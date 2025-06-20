@@ -1,9 +1,9 @@
 
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/card";
 import { Scan } from "lucide-react";
 import { SimpleImaging } from "@/features/cases/create/SimpleImaging";
-import { medicalSection, iconWithText } from "@/lib/ui-styles";
+import { medicalSection, iconWithText } from "@/design-system/ui-styles";
 
 interface CaseRadiologySectionProps {
   onImagingChange: (radiologyStudies: any[]) => void;

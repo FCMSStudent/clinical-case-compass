@@ -1,12 +1,12 @@
 
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { cn } from '@/lib/utils';
-import { buttonVariants, typography } from '@/lib/ui-styles';
+import { cn } from '@/shared/utils/utils';
+import { buttonVariants, typography } from '@/design-system/ui-styles';
 import { ArrowRight, BookOpen, User, BrainCircuit } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { BentoCard } from '@/components/ui/bento-card';
-import { BentoContainer } from '@/components/ui/bento-container';
+import { BentoCard } from '@/shared/components/bento-card';
+import { BentoContainer } from '@/shared/components/bento-container';
 
 const HeroSection = () => {
   return (

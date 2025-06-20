@@ -1,7 +1,6 @@
-
 import { useMemo } from 'react';
 import { useFormContext, FieldValues, FieldErrors } from 'react-hook-form';
-import { validateFormFields, ValidationResult } from '@/lib/utils/formValidation';
+import { validateFormFields, ValidationResult } from '@/shared/utils/formValidation';
 
 export interface UseFormValidationOptions {
   requiredFields?: string[];

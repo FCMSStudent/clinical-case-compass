@@ -5,7 +5,7 @@ import { screen } from '@testing-library/dom';
 import { describe, it, expect, vi } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import ProtectedRouteLayout from './ProtectedRouteLayout';
-import { AuthContext, AuthContextType } from '@/app/AuthContext';
+import { AuthContext, AuthContextType } from '@/app/providers/AuthContext';
 
 // Mock dependencies
 vi.mock('@/features/auth/PrivateRoute', () => ({
@@ -16,7 +16,7 @@ vi.mock('@/features/navigation/components/EnhancedAppLayout', () => ({
   EnhancedAppLayout: ({ children }: { children: React.ReactNode }) => <div data-testid="enhanced-app-layout">{children}</div>,
 }));
 
-vi.mock('@/components/ui/OfflineBanner', () => ({
+vi.mock('@/shared/components/OfflineBanner', () => ({
   OfflineBanner: () => <div data-testid="offline-banner">Offline Banner</div>,
 }));
 

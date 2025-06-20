@@ -1,14 +1,14 @@
 import React, { memo, useMemo } from "react";
 import { ArrowUp, ArrowDown } from "lucide-react";
-import { Slider } from "@/components/ui/slider";
-import { Label } from "@/components/ui/label";
+import { Slider } from "@/shared/components/slider";
+import { Label } from "@/shared/components/label";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
+} from "@/shared/components/tooltip";
+import { cn } from "@/shared/utils/utils";
 
 interface VitalRange {
   min: number;

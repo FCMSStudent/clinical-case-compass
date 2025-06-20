@@ -1,10 +1,10 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/shared/components/button";
+import { Label } from "@/shared/components/label";
 import { motion } from "framer-motion";
 import { X, Image as ImageIcon } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import type { RadiologyStudy } from "@/types/case";
+import { Badge } from "@/shared/components/badge";
+import type { RadiologyStudy } from "@/shared/types/case";
 import { getStudyByName } from "../utils/radiologyData";
 
 // Common radiology studies with typical findings

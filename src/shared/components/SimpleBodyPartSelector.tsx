@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo, useEffect } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/utils/utils";
 import type { BodyPart, SimpleBodyPartSelectorProps } from "./types/bodyPartTypes";
 import { getCategorizedParts } from "./data/bodyPartData";
 import { BodyDiagramHeader } from "./components/BodyDiagramHeader";

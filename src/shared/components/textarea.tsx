@@ -11,14 +11,14 @@ import * as React from "react";
 import { motion } from "framer-motion";
 import { cva, type VariantProps } from "class-variance-authority";
 
-import { cn } from "@/lib/utils";
-import { componentSizes } from "@/lib/component-system";
+import { cn } from "@/shared/utils/utils";
+import { componentSizes } from "@/design-system/components/component-system";
 import {
   getMotionVariants,
   subtleInputInteraction,
   reducedMotionInputInteraction,
-} from "@/lib/motion";
-import { typography } from "@/lib/typography";
+} from "@/design-system/animations/motion";
+import { typography } from "@/design-system/tokens/typography";
 
 // ─── Tailwind variant generator ──────────────────────────────────────────────
 const textareaVariants = cva(

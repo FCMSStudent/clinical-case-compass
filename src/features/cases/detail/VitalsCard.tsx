@@ -1,9 +1,9 @@
 
 import React from "react";
-import { BentoCard } from "@/components/ui/bento-card";
+import { BentoCard } from "@/shared/components/bento-card";
 import { Activity } from "lucide-react";
 import { InteractiveVitalsCard } from "@/features/cases/InteractiveVitalsCard";
-import { MedicalCase } from "@/types/case";
+import { MedicalCase } from "@/shared/types/case";
 
 interface VitalsCardProps {
   medicalCase: MedicalCase;

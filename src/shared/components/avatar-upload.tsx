@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Camera, Upload, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { Button } from '@/shared/components/button';
+import { cn } from '@/shared/utils/utils';
 
 interface AvatarUploadProps {
   currentAvatar?: string;

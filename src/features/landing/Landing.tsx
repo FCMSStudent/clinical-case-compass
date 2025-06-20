@@ -1,18 +1,18 @@
 
 import React from 'react';
-import UnifiedBackground from '@/components/backgrounds/UnifiedBackground';
+import UnifiedBackground from '@/shared/components/UnifiedBackground';
 import LandingNavbar from '@/features/landing/components/LandingNavbar';
 import HeroSection from '@/features/landing/components/HeroSection';
 import FeaturesSection from '@/features/landing/components/FeaturesSection';
 import CtaSection from '@/features/landing/components/CtaSection';
 import Footer from '@/features/landing/components/Footer';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { ScrollArea } from '@/shared/components/scroll-area';
 import { motion } from "framer-motion";
 import {
   pageTransitionVariants,
   reducedMotionPageTransitionVariants,
   getMotionVariants
-} from "@/lib/motion";
+} from "@/design-system/animations/motion";
 
 const LandingPage = () => {
   // Get page transition variants, respecting reduced motion settings.

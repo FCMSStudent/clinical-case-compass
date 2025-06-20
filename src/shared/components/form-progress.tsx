@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { CheckCircle, Circle } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/shared/utils/utils';
 
 interface FormProgressProps {
   totalFields: number;

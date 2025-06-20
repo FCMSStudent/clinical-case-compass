@@ -2,8 +2,8 @@ import React, { memo } from "react";
 import { User, Sparkles, CalendarDays } from "lucide-react";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
-import { cn } from "@/lib/utils";
-import { MedicalCase } from "@/types/case";
+import { cn } from "@/shared/utils/utils";
+import { MedicalCase } from "@/shared/types/case";
 
 interface CaseCardHeaderProps {
   medicalCase: MedicalCase;

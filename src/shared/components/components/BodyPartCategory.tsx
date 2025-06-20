@@ -1,8 +1,8 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { cn } from "@/lib/utils";
-import { typo } from "@/lib/typography";
+import { cn } from "@/shared/utils/utils";
+import { typo } from "@/design-system/tokens/typography";
 import type { BodyPart, BodyPartCategory as BodyPartCategoryType, BodyPartConfig } from "../types/bodyPartTypes";
 import { BodyPartButton } from "./BodyPartButton";
 import { CATEGORY_LABEL } from "../data/bodyPartData";

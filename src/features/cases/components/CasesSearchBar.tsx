@@ -1,7 +1,7 @@
 import React from "react";
 import { Search } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/shared/components/card";
+import { Input } from "@/shared/components/input";
 
 interface CasesSearchBarProps {
   searchQuery: string;
