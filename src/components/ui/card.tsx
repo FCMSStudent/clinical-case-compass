@@ -1,5 +1,6 @@
+
 import * as React from "react"
-import { motion } from "framer-motion"
+import { motion, HTMLMotionProps } from "framer-motion"
 
 import { cn } from "@/lib/utils"
 import { card } from "@/lib/design-system"
@@ -8,17 +9,16 @@ import { typography } from "@/lib/typography"
 
 const Card = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & {
+  Omit<HTMLMotionProps<"div">, "onDrag"> & {
     variant?: keyof typeof card.variant
-    glassIntensity?: 'subtle' | 'medium' | 'strong'
+    glassIntensity?: 'subtle' | 'medium'
     interactive?: boolean
   }
 >(({ className, variant = "default", glassIntensity = 'medium', interactive = false, ...props }, ref) => {
   const glassVariants = interactive ? getGlassHoverVariants(glassIntensity) : getGlassTransitionVariants(glassIntensity)
-  const Comp = interactive ? motion.div : motion.div
   
   return (
-    <Comp
+    <motion.div
       ref={ref}
       className={cn(
         card.base,

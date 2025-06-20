@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from "react";
 import { Search, Menu, X, Home, BookOpen, ChevronDown, User, LogOut } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -60,7 +61,7 @@ const EnhancedNavbar: React.FC = () => {
         .map(caseItem => ({
           id: caseItem.id,
           title: caseItem.title,
-          type: 'case',
+          type: 'case' as const,
           subtitle: `${caseItem.patient?.name ?? ""} - ${caseItem.chiefComplaint ?? ""}`,
           path: `/cases/${caseItem.id}`
         }));
@@ -167,7 +168,7 @@ const EnhancedNavbar: React.FC = () => {
                       "focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-transparent"
                     )}
                   >
-                    <item.icon className="h-4 w-4" />
+                    <item.icon />
                     <span className="font-medium tracking-[0.01em]">{item.label}</span>
                     {item.hasNotifications && <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse" />}
                   </NavLink>

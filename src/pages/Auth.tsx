@@ -71,6 +71,7 @@ const Auth = () => {
 
   const onLoginSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
+    setError(null);
     try {
       await signIn(data.email, data.password);
       navigate("/");
@@ -89,6 +90,7 @@ const Auth = () => {
 
   const onSignupSubmit = async (data: SignupFormData) => {
     setIsLoading(true);
+    setError(null);
     try {
       await signUp(data.email, data.password, data.fullName);
       setVerificationSent(true);
@@ -112,19 +114,6 @@ const Auth = () => {
       animate="animate"
       exit="exit"
     >
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 px-4 py-2 rounded-lg z-50 focus:outline-none focus:ring-2 focus:ring-white/30 transition-all duration-300"
-        style={{ 
-          backgroundColor: currentTheme.colors.primary,
-          color: currentTheme.colors.text
-        }}
-      >
-        Skip to main content
-      </a>
-
-      <UnifiedBackground />
-
       <div id="main-content" className="relative z-10 min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8">
         <motion.div
           initial={{ opacity: 0, y: 20, scale: 0.95 }}
@@ -134,9 +123,6 @@ const Auth = () => {
         >
           <Card 
             className={cn("border shadow-2xl transition-all duration-300 hover:border-opacity-30", liquidGlassClasses.modal)}
-            variants={getGlassTransitionVariants('medium')}
-            initial="initial"
-            animate="animate"
           >
             <CardHeader className="text-center pb-8">
               <motion.div
@@ -207,7 +193,12 @@ const Auth = () => {
                       exit={{ opacity: 0, x: 20 }}
                       transition={{ duration: 0.3, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
                     >
-                      <LoginForm isLoading={isLoading} onLoginSubmit={onLoginSubmit} error={error} />
+                      <LoginForm isLoading={isLoading} onLoginSubmit={onLoginSubmit} />
+                      {error && (
+                        <Alert variant="destructive" className="mt-4">
+                          <AlertDescription>{error}</AlertDescription>
+                        </Alert>
+                      )}
                     </motion.div>
                   </TabsContent>
 
@@ -218,7 +209,12 @@ const Auth = () => {
                       exit={{ opacity: 0, x: -20 }}
                       transition={{ duration: 0.3, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
                     >
-                      <SignupForm isLoading={isLoading} onSignupSubmit={onSignupSubmit} error={error} />
+                      <SignupForm isLoading={isLoading} onSignupSubmit={onSignupSubmit} />
+                      {error && (
+                        <Alert variant="destructive" className="mt-4">
+                          <AlertDescription>{error}</AlertDescription>
+                        </Alert>
+                      )}
                     </motion.div>
                   </TabsContent>
                 </AnimatePresence>

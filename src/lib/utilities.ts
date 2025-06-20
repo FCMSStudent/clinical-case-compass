@@ -2,7 +2,7 @@
 // DESIGN SYSTEM UTILITIES
 // ────────────────────────────────────────────────────────────────────────────────
 
-import { ThemeColors } from './colors';
+import { themeColors, type ThemeColors, type GlassSystem } from './colors';
 
 /** Check for reduced motion preference */
 export const prefersReducedMotion = () => {
@@ -11,10 +11,15 @@ export const prefersReducedMotion = () => {
 };
 
 /** Get glassmorphic styles */
-export const getGlassmorphicStyles = (themeColors: ThemeColors, variant: "default" | "elevated" | "subtle" | "light" = "default") => {
+export const getGlassmorphicStyles = (
+  themeColors: ThemeColors, 
+  variant: "default" | "elevated" | "subtle" | "light" | "navigation" | "modal" | "card" | "alert" = "default"
+) => {
   const baseStyles = {
     backgroundColor: themeColors.glass.background,
-    backdropFilter: themeColors.glass.backdrop,
+    backdropFilter: typeof themeColors.glass.backdrop === 'string' 
+      ? themeColors.glass.backdrop 
+      : themeColors.glass.backdrop.medium,
     border: themeColors.glass.border,
     boxShadow: themeColors.glass.shadow,
   };
@@ -23,23 +28,51 @@ export const getGlassmorphicStyles = (themeColors: ThemeColors, variant: "defaul
     case "elevated":
       return {
         ...baseStyles,
-        backgroundColor: themeColors.glass.background.replace("0.1", "0.15"),
+        backgroundColor: themeColors.glass.vibrant,
         boxShadow: "0 12px 40px rgba(0, 0, 0, 0.15)",
         border: themeColors.glass.border.replace("0.2", "0.3"),
       };
     case "subtle":
       return {
         ...baseStyles,
-        backgroundColor: themeColors.glass.background.replace("0.1", "0.05"),
+        backgroundColor: themeColors.glass.subtle,
         boxShadow: "0 4px 16px rgba(0, 0, 0, 0.05)",
         border: themeColors.glass.border.replace("0.2", "0.1"),
       };
     case "light":
       return {
         ...baseStyles,
-        backgroundColor: themeColors.glass.background.replace("0.1", "0.12"),
+        backgroundColor: themeColors.glass.adaptiveGlass.onDark,
         boxShadow: "0 6px 20px rgba(0, 0, 0, 0.08)",
         border: themeColors.glass.border.replace("0.2", "0.25"),
+      };
+    case "navigation":
+      return {
+        ...baseStyles,
+        backgroundColor: themeColors.glass.contextual.navigation,
+        backdropFilter: themeColors.glass.backdrop.medium,
+        boxShadow: "0 8px 32px rgba(0, 0, 0, 0.12)",
+      };
+    case "modal":
+      return {
+        ...baseStyles,
+        backgroundColor: themeColors.glass.contextual.modal,
+        backdropFilter: themeColors.glass.backdrop.heavy,
+        boxShadow: "0 16px 64px rgba(0, 0, 0, 0.2)",
+      };
+    case "card":
+      return {
+        ...baseStyles,
+        backgroundColor: themeColors.glass.contextual.card,
+        backdropFilter: themeColors.glass.backdrop.light,
+        boxShadow: "0 4px 16px rgba(0, 0, 0, 0.06)",
+      };
+    case "alert":
+      return {
+        ...baseStyles,
+        backgroundColor: themeColors.glass.contextual.alert,
+        backdropFilter: themeColors.glass.backdrop.medium,
+        boxShadow: "0 8px 24px rgba(0, 0, 0, 0.15)",
       };
     default:
       return baseStyles;
@@ -205,4 +238,4 @@ export const isThemeAccessible = (theme: ThemeColors): boolean => {
   
   // WCAG AA standard requires 4.5:1 for normal text and 3:1 for large text
   return textContrast >= 4.5 && secondaryTextContrast >= 3;
-}; 
+};
