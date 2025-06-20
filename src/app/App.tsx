@@ -1,24 +1,24 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "@/shared/components/ui/sonner";
 import { AnimatePresence } from "framer-motion";
-import { AuthProvider, useAuth } from "./AuthContext";
-import { ThemeProvider } from "@/lib/design-system";
-import { ErrorBoundary } from "@/components/error/ErrorBoundary";
+import { AuthProvider, useAuth } from "./providers/AuthContext";
+import { ThemeProvider } from "@/design-system/design-system";
+import { ErrorBoundary } from "./error-boundaries/ErrorBoundary";
 import { ProtectedRouteLayout } from "@/features/navigation";
-import LoadingScreen from "@/components/ui/loading-screen";
+import LoadingScreen from "@/shared/components/ui/loading-screen";
 
 // Pages
-import Dashboard from "@/pages/Dashboard";
-import Cases from "@/pages/Cases";
-import CaseDetail from "@/pages/CaseDetail";
-import CaseEdit from "@/pages/CaseEdit";
-import CreateCaseFlow from "@/pages/CreateCaseFlow";
-import Account from "@/pages/Account";
-import Auth from "@/pages/Auth";
-import NotFound from "@/pages/NotFound";
-import LandingPage from "@/pages/Landing";
+import Dashboard from "@/features/dashboard/Dashboard";
+import Cases from "@/features/cases/Cases";
+import CaseDetail from "@/features/cases/CaseDetail";
+import CaseEdit from "@/features/cases/CaseEdit";
+import CreateCaseFlow from "@/features/cases/CreateCaseFlow";
+import Account from "@/features/auth/Account";
+import Auth from "@/features/auth/Auth";
+import NotFound from "@/shared/components/NotFound";
+import LandingPage from "@/features/landing/Landing";
 
 // Create a client with better error handling
 const queryClient = new QueryClient({
