@@ -1,11 +1,11 @@
 import React, { memo } from "react";
 import { Clipboard, Stethoscope } from "lucide-react";
 import { Badge } from "@/shared/components/badge";
-import { MedicalCase } from "@/shared/types/case";
+import { MedicalCase, Diagnosis } from "@/shared/types/case";
 
 interface CaseCardBodyProps {
   medicalCase: MedicalCase;
-  primaryDx: any; // TODO: Type this properly
+  primaryDx?: Diagnosis;
 }
 
 export const CaseCardBody = memo(({ medicalCase, primaryDx }: CaseCardBodyProps) => {

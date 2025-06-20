@@ -29,7 +29,7 @@ export {
 } from "./animation"
 
 // ────────────────────────────────────────────────────────────────────────────────
-// LEGACY COMPONENTS (for backward compatibility)
+// UI COMPONENTS
 // ────────────────────────────────────────────────────────────────────────────────
 
 export { Toggle, toggleVariants } from "./toggle"
@@ -75,7 +75,6 @@ export { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "./inpu
 export { PageHeader } from "./page-header"
 export { SettingsCard } from "./settings-card"
 export { RecentCasesCarousel } from "./recent-cases-carousel"
-// export { Chart } from "./chart" // Chart component is not ready
 export { default as LoadingScreen } from "./loading-screen"
 export { LoadingSpinner } from "./loading-spinner"
 export { AutosaveIndicator } from "./autosave-indicator"
@@ -85,24 +84,21 @@ export { ErrorSummary } from "./ErrorSummary"
 export { OfflineBanner } from "./OfflineBanner"
 
 // ────────────────────────────────────────────────────────────────────────────────
-// TOAST COMPONENTS
+// TOAST SYSTEM
 // ────────────────────────────────────────────────────────────────────────────────
 
-export { Toaster } from "./toaster"
-export { useToast } from "@/shared/hooks/use-toast"
-export { toast } from "sonner"
+export { Toaster } from "./sonner"
 
-// Shared UI Components
-export * from './ui';
+// ────────────────────────────────────────────────────────────────────────────────
+// SHARED COMPONENTS
+// ────────────────────────────────────────────────────────────────────────────────
 
-// Shared Layout Components
 export { default as NotFound } from './NotFound';
 export { default as SearchPanel } from './SearchPanel';
 export { default as RecentActivityList } from './RecentActivityList';
 
 // Background Components
 export { default as UnifiedBackground } from './UnifiedBackground';
-export { default as OptimizedBackground } from './OptimizedBackground';
 
 // Body Diagram Components
 export { default as SimpleBodyPartSelector } from './SimpleBodyPartSelector';

@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/app/providers/AuthContext';
-import { toast } from '@/shared/hooks/use-toast';
+import { toast } from 'sonner';
 import { useErrorHandler } from './use-error-handler';
 import { MedicalCase, Patient, Diagnosis, Resource, CaseTag, LabTest as ComponentLabTest, RadiologyStudy, DiagnosisStatus as ComponentDiagnosisStatus } from '@/shared/types/case';
 import { Database } from '@/integrations/supabase/types';
