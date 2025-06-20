@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/card";
 import { Button } from "@/shared/components/button";
 import { Plus, BookOpen, Users, Settings, Sparkles, Target, Zap, ArrowRight, Star } from "lucide-react";
-import { ICON_SIZE } from "@/constants/ui";
+import { ICON_SIZE } from "@/shared/constants/ui";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Badge } from "@/shared/components/badge";
