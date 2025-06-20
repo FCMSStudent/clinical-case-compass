@@ -41,11 +41,11 @@ const inputVariants = cva(
           "disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed"
         ),
         
-        // Elevated variant for important inputs
+        // Elevated variant for important inputs (used in auth forms)
         elevated: cn(
-          "bg-white/15 backdrop-blur-md border border-white/25 shadow-sm",
+          "bg-white/25 backdrop-blur-md border border-white/35 shadow-sm",
           "text-white placeholder:text-white/70",
-          "hover:bg-white/25 hover:border-white/35 hover:shadow-md",
+          "hover:bg-white/35 hover:border-white/45 hover:shadow-md",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:filter focus-visible:brightness-110 focus-visible:saturate-105",
           "disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed"
         ),

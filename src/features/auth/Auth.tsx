@@ -158,8 +158,8 @@ const Auth = () => {
                     }}
                     initial={false}
                     animate={{
-                      x: activeTab === "login" ? "2px" : "calc(50% - 2px)",
-                      width: "calc(50% - 2px)",
+                      x: activeTab === "login" ? "2px" : "calc(50% + 2px)",
+                      width: "calc(50% - 4px)",
                     }}
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   />
