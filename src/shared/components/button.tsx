@@ -10,7 +10,7 @@ import { typography } from "@/design-system/tokens/typography"
 import { getGlassHoverVariants } from "@/design-system/components/glass-effects"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-xl transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:filter focus-visible:brightness-110 focus-visible:saturate-105 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-2xl transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:backdrop-blur-md focus-visible:border-2 focus-visible:border-blue-400/50 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed hover:scale-102",
   {
     variants: {
       variant: {
@@ -81,8 +81,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       buttonVariants({ variant, size, className }),
       // Enhanced frosted glass effects
       "relative overflow-hidden",
-      "before:absolute before:inset-0 before:bg-gradient-to-b before:from-white/10 before:to-transparent before:pointer-events-none before:rounded-xl",
-      "after:absolute after:inset-[1px] after:bg-gradient-to-b after:from-white/5 after:to-transparent after:pointer-events-none after:rounded-[11px]"
+      "before:absolute before:inset-0 before:bg-gradient-to-b before:from-white/5 before:to-transparent before:pointer-events-none before:rounded-2xl",
+      "after:absolute after:inset-[1px] after:bg-gradient-to-b after:from-white/3 after:to-transparent after:pointer-events-none after:rounded-[15px]"
     );
     
     if (asChild) {

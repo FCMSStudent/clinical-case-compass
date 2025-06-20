@@ -25,29 +25,32 @@ const inputVariants = cva(
       variant: {
         // Default glassmorphic variant with Apple-inspired effects
         default: cn(
-          "bg-white/10 backdrop-blur-md border border-white/20",
-          "text-white placeholder:text-white/60",
-          "hover:bg-white/20 hover:border-white/30",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:filter focus-visible:brightness-110 focus-visible:saturate-105",
-          "disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed"
+          "bg-white/8 backdrop-blur-sm border border-white/20",
+          "text-white placeholder:text-white/70",
+          "hover:bg-white/15 hover:border-white/25",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:backdrop-blur-md focus-visible:border-2 focus-visible:border-blue-400/50",
+          "disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed",
+          "rounded-2xl"
         ),
         
         // Subtle variant for less prominent inputs
         subtle: cn(
-          "bg-white/5 backdrop-blur-md border border-white/10",
-          "text-white/90 placeholder:text-white/40",
-          "hover:bg-white/10 hover:border-white/20",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:filter focus-visible:brightness-110 focus-visible:saturate-105",
-          "disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed"
+          "bg-white/5 backdrop-blur-sm border border-white/15",
+          "text-white/90 placeholder:text-white/50",
+          "hover:bg-white/8 hover:border-white/20",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:backdrop-blur-md focus-visible:border-2 focus-visible:border-blue-400/40",
+          "disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed",
+          "rounded-2xl"
         ),
         
         // Elevated variant for important inputs
         elevated: cn(
-          "bg-white/15 backdrop-blur-md border border-white/25 shadow-sm",
-          "text-white placeholder:text-white/70",
-          "hover:bg-white/25 hover:border-white/35 hover:shadow-md",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:filter focus-visible:brightness-110 focus-visible:saturate-105",
-          "disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed"
+          "bg-white/12 backdrop-blur-sm border border-white/20 shadow-sm",
+          "text-white placeholder:text-white/75",
+          "hover:bg-white/20 hover:border-white/30 hover:shadow-md",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:backdrop-blur-md focus-visible:border-2 focus-visible:border-blue-400/60",
+          "disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed",
+          "rounded-2xl"
         ),
         
         // Medical variant for clinical data
@@ -132,8 +135,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       rightIcon && "pr-12",
       // Enhanced frosted glass styling for auth context
       "relative overflow-hidden",
-      "before:absolute before:inset-0 before:bg-gradient-to-r before:from-white/5 before:to-transparent before:pointer-events-none before:rounded-lg",
-      "after:absolute after:inset-[1px] after:bg-gradient-to-b after:from-white/10 after:to-transparent after:pointer-events-none after:rounded-[7px]",
+      "before:absolute before:inset-0 before:bg-gradient-to-r before:from-white/3 before:to-transparent before:pointer-events-none before:rounded-2xl",
+      "after:absolute after:inset-[1px] after:bg-gradient-to-b after:from-white/5 after:to-transparent after:pointer-events-none after:rounded-[15px]",
       className
     );
 
