@@ -130,14 +130,26 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       inputVariants({ variant: finalVariant, size: size as 'xs' | 'sm' | 'md' | 'lg' | 'xl' }),
       leftIcon && "pl-12",
       rightIcon && "pr-12",
+      // Enhanced frosted glass styling for auth context
+      "relative overflow-hidden",
+      "before:absolute before:inset-0 before:bg-gradient-to-r before:from-white/5 before:to-transparent before:pointer-events-none before:rounded-lg",
+      "after:absolute after:inset-[1px] after:bg-gradient-to-b after:from-white/10 after:to-transparent after:pointer-events-none after:rounded-[7px]",
       className
     );
 
+    // Enhanced focus and hover effects
+    const containerClasses = cn(
+      "relative group",
+      "transition-all duration-300 ease-out",
+      "hover:scale-[1.01] hover:brightness-105",
+      "focus-within:scale-[1.01] focus-within:brightness-110"
+    );
+
     return (
-      <div className="relative">
+      <div className={containerClasses}>
         {leftIcon && (
-          <div className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center justify-center w-12 h-12 pointer-events-none">
-            <div className="text-white/60 group-focus-within:text-white/80 transition-colors duration-300">
+          <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none z-10">
+            <div className="text-white/70 group-focus-within:text-white/90 group-hover:text-white/80 transition-colors duration-300">
               {leftIcon}
             </div>
           </div>
@@ -150,12 +162,18 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           variants={glassVariants}
           initial="initial"
           whileFocus="focus"
+          onClick={() => {
+            // Haptic feedback for supported devices
+            if ('vibrate' in navigator) {
+              navigator.vibrate(10);
+            }
+          }}
           {...(props as any)}
         />
         
         {rightIcon && (
-          <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center justify-center w-12 h-12 pointer-events-none">
-            <div className="text-white/60 group-focus-within:text-white/80 transition-colors duration-300">
+          <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center justify-center z-10">
+            <div className="text-white/70 group-focus-within:text-white/90 group-hover:text-white/80 transition-colors duration-300">
               {rightIcon}
             </div>
           </div>
