@@ -4,22 +4,23 @@ import { useAuth } from "@/app/providers/AuthContext";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
+  CardTitle,
 } from "@/shared/components/card";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/shared/components/tabs";
-import { useToast } from "@/shared/hooks/use-toast";
+import { Button } from "@/shared/components/button";
+import { Input } from "@/shared/components/input";
+import { Label } from "@/shared/components/label";
+import { Separator } from "@/shared/components/separator";
+import { Badge } from "@/shared/components/badge";
+import { Alert, AlertDescription } from "@/shared/components/alert";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/tabs";
+import { LoadingSpinner } from "@/shared/components/loading-spinner";
+import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "@/shared/components/alert";
-import { CheckCircle2 } from "lucide-react";
+  CheckCircle2,
+} from "lucide-react";
 import UnifiedBackground from "@/shared/components/UnifiedBackground";
 import { useTheme } from "@/design-system/design-system";
 import {
@@ -41,7 +42,6 @@ const Auth = () => {
   const { signIn, signUp } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const { toast } = useToast();
   const { currentTheme } = useTheme();
   const [error, setError] = useState<string | null>(null);
 
