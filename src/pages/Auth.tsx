@@ -43,6 +43,7 @@ const Auth = () => {
   const location = useLocation();
   const { toast } = useToast();
   const { currentTheme } = useTheme();
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -78,8 +79,9 @@ const Auth = () => {
         description: "You have successfully logged in.",
         variant: "default",
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Login error:", error);
+      setError(error.message || "An error occurred during login");
     } finally {
       setIsLoading(false);
     }
@@ -90,8 +92,9 @@ const Auth = () => {
     try {
       await signUp(data.email, data.password, data.fullName);
       setVerificationSent(true);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Signup error:", error);
+      setError(error.message || "An error occurred during signup");
     } finally {
       setIsLoading(false);
     }
@@ -204,7 +207,7 @@ const Auth = () => {
                       exit={{ opacity: 0, x: 20 }}
                       transition={{ duration: 0.3, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
                     >
-                      <LoginForm isLoading={isLoading} onLoginSubmit={onLoginSubmit} />
+                      <LoginForm isLoading={isLoading} onLoginSubmit={onLoginSubmit} error={error} />
                     </motion.div>
                   </TabsContent>
 
@@ -215,7 +218,7 @@ const Auth = () => {
                       exit={{ opacity: 0, x: -20 }}
                       transition={{ duration: 0.3, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
                     >
-                      <SignupForm isLoading={isLoading} onSignupSubmit={onSignupSubmit} />
+                      <SignupForm isLoading={isLoading} onSignupSubmit={onSignupSubmit} error={error} />
                     </motion.div>
                   </TabsContent>
                 </AnimatePresence>

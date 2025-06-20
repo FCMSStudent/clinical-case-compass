@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/app/AuthContext';
@@ -37,8 +36,6 @@ export function useSupabaseCases() {
   const { handleError } = useErrorHandler();
   const queryClient = useQueryClient();
 
-  console.log("[useSupabaseCases] Hook initialized, user:", user, "isOfflineMode:", isOfflineMode);
-
   // Fetch all cases with simplified query
   const {
     data: cases = [],
@@ -47,21 +44,16 @@ export function useSupabaseCases() {
   } = useQuery({
     queryKey: ['cases', user?.id],
     queryFn: async (): Promise<MedicalCase[]> => {
-      console.log("[useSupabaseCases] Starting query for cases, user:", user);
-      
       if (!user) {
-        console.log("[useSupabaseCases] No user found, throwing error");
         throw new Error('User not authenticated');
       }
 
       if (isOfflineMode) {
-        console.log("[useSupabaseCases] Offline mode, returning empty array");
         return [];
       }
 
       try {
         // First, get basic case data with patient info
-        console.log("[useSupabaseCases] Fetching basic case data");
         const { data: casesData, error: casesError } = await supabase
           .from('medical_cases')
           .select(`
@@ -77,11 +69,8 @@ export function useSupabaseCases() {
         }
 
         if (!casesData || casesData.length === 0) {
-          console.log("[useSupabaseCases] No cases found, returning empty array");
           return [];
         }
-
-        console.log("[useSupabaseCases] Found", casesData.length, "cases");
 
         // Transform the data with better error handling
         const transformedCases = casesData.map(caseData => {
@@ -127,7 +116,6 @@ export function useSupabaseCases() {
           }
         });
 
-        console.log("[useSupabaseCases] Successfully transformed", transformedCases.length, "cases");
         return transformedCases;
 
       } catch (error) {
@@ -144,7 +132,6 @@ export function useSupabaseCases() {
   const useGetCaseQuery = (id: string) => useQuery({
     queryKey: ['case', id],
     queryFn: async (): Promise<MedicalCase | null> => {
-      console.log("[useSupabaseCases] Fetching single case:", id);
       if (!user) throw new Error('User not authenticated');
       if (isOfflineMode) return null;
 
@@ -180,7 +167,6 @@ export function useSupabaseCases() {
       resources?: Omit<Resource, 'id'>[];
       tagIds?: string[];
     }) => {
-      console.log("[useSupabaseCases] Creating new case");
       if (!user) throw new Error('User not authenticated');
       if (isOfflineMode) throw new Error('Cannot create cases in offline mode');
 
