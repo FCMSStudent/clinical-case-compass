@@ -1,5 +1,5 @@
 import React from "react";
-import { createContext, useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 
 // ────────────────────────────────────────────────────────────────────────────────
 // THEME VARIATIONS FOR GLASSY VISIONOS UI
@@ -373,6 +373,8 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   // Apply theme to document
   useEffect(() => {
+    if (!currentTheme) return;
+    
     const root = document.documentElement;
 
     // Add .dark class for shadcn components compatibility since all our themes are dark
@@ -405,16 +407,16 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     };
   }, [currentTheme]);
 
+  const contextValue: ThemeContextType = {
+    currentTheme: currentTheme!,
+    setTheme,
+    availableThemes,
+    getThemeNames,
+  };
+
   return React.createElement(
     ThemeContext.Provider,
-    {
-      value: {
-        currentTheme,
-        setTheme,
-        availableThemes,
-        getThemeNames,
-      }
-    },
+    { value: contextValue },
     children
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { CheckCheck, Save, AlertCircle } from "lucide-react";
 
@@ -51,7 +51,9 @@ export function AutosaveIndicator({
           <AlertCircle className="mr-1 h-3 w-3 text-red-300" />
           <span className="text-red-100">Save failed</span>
         </>
-      ) : null}
+      ) : (
+        null
+      )}
     </div>
   );
 }

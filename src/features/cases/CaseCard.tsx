@@ -14,7 +14,6 @@ import { getPrimaryDiagnosis, isValidMedicalCase } from "./utils/caseUtils";
  * CONSTANTS & HELPERS
  * ────────────────────────────────────────────────────────────────────────────────
  */
-const VISIBLE_TAGS = 2;
 
 interface TagPillProps {
   tag: { id: string; name: string; color: string };
@@ -103,7 +102,7 @@ export const CaseCard: React.FC<CaseCardProps> = memo(
               <CaseCardFooter 
                 medicalCase={medicalCase} 
                 isHovered={isHovered} 
-                onDelete={onDelete} 
+                {...(onDelete && { onDelete })}
               />
             </div>
           </div>
@@ -111,7 +110,7 @@ export const CaseCard: React.FC<CaseCardProps> = memo(
       );
     } catch (error) {
       console.error(`[CaseCard] Error rendering medicalCase ID: ${medicalCase?.id || 'Unknown'}`, error);
-      return <CaseCardError medicalCase={medicalCase} className={className} />;
+      return <CaseCardError medicalCase={medicalCase} {...(className && { className })} />;
     }
   }
 );

@@ -3,7 +3,7 @@
 // ────────────────────────────────────────────────────────────────────────────────
 
 import React from "react";
-import { createContext, useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import { ThemeColors, themeColors } from '../tokens/colors';
 import { applyThemeToDocument, removeThemeFromDocument } from '../../shared/utils/utilities';
 
@@ -33,7 +33,7 @@ export const themes: Record<string, ThemeConfig> = {
   medical: {
     name: "Medical Blue",
     description: "Professional medical theme with clinical blue tones",
-    colors: themeColors.medical,
+    colors: themeColors.medical || themeColors.default,
     effects: {
       blur: "blur(20px)",
       shadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
@@ -44,7 +44,7 @@ export const themes: Record<string, ThemeConfig> = {
   emerald: {
     name: "Emerald Medical",
     description: "Fresh and modern medical theme with emerald accents",
-    colors: themeColors.emerald,
+    colors: themeColors.emerald || themeColors.default,
     effects: {
       blur: "blur(20px)",
       shadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
@@ -55,7 +55,7 @@ export const themes: Record<string, ThemeConfig> = {
   purple: {
     name: "Purple Medical",
     description: "Sophisticated medical theme with purple and violet tones",
-    colors: themeColors.purple,
+    colors: themeColors.purple || themeColors.default,
     effects: {
       blur: "blur(20px)",
       shadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
@@ -70,7 +70,7 @@ const ThemeContext = React.createContext<ThemeContextType | undefined>(undefined
 /** Theme Provider Component */
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentThemeName, setCurrentThemeName] = useState<string>("medical");
-  const currentTheme = themes[currentThemeName] || themes.medical;
+  const currentTheme = themes[currentThemeName] ?? themes.medical;
 
   const setTheme = (themeName: string) => {
     if (themes[themeName]) {
@@ -92,13 +92,22 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   // Apply theme to document
   useEffect(() => {
-    applyThemeToDocument(currentTheme.colors);
+    if (currentTheme) {
+      applyThemeToDocument(currentTheme.colors);
+    }
     return () => removeThemeFromDocument();
   }, [currentTheme]);
 
+  const contextValue: ThemeContextType = {
+    currentTheme: currentTheme!,
+    setTheme,
+    availableThemes,
+    getThemeNames
+  };
+
   return React.createElement(
     ThemeContext.Provider,
-    { value: { currentTheme, setTheme, availableThemes, getThemeNames } },
+    { value: contextValue },
     children
   );
 };

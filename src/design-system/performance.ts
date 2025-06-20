@@ -42,8 +42,9 @@ export const useLazyLoad = (options: IntersectionObserverInit = {}) => {
   const elementRef = useRef<HTMLElement>(null);
   
   useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
+    const observer = new IntersectionObserver((entries) => {
+      const entry = entries[0];
+      if (entry?.isIntersecting) {
         setIsVisible(true);
         setHasLoaded(true);
         observer.disconnect();
@@ -410,15 +411,17 @@ export const useComputationCache = <K, V>(
   
   // Always compute the value with useMemo
   const computedValue = useMemo(() => {
-    const cachedValue = cacheRef.current!.get(key);
+    const currentCache = cacheRef.current!;
+    const cachedValue = currentCache.get(key);
     if (cachedValue !== undefined) {
       return cachedValue;
     }
     
     const newValue = compute();
-    cacheRef.current!.set(key, newValue);
+    currentCache.set(key, newValue);
     return newValue;
-  }, [key, compute, dependencies.length, ...dependencies]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key, ...dependencies]);
   
   return computedValue;
 };

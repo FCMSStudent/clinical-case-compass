@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState, useCallback } from "react";
-import { motion, PanInfo, useTransform } from "framer-motion";
+import React from "react";
 
 // ────────────────────────────────────────────────────────────────────────────────
 // ADVANCED INTERACTION UTILITIES FOR GLASSY VISIONOS UI
@@ -49,6 +49,7 @@ export const useGestureDetection = (
   
   const handleTouchStart = useCallback((event: TouchEvent) => {
     const touch = event.touches[0];
+    if (!touch) return;
     startPos.current = { x: touch.clientX, y: touch.clientY };
     startTime.current = Date.now();
     setIsListening(true);
@@ -64,7 +65,7 @@ export const useGestureDetection = (
     }, config.timeout || 500);
   }, [onGesture, config.timeout]);
   
-  const handleTouchMove = useCallback((event: TouchEvent) => {
+  const handleTouchMove = useCallback((_event: TouchEvent) => {
     if (longPressTimeout.current) {
       clearTimeout(longPressTimeout.current);
     }
@@ -78,6 +79,7 @@ export const useGestureDetection = (
     if (!startPos.current) return;
     
     const touch = event.changedTouches[0];
+    if (!touch) return;
     const endPos = { x: touch.clientX, y: touch.clientY };
     const deltaX = endPos.x - startPos.current.x;
     const deltaY = endPos.y - startPos.current.y;
@@ -111,7 +113,6 @@ export const useGestureDetection = (
       }
     } else if (distance > (config.distance || 50)) {
       // Swipe detection
-      const velocity = distance / duration;
       const direction = getSwipeDirection(deltaX, deltaY);
       
       if (config.direction === "any" || config.direction === direction) {
@@ -339,7 +340,7 @@ export const useEnhancedDragDrop = <T>(
     setDragPosition({ x: event.clientX, y: event.clientY });
   }, []);
   
-  const handleDragEnd = useCallback((event: React.DragEvent) => {
+  const handleDragEnd = useCallback((_event: React.DragEvent) => {
     if (draggedItem && dragPosition) {
       onDrop(draggedItem, dragPosition);
     }
@@ -381,6 +382,7 @@ export const usePinchZoom = (
   const getDistance = (touches: TouchList) => {
     const touch1 = touches[0];
     const touch2 = touches[1];
+    if (!touch1 || !touch2) return 0;
     return Math.sqrt(
       Math.pow(touch2.clientX - touch1.clientX, 2) +
       Math.pow(touch2.clientY - touch1.clientY, 2)
@@ -390,6 +392,7 @@ export const usePinchZoom = (
   const getCenter = (touches: TouchList) => {
     const touch1 = touches[0];
     const touch2 = touches[1];
+    if (!touch1 || !touch2) return { x: 0, y: 0 };
     return {
       x: (touch1.clientX + touch2.clientX) / 2,
       y: (touch1.clientY + touch2.clientY) / 2,
