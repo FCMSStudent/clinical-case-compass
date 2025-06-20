@@ -89,7 +89,7 @@ export { OfflineBanner } from "./OfflineBanner"
 // ────────────────────────────────────────────────────────────────────────────────
 
 export { Toaster } from "./toaster"
-export { useToast } from "./use-toast"
+export { useToast } from "@/shared/hooks/use-toast"
 export { toast } from "sonner"
 
 // Shared UI Components
