@@ -15,11 +15,13 @@ export const getGlassmorphicStyles = (
   themeColors: ThemeColors, 
   variant: "default" | "elevated" | "subtle" | "light" | "navigation" | "modal" | "card" | "alert" = "default"
 ) => {
+  const backdropFilter = typeof themeColors.glass.backdrop === 'string' 
+    ? themeColors.glass.backdrop 
+    : themeColors.glass.backdrop.medium;
+
   const baseStyles = {
     backgroundColor: themeColors.glass.background,
-    backdropFilter: typeof themeColors.glass.backdrop === 'string' 
-      ? themeColors.glass.backdrop 
-      : themeColors.glass.backdrop.medium,
+    backdropFilter: backdropFilter,
     border: themeColors.glass.border,
     boxShadow: themeColors.glass.shadow,
   };
@@ -50,28 +52,36 @@ export const getGlassmorphicStyles = (
       return {
         ...baseStyles,
         backgroundColor: themeColors.glass.contextual.navigation,
-        backdropFilter: themeColors.glass.backdrop.medium,
+        backdropFilter: typeof themeColors.glass.backdrop === 'string' 
+          ? themeColors.glass.backdrop 
+          : themeColors.glass.backdrop.medium,
         boxShadow: "0 8px 32px rgba(0, 0, 0, 0.12)",
       };
     case "modal":
       return {
         ...baseStyles,
         backgroundColor: themeColors.glass.contextual.modal,
-        backdropFilter: themeColors.glass.backdrop.heavy,
+        backdropFilter: typeof themeColors.glass.backdrop === 'string' 
+          ? themeColors.glass.backdrop 
+          : themeColors.glass.backdrop.heavy,
         boxShadow: "0 16px 64px rgba(0, 0, 0, 0.2)",
       };
     case "card":
       return {
         ...baseStyles,
         backgroundColor: themeColors.glass.contextual.card,
-        backdropFilter: themeColors.glass.backdrop.light,
+        backdropFilter: typeof themeColors.glass.backdrop === 'string' 
+          ? themeColors.glass.backdrop 
+          : themeColors.glass.backdrop.light,
         boxShadow: "0 4px 16px rgba(0, 0, 0, 0.06)",
       };
     case "alert":
       return {
         ...baseStyles,
         backgroundColor: themeColors.glass.contextual.alert,
-        backdropFilter: themeColors.glass.backdrop.medium,
+        backdropFilter: typeof themeColors.glass.backdrop === 'string' 
+          ? themeColors.glass.backdrop 
+          : themeColors.glass.backdrop.medium,
         boxShadow: "0 8px 24px rgba(0, 0, 0, 0.15)",
       };
     default:

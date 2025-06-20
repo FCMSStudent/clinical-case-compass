@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserRound, TrendingUp, Activity, BookOpen, Users, Target, Plus, Eye } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -207,7 +206,7 @@ const Dashboard = () => {
               </div>
             </CardHeader>
             <CardContent>
-              <RecentCasesCarousel cases={data?.recentCases || []} />
+              <RecentCasesCarousel cases={data?.recentCases || []} isLoading={isLoading} />
             </CardContent>
           </Card>
         </motion.div>
@@ -219,7 +218,7 @@ const Dashboard = () => {
               <CardTitle className="text-white">Recent Activity</CardTitle>
             </CardHeader>
             <CardContent>
-              <DynamicRecentActivity activities={data?.recentActivity || []} />
+              <DynamicRecentActivity />
             </CardContent>
           </Card>
         </motion.div>

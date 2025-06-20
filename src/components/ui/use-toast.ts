@@ -6,3 +6,13 @@ export const toast = (options: any) => {
   // This is a placeholder implementation
   // In a real app, you would integrate with your toast library (e.g., sonner, react-hot-toast)
 };
+
+// Add useToast hook that was missing
+export const useToast = () => {
+  return {
+    toast: (options: any) => {
+      console.log('Toast:', options);
+      // Placeholder implementation
+    }
+  };
+};
