@@ -119,12 +119,14 @@ export const card = {
 };
 
 export const cardStyles = {
-  // ... existing code ...
+  default: 'bg-white/8 backdrop-blur-[18px] saturate-140 brightness-106 shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]',
+  elevated: 'bg-white/12 backdrop-blur-[24px] saturate-160 brightness-108 shadow-[0_12px_48px_rgba(0,0,0,0.12)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]',
+  interactive: 'bg-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] hover:bg-white/25 hover:shadow-[0_12px_48px_rgba(0,0,0,0.12)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] hover:scale-[1.02] hover:brightness-105 hover:saturate-110 cursor-pointer transition-all duration-300 ease-out backdrop-blur-[18px] saturate-140 brightness-106',
 };
 
 export function loadCard(variant: string) {
-  const card = cardStyles[variant] || cardStyles.default;
-  return card;
+  const cardVariant = cardStyles[variant as keyof typeof cardStyles];
+  return cardVariant || cardStyles.default;
 }
 
 /** Bento Grid System */

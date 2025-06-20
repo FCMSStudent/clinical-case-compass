@@ -1,4 +1,3 @@
-
 import { useSupabaseCases } from '@/hooks/use-supabase-cases';
 import { MedicalCase } from '@/types/case';
 
@@ -48,7 +47,29 @@ export function useDashboardData() {
       .slice(0, 3);
   };
 
+  // Create the data object that Dashboard.tsx expects
+  const data = {
+    totalCases: cases.length,
+    activeCases: cases.filter(c => c.status !== 'archived').length,
+    monthlyCases: cases.filter(c => {
+      const date = new Date(c.createdAt);
+      const now = new Date();
+      const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+      return date >= monthStart && date <= now;
+    }).length,
+    totalPatients: new Set(cases.map(c => c.patient.id)).size,
+    recentCases: getRecentCases(),
+    recentActivity: getRecentCases(10).map(caseItem => ({
+      id: caseItem.id,
+      type: 'updated',
+      description: `Case "${caseItem.title}" updated`,
+      time: caseItem.updatedAt,
+      caseId: caseItem.id
+    }))
+  };
+
   return {
+    data,
     cases,
     isLoading,
     error,

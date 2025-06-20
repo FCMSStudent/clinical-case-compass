@@ -1,4 +1,3 @@
-
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -59,6 +58,7 @@ export interface ButtonProps
   asChild?: boolean
   loading?: boolean
   glassIntensity?: 'subtle' | 'medium' | 'strong'
+  children?: React.ReactNode
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
