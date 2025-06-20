@@ -24,6 +24,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { toast } = useToast();
 
   useEffect(() => {
+    // Get the Supabase URL and key from environment variables
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
     // Check if Supabase is properly configured
     if (!supabaseUrl || !supabaseAnonKey) {
       console.warn("Running in offline mode - Supabase credentials not configured");
@@ -77,7 +81,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => {
       subscription.unsubscribe();
     };
-  }, [toast]); // `dispatch` is stable
+  }, [toast]);
 
   const signIn = useCallback(async (email: string, password: string) => {
     if (isOfflineMode) {
