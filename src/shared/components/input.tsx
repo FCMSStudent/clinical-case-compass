@@ -1,3 +1,4 @@
+
 // -----------------------------------------------------------------------------
 // Input – Apple Liquid Glass Enhanced
 // -----------------------------------------------------------------------------
@@ -23,60 +24,60 @@ const inputVariants = cva(
   {
     variants: {
       variant: {
-        // Default glassmorphic variant with Apple-inspired effects
+        // Default glassmorphic variant with improved visibility
         default: cn(
-          "bg-white/8 backdrop-blur-sm border border-white/20",
-          "text-white placeholder:text-white/70",
-          "hover:bg-white/15 hover:border-white/25",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:backdrop-blur-md focus-visible:border-2 focus-visible:border-blue-400/50",
+          "bg-white/15 backdrop-blur-sm border border-white/30",
+          "text-white placeholder:text-white/80",
+          "hover:bg-white/20 hover:border-white/40",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:backdrop-blur-md focus-visible:border-2 focus-visible:border-blue-400/60 focus-visible:bg-white/25",
           "disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed",
           "rounded-2xl"
         ),
         
         // Subtle variant for less prominent inputs
         subtle: cn(
-          "bg-white/5 backdrop-blur-sm border border-white/15",
-          "text-white/90 placeholder:text-white/50",
-          "hover:bg-white/8 hover:border-white/20",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:backdrop-blur-md focus-visible:border-2 focus-visible:border-blue-400/40",
+          "bg-white/10 backdrop-blur-sm border border-white/20",
+          "text-white/90 placeholder:text-white/60",
+          "hover:bg-white/15 hover:border-white/25",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:backdrop-blur-md focus-visible:border-2 focus-visible:border-blue-400/50 focus-visible:bg-white/20",
           "disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed",
           "rounded-2xl"
         ),
         
-        // Elevated variant for important inputs
+        // Elevated variant for important inputs - improved visibility
         elevated: cn(
-          "bg-white/12 backdrop-blur-sm border border-white/20 shadow-sm",
-          "text-white placeholder:text-white/75",
-          "hover:bg-white/20 hover:border-white/30 hover:shadow-md",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:backdrop-blur-md focus-visible:border-2 focus-visible:border-blue-400/60",
+          "bg-white/20 backdrop-blur-sm border border-white/30 shadow-sm",
+          "text-white placeholder:text-white/85",
+          "hover:bg-white/25 hover:border-white/40 hover:shadow-md",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:backdrop-blur-md focus-visible:border-2 focus-visible:border-blue-400/70 focus-visible:bg-white/30",
           "disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed",
           "rounded-2xl"
         ),
         
         // Medical variant for clinical data
         medical: cn(
-          "bg-blue-500/10 backdrop-blur-md border border-blue-400/30",
-          "text-blue-100 placeholder:text-blue-200/60",
-          "hover:bg-blue-500/15 hover:border-blue-400/40",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:filter focus-visible:brightness-110 focus-visible:saturate-105",
+          "bg-blue-500/15 backdrop-blur-md border border-blue-400/40",
+          "text-blue-100 placeholder:text-blue-200/70",
+          "hover:bg-blue-500/20 hover:border-blue-400/50",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:filter focus-visible:brightness-110 focus-visible:saturate-105",
           "disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed"
         ),
         
         // Error variant for validation errors
         error: cn(
-          "bg-red-500/10 backdrop-blur-md border border-red-400/30",
-          "text-red-100 placeholder:text-red-200/60",
-          "hover:bg-red-500/15 hover:border-red-400/40",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:filter focus-visible:brightness-110 focus-visible:saturate-105",
+          "bg-red-500/15 backdrop-blur-md border border-red-400/40",
+          "text-red-100 placeholder:text-red-200/70",
+          "hover:bg-red-500/20 hover:border-red-400/50",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:filter focus-visible:brightness-110 focus-visible:saturate-105",
           "disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed"
         ),
         
         // Success variant for validated inputs
         success: cn(
-          "bg-green-500/10 backdrop-blur-md border border-green-400/30",
-          "text-green-100 placeholder:text-green-200/60",
-          "hover:bg-green-500/15 hover:border-green-400/40",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:filter focus-visible:brightness-110 focus-visible:saturate-105",
+          "bg-green-500/15 backdrop-blur-md border border-green-400/40",
+          "text-green-100 placeholder:text-green-200/70",
+          "hover:bg-green-500/20 hover:border-green-400/50",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:filter focus-visible:brightness-110 focus-visible:saturate-105",
           "disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed"
         ),
       },

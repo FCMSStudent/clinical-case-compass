@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/app/providers/AuthContext";
@@ -13,7 +14,7 @@ import {
   TabsTrigger,
 } from "@/shared/components/tabs";
 import { useToast } from "@/shared/hooks/use-toast";
-import { motion, AnimatePresence, useSpring } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Alert,
   AlertDescription,
@@ -44,12 +45,6 @@ const Auth = () => {
   const { toast } = useToast();
   const { currentTheme } = useTheme();
   const [error, setError] = useState<string | null>(null);
-
-  // Spring animation for toggle with natural bounce
-  const springX = useSpring(activeTab === "login" ? 2 : 200, { 
-    stiffness: 200, 
-    damping: 20 
-  });
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -155,21 +150,29 @@ const Auth = () => {
               </CardHeader>
 
               <CardContent className="px-8 pb-8 space-y-6 relative z-10">
-                {/* Enhanced toggle with spring animation */}
-                <div className="auth-glass-toggle">
+                {/* Fixed toggle with proper animation */}
+                <div className="relative flex bg-white/10 backdrop-blur-sm border border-white/25 rounded-2xl p-1">
                   <motion.div
-                    className="auth-glass-toggle-indicator"
+                    className="absolute top-1 bottom-1 bg-white/25 rounded-xl shadow-sm backdrop-blur-sm border border-white/20"
                     style={{
-                      x: springX,
+                      width: `calc(50% - 4px)`,
+                    }}
+                    animate={{
+                      x: activeTab === "login" ? "2px" : `calc(100% + 2px)`,
+                    }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 200,
+                      damping: 20,
                     }}
                   />
                   <button 
                     onClick={() => setActiveTab("login")}
                     className={cn(
-                      "relative z-10 py-3 px-4 text-sm md:text-base font-medium transition-all duration-300 rounded-xl backdrop-brightness-75",
+                      "relative z-10 flex-1 py-3 px-4 text-sm md:text-base font-medium transition-all duration-300 rounded-xl",
                       activeTab === "login" 
                         ? "text-white" 
-                        : "text-white/85 hover:text-white"
+                        : "text-white/70 hover:text-white/90"
                     )}
                     aria-label="Sign in to your account"
                   >
@@ -178,10 +181,10 @@ const Auth = () => {
                   <button 
                     onClick={() => setActiveTab("signup")}
                     className={cn(
-                      "relative z-10 py-3 px-4 text-sm md:text-base font-medium transition-all duration-300 rounded-xl backdrop-brightness-75",
+                      "relative z-10 flex-1 py-3 px-4 text-sm md:text-base font-medium transition-all duration-300 rounded-xl",
                       activeTab === "signup" 
                         ? "text-white" 
-                        : "text-white/85 hover:text-white"
+                        : "text-white/70 hover:text-white/90"
                     )}
                     aria-label="Create a new account"
                   >
