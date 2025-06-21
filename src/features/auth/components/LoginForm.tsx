@@ -38,7 +38,7 @@ const LoginForm = ({ onLoginSubmit, isLoading }: LoginFormProps) => {
       className="w-full"
     >
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onLoginSubmit)} className="space-y-3">
+        <form onSubmit={form.handleSubmit(onLoginSubmit)} className="space-y-4">
           <FormField
             control={form.control}
             name="email"
@@ -46,7 +46,7 @@ const LoginForm = ({ onLoginSubmit, isLoading }: LoginFormProps) => {
               <FormItem className="form-row-spacing form-field-container">
                 <FormLabel 
                   id="login-email-label"
-                  className="text-base form-label text-white/90"
+                  className="form-label text-white/90"
                 >
                   Email
                 </FormLabel>
@@ -64,7 +64,7 @@ const LoginForm = ({ onLoginSubmit, isLoading }: LoginFormProps) => {
                     size="md"
                     leftIcon={<Mail className="h-4 w-4" />}
                     error={!!fieldState.error}
-                    className="h-10 text-sm glass-input rounded-lg backdrop-blur-sm"
+                    className="h-12 form-input glass-input"
                   />
                 </FormControl>
                 <FormMessage id="login-email-error" className="text-red-300 text-sm" />
@@ -79,7 +79,7 @@ const LoginForm = ({ onLoginSubmit, isLoading }: LoginFormProps) => {
               <FormItem className="form-row-spacing form-field-container">
                 <FormLabel 
                   id="login-password-label"
-                  className="text-base form-label text-white/90"
+                  className="form-label text-white/90"
                 >
                   Password
                 </FormLabel>
@@ -108,7 +108,7 @@ const LoginForm = ({ onLoginSubmit, isLoading }: LoginFormProps) => {
                       </button>
                     }
                     error={!!fieldState.error}
-                    className="h-10 text-sm glass-input rounded-lg backdrop-blur-sm"
+                    className="h-12 form-input glass-input"
                   />
                 </FormControl>
                 <FormMessage id="login-password-error" className="text-red-300 text-sm" />
@@ -116,10 +116,10 @@ const LoginForm = ({ onLoginSubmit, isLoading }: LoginFormProps) => {
             )}
           />
 
-          <div className="pt-2">
+          <div className="pt-4">
             <Button
               type="submit"
-              className="w-full py-2 text-sm font-medium glass-button"
+              className="w-full py-3 button-text glass-button"
               size="md"
               disabled={isLoading}
               variant="primary"
@@ -127,7 +127,7 @@ const LoginForm = ({ onLoginSubmit, isLoading }: LoginFormProps) => {
               {isLoading ? (
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Signing in...
+                  <span className="button-text">Signing in...</span>
                 </div>
               ) : (
                 "Sign In"

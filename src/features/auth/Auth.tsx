@@ -102,8 +102,7 @@ const Auth = () => {
 
   return (
     <motion.div
-      className="min-h-screen relative overflow-hidden"
-      style={{ background: currentTheme.colors.background }}
+      className="min-h-screen relative overflow-hidden auth-gradient-bg"
       variants={pageVariants}
       initial="initial"
       animate="animate"
@@ -121,7 +120,7 @@ const Auth = () => {
             <Card 
               className="border-0 bg-transparent shadow-none relative z-10"
             >
-              <CardHeader className="text-center p-4 pb-2">
+              <CardHeader className="text-left p-6 pb-4">
                 <motion.div
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -130,26 +129,26 @@ const Auth = () => {
                     duration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0.01 : 0.5, 
                     ease: "cubic-bezier(0.16, 1, 0.3, 1)" 
                   }}
-                  className="text-center"
+                  className="text-left"
                 >
                   <motion.div 
-                    className="flex items-center justify-center gap-2 mb-3"
-                    whileHover={window.matchMedia('(prefers-reduced-motion: reduce)').matches ? {} : { scale: 1.05 }}
+                    className="mb-2"
+                    whileHover={window.matchMedia('(prefers-reduced-motion: reduce)').matches ? {} : { scale: 1.02 }}
                     transition={{ duration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 0.2 }}
                   >
-                    <h1 className="text-2xl font-bold tracking-wide text-white transition-all duration-300 hover:brightness-110">
+                    <h1 className="auth-title text-white transition-all duration-300 hover:brightness-110">
                       Medica
                     </h1>
                   </motion.div>
-                  <p className="text-base font-light text-white">
+                  <p className="auth-subtitle text-white/90">
                     Sign in to your account or create a new one
                   </p>
                 </motion.div>
               </CardHeader>
 
-              <CardContent className="p-4 pt-2 space-y-3 relative z-10">
-                {/* Premium toggle with enhanced glass styling */}
-                <div className="relative flex toggle-track p-1 h-10">
+              <CardContent className="p-6 pt-0 space-y-4 relative z-10">
+                {/* Apple Liquid Glass toggle with 16px radius */}
+                <div className="relative flex toggle-track p-1 h-12">
                   <motion.div
                     className="absolute top-1 bottom-1 toggle-thumb"
                     style={{
@@ -170,7 +169,7 @@ const Auth = () => {
                   <button 
                     onClick={() => setActiveTab("login")}
                     className={cn(
-                      "relative z-10 flex-1 text-sm font-medium transition-all duration-300 rounded-lg",
+                      "relative z-10 flex-1 toggle-text transition-all duration-300",
                       activeTab === "login" 
                         ? "text-white" 
                         : "text-white/70 hover:text-white/90 toggle-inactive"
@@ -182,7 +181,7 @@ const Auth = () => {
                   <button 
                     onClick={() => setActiveTab("signup")}
                     className={cn(
-                      "relative z-10 flex-1 text-sm font-medium transition-all duration-300 rounded-lg",
+                      "relative z-10 flex-1 toggle-text transition-all duration-300",
                       activeTab === "signup" 
                         ? "text-white" 
                         : "text-white/70 hover:text-white/90 toggle-inactive"
@@ -204,11 +203,11 @@ const Auth = () => {
                         duration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0.01 : 0.3, 
                         ease: "cubic-bezier(0.16, 1, 0.3, 1)" 
                       }}
-                      className="space-y-3"
+                      className="space-y-4"
                     >
                       <LoginForm isLoading={isLoading} onLoginSubmit={onLoginSubmit} />
                       {error && (
-                        <Alert variant="destructive" className="mt-3 bg-red-500/10 border-red-400/30 backdrop-blur-md rounded-xl">
+                        <Alert variant="destructive" className="mt-4 bg-red-500/10 border-red-400/30 backdrop-blur-md rounded-2xl">
                           <AlertDescription className="text-red-100">{error}</AlertDescription>
                         </Alert>
                       )}
@@ -225,11 +224,11 @@ const Auth = () => {
                         duration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0.01 : 0.3, 
                         ease: "cubic-bezier(0.16, 1, 0.3, 1)" 
                       }}
-                      className="space-y-3"
+                      className="space-y-4"
                     >
                       <SignupForm isLoading={isLoading} onSignupSubmit={onSignupSubmit} />
                       {error && (
-                        <Alert variant="destructive" className="mt-3 bg-red-500/10 border-red-400/30 backdrop-blur-md rounded-xl">
+                        <Alert variant="destructive" className="mt-4 bg-red-500/10 border-red-400/30 backdrop-blur-md rounded-2xl">
                           <AlertDescription className="text-red-100">{error}</AlertDescription>
                         </Alert>
                       )}
@@ -251,7 +250,7 @@ const Auth = () => {
                       role="alert"
                       aria-live="polite"
                     >
-                      <Alert className="bg-green-500/10 border-green-400/30 backdrop-blur-md rounded-xl">
+                      <Alert className="bg-green-500/10 border-green-400/30 backdrop-blur-md rounded-2xl">
                         <CheckCircle2 className="h-4 w-4 text-green-400" aria-hidden="true" />
                         <AlertTitle className="text-green-400 font-medium">
                           Verification Email Sent

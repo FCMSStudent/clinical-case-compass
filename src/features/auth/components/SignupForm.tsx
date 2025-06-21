@@ -41,7 +41,7 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
       className="w-full"
     >
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSignupSubmit)} className="space-y-3">
+        <form onSubmit={form.handleSubmit(onSignupSubmit)} className="space-y-4">
           <FormField
             control={form.control}
             name="fullName"
@@ -49,7 +49,7 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
               <FormItem className="form-row-spacing form-field-container">
                 <FormLabel 
                   id="signup-fullname-label"
-                  className="text-base form-label text-white/90"
+                  className="form-label text-white/90"
                 >
                   Full Name
                 </FormLabel>
@@ -67,7 +67,7 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
                     size="md"
                     leftIcon={<User className="h-4 w-4" />}
                     error={!!fieldState.error}
-                    className="h-10 text-sm glass-input rounded-lg backdrop-blur-sm"
+                    className="h-12 form-input glass-input"
                   />
                 </FormControl>
                 <FormMessage id="signup-fullname-error" className="text-red-300 text-sm" />
@@ -82,7 +82,7 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
               <FormItem className="form-row-spacing form-field-container">
                 <FormLabel 
                   id="signup-email-label"
-                  className="text-base form-label text-white/90"
+                  className="form-label text-white/90"
                 >
                   Email
                 </FormLabel>
@@ -100,7 +100,7 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
                     size="md"
                     leftIcon={<Mail className="h-4 w-4" />}
                     error={!!fieldState.error}
-                    className="h-10 text-sm glass-input rounded-lg backdrop-blur-sm"
+                    className="h-12 form-input glass-input"
                   />
                 </FormControl>
                 <FormMessage id="signup-email-error" className="text-red-300 text-sm" />
@@ -115,7 +115,7 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
               <FormItem className="form-row-spacing form-field-container">
                 <FormLabel 
                   id="signup-password-label"
-                  className="text-base form-label text-white/90"
+                  className="form-label text-white/90"
                 >
                   Password
                 </FormLabel>
@@ -144,7 +144,7 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
                       </button>
                     }
                     error={!!fieldState.error}
-                    className="h-10 text-sm glass-input rounded-lg backdrop-blur-sm"
+                    className="h-12 form-input glass-input"
                   />
                 </FormControl>
                 <FormMessage id="signup-password-error" className="text-red-300 text-sm" />
@@ -159,7 +159,7 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
               <FormItem className="form-row-spacing form-field-container">
                 <FormLabel 
                   id="signup-confirm-password-label"
-                  className="text-base form-label text-white/90"
+                  className="form-label text-white/90"
                 >
                   Confirm Password
                 </FormLabel>
@@ -188,7 +188,7 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
                       </button>
                     }
                     error={!!fieldState.error}
-                    className="h-10 text-sm glass-input rounded-lg backdrop-blur-sm"
+                    className="h-12 form-input glass-input"
                   />
                 </FormControl>
                 <FormMessage id="signup-confirm-password-error" className="text-red-300 text-sm" />
@@ -196,10 +196,10 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
             )}
           />
 
-          <div className="pt-2">
+          <div className="pt-4">
             <Button
               type="submit"
-              className="w-full py-2 text-sm font-medium glass-button"
+              className="w-full py-3 button-text glass-button"
               size="md"
               disabled={isLoading}
               variant="primary"
@@ -207,7 +207,7 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
               {isLoading ? (
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Creating account...
+                  <span className="button-text">Creating account...</span>
                 </div>
               ) : (
                 "Create Account"
