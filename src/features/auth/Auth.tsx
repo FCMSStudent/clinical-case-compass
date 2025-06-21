@@ -114,7 +114,7 @@ const Auth = () => {
           initial={{ opacity: 0, y: 20, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.6, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
-          className="w-full max-w-sm mx-auto"
+          className="w-full max-w-sm mx-auto p-4"
         >
           {/* Refined glassmorphic container */}
           <div className="auth-glass-container">
@@ -125,13 +125,17 @@ const Auth = () => {
                 <motion.div
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2, duration: 0.5, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
+                  transition={{ 
+                    delay: 0.2, 
+                    duration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0.01 : 0.5, 
+                    ease: "cubic-bezier(0.16, 1, 0.3, 1)" 
+                  }}
                   className="text-center"
                 >
                   <motion.div 
                     className="flex items-center justify-center gap-2 mb-3"
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ duration: 0.2 }}
+                    whileHover={window.matchMedia('(prefers-reduced-motion: reduce)').matches ? {} : { scale: 1.05 }}
+                    transition={{ duration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 0.2 }}
                   >
                     <h1 className="text-2xl font-bold tracking-wide text-white transition-all duration-300 hover:brightness-110">
                       Medica
@@ -144,7 +148,7 @@ const Auth = () => {
               </CardHeader>
 
               <CardContent className="px-4 pb-6 space-y-3 relative z-10">
-                {/* Refined toggle with unified styling */}
+                {/* Refined toggle with unified styling - h-9, rounded-lg */}
                 <div className="relative flex bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg p-1 h-9">
                   <motion.div
                     className="absolute top-1 bottom-1 bg-white/30 rounded-lg shadow-sm backdrop-blur-sm border border-white/20"
@@ -154,16 +158,19 @@ const Auth = () => {
                     animate={{
                       x: activeTab === "login" ? "2px" : `calc(100% + 2px)`,
                     }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 200,
-                      damping: 20,
-                    }}
+                    transition={window.matchMedia('(prefers-reduced-motion: reduce)').matches 
+                      ? { duration: 0.01 }
+                      : {
+                          type: "spring",
+                          stiffness: 200,
+                          damping: 20,
+                        }
+                    }
                   />
                   <button 
                     onClick={() => setActiveTab("login")}
                     className={cn(
-                      "relative z-10 flex-1 py-1 px-3 text-sm font-medium transition-all duration-300 rounded-lg",
+                      "relative z-10 flex-1 text-sm font-medium transition-all duration-300 rounded-lg",
                       activeTab === "login" 
                         ? "text-white" 
                         : "text-white/70 hover:text-white/90"
@@ -175,7 +182,7 @@ const Auth = () => {
                   <button 
                     onClick={() => setActiveTab("signup")}
                     className={cn(
-                      "relative z-10 flex-1 py-1 px-3 text-sm font-medium transition-all duration-300 rounded-lg",
+                      "relative z-10 flex-1 text-sm font-medium transition-all duration-300 rounded-lg",
                       activeTab === "signup" 
                         ? "text-white" 
                         : "text-white/70 hover:text-white/90"
@@ -193,7 +200,10 @@ const Auth = () => {
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: 20 }}
-                      transition={{ duration: 0.3, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
+                      transition={{ 
+                        duration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0.01 : 0.3, 
+                        ease: "cubic-bezier(0.16, 1, 0.3, 1)" 
+                      }}
                       className="space-y-3"
                     >
                       <LoginForm isLoading={isLoading} onLoginSubmit={onLoginSubmit} />
@@ -211,7 +221,10 @@ const Auth = () => {
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -20 }}
-                      transition={{ duration: 0.3, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
+                      transition={{ 
+                        duration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0.01 : 0.3, 
+                        ease: "cubic-bezier(0.16, 1, 0.3, 1)" 
+                      }}
                       className="space-y-3"
                     >
                       <SignupForm isLoading={isLoading} onSignupSubmit={onSignupSubmit} />
@@ -230,7 +243,10 @@ const Auth = () => {
                       initial={{ opacity: 0, y: 20, scale: 0.95 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: -20, scale: 0.95 }}
-                      transition={{ duration: 0.4, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
+                      transition={{ 
+                        duration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0.01 : 0.4, 
+                        ease: "cubic-bezier(0.16, 1, 0.3, 1)" 
+                      }}
                       className="mt-4"
                       role="alert"
                       aria-live="polite"

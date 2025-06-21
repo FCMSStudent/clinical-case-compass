@@ -32,7 +32,9 @@ const LoginForm = ({ onLoginSubmit, isLoading }: LoginFormProps) => {
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 20 }}
-      transition={{ duration: 0.3 }}
+      transition={{ 
+        duration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0.01 : 0.3 
+      }}
       className="w-full"
     >
       <Form {...form}>
@@ -62,7 +64,7 @@ const LoginForm = ({ onLoginSubmit, isLoading }: LoginFormProps) => {
                     size="md"
                     leftIcon={<Mail className="h-4 w-4" />}
                     error={!!fieldState.error}
-                    className="h-10 text-sm glass-input rounded-lg"
+                    className="h-10 text-sm glass-input rounded-lg backdrop-blur-sm"
                   />
                 </FormControl>
                 <FormMessage id="login-email-error" className="text-red-300 text-sm" />
@@ -106,7 +108,7 @@ const LoginForm = ({ onLoginSubmit, isLoading }: LoginFormProps) => {
                       </button>
                     }
                     error={!!fieldState.error}
-                    className="h-10 text-sm glass-input rounded-lg"
+                    className="h-10 text-sm glass-input rounded-lg backdrop-blur-sm"
                   />
                 </FormControl>
                 <FormMessage id="login-password-error" className="text-red-300 text-sm" />
