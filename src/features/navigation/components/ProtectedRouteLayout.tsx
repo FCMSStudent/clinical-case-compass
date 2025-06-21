@@ -1,15 +1,16 @@
+
 import React from "react";
 import { EnhancedAppLayout } from "@/features/navigation/components/EnhancedAppLayout";
 import PrivateRoute from "@/features/auth/PrivateRoute";
 import { OfflineBanner } from "@/shared/components/OfflineBanner";
-import { useAuth } from "@/app/providers/AuthContext"; // Import useAuth
+import { useAuth } from "@/app/providers/AuthContext";
 
 interface ProtectedRouteLayoutProps {
   children: React.ReactNode;
 }
 
 const ProtectedRouteLayout: React.FC<ProtectedRouteLayoutProps> = ({ children }) => {
-  const { isOfflineMode } = useAuth(); // Get isOfflineMode from useAuth
+  const { isOfflineMode } = useAuth();
 
   return (
     <PrivateRoute>

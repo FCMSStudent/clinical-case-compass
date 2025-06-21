@@ -1,3 +1,4 @@
+
 import React, {
   useState,
   useCallback,
@@ -15,18 +16,11 @@ import { CaseOverviewStep } from "@/features/cases/create/CaseOverviewStep";
 import { ClinicalDetailStep } from "@/features/cases/create/ClinicalDetailStep";
 import { LearningPointsStep } from "@/features/cases/create/LearningPointsStep";
 import { useErrorHandler } from "@/shared/hooks/use-error-handler";
+import { useToast } from "@/shared/hooks/use-toast";
 import { useSupabaseCases } from "@/shared/hooks/use-supabase-cases";
 import { useAuth } from "@/app/providers/AuthContext";
 import { FileText, Heart, TestTube } from "lucide-react";
 import { z } from "zod";
-import { Button } from "@/shared/components/button";
-import { Card, CardContent } from "@/shared/components/card";
-import { Form as SharedForm } from "@/shared/components/form";
-import { Badge } from "@/shared/components/badge";
-import { ArrowLeft, Check } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "@/shared/utils/utils";
-import { toast } from "sonner";
 
 // Define form data types
 interface FormData {
@@ -107,6 +101,7 @@ const CreateCaseFlow = () => {
     useState<"idle" | "saving" | "saved" | "error">("idle");
   const errorAnnouncementRef = useRef(null);
   const { handleError } = useErrorHandler();
+  const { toast } = useToast();
   const { createCase, isCreating } = useSupabaseCases();
   const { user } = useAuth();
   const navigate = useNavigate();
