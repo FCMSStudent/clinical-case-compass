@@ -153,8 +153,10 @@ export const useSpatialAudioCues = () => {
     pan: number = 0,
     volume: number = 0.3
   ) => {
-    // Simplified: just log the cue for now
-    console.log(`Audio cue: ${frequency}Hz, ${duration}ms, pan: ${pan}, vol: ${volume}`);
+    // Visual feedback instead of audio for accessibility
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`Audio cue: ${frequency}Hz, ${duration}ms, pan: ${pan}, vol: ${volume}`);
+    }
   }, []);
   
   const playSuccessCue = useCallback(() => {
@@ -180,8 +182,10 @@ export const useSpatialAudioCues = () => {
   }, []);
   
   const playNavigationCue = useCallback((direction: string) => {
-    // Visual feedback for navigation
-    console.log(`Navigation cue: ${direction}`);
+    // Visual feedback for navigation - only log in development
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`Navigation cue: ${direction}`);
+    }
   }, []);
   
   return {

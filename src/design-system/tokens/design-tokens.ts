@@ -1,7 +1,11 @@
-
 // ────────────────────────────────────────────────────────────────────────────────
 // DESIGN TOKENS - COMPATIBILITY EXPORT
 // ────────────────────────────────────────────────────────────────────────────────
+
+// Import all tokens directly
+import { colors, themeColors } from './colors';
+import { spacing, borderRadius, shadows } from './spacing';
+import { typography, fontWeight } from './typography';
 
 // Re-export everything from the individual token files
 export * from './colors';
