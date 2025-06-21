@@ -1,3 +1,4 @@
+
 import React from "react";
 import EnhancedNavbar from "../EnhancedNavbar";
 import Breadcrumbs from "../Breadcrumbs";
@@ -43,7 +44,6 @@ export const EnhancedAppLayout: React.FC<EnhancedAppLayoutProps> = ({
         <main className={`flex-1 flex flex-col ${className}`} role="main">
           <div className="container mx-auto px-4 py-6 flex-1">
             <Breadcrumbs />
-            {/* Remove individual page animations to prevent conflicts */}
             {children}
           </div>
         </main>

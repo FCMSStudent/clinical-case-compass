@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -35,165 +36,171 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 20 }}
       transition={{ duration: 0.3 }}
+      className="w-full"
     >
-      <div className="w-full max-w-md mx-auto">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSignupSubmit)} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="fullName"
-              render={({ field, fieldState }) => (
-                <FormItem>
-                  <FormLabel 
-                    id="signup-fullname-label"
-                    className="text-sm font-medium text-white/90"
-                  >
-                    Full Name
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="text"
-                      id="signup-fullname"
-                      aria-labelledby="signup-fullname-label"
-                      aria-describedby={fieldState.error ? "signup-fullname-error" : undefined}
-                      aria-invalid={fieldState.error ? "true" : "false"}
-                      aria-required="true"
-                      placeholder="Enter your full name"
-                      variant="elevated"
-                      size="lg"
-                      leftIcon={<User className="h-5 w-5" />}
-                      error={!!fieldState.error}
-                    />
-                  </FormControl>
-                  <FormMessage id="signup-fullname-error" />
-                </FormItem>
-              )}
-            />
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSignupSubmit)} className="space-y-3">
+          <FormField
+            control={form.control}
+            name="fullName"
+            render={({ field, fieldState }) => (
+              <FormItem className="form-row-spacing">
+                <FormLabel 
+                  id="signup-fullname-label"
+                  className="text-base font-medium text-white/90"
+                >
+                  Full Name
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    type="text"
+                    id="signup-fullname"
+                    aria-labelledby="signup-fullname-label"
+                    aria-describedby={fieldState.error ? "signup-fullname-error" : undefined}
+                    aria-invalid={fieldState.error ? "true" : "false"}
+                    aria-required="true"
+                    placeholder="Enter your full name"
+                    variant="elevated"
+                    size="md"
+                    leftIcon={<User className="h-4 w-4" />}
+                    error={!!fieldState.error}
+                    className="h-10 text-sm glass-input rounded-lg"
+                  />
+                </FormControl>
+                <FormMessage id="signup-fullname-error" className="text-red-300 text-sm" />
+              </FormItem>
+            )}
+          />
 
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field, fieldState }) => (
-                <FormItem>
-                  <FormLabel 
-                    id="signup-email-label"
-                    className="text-sm font-medium text-white/90"
-                  >
-                    Email
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="email"
-                      id="signup-email"
-                      aria-labelledby="signup-email-label"
-                      aria-describedby={fieldState.error ? "signup-email-error" : undefined}
-                      aria-invalid={fieldState.error ? "true" : "false"}
-                      aria-required="true"
-                      placeholder="Enter your email"
-                      variant="elevated"
-                      size="lg"
-                      leftIcon={<Mail className="h-5 w-5" />}
-                      error={!!fieldState.error}
-                    />
-                  </FormControl>
-                  <FormMessage id="signup-email-error" />
-                </FormItem>
-              )}
-            />
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field, fieldState }) => (
+              <FormItem className="form-row-spacing">
+                <FormLabel 
+                  id="signup-email-label"
+                  className="text-base font-medium text-white/90"
+                >
+                  Email
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    type="email"
+                    id="signup-email"
+                    aria-labelledby="signup-email-label"
+                    aria-describedby={fieldState.error ? "signup-email-error" : undefined}
+                    aria-invalid={fieldState.error ? "true" : "false"}
+                    aria-required="true"
+                    placeholder="Enter your email"
+                    variant="elevated"
+                    size="md"
+                    leftIcon={<Mail className="h-4 w-4" />}
+                    error={!!fieldState.error}
+                    className="h-10 text-sm glass-input rounded-lg"
+                  />
+                </FormControl>
+                <FormMessage id="signup-email-error" className="text-red-300 text-sm" />
+              </FormItem>
+            )}
+          />
 
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field, fieldState }) => (
-                <FormItem>
-                  <FormLabel 
-                    id="signup-password-label"
-                    className="text-sm font-medium text-white/90"
-                  >
-                    Password
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type={showPassword ? "text" : "password"}
-                      id="signup-password"
-                      aria-labelledby="signup-password-label"
-                      aria-describedby={fieldState.error ? "signup-password-error" : undefined}
-                      aria-invalid={fieldState.error ? "true" : "false"}
-                      aria-required="true"
-                      placeholder="Create a password"
-                      variant="elevated"
-                      size="lg"
-                      leftIcon={<Lock className="h-5 w-5" />}
-                      rightIcon={
-                        <button
-                          type="button"
-                          aria-label={showPassword ? "Hide password" : "Show password"}
-                          aria-pressed={showPassword}
-                          onClick={() => setShowPassword(!showPassword)}
-                          className="hover:opacity-100 transition-colors"
-                        >
-                          {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                        </button>
-                      }
-                      error={!!fieldState.error}
-                    />
-                  </FormControl>
-                  <FormMessage id="signup-password-error" />
-                </FormItem>
-              )}
-            />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field, fieldState }) => (
+              <FormItem className="form-row-spacing">
+                <FormLabel 
+                  id="signup-password-label"
+                  className="text-base font-medium text-white/90"
+                >
+                  Password
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    type={showPassword ? "text" : "password"}
+                    id="signup-password"
+                    aria-labelledby="signup-password-label"
+                    aria-describedby={fieldState.error ? "signup-password-error" : undefined}
+                    aria-invalid={fieldState.error ? "true" : "false"}
+                    aria-required="true"
+                    placeholder="Create a password"
+                    variant="elevated"
+                    size="md"
+                    leftIcon={<Lock className="h-4 w-4" />}
+                    rightIcon={
+                      <button
+                        type="button"
+                        aria-label={showPassword ? "Hide password" : "Show password"}
+                        aria-pressed={showPassword}
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="hover:opacity-100 transition-colors"
+                      >
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    }
+                    error={!!fieldState.error}
+                    className="h-10 text-sm glass-input rounded-lg"
+                  />
+                </FormControl>
+                <FormMessage id="signup-password-error" className="text-red-300 text-sm" />
+              </FormItem>
+            )}
+          />
 
-            <FormField
-              control={form.control}
-              name="confirmPassword"
-              render={({ field, fieldState }) => (
-                <FormItem>
-                  <FormLabel 
-                    id="signup-confirm-password-label"
-                    className="text-sm font-medium text-white/90"
-                  >
-                    Confirm Password
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type={showConfirmPassword ? "text" : "password"}
-                      id="signup-confirm-password"
-                      aria-labelledby="signup-confirm-password-label"
-                      aria-describedby={fieldState.error ? "signup-confirm-password-error" : undefined}
-                      aria-invalid={fieldState.error ? "true" : "false"}
-                      aria-required="true"
-                      placeholder="Confirm your password"
-                      variant="elevated"
-                      size="lg"
-                      leftIcon={<Lock className="h-5 w-5" />}
-                      rightIcon={
-                        <button
-                          type="button"
-                          aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
-                          aria-pressed={showConfirmPassword}
-                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                          className="hover:opacity-100 transition-colors"
-                        >
-                          {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                        </button>
-                      }
-                      error={!!fieldState.error}
-                    />
-                  </FormControl>
-                  <FormMessage id="signup-confirm-password-error" />
-                </FormItem>
-              )}
-            />
+          <FormField
+            control={form.control}
+            name="confirmPassword"
+            render={({ field, fieldState }) => (
+              <FormItem className="form-row-spacing">
+                <FormLabel 
+                  id="signup-confirm-password-label"
+                  className="text-base font-medium text-white/90"
+                >
+                  Confirm Password
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    type={showConfirmPassword ? "text" : "password"}
+                    id="signup-confirm-password"
+                    aria-labelledby="signup-confirm-password-label"
+                    aria-describedby={fieldState.error ? "signup-confirm-password-error" : undefined}
+                    aria-invalid={fieldState.error ? "true" : "false"}
+                    aria-required="true"
+                    placeholder="Confirm your password"
+                    variant="elevated"
+                    size="md"
+                    leftIcon={<Lock className="h-4 w-4" />}
+                    rightIcon={
+                      <button
+                        type="button"
+                        aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+                        aria-pressed={showConfirmPassword}
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        className="hover:opacity-100 transition-colors"
+                      >
+                        {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    }
+                    error={!!fieldState.error}
+                    className="h-10 text-sm glass-input rounded-lg"
+                  />
+                </FormControl>
+                <FormMessage id="signup-confirm-password-error" className="text-red-300 text-sm" />
+              </FormItem>
+            )}
+          />
 
+          <div className="pt-2">
             <Button
               type="submit"
-              className="w-full"
-              size="lg"
+              className="w-full py-2 rounded-lg bg-white/30 hover:scale-102 transition text-sm font-medium glass-button"
+              size="md"
               disabled={isLoading}
+              variant="primary"
             >
               {isLoading ? (
                 <div className="flex items-center gap-2">
@@ -204,9 +211,9 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
                 "Create Account"
               )}
             </Button>
-          </form>
-        </Form>
-      </div>
+          </div>
+        </form>
+      </Form>
     </motion.div>
   );
 };
