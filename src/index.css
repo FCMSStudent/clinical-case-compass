@@ -66,17 +66,17 @@
   }
 }
 
-/* Apple Liquid Glass auth container - optimized for blue gradient background */
+/* Apple Liquid Glass auth container - subtle and refined */
 .auth-glass-container {
   position: relative;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(25px) saturate(1.2) brightness(1.1);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px) saturate(1.1) brightness(0.95);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 16px;
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.1),
-    0 2px 8px rgba(0, 0, 0, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    0 8px 32px rgba(0, 0, 0, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
   overflow: hidden;
   max-width: 400px;
 }
@@ -126,29 +126,29 @@
   z-index: 1;
 }
 
-/* Apple Liquid Glass inputs - optimized for blue gradient background */
+/* Apple Liquid Glass inputs - subtle and refined */
 .glass-input {
-  background: rgba(255, 255, 255, 0.15) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  backdrop-filter: blur(12px) saturate(1.1);
+  background: rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  backdrop-filter: blur(12px) saturate(1.05);
   border-radius: 16px;
   color: white !important;
   box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    0 2px 4px rgba(0, 0, 0, 0.1);
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 2px 4px rgba(0, 0, 0, 0.06);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   z-index: 1;
 }
 
 .glass-input:focus {
-  background: rgba(255, 255, 255, 0.25) !important;
-  border: 1px solid rgba(255, 255, 255, 0.3) !important;
-  backdrop-filter: blur(16px) saturate(1.2);
+  background: rgba(255, 255, 255, 0.18) !important;
+  border: 1px solid rgba(255, 255, 255, 0.24) !important;
+  backdrop-filter: blur(16px) saturate(1.15);
   box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.15),
-    0 4px 12px rgba(0, 0, 0, 0.15),
-    0 0 0 2px rgba(255, 255, 255, 0.1);
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 4px 12px rgba(0, 0, 0, 0.12),
+    0 0 0 2px rgba(255, 255, 255, 0.08);
 }
 
 .glass-input::placeholder {
