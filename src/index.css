@@ -208,15 +208,13 @@
   text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
 }
 
-/* Apple Liquid Glass toggle - 16px radius, clean design - FIXED OVERLAPPING */
+/* Apple Liquid Glass toggle - 16px radius, clean design - SIMPLIFIED */
 .toggle-track {
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(8px);
   border-radius: 16px;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
-  position: relative;
-  z-index: 1;
 }
 
 .toggle-thumb {
@@ -227,8 +225,6 @@
   box-shadow: 
     0 2px 6px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  position: relative;
-  z-index: 2;
 }
 
 .toggle-inactive {
@@ -236,17 +232,22 @@
   transition: all 0.3s ease;
   border-radius: 14px;
   margin: 2px;
-  position: relative;
-  z-index: 3;
-  transform: none !important;
-  will-change: auto;
 }
 
 .toggle-inactive:hover {
   background: rgba(255, 255, 255, 0.08);
   border-radius: 14px;
-  transform: none !important;
-  z-index: 3;
+}
+
+/* Toggle text elements - simplified */
+.toggle-text {
+  font-size: var(--font-size-md) !important;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Unified Typography System - Consistent 5-Size Scale */
@@ -302,28 +303,6 @@
   font-weight: 600;
   letter-spacing: 0.01em;
   line-height: 1.2;
-}
-
-.toggle-text {
-  font-size: var(--font-size-md) !important;
-  position: relative;
-  z-index: 4;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: auto;
-  transform: none !important;
-  will-change: auto;
-  backface-visibility: hidden;
-}
-
-/* Ensure proper button behavior */
-button.toggle-text {
-  background: none !important;
-  border: none !important;
-  outline: none !important;
-  cursor: pointer;
-  user-select: none;
 }
 
 /* Enhanced form field styling */
