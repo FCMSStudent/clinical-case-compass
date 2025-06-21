@@ -4,31 +4,40 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Rainbow radial gradient background - matching the exact image */
+/* Exact horizontal rainbow light refraction background */
 .auth-gradient-bg {
   background: 
-    radial-gradient(ellipse at center, 
-      rgba(255, 255, 255, 0.9) 0%,
-      rgba(255, 255, 0, 0.8) 15%,
-      rgba(255, 165, 0, 0.7) 25%,
-      rgba(255, 20, 147, 0.8) 35%,
-      rgba(138, 43, 226, 0.9) 45%,
-      rgba(0, 0, 255, 0.8) 55%,
-      rgba(0, 255, 255, 0.7) 65%,
-      rgba(0, 255, 0, 0.6) 75%,
-      rgba(0, 0, 0, 1) 85%);
-  background-size: 100% 100%;
-  animation: pulseGlow 8s ease-in-out infinite;
+    linear-gradient(90deg, 
+      rgba(0, 0, 255, 0.8) 0%,
+      rgba(0, 0, 0, 1) 15%,
+      rgba(0, 0, 0, 1) 85%,
+      rgba(0, 0, 255, 0.8) 100%
+    ),
+    radial-gradient(ellipse 200% 40% at center, 
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 255, 0, 0.9) 15%,
+      rgba(255, 165, 0, 0.8) 25%,
+      rgba(255, 20, 147, 0.9) 35%,
+      rgba(138, 43, 226, 0.8) 45%,
+      rgba(0, 100, 255, 0.7) 55%,
+      rgba(0, 255, 255, 0.6) 65%,
+      rgba(0, 255, 0, 0.5) 75%,
+      rgba(0, 0, 0, 0) 85%
+    ),
+    #000000;
+  background-size: 100% 100%, 100% 100%, 100% 100%;
+  animation: lightRefraction 12s ease-in-out infinite;
 }
 
-@keyframes pulseGlow {
+@keyframes lightRefraction {
   0%, 100% { 
-    filter: brightness(1) saturate(1.2);
-    transform: scale(1);
+    filter: brightness(1) saturate(1.3) hue-rotate(0deg);
   }
-  50% { 
-    filter: brightness(1.1) saturate(1.4);
-    transform: scale(1.02);
+  33% { 
+    filter: brightness(1.1) saturate(1.5) hue-rotate(5deg);
+  }
+  66% { 
+    filter: brightness(0.95) saturate(1.4) hue-rotate(-5deg);
   }
 }
 
