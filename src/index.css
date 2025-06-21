@@ -4,25 +4,32 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Premium gradient background */
+/* Rainbow radial gradient background - matching the exact image */
 .auth-gradient-bg {
-  background: linear-gradient(135deg, 
-    #1e1b4b 0%,
-    #3730a3 15%,
-    #5b21b6 35%,
-    #7c3aed 50%,
-    #a855f7 65%,
-    #c084fc 80%,
-    #e879f9 90%,
-    #f0abfc 100%);
-  background-size: 400% 400%;
-  animation: gradientShift 20s ease infinite;
+  background: 
+    radial-gradient(ellipse at center, 
+      rgba(255, 255, 255, 0.9) 0%,
+      rgba(255, 255, 0, 0.8) 15%,
+      rgba(255, 165, 0, 0.7) 25%,
+      rgba(255, 20, 147, 0.8) 35%,
+      rgba(138, 43, 226, 0.9) 45%,
+      rgba(0, 0, 255, 0.8) 55%,
+      rgba(0, 255, 255, 0.7) 65%,
+      rgba(0, 255, 0, 0.6) 75%,
+      rgba(0, 0, 0, 1) 85%);
+  background-size: 100% 100%;
+  animation: pulseGlow 8s ease-in-out infinite;
 }
 
-@keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+@keyframes pulseGlow {
+  0%, 100% { 
+    filter: brightness(1) saturate(1.2);
+    transform: scale(1);
+  }
+  50% { 
+    filter: brightness(1.1) saturate(1.4);
+    transform: scale(1.02);
+  }
 }
 
 /* Apple-inspired liquid glass typography system */
@@ -52,36 +59,22 @@
   }
 }
 
-/* Apple Liquid Glass auth container - 16px fixed radius */
+/* Apple Liquid Glass auth container - optimized for rainbow background */
 .auth-glass-container {
   position: relative;
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(20px) saturate(1.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(25px) saturate(1.2) brightness(1.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 16px;
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.15),
-    0 2px 8px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
   overflow: hidden;
   max-width: 400px;
 }
 
-/* Apple Liquid Glass specular highlight - 16px radius */
-.auth-glass-container::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 12%;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 80%, transparent 100%);
-  backdrop-filter: blur(6px);
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
-  pointer-events: none;
-  z-index: 1;
-}
+/* Removed specular highlight - clean glass look */
 
 /* Accessibility: Reduced transparency fallback */
 @media (prefers-reduced-transparency: reduce) {
@@ -126,52 +119,52 @@
   z-index: 1;
 }
 
-/* Apple Liquid Glass inputs - 16px radius, clean styling */
+/* Apple Liquid Glass inputs - optimized for dark container */
 .glass-input {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px) saturate(1.05);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px) saturate(1.1);
   border-radius: 16px;
   box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    0 2px 4px rgba(0, 0, 0, 0.06);
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 2px 4px rgba(0, 0, 0, 0.1);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-input:focus {
-  background: rgba(255, 255, 255, 0.18);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(12px) saturate(1.1);
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(16px) saturate(1.2);
   box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.15),
-    0 4px 12px rgba(0, 0, 0, 0.1),
-    0 0 0 2px rgba(255, 255, 255, 0.1);
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    0 0 0 2px rgba(255, 255, 255, 0.08);
 }
 
-/* Apple Liquid Glass button - 16px radius, clean hover */
+/* Apple Liquid Glass button - optimized for dark container */
 .glass-button {
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(12px) saturate(1.05);
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(12px) saturate(1.1);
   border-radius: 16px;
   box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.2),
-    0 4px 12px rgba(0, 0, 0, 0.1),
-    0 2px 4px rgba(0, 0, 0, 0.06);
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    0 2px 4px rgba(0, 0, 0, 0.1);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
 }
 
 .glass-button:hover {
-  background: rgba(255, 255, 255, 0.28);
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   transform: translateY(-1px);
-  backdrop-filter: blur(14px) saturate(1.1);
+  backdrop-filter: blur(16px) saturate(1.2);
   box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.25),
-    0 8px 25px rgba(0, 0, 0, 0.15),
-    0 4px 8px rgba(0, 0, 0, 0.1);
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 8px 25px rgba(0, 0, 0, 0.2),
+    0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .glass-button:active {
@@ -216,9 +209,9 @@
   background: rgba(255, 255, 255, 0.03);
 }
 
-/* Apple Liquid Glass Typography System */
+/* Apple Liquid Glass Typography System - Reduced Sizes */
 .auth-title {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.2;
@@ -226,7 +219,7 @@
 }
 
 .auth-subtitle {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 400;
   letter-spacing: 0.01em;
   line-height: 1.4;
@@ -235,7 +228,7 @@
 }
 
 .form-label {
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 500;
   letter-spacing: 0.01em;
   line-height: 1.3;
@@ -244,21 +237,21 @@
 }
 
 .form-input {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 400;
   letter-spacing: 0.01em;
   line-height: 1.4;
 }
 
 .button-text {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.01em;
   line-height: 1.2;
 }
 
 .toggle-text {
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 500;
   letter-spacing: 0.01em;
   line-height: 1.2;
