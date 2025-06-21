@@ -228,7 +228,7 @@ export const createLazyComponent = <T extends React.ComponentType<any>>(
     return React.createElement(
       React.Suspense,
       { fallback: fallback || React.createElement('div', null, 'Loading...') },
-      React.createElement(LazyComponent, props as any)
+      React.createElement(LazyComponent, props as React.ComponentProps<T>)
     );
   };
 };
@@ -418,7 +418,7 @@ export const useComputationCache = <K, V>(
     const newValue = compute();
     cacheRef.current!.set(key, newValue);
     return newValue;
-  }, [key, compute, dependencies.length, ...dependencies]);
+  }, [key, ...dependencies]);
   
   return computedValue;
 };

@@ -49,7 +49,7 @@ const CaseEdit = () => {
 
   // State for specialized inputs
   const [vitals, setVitals] = useState<Record<string, string>>({});
-  const [labResults, setLabResults] = useState<any[]>([]); // Consider typing this if structure is known
+  const [labResults, setLabResults] = useState<Record<string, unknown>[]>([]);
   const [radiologyStudies, setRadiologyStudies] = useState<RadiologyStudy[]>([]);
 
   // Set up form with existing case data

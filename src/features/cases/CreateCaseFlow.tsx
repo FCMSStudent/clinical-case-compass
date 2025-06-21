@@ -32,7 +32,7 @@ interface FormData {
   caseTitle: string;
   chiefComplaint: string;
   specialty: string;
-  clinicalDetails: any;
+  clinicalDetails: Record<string, unknown>;
   learningPoints: string;
   generalNotes: string;
   resourceLinks: Array<{ url: string; description: string }>;
@@ -59,7 +59,7 @@ const combinedSchema = z.object({
   chiefComplaint: z.string().optional(),
   specialty: z.string().optional(),
   // Clinical details step
-  clinicalDetails: z.any().optional(),
+  clinicalDetails: z.record(z.unknown()).optional(),
   // Learning points step
   learningPoints: z.string().optional(),
   generalNotes: z.string().optional(),

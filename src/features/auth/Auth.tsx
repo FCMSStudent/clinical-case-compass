@@ -73,9 +73,10 @@ const Auth = () => {
         description: "You have successfully logged in.",
         variant: "default",
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Login error:", error);
-      setError(error.message || "An error occurred during login");
+      const errorMessage = error instanceof Error ? error.message : "An error occurred during login";
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -87,9 +88,10 @@ const Auth = () => {
     try {
       await signUp(data.email, data.password, data.fullName);
       setVerificationSent(true);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Signup error:", error);
-      setError(error.message || "An error occurred during signup");
+      const errorMessage = error instanceof Error ? error.message : "An error occurred during signup";
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }

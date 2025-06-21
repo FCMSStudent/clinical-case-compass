@@ -85,11 +85,11 @@ const CaseDetail = () => {
     console.log("Vitals updated:", vitals);
   };
 
-  const handleLabsChange = (labs: any) => {
+  const handleLabsChange = (labs: Record<string, unknown>) => {
     console.log("Labs updated:", labs);
   };
 
-  const handleImagingChange = (imaging: any) => {
+  const handleImagingChange = (imaging: Record<string, unknown>) => {
     console.log("Imaging updated:", imaging);
   };
 
