@@ -199,15 +199,18 @@
 .toggle-inactive {
   background: transparent;
   transition: all 0.3s ease;
+  border-radius: 14px;
+  margin: 2px;
 }
 
 .toggle-inactive:hover {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
 }
 
-/* Apple Liquid Glass Typography System - Reduced Sizes */
+/* Apple Liquid Glass Typography System - Optimized Sizes */
 .auth-title {
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.2;
@@ -215,7 +218,7 @@
 }
 
 .auth-subtitle {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 400;
   letter-spacing: 0.01em;
   line-height: 1.4;
@@ -224,7 +227,7 @@
 }
 
 .form-label {
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.01em;
   line-height: 1.3;
@@ -233,21 +236,21 @@
 }
 
 .form-input {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 400;
   letter-spacing: 0.01em;
   line-height: 1.4;
 }
 
 .button-text {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.01em;
   line-height: 1.2;
 }
 
 .toggle-text {
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.01em;
   line-height: 1.2;
