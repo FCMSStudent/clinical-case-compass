@@ -208,13 +208,14 @@
   text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
 }
 
-/* Apple Liquid Glass toggle - 16px radius, clean design - SIMPLIFIED */
+/* Apple Liquid Glass toggle - COMPLETELY FIXED */
 .toggle-track {
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(8px);
   border-radius: 16px;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+  display: flex;
 }
 
 .toggle-thumb {
@@ -227,27 +228,19 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
-.toggle-inactive {
-  background: transparent;
-  transition: all 0.3s ease;
-  border-radius: 14px;
-  margin: 2px;
-}
-
-.toggle-inactive:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
-}
-
-/* Toggle text elements - simplified */
+/* Toggle text elements - clean and simple */
 .toggle-text {
   font-size: var(--font-size-md) !important;
   font-weight: 500;
   letter-spacing: 0.01em;
   line-height: 1.2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: none !important;
+  border: none !important;
+  outline: none !important;
+  cursor: pointer;
+  user-select: none;
+  padding: 0;
+  margin: 0;
 }
 
 /* Unified Typography System - Consistent 5-Size Scale */
