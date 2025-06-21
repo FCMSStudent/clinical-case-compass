@@ -121,7 +121,7 @@ const Auth = () => {
             <Card 
               className="border-0 bg-transparent shadow-none relative z-10"
             >
-              <CardHeader className="text-center pb-4 pt-6 px-4">
+              <CardHeader className="text-center p-4 pb-2">
                 <motion.div
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -147,11 +147,11 @@ const Auth = () => {
                 </motion.div>
               </CardHeader>
 
-              <CardContent className="px-4 pb-6 space-y-3 relative z-10">
+              <CardContent className="p-4 pt-2 space-y-3 relative z-10">
                 {/* Refined toggle with unified styling - h-9, rounded-lg */}
-                <div className="relative flex bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg p-1 h-9">
+                <div className="relative flex bg-white/10 backdrop-blur-sm border border-white/15 rounded-lg p-1 h-9">
                   <motion.div
-                    className="absolute top-1 bottom-1 bg-white/30 rounded-lg shadow-sm backdrop-blur-sm border border-white/20"
+                    className="absolute top-1 bottom-1 bg-white/30 rounded-lg shadow-sm backdrop-blur-sm border border-white/15"
                     style={{
                       width: `calc(50% - 4px)`,
                     }}
@@ -173,7 +173,7 @@ const Auth = () => {
                       "relative z-10 flex-1 text-sm font-medium transition-all duration-300 rounded-lg",
                       activeTab === "login" 
                         ? "text-white" 
-                        : "text-white/70 hover:text-white/90"
+                        : "text-white/70 hover:text-white/90 toggle-inactive"
                     )}
                     aria-label="Sign in to your account"
                   >
@@ -185,7 +185,7 @@ const Auth = () => {
                       "relative z-10 flex-1 text-sm font-medium transition-all duration-300 rounded-lg",
                       activeTab === "signup" 
                         ? "text-white" 
-                        : "text-white/70 hover:text-white/90"
+                        : "text-white/70 hover:text-white/90 toggle-inactive"
                     )}
                     aria-label="Create a new account"
                   >

@@ -30,27 +30,29 @@
   }
 }
 
-/* Enhanced glassmorphic auth container with refined styling */
+/* Enhanced glassmorphic auth container - uniform & lighter */
 .auth-glass-container {
   position: relative;
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(16px) brightness(0.75);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15), inset 0 2px 8px rgba(255, 255, 255, 0.15);
   overflow: hidden;
 }
 
-/* Toned-down specular highlight - top 20% only with subtle effect */
+/* Refined specular highlight - tiny top 10% reflection */
 .auth-glass-container::after {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  height: 20%;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%);
+  width: 100%;
+  height: 10%;
+  background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(4px);
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
   pointer-events: none;
   z-index: 1;
 }
@@ -98,26 +100,30 @@
   z-index: 1;
 }
 
-/* Input field enhancements for better contrast - simplified blur */
+/* Lightened input fields with subtle fill */
 .glass-input {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(4px);
-  background: rgba(255, 255, 255, 0.15);
   border-radius: 8px;
 }
 
 .glass-input:focus {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(4px);
 }
 
-/* Button enhancements - simplified transitions */
+/* Lightened button with hover state */
 .glass-button {
+  background: rgba(255, 255, 255, 0.3);
+  border: none;
   backdrop-filter: blur(8px);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   border-radius: 8px;
 }
 
 .glass-button:hover {
+  background: rgba(255, 255, 255, 0.4);
   transform: scale(1.02);
   backdrop-filter: blur(8px);
 }
@@ -129,6 +135,12 @@
 
 .form-row-spacing:last-child {
   margin-bottom: 0;
+}
+
+/* Toggle accessibility enhancement for better contrast */
+.toggle-inactive {
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(2px) brightness(0.9);
 }
 
 /* Accessibility: Honor prefers-reduced-motion */

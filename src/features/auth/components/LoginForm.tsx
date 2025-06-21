@@ -119,7 +119,7 @@ const LoginForm = ({ onLoginSubmit, isLoading }: LoginFormProps) => {
           <div className="pt-2">
             <Button
               type="submit"
-              className="w-full py-2 rounded-lg bg-white/30 hover:scale-102 transition text-sm font-medium glass-button"
+              className="w-full py-2 text-sm font-medium glass-button"
               size="md"
               disabled={isLoading}
               variant="primary"
