@@ -1,5 +1,3 @@
-
-
 import React, { useContext, useState, useEffect } from "react";
 import { ThemeColors, themeColors } from '../tokens/colors';
 import { applyThemeToDocument, removeThemeFromDocument } from '../../shared/utils/utilities';
@@ -30,7 +28,7 @@ export const themes: Record<string, ThemeConfig> = {
   medical: {
     name: "Medical Blue",
     description: "Professional medical theme with clinical blue tones",
-    colors: themeColors.medical || themeColors.medical,
+    colors: themeColors.medical!,
     effects: {
       blur: "blur(20px)",
       shadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
@@ -41,7 +39,7 @@ export const themes: Record<string, ThemeConfig> = {
   emerald: {
     name: "Emerald Medical",
     description: "Fresh and modern medical theme with emerald accents",
-    colors: themeColors.emerald || themeColors.medical,
+    colors: themeColors.emerald!,
     effects: {
       blur: "blur(20px)",
       shadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
@@ -52,7 +50,7 @@ export const themes: Record<string, ThemeConfig> = {
   purple: {
     name: "Purple Medical",
     description: "Sophisticated medical theme with purple and violet tones",
-    colors: themeColors.purple || themeColors.medical,
+    colors: themeColors.purple!,
     effects: {
       blur: "blur(20px)",
       shadow: "0 8px 32px rgba(0, 0, 0, 0.1)",

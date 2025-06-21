@@ -204,7 +204,7 @@ export const liquidGlassEffects = {
  * Apply liquid glass styles to an element
  */
 export const applyLiquidGlass = (
-  variant: 'subtle' | 'medium' | 'strong' = 'medium',
+  _variant: 'subtle' | 'medium' | 'strong' = 'medium',
   context: 'card' | 'navigation' | 'modal' | 'alert' | 'button' = 'card'
 ) => {
   const baseStyles = {
