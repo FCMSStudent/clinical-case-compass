@@ -3,12 +3,9 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Rainbow background using actual image */
+/* Blue gradient background matching user's design */
 .auth-gradient-bg {
-  background-image: url('/rainbow-background.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background: linear-gradient(180deg, #E3F2FD 0%, #BBDEFB 25%, #64B5F6 50%, #2196F3 75%, #1565C0 100%);
   background-attachment: fixed;
   min-height: 100vh;
   width: 100vw;
