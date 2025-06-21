@@ -9,7 +9,7 @@ import { AuthContext, AuthContextType } from '@/app/providers/AuthContext';
 
 // Mock dependencies
 vi.mock('@/features/auth/PrivateRoute', () => ({
-  PrivateRoute: ({ children }: { children: React.ReactNode }) => <div data-testid="private-route">{children}</div>,
+  default: ({ children }: { children: React.ReactNode }) => <div data-testid="private-route">{children}</div>,
 }));
 
 vi.mock('@/features/navigation/components/EnhancedAppLayout', () => ({
