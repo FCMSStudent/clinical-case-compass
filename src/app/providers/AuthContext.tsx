@@ -5,6 +5,8 @@ import { useToast } from "@/shared/hooks/use-toast";
 import { authReducer, initialAuthState } from "@/shared/utils/authReducer";
 import type { UserMetadata } from "@/shared/types/auth";
 
+/* eslint-disable react-refresh/only-export-components */
+
 export type AuthContextType = {
   session: Session | null;
   user: User | null;

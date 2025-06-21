@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import '../index.css';
 
+/* eslint-disable react-refresh/only-export-components */
+
 // Error boundary component
 const ErrorBoundary = ({ children }: { children: React.ReactNode }) => {
   try {
