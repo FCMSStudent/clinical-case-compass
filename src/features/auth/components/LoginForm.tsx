@@ -1,14 +1,14 @@
+
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
-import { Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 
 import { Button } from "@/shared/components/button";
 import { Input } from "@/shared/components/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/components/form";
 import { loginSchema, type LoginFormData } from "@/features/auth/authSchemas";
-import { useTheme } from "@/design-system/design-system";
 
 interface LoginFormProps {
   onLoginSubmit: (data: LoginFormData) => Promise<void>;
@@ -17,7 +17,6 @@ interface LoginFormProps {
 
 const LoginForm = ({ onLoginSubmit, isLoading }: LoginFormProps) => {
   const [showPassword, setShowPassword] = useState(false);
-  const { currentTheme } = useTheme();
 
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -26,19 +25,6 @@ const LoginForm = ({ onLoginSubmit, isLoading }: LoginFormProps) => {
       password: "",
     },
   });
-
-  const inputStyles = {
-    backgroundColor: currentTheme.colors.glass.background.replace('0.1', '0.05'),
-    borderColor: currentTheme.colors.glass.border,
-    color: currentTheme.colors.text,
-  };
-
-  const buttonStyles = {
-    backgroundColor: currentTheme.colors.glass.background.replace('0.1', '0.15'),
-    backdropFilter: currentTheme.colors.glass.backdrop,
-    borderColor: currentTheme.colors.glass.border,
-    color: currentTheme.colors.text,
-  };
 
   return (
     <motion.div

@@ -7,12 +7,6 @@ import {
   CardContent,
   CardHeader,
 } from "@/shared/components/card";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/shared/components/tabs";
 import { useToast } from "@/shared/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -21,14 +15,12 @@ import {
   AlertTitle,
 } from "@/shared/components/alert";
 import { CheckCircle2 } from "lucide-react";
-import UnifiedBackground from "@/shared/components/UnifiedBackground";
 import { useTheme } from "@/design-system/design-system";
 import {
   pageTransitionVariants as globalPageTransitionVariants,
   reducedMotionPageTransitionVariants as globalReducedMotionPageVariants,
   getMotionVariants
 } from "@/design-system/animations/motion";
-import { getGlassTransitionVariants, liquidGlassClasses } from "@/design-system/components/glass-effects";
 import { cn } from "@/shared/utils/utils";
 
 import type { LoginFormData, SignupFormData } from "@/features/auth/authSchemas";
