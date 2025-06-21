@@ -61,15 +61,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         dispatch({ type: 'SET_SESSION', payload: currentSession });
         
         if (event === 'SIGNED_IN') {
-          toast({
-            title: "Signed in successfully",
+          toast.success("Signed in successfully", {
             description: "Welcome to Clinical Case Compass",
           });
         }
         
         if (event === 'SIGNED_OUT') {
-          toast({
-            title: "Signed out",
+          toast("Signed out", {
             description: "You have been signed out",
           });
         }
@@ -85,11 +83,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signIn = useCallback(async (email: string, password: string) => {
     if (isOfflineMode) {
-      toast({
-        variant: "destructive",
-        title: "Offline Mode",
-        description: "Authentication is not available in offline mode. Please configure Supabase credentials.",
-      });
+      toast.error("Authentication is not available in offline mode. Please configure Supabase credentials.");
       return;
     }
 
@@ -98,22 +92,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (error) throw error;
     } catch (error: unknown) {
       const err = error as Error;
-      toast({
-        variant: "destructive",
-        title: "Sign in failed",
-        description: err.message || "An error occurred during sign in",
-      });
+      toast.error(err.message || "An error occurred during sign in");
       throw err;
     }
   }, [isOfflineMode, toast]);
 
   const signUp = useCallback(async (email: string, password: string, fullName?: string) => {
     if (isOfflineMode) {
-      toast({
-        variant: "destructive",
-        title: "Offline Mode",
-        description: "Authentication is not available in offline mode. Please configure Supabase credentials.",
-      });
+      toast.error("Authentication is not available in offline mode. Please configure Supabase credentials.");
       return;
     }
 
@@ -127,17 +113,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
       if (error) throw error;
 
-      toast({
-        title: "Account created",
+      toast.success("Account created", {
         description: "Please check your email to verify your account",
       });
     } catch (error: unknown) {
       const err = error as Error;
-      toast({
-        variant: "destructive",
-        title: "Sign up failed",
-        description: err.message || "An error occurred during sign up",
-      });
+      toast.error(err.message || "An error occurred during sign up");
       throw err;
     }
   }, [isOfflineMode, toast]);
@@ -151,21 +132,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await supabase.auth.signOut();
     } catch (error: unknown) {
       const err = error as Error;
-      toast({
-        variant: "destructive",
-        title: "Sign out failed",
-        description: err.message || "An error occurred during sign out",
-      });
+      toast.error(err.message || "An error occurred during sign out");
     }
   }, [isOfflineMode, toast]);
 
   const updateProfile = useCallback(async (data: UserMetadata) => {
     if (isOfflineMode) {
-      toast({
-        variant: "destructive",
-        title: "Offline Mode",
-        description: "Profile updates are not available in offline mode.",
-      });
+      toast.error("Profile updates are not available in offline mode.");
       return;
     }
 
@@ -202,17 +175,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         dispatch({ type: 'SET_USER', payload: authData.user });
       }
 
-      toast({
-        title: "Profile updated",
+      toast.success("Profile updated", {
         description: "Your profile has been updated successfully",
       });
     } catch (error: unknown) {
       const err = error as Error;
-      toast({
-        variant: "destructive",
-        title: "Profile update failed",
-        description: err.message || "An error occurred while updating your profile",
-      });
+      toast.error(err.message || "An error occurred while updating your profile");
       throw err;
     }
   }, [isOfflineMode, toast, user, dispatch]);

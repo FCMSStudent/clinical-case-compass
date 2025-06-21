@@ -1,33 +1,14 @@
-import { useToast } from "@/shared/hooks/use-toast"
-import {
-  Toast,
-  ToastClose,
-  ToastDescription,
-  ToastProvider,
-  ToastTitle,
-  ToastViewport,
-} from "@/shared/components/toast"
+/**
+ * Toast Component - Unified Sonner Implementation
+ * 
+ * This replaces the old custom toast system with Sonner for better
+ * performance and user experience.
+ */
 
-export function Toaster() {
-  const { toasts } = useToast()
+export { Toaster } from "./sonner";
 
-  return (
-    <ToastProvider>
-      {toasts.map(function ({ id, title, description, action, ...props }) {
-        return (
-          <Toast key={id} {...props}>
-            <div className="grid gap-1">
-              {title && <ToastTitle>{title}</ToastTitle>}
-              {description && (
-                <ToastDescription>{description}</ToastDescription>
-              )}
-            </div>
-            {action}
-            <ToastClose />
-          </Toast>
-        )
-      })}
-      <ToastViewport />
-    </ToastProvider>
-  )
-}
+// Re-export toast functions for convenience
+export { toast } from "sonner";
+
+// Type exports for better TypeScript support
+export type { ToasterProps } from "./sonner";
