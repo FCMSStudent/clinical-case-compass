@@ -107,19 +107,19 @@ const Auth = () => {
       animate="animate"
       exit="exit"
     >
-      <div id="main-content" className="relative z-10 min-h-screen flex items-center justify-center p-6 md:p-8">
+      <div id="main-content" className="relative z-10 min-h-screen flex items-center justify-center p-4">
         <motion.div
           initial={{ opacity: 0, y: 20, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.6, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
-          className="w-full max-w-md lg:max-w-lg"
+          className="w-full max-w-sm mx-auto"
         >
-          {/* Enhanced frosted-glass container */}
+          {/* Refined glassmorphic container */}
           <div className="auth-glass-container">
             <Card 
               className="border-0 bg-transparent shadow-none relative z-10"
             >
-              <CardHeader className="text-center pb-6 pt-8 px-8">
+              <CardHeader className="text-center pb-4 pt-6 px-4">
                 <motion.div
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -127,25 +127,25 @@ const Auth = () => {
                   className="text-center"
                 >
                   <motion.div 
-                    className="flex items-center justify-center gap-3 mb-4"
+                    className="flex items-center justify-center gap-2 mb-3"
                     whileHover={{ scale: 1.05 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <h1 className="text-3xl md:text-4xl font-bold tracking-wide text-white transition-all duration-300 hover:brightness-110">
+                    <h1 className="text-2xl font-bold tracking-wide text-white transition-all duration-300 hover:brightness-110">
                       Medica
                     </h1>
                   </motion.div>
-                  <p className="text-base md:text-lg font-light text-white">
+                  <p className="text-base font-light text-white">
                     Sign in to your account or create a new one
                   </p>
                 </motion.div>
               </CardHeader>
 
-              <CardContent className="px-8 pb-8 space-y-6 relative z-10">
-                {/* Fixed toggle with proper animation */}
-                <div className="relative flex bg-white/10 backdrop-blur-sm border border-white/25 rounded-2xl p-1">
+              <CardContent className="px-4 pb-6 space-y-3 relative z-10">
+                {/* Refined toggle with unified styling */}
+                <div className="relative flex bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg p-1 h-9">
                   <motion.div
-                    className="absolute top-1 bottom-1 bg-white/25 rounded-xl shadow-sm backdrop-blur-sm border border-white/20"
+                    className="absolute top-1 bottom-1 bg-white/30 rounded-lg shadow-sm backdrop-blur-sm border border-white/20"
                     style={{
                       width: `calc(50% - 4px)`,
                     }}
@@ -161,7 +161,7 @@ const Auth = () => {
                   <button 
                     onClick={() => setActiveTab("login")}
                     className={cn(
-                      "relative z-10 flex-1 py-3 px-4 text-sm md:text-base font-medium transition-all duration-300 rounded-xl",
+                      "relative z-10 flex-1 py-1 px-3 text-sm font-medium transition-all duration-300 rounded-lg",
                       activeTab === "login" 
                         ? "text-white" 
                         : "text-white/70 hover:text-white/90"
@@ -173,7 +173,7 @@ const Auth = () => {
                   <button 
                     onClick={() => setActiveTab("signup")}
                     className={cn(
-                      "relative z-10 flex-1 py-3 px-4 text-sm md:text-base font-medium transition-all duration-300 rounded-xl",
+                      "relative z-10 flex-1 py-1 px-3 text-sm font-medium transition-all duration-300 rounded-lg",
                       activeTab === "signup" 
                         ? "text-white" 
                         : "text-white/70 hover:text-white/90"
@@ -192,11 +192,11 @@ const Auth = () => {
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: 20 }}
                       transition={{ duration: 0.3, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
-                      className="space-y-4"
+                      className="space-y-3"
                     >
                       <LoginForm isLoading={isLoading} onLoginSubmit={onLoginSubmit} />
                       {error && (
-                        <Alert variant="destructive" className="mt-4 bg-red-500/10 border-red-400/30 backdrop-blur-md">
+                        <Alert variant="destructive" className="mt-3 bg-red-500/10 border-red-400/30 backdrop-blur-md rounded-lg">
                           <AlertDescription className="text-red-100">{error}</AlertDescription>
                         </Alert>
                       )}
@@ -210,11 +210,11 @@ const Auth = () => {
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -20 }}
                       transition={{ duration: 0.3, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
-                      className="space-y-4"
+                      className="space-y-3"
                     >
                       <SignupForm isLoading={isLoading} onSignupSubmit={onSignupSubmit} />
                       {error && (
-                        <Alert variant="destructive" className="mt-4 bg-red-500/10 border-red-400/30 backdrop-blur-md">
+                        <Alert variant="destructive" className="mt-3 bg-red-500/10 border-red-400/30 backdrop-blur-md rounded-lg">
                           <AlertDescription className="text-red-100">{error}</AlertDescription>
                         </Alert>
                       )}
@@ -229,11 +229,11 @@ const Auth = () => {
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: -20, scale: 0.95 }}
                       transition={{ duration: 0.4, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
-                      className="mt-6"
+                      className="mt-4"
                       role="alert"
                       aria-live="polite"
                     >
-                      <Alert className="bg-green-500/10 border-green-400/30 backdrop-blur-md rounded-xl">
+                      <Alert className="bg-green-500/10 border-green-400/30 backdrop-blur-md rounded-lg">
                         <CheckCircle2 className="h-4 w-4 text-green-400" aria-hidden="true" />
                         <AlertTitle className="text-green-400 font-medium">
                           Verification Email Sent

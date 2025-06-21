@@ -1,4 +1,3 @@
-
 // -----------------------------------------------------------------------------
 // Input – Apple Liquid Glass Enhanced
 // -----------------------------------------------------------------------------
@@ -20,18 +19,18 @@ import { typography } from "@/design-system/tokens/typography"
 // ─── Tailwind variant generator ──────────────────────────────────────────────
 const inputVariants = cva(
   // Base styles - unified across all inputs with enhanced glass effects
-  cn("flex w-full rounded-lg transition-all duration-300 ease-out backdrop-blur-md", typography.body.default),
+  cn("flex w-full rounded-lg transition-all duration-300 ease-out backdrop-blur-sm", typography.body.default),
   {
     variants: {
       variant: {
         // Default glassmorphic variant with improved visibility
         default: cn(
           "bg-white/15 backdrop-blur-sm border border-white/30",
-          "text-white placeholder:text-white/80",
+          "text-white placeholder:text-white/70",
           "hover:bg-white/20 hover:border-white/40",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:backdrop-blur-md focus-visible:border-2 focus-visible:border-blue-400/60 focus-visible:bg-white/25",
           "disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed",
-          "rounded-2xl"
+          "rounded-lg"
         ),
         
         // Subtle variant for less prominent inputs
@@ -41,17 +40,17 @@ const inputVariants = cva(
           "hover:bg-white/15 hover:border-white/25",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:backdrop-blur-md focus-visible:border-2 focus-visible:border-blue-400/50 focus-visible:bg-white/20",
           "disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed",
-          "rounded-2xl"
+          "rounded-lg"
         ),
         
         // Elevated variant for important inputs - improved visibility
         elevated: cn(
           "bg-white/20 backdrop-blur-sm border border-white/30 shadow-sm",
-          "text-white placeholder:text-white/85",
+          "text-white placeholder:text-white/70",
           "hover:bg-white/25 hover:border-white/40 hover:shadow-md",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:backdrop-blur-md focus-visible:border-2 focus-visible:border-blue-400/70 focus-visible:bg-white/30",
           "disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed",
-          "rounded-2xl"
+          "rounded-lg"
         ),
         
         // Medical variant for clinical data
@@ -84,9 +83,9 @@ const inputVariants = cva(
       size: {
         xs: 'h-6 px-2 text-xs',
         sm: 'h-8 px-3 text-sm',
-        md: 'h-10 px-4 text-base md:text-lg',
-        lg: 'h-12 px-4 text-lg md:text-xl',
-        xl: 'h-14 px-6 text-xl md:text-2xl',
+        md: 'h-10 px-4 text-sm',
+        lg: 'h-12 px-4 text-base',
+        xl: 'h-14 px-6 text-lg',
       },
     },
     defaultVariants: {
@@ -132,27 +131,21 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     const inputClasses = cn(
       inputVariants({ variant: finalVariant, size: size as 'xs' | 'sm' | 'md' | 'lg' | 'xl' }),
-      leftIcon && "pl-12",
-      rightIcon && "pr-12",
-      // Enhanced frosted glass styling for auth context
-      "relative overflow-hidden",
-      "before:absolute before:inset-0 before:bg-gradient-to-r before:from-white/3 before:to-transparent before:pointer-events-none before:rounded-2xl",
-      "after:absolute after:inset-[1px] after:bg-gradient-to-b after:from-white/5 after:to-transparent after:pointer-events-none after:rounded-[15px]",
+      leftIcon && "pl-10",
+      rightIcon && "pr-10",
       className
     );
 
     // Enhanced focus and hover effects
     const containerClasses = cn(
       "relative group",
-      "transition-all duration-300 ease-out",
-      "hover:scale-[1.01] hover:brightness-105",
-      "focus-within:scale-[1.01] focus-within:brightness-110"
+      "transition-all duration-300 ease-out"
     );
 
     return (
       <div className={containerClasses}>
         {leftIcon && (
-          <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none z-10">
+          <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none z-10">
             <div className="text-white/70 group-focus-within:text-white/90 group-hover:text-white/80 transition-colors duration-300">
               {leftIcon}
             </div>
@@ -176,7 +169,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         />
         
         {rightIcon && (
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center justify-center z-10">
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center z-10">
             <div className="text-white/70 group-focus-within:text-white/90 group-hover:text-white/80 transition-colors duration-300">
               {rightIcon}
             </div>

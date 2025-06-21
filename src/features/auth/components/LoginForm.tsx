@@ -36,15 +36,15 @@ const LoginForm = ({ onLoginSubmit, isLoading }: LoginFormProps) => {
       className="w-full"
     >
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onLoginSubmit)} className="space-y-4">
+        <form onSubmit={form.handleSubmit(onLoginSubmit)} className="space-y-3">
           <FormField
             control={form.control}
             name="email"
             render={({ field, fieldState }) => (
-              <FormItem className="space-y-2">
+              <FormItem className="form-row-spacing">
                 <FormLabel 
                   id="login-email-label"
-                  className="text-sm font-medium text-white/90"
+                  className="text-base font-medium text-white/90"
                 >
                   Email
                 </FormLabel>
@@ -59,13 +59,13 @@ const LoginForm = ({ onLoginSubmit, isLoading }: LoginFormProps) => {
                     aria-required="true"
                     placeholder="Enter your email"
                     variant="elevated"
-                    size="lg"
-                    leftIcon={<Mail className="h-5 w-5" />}
+                    size="md"
+                    leftIcon={<Mail className="h-4 w-4" />}
                     error={!!fieldState.error}
-                    className="h-12 text-base md:text-lg"
+                    className="h-10 text-sm glass-input rounded-lg"
                   />
                 </FormControl>
-                <FormMessage id="login-email-error" className="text-red-300" />
+                <FormMessage id="login-email-error" className="text-red-300 text-sm" />
               </FormItem>
             )}
           />
@@ -74,10 +74,10 @@ const LoginForm = ({ onLoginSubmit, isLoading }: LoginFormProps) => {
             control={form.control}
             name="password"
             render={({ field, fieldState }) => (
-              <FormItem className="space-y-2">
+              <FormItem className="form-row-spacing">
                 <FormLabel 
                   id="login-password-label"
-                  className="text-sm font-medium text-white/90"
+                  className="text-base font-medium text-white/90"
                 >
                   Password
                 </FormLabel>
@@ -92,8 +92,8 @@ const LoginForm = ({ onLoginSubmit, isLoading }: LoginFormProps) => {
                     aria-required="true"
                     placeholder="Enter your password"
                     variant="elevated"
-                    size="lg"
-                    leftIcon={<Lock className="h-5 w-5" />}
+                    size="md"
+                    leftIcon={<Lock className="h-4 w-4" />}
                     rightIcon={
                       <button
                         type="button"
@@ -102,14 +102,14 @@ const LoginForm = ({ onLoginSubmit, isLoading }: LoginFormProps) => {
                         onClick={() => setShowPassword(!showPassword)}
                         className="hover:opacity-100 transition-colors"
                       >
-                        {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </button>
                     }
                     error={!!fieldState.error}
-                    className="h-12 text-base md:text-lg"
+                    className="h-10 text-sm glass-input rounded-lg"
                   />
                 </FormControl>
-                <FormMessage id="login-password-error" className="text-red-300" />
+                <FormMessage id="login-password-error" className="text-red-300 text-sm" />
               </FormItem>
             )}
           />
@@ -117,8 +117,8 @@ const LoginForm = ({ onLoginSubmit, isLoading }: LoginFormProps) => {
           <div className="pt-2">
             <Button
               type="submit"
-              className="w-full h-12 text-base md:text-lg font-medium"
-              size="lg"
+              className="w-full py-2 rounded-lg bg-white/30 hover:scale-102 transition text-sm font-medium glass-button"
+              size="md"
               disabled={isLoading}
               variant="primary"
             >
