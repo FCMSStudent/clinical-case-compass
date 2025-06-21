@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -35,7 +34,7 @@ const LoginForm = ({ onLoginSubmit, isLoading }: LoginFormProps) => {
       transition={{ 
         duration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0.01 : 0.3 
       }}
-      className="w-full"
+      className="w-full space-y-4"
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onLoginSubmit)} className="space-y-4">

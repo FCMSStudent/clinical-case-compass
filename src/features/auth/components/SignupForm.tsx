@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -32,13 +31,13 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
   return (
     <motion.div
       key="signup"
-      initial={{ opacity: 0, x: -20 }}
+      initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: 20 }}
+      exit={{ opacity: 0, x: -20 }}
       transition={{ 
         duration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0.01 : 0.3 
       }}
-      className="w-full"
+      className="w-full space-y-4"
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSignupSubmit)} className="space-y-4">
@@ -210,7 +209,7 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
                   <span className="button-text">Creating account...</span>
                 </div>
               ) : (
-                "Create Account"
+                "Sign Up"
               )}
             </Button>
           </div>

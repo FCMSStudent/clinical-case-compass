@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
@@ -10,7 +9,9 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  background-attachment: fixed;
   min-height: 100vh;
+  width: 100vw;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -34,14 +35,24 @@
     @apply border-gray-200;
   }
   
-  body {
-    @apply bg-white text-gray-900;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  html {
+    background-color: #000000;
+    scroll-behavior: smooth;
   }
   
-  /* Smooth scrolling for better UX */
-  html {
-    scroll-behavior: smooth;
+  body {
+    @apply text-gray-900;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #000000;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+  
+  /* Remove any default backgrounds */
+  #root {
+    background: transparent;
+    min-height: 100vh;
   }
   
   /* Improved focus styles for accessibility */
@@ -125,6 +136,8 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.08),
     0 2px 4px rgba(0, 0, 0, 0.1);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  z-index: 1;
 }
 
 .glass-input:focus {
@@ -150,6 +163,7 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
+  z-index: 1;
 }
 
 .glass-button:hover {
@@ -171,10 +185,22 @@
 /* Form spacing refinements - tightened to space-y-3 equivalent */
 .form-row-spacing {
   margin-bottom: 0.75rem;
+  position: relative;
+  z-index: 1;
 }
 
 .form-row-spacing:last-child {
   margin-bottom: 0;
+}
+
+.form-field-container {
+  position: relative;
+  z-index: 1;
+}
+
+.form-field-container:focus-within .form-label {
+  color: rgba(255, 255, 255, 1);
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
 }
 
 /* Apple Liquid Glass toggle - 16px radius, clean design */

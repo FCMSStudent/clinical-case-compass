@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/app/providers/AuthContext";
@@ -194,47 +193,19 @@ const Auth = () => {
 
                 <AnimatePresence mode="wait">
                   {activeTab === "login" && (
-                    <motion.div
-                      key="login"
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: 20 }}
-                      transition={{ 
-                        duration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0.01 : 0.3, 
-                        ease: "cubic-bezier(0.16, 1, 0.3, 1)" 
-                      }}
-                      className="space-y-4"
-                    >
-                      <LoginForm isLoading={isLoading} onLoginSubmit={onLoginSubmit} />
-                      {error && (
-                        <Alert variant="destructive" className="mt-4 bg-red-500/10 border-red-400/30 backdrop-blur-md rounded-2xl">
-                          <AlertDescription className="text-red-100">{error}</AlertDescription>
-                        </Alert>
-                      )}
-                    </motion.div>
+                    <LoginForm isLoading={isLoading} onLoginSubmit={onLoginSubmit} />
                   )}
 
                   {activeTab === "signup" && (
-                    <motion.div
-                      key="signup"
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                      transition={{ 
-                        duration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0.01 : 0.3, 
-                        ease: "cubic-bezier(0.16, 1, 0.3, 1)" 
-                      }}
-                      className="space-y-4"
-                    >
-                      <SignupForm isLoading={isLoading} onSignupSubmit={onSignupSubmit} />
-                      {error && (
-                        <Alert variant="destructive" className="mt-4 bg-red-500/10 border-red-400/30 backdrop-blur-md rounded-2xl">
-                          <AlertDescription className="text-red-100">{error}</AlertDescription>
-                        </Alert>
-                      )}
-                    </motion.div>
+                    <SignupForm isLoading={isLoading} onSignupSubmit={onSignupSubmit} />
                   )}
                 </AnimatePresence>
+
+                {error && (
+                  <Alert variant="destructive" className="mt-4 bg-red-500/10 border-red-400/30 backdrop-blur-md rounded-2xl">
+                    <AlertDescription className="text-red-100">{error}</AlertDescription>
+                  </Alert>
+                )}
 
                 <AnimatePresence>
                   {verificationSent && (

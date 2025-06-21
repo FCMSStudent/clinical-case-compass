@@ -22,7 +22,7 @@ const LandingPage = React.lazy(() => import("@/features/landing/Landing"));
 
 // Loading component for Suspense fallback
 const PageLoadingFallback = () => (
-  <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+  <div className="min-h-screen flex items-center justify-center bg-black">
     <LoadingScreen />
   </div>
 );
