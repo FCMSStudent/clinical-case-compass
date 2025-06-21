@@ -146,7 +146,7 @@ const Auth = () => {
               </CardHeader>
 
               <CardContent className="p-6 pt-0 space-y-4 relative z-10">
-                {/* Apple Liquid Glass toggle with 16px radius */}
+                {/* Apple Liquid Glass toggle with 16px radius - FIXED OVERLAPPING */}
                 <div className="relative flex toggle-track p-1 h-12">
                   <motion.div
                     className="absolute top-1 bottom-1 toggle-thumb"
@@ -168,7 +168,7 @@ const Auth = () => {
                   <button 
                     onClick={() => setActiveTab("login")}
                     className={cn(
-                      "relative z-10 flex-1 toggle-text transition-all duration-300",
+                      "flex-1 toggle-text transition-all duration-300",
                       activeTab === "login" 
                         ? "text-white" 
                         : "text-white/70 hover:text-white/90 toggle-inactive"
@@ -180,7 +180,7 @@ const Auth = () => {
                   <button 
                     onClick={() => setActiveTab("signup")}
                     className={cn(
-                      "relative z-10 flex-1 toggle-text transition-all duration-300",
+                      "flex-1 toggle-text transition-all duration-300",
                       activeTab === "signup" 
                         ? "text-white" 
                         : "text-white/70 hover:text-white/90 toggle-inactive"
