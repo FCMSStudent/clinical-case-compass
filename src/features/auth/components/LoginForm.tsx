@@ -43,10 +43,10 @@ const LoginForm = ({ onLoginSubmit, isLoading }: LoginFormProps) => {
             control={form.control}
             name="email"
             render={({ field, fieldState }) => (
-              <FormItem className="form-row-spacing">
+              <FormItem className="form-row-spacing form-field-container">
                 <FormLabel 
                   id="login-email-label"
-                  className="text-base font-medium text-white/90"
+                  className="text-base form-label text-white/90"
                 >
                   Email
                 </FormLabel>
@@ -76,10 +76,10 @@ const LoginForm = ({ onLoginSubmit, isLoading }: LoginFormProps) => {
             control={form.control}
             name="password"
             render={({ field, fieldState }) => (
-              <FormItem className="form-row-spacing">
+              <FormItem className="form-row-spacing form-field-container">
                 <FormLabel 
                   id="login-password-label"
-                  className="text-base font-medium text-white/90"
+                  className="text-base form-label text-white/90"
                 >
                   Password
                 </FormLabel>

@@ -46,10 +46,10 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
             control={form.control}
             name="fullName"
             render={({ field, fieldState }) => (
-              <FormItem className="form-row-spacing">
+              <FormItem className="form-row-spacing form-field-container">
                 <FormLabel 
                   id="signup-fullname-label"
-                  className="text-base font-medium text-white/90"
+                  className="text-base form-label text-white/90"
                 >
                   Full Name
                 </FormLabel>
@@ -79,10 +79,10 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
             control={form.control}
             name="email"
             render={({ field, fieldState }) => (
-              <FormItem className="form-row-spacing">
+              <FormItem className="form-row-spacing form-field-container">
                 <FormLabel 
                   id="signup-email-label"
-                  className="text-base font-medium text-white/90"
+                  className="text-base form-label text-white/90"
                 >
                   Email
                 </FormLabel>
@@ -112,10 +112,10 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
             control={form.control}
             name="password"
             render={({ field, fieldState }) => (
-              <FormItem className="form-row-spacing">
+              <FormItem className="form-row-spacing form-field-container">
                 <FormLabel 
                   id="signup-password-label"
-                  className="text-base font-medium text-white/90"
+                  className="text-base form-label text-white/90"
                 >
                   Password
                 </FormLabel>
@@ -156,10 +156,10 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
             control={form.control}
             name="confirmPassword"
             render={({ field, fieldState }) => (
-              <FormItem className="form-row-spacing">
+              <FormItem className="form-row-spacing form-field-container">
                 <FormLabel 
                   id="signup-confirm-password-label"
-                  className="text-base font-medium text-white/90"
+                  className="text-base form-label text-white/90"
                 >
                   Confirm Password
                 </FormLabel>

@@ -148,10 +148,10 @@ const Auth = () => {
               </CardHeader>
 
               <CardContent className="p-4 pt-2 space-y-3 relative z-10">
-                {/* Refined toggle with unified styling - h-9, rounded-lg */}
-                <div className="relative flex bg-white/10 backdrop-blur-sm border border-white/15 rounded-lg p-1 h-9">
+                {/* Premium toggle with enhanced glass styling */}
+                <div className="relative flex toggle-track p-1 h-10">
                   <motion.div
-                    className="absolute top-1 bottom-1 bg-white/30 rounded-lg shadow-sm backdrop-blur-sm border border-white/15"
+                    className="absolute top-1 bottom-1 toggle-thumb"
                     style={{
                       width: `calc(50% - 4px)`,
                     }}
@@ -208,7 +208,7 @@ const Auth = () => {
                     >
                       <LoginForm isLoading={isLoading} onLoginSubmit={onLoginSubmit} />
                       {error && (
-                        <Alert variant="destructive" className="mt-3 bg-red-500/10 border-red-400/30 backdrop-blur-md rounded-lg">
+                        <Alert variant="destructive" className="mt-3 bg-red-500/10 border-red-400/30 backdrop-blur-md rounded-xl">
                           <AlertDescription className="text-red-100">{error}</AlertDescription>
                         </Alert>
                       )}
@@ -229,7 +229,7 @@ const Auth = () => {
                     >
                       <SignupForm isLoading={isLoading} onSignupSubmit={onSignupSubmit} />
                       {error && (
-                        <Alert variant="destructive" className="mt-3 bg-red-500/10 border-red-400/30 backdrop-blur-md rounded-lg">
+                        <Alert variant="destructive" className="mt-3 bg-red-500/10 border-red-400/30 backdrop-blur-md rounded-xl">
                           <AlertDescription className="text-red-100">{error}</AlertDescription>
                         </Alert>
                       )}
@@ -251,7 +251,7 @@ const Auth = () => {
                       role="alert"
                       aria-live="polite"
                     >
-                      <Alert className="bg-green-500/10 border-green-400/30 backdrop-blur-md rounded-lg">
+                      <Alert className="bg-green-500/10 border-green-400/30 backdrop-blur-md rounded-xl">
                         <CheckCircle2 className="h-4 w-4 text-green-400" aria-hidden="true" />
                         <AlertTitle className="text-green-400 font-medium">
                           Verification Email Sent
