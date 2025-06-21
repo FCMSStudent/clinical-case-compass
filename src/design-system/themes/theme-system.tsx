@@ -1,9 +1,6 @@
-// ────────────────────────────────────────────────────────────────────────────────
-// THEME SYSTEM
-// ────────────────────────────────────────────────────────────────────────────────
 
-import React from "react";
-import { createContext, useContext, useState, useEffect } from "react";
+
+import React, { useContext, useState, useEffect } from "react";
 import { ThemeColors, themeColors } from '../tokens/colors';
 import { applyThemeToDocument, removeThemeFromDocument } from '../../shared/utils/utilities';
 
@@ -33,7 +30,7 @@ export const themes: Record<string, ThemeConfig> = {
   medical: {
     name: "Medical Blue",
     description: "Professional medical theme with clinical blue tones",
-    colors: themeColors.medical,
+    colors: themeColors.medical || themeColors.medical,
     effects: {
       blur: "blur(20px)",
       shadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
@@ -44,7 +41,7 @@ export const themes: Record<string, ThemeConfig> = {
   emerald: {
     name: "Emerald Medical",
     description: "Fresh and modern medical theme with emerald accents",
-    colors: themeColors.emerald,
+    colors: themeColors.emerald || themeColors.medical,
     effects: {
       blur: "blur(20px)",
       shadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
@@ -55,7 +52,7 @@ export const themes: Record<string, ThemeConfig> = {
   purple: {
     name: "Purple Medical",
     description: "Sophisticated medical theme with purple and violet tones",
-    colors: themeColors.purple,
+    colors: themeColors.purple || themeColors.medical,
     effects: {
       blur: "blur(20px)",
       shadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
@@ -92,7 +89,9 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   // Apply theme to document
   useEffect(() => {
-    applyThemeToDocument(currentTheme.colors);
+    if (currentTheme?.colors) {
+      applyThemeToDocument(currentTheme.colors);
+    }
     return () => removeThemeFromDocument();
   }, [currentTheme]);
 

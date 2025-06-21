@@ -45,11 +45,11 @@ export const animations = {
   staggeredContainer,
   staggeredItem,
   floatingAnimation,
-  floating, // Add alias
+  floating,
   pulseGlow,
   morphingBackground,
   glassyHover,
-  fadeIn, // Add missing fadeIn
+  fadeIn,
   useAdaptiveTinting,
   useMotionResponsiveHover,
   useParallaxScroll,
