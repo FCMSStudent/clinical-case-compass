@@ -69,7 +69,7 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
                     className="h-12 form-input glass-input"
                   />
                 </FormControl>
-                <FormMessage id="signup-fullname-error" className="text-red-300 text-sm" />
+                <FormMessage id="signup-fullname-error" className="form-error-message text-red-300" />
               </FormItem>
             )}
           />
@@ -102,7 +102,7 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
                     className="h-12 form-input glass-input"
                   />
                 </FormControl>
-                <FormMessage id="signup-email-error" className="text-red-300 text-sm" />
+                <FormMessage id="signup-email-error" className="form-error-message text-red-300" />
               </FormItem>
             )}
           />
@@ -146,7 +146,7 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
                     className="h-12 form-input glass-input"
                   />
                 </FormControl>
-                <FormMessage id="signup-password-error" className="text-red-300 text-sm" />
+                <FormMessage id="signup-password-error" className="form-error-message text-red-300" />
               </FormItem>
             )}
           />
@@ -190,7 +190,7 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
                     className="h-12 form-input glass-input"
                   />
                 </FormControl>
-                <FormMessage id="signup-confirm-password-error" className="text-red-300 text-sm" />
+                <FormMessage id="signup-confirm-password-error" className="form-error-message text-red-300" />
               </FormItem>
             )}
           />

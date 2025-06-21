@@ -66,7 +66,7 @@ const LoginForm = ({ onLoginSubmit, isLoading }: LoginFormProps) => {
                     className="h-12 form-input glass-input"
                   />
                 </FormControl>
-                <FormMessage id="login-email-error" className="text-red-300 text-sm" />
+                <FormMessage id="login-email-error" className="form-error-message text-red-300" />
               </FormItem>
             )}
           />
@@ -110,7 +110,7 @@ const LoginForm = ({ onLoginSubmit, isLoading }: LoginFormProps) => {
                     className="h-12 form-input glass-input"
                   />
                 </FormControl>
-                <FormMessage id="login-password-error" className="text-red-300 text-sm" />
+                <FormMessage id="login-password-error" className="form-error-message text-red-300" />
               </FormItem>
             )}
           />
