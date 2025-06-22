@@ -221,6 +221,7 @@ const Dashboard = () => {
       </motion.div>
       <FloatingNewCaseButton onClick={() => navigate('/cases/new')} />
     </div>
+    </>
   );
 };
 

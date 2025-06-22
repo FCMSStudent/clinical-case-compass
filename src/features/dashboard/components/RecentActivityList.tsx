@@ -153,29 +153,6 @@ const RecentActivityList: React.FC = () => {
           </Button>
         </motion.div>
       )}
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
-          
-          {/* View All Activities Button */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.6, ease: "easeOut" }}
-            className="pt-4 border-t border-white/20"
-          >
-            <Button 
-              variant="outline" 
-              className="w-full border-white/30 text-white hover:bg-white/20"
-            >
-              View All Activities
-            </Button>
-          </motion.div>
-        </div>
-      </div>
     </div>
   );
 };
