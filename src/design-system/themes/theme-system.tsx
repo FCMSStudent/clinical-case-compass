@@ -37,11 +37,18 @@ const fallbackColors: ThemeColors = {
   glass: {
     background: "rgba(255, 255, 255, 0.1)",
     border: "rgba(255, 255, 255, 0.2)",
-    shadow: "0 8px 32px rgba(0, 0, 0, 0.1)"
+    shadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
+    subtle: "rgba(255, 255, 255, 0.05)",
+    vibrant: "rgba(255, 255, 255, 0.15)",
+    frosted: "rgba(255, 255, 255, 0.08)",
+    innerShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.1)",
+    backdrop: "backdrop-blur(20px)",
+    overlay: "rgba(0, 0, 0, 0.1)"
   },
   gradient: {
     primary: "linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)",
-    secondary: "linear-gradient(135deg, #0284c7 0%, #0369a1 100%)"
+    secondary: "linear-gradient(135deg, #0284c7 0%, #0369a1 100%)",
+    accent: "linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)"
   },
   status: {
     success: "#10b981",

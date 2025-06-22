@@ -1,5 +1,5 @@
-// Remove: import { getCaseById } from "@/data/mock-data";
-import React, { useState, useEffect } from "react";
+
+import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -9,11 +9,10 @@ import { toast } from "sonner";
 
 import { PageHeader } from "@/shared/components/page-header";
 import { useLocalStorage } from "@/shared/hooks/use-local-storage";
-import { MedicalCase, RadiologyStudy } from "@/shared/types/case";
+import { MedicalCase, RadiologyStudy, LabTest } from "@/shared/types/case";
 import { useSupabaseCases } from "@/shared/hooks/use-supabase-cases";
 import { CaseEditForm } from "@/features/cases/edit/CaseEditForm";
 import { typography, layouts } from "@/design-system/ui-styles";
-import { colors } from "@/design-system/tokens/design-tokens";
 
 // Define the form schema with optional fields
 const formSchema = z.object({
@@ -49,7 +48,7 @@ const CaseEdit = () => {
 
   // State for specialized inputs
   const [vitals, setVitals] = useState<Record<string, string>>({});
-  const [labResults, setLabResults] = useState<Record<string, unknown>[]>([]);
+  const [labResults, setLabResults] = useState<LabTest[]>([]);
   const [radiologyStudies, setRadiologyStudies] = useState<RadiologyStudy[]>([]);
 
   // Set up form with existing case data
@@ -112,26 +111,21 @@ const CaseEdit = () => {
     if (medicalCase.radiologyStudies) {
       setRadiologyStudies(medicalCase.radiologyStudies);
     }
-    // Removed backward compatibility for radiologyExams as it's handled by the hook
   }, [medicalCase, id, navigate, form, isLoading, error]);
 
   // Helper to map SimpleImaging's output to RadiologyStudy[]
-  // This is a placeholder and might need more sophisticated logic
-  // to determine 'type' (modality) and 'date'.
   const mapSimpleImagingToRadiologyStudy = (simpleStudies: {id: string, type: string, findings: string}[]): RadiologyStudy[] => {
     return simpleStudies.map(ss => ({
       id: ss.id,
-      name: ss.type, // SimpleImaging's 'type' is more like a 'name' (e.g., "Chest X-Ray")
-      type: extractModalityFromName(ss.type), // Needs a helper to get "X-Ray" from "Chest X-Ray"
+      name: ss.type,
+      type: extractModalityFromName(ss.type),
       findings: ss.findings,
-      date: new Date().toISOString().split('T')[0], // Default to today
-      impression: "", // SimpleImaging doesn't have impression
+      date: new Date().toISOString().split('T')[0],
+      impression: "",
     }));
   };
 
-  // This function would try to extract modality like "CT", "MRI", "X-Ray"
-  // from a study name like "CT Head" or "Chest X-Ray".
-  // This is a simplistic implementation.
+  // Extract modality from study name
   const extractModalityFromName = (studyName: string): string => {
     const lowerName = studyName.toLowerCase();
     if (lowerName.includes("ct") || lowerName.includes("computed tomography")) return "CT";
@@ -139,10 +133,8 @@ const CaseEdit = () => {
     if (lowerName.includes("x-ray") || lowerName.includes("radiography")) return "X-Ray";
     if (lowerName.includes("ultrasound")) return "Ultrasound";
     if (lowerName.includes("pet")) return "PET";
-    // Add more rules as needed
-    return "Other"; // Default modality
+    return "Other";
   };
-
 
   const handleImagingChange = (studiesFromSimpleImaging: {id: string, type: string, findings: string}[]) => {
     setRadiologyStudies(mapSimpleImagingToRadiologyStudy(studiesFromSimpleImaging));
@@ -168,7 +160,7 @@ const CaseEdit = () => {
           name: values.patientName || medicalCase.patient.name,
           age: values.patientAge || medicalCase.patient.age,
           gender: values.patientGender || medicalCase.patient.gender,
-          medicalRecordNumber: values.patientMRN || undefined,
+          medicalRecordNumber: values.patientMRN || medicalCase.patient.medicalRecordNumber || "",
         },
         vitals: vitals,
         labTests: labResults,
@@ -246,7 +238,7 @@ const CaseEdit = () => {
         onSubmit={onSubmit}
         isSaving={isSaving}
         onVitalsChange={setVitals}
-        onLabChange={setLabResults} // Consider mapping this if SimpleLabs output is different
+        onLabChange={setLabResults}
         onImagingChange={handleImagingChange}
         initialVitals={initialVitals}
         patientAge={form.watch("patientAge")}
