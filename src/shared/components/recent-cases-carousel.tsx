@@ -66,19 +66,19 @@ export function RecentCasesCarousel({ cases, isLoading }: RecentCasesCarouselPro
 
   if (cases.length === 0) {
     return (
-      <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-        <CardContent className="p-8 text-center">
-          <FileText className="h-12 w-12 text-white/40 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-white mb-2">No Cases Yet</h3>
-          <p className="text-white/70 mb-4">Start by creating your first medical case</p>
-          <Button 
-            onClick={() => navigate('/cases/new')}
-            className="bg-blue-600 hover:bg-blue-700 text-white"
-          >
-            Create First Case
-          </Button>
-        </CardContent>
-      </Card>
+      // Applying glass-panel style, using p-6 as it's a standalone panel
+      <div className="bg-white/20 backdrop-blur-lg border border-white/20 rounded-[16px] p-6 text-center">
+        <FileText className="h-12 w-12 text-white/60 mx-auto mb-4" /> {/* Increased icon opacity slightly */}
+        <h3 className="text-xl font-semibold text-white mb-2">No Cases Yet</h3> {/* Typography: text-xl as per general panel titles */}
+        <p className="text-base text-white/80 mb-4">Start by creating your first medical case</p> {/* Typography: text-base, improved contrast */}
+        <Button
+          onClick={() => navigate('/cases/new')}
+          // Button styling will be reviewed in a later step, using existing for now
+          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-[16px]" // Added rounded-[16px]
+        >
+          Create First Case
+        </Button>
+      </div>
     );
   }
 
@@ -122,60 +122,43 @@ export function RecentCasesCarousel({ cases, isLoading }: RecentCasesCarouselPro
         >
           <AnimatePresence>
             {cases.map((medicalCase, index) => (
+              // Applying glass-panel p-4 to the motion.div, replacing Card
               <motion.div
                 key={medicalCase.id}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.2, delay: index * 0.05 }}
-                className="min-w-[280px]"
+                className="min-w-[280px] bg-white/20 backdrop-blur-lg border border-white/20 rounded-[16px] p-4 hover:shadow-lg transition cursor-pointer group"
+                onClick={() => handleCaseClick(medicalCase.id)}
               >
-                <Card 
-                  className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/15 hover:border-white/30 transition-all duration-300 cursor-pointer group"
-                  onClick={() => handleCaseClick(medicalCase.id)}
-                >
-                  <CardContent className="p-4">
-                    <div className="space-y-3">
-                      <div className="flex items-start justify-between">
-                        <div className="p-2 bg-blue-500/20 rounded-lg group-hover:bg-blue-500/30 transition-colors">
-                          <FileText className="h-4 w-4 text-blue-400" />
-                        </div>
-                        <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
-                          {medicalCase.patient.age}y {medicalCase.patient.gender}
-                        </Badge>
+                {/* Replicating spec structure: icon + text, then status dot */}
+                <div className="flex items-center justify-between h-full"> {/* Added h-full for consistent height if needed */}
+                  <span className="flex items-center flex-grow min-w-0 mr-3"> {/* Left part */}
+                    {/* Icon section - glass-inner */}
+                    <div className="bg-white/10 backdrop-blur-sm p-2 rounded-full mr-3 flex-shrink-0">
+                      {/* Using FileText from original carousel item, styled as per spec */}
+                      <FileText className="h-5 w-5 text-white/70" />
+                    </div>
+
+                    {/* Text content div */}
+                    <div className="flex-grow min-w-0">
+                      <div className="font-semibold text-white text-base truncate" title={medicalCase.title}>
+                        {medicalCase.title || "Untitled Case"}
                       </div>
-                      
-                      <div>
-                        <h4 className="font-semibold text-white line-clamp-1 group-hover:text-blue-100 transition-colors">
-                          {medicalCase.title}
-                        </h4>
-                        <div className="flex items-center gap-1 text-sm text-white/70 mt-1">
-                          <User className="h-3 w-3" />
-                          {medicalCase.patient.name}
-                        </div>
-                      </div>
-                      
-                      <p className="text-sm text-white/70 line-clamp-2">
-                        {medicalCase.chiefComplaint}
-                      </p>
-                      
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-1 text-xs text-white/60">
-                          <Clock className="h-3 w-3" />
-                          {formatDistanceToNow(new Date(medicalCase.updatedAt), { addSuffix: true })}
-                        </div>
-                        {medicalCase.tags.length > 0 && (
-                          <Badge 
-                            variant="secondary" 
-                            className="bg-purple-500/20 text-purple-300 border-purple-400/30 text-xs"
-                          >
-                            {medicalCase.tags[0].name}
-                          </Badge>
-                        )}
+                      <div className="text-sm text-white/70 truncate">
+                        {medicalCase.patient ? `${medicalCase.patient.name} • ${formatDistanceToNow(new Date(medicalCase.updatedAt), { addSuffix: true })}` : formatDistanceToNow(new Date(medicalCase.updatedAt), { addSuffix: true })}
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
+                  </span>
+
+                  {/* Right Section: Status Indicator (e.g. based on tags or a status field) */}
+                  {/* Using a simple green dot as placeholder, similar to CaseListItem */}
+                  <span className="inline-block w-3 h-3 rounded-full bg-green-400/80 flex-shrink-0"></span>
+                </div>
+                {/* Original more detailed content is simplified to match spec.
+                    If details like chief complaint, specific tags are needed, this structure would expand.
+                */}
               </motion.div>
             ))}
           </AnimatePresence>
