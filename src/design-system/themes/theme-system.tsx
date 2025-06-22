@@ -24,21 +24,39 @@ interface ThemeContextType {
   getThemeNames: () => Array<{ name: string; description: string }>;
 }
 
+/** Complete fallback colors that match ThemeColors interface */
+const fallbackColors: ThemeColors = {
+  primary: "#0ea5e9",
+  secondary: "#0284c7",
+  accent: "#3b82f6",
+  background: "linear-gradient(135deg, #0c4a6e 0%, #0369a1 50%, #0284c7 100%)",
+  surface: "#f8fafc",
+  text: "#ffffff",
+  textSecondary: "rgba(255, 255, 255, 0.8)",
+  border: "rgba(255, 255, 255, 0.2)",
+  glass: {
+    background: "rgba(255, 255, 255, 0.1)",
+    border: "rgba(255, 255, 255, 0.2)",
+    shadow: "0 8px 32px rgba(0, 0, 0, 0.1)"
+  },
+  gradient: {
+    primary: "linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)",
+    secondary: "linear-gradient(135deg, #0284c7 0%, #0369a1 100%)"
+  },
+  status: {
+    success: "#10b981",
+    warning: "#f59e0b",
+    error: "#ef4444",
+    info: "#3b82f6"
+  }
+};
+
 /** Predefined Theme Configurations */
 export const themes: Record<string, ThemeConfig> = {
   medical: {
     name: "Medical Blue",
     description: "Professional medical theme with clinical blue tones",
-    colors: themeColors.medical || themeColors.medical || {
-      primary: "#0ea5e9",
-      secondary: "#0284c7",
-      accent: "#3b82f6",
-      background: "linear-gradient(135deg, #0c4a6e 0%, #0369a1 50%, #0284c7 100%)",
-      surface: "#f8fafc",
-      text: "#ffffff",
-      textSecondary: "rgba(255, 255, 255, 0.8)",
-      border: "rgba(255, 255, 255, 0.2)"
-    },
+    colors: themeColors.medical || fallbackColors,
     effects: {
       blur: "blur(20px)",
       shadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
@@ -49,16 +67,7 @@ export const themes: Record<string, ThemeConfig> = {
   emerald: {
     name: "Emerald Medical",
     description: "Fresh and modern medical theme with emerald accents",
-    colors: themeColors.emerald || themeColors.medical || {
-      primary: "#10b981",
-      secondary: "#059669",
-      accent: "#34d399",
-      background: "linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%)",
-      surface: "#f0fdf4",
-      text: "#ffffff",
-      textSecondary: "rgba(255, 255, 255, 0.8)",
-      border: "rgba(255, 255, 255, 0.2)"
-    },
+    colors: themeColors.emerald || fallbackColors,
     effects: {
       blur: "blur(20px)",
       shadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
@@ -69,16 +78,7 @@ export const themes: Record<string, ThemeConfig> = {
   purple: {
     name: "Purple Medical",
     description: "Sophisticated medical theme with purple and violet tones",
-    colors: themeColors.purple || themeColors.medical || {
-      primary: "#8b5cf6",
-      secondary: "#7c3aed",
-      accent: "#a78bfa",
-      background: "linear-gradient(135deg, #4c1d95 0%, #5b21b6 50%, #6d28d9 100%)",
-      surface: "#faf5ff",
-      text: "#ffffff",
-      textSecondary: "rgba(255, 255, 255, 0.8)",
-      border: "rgba(255, 255, 255, 0.2)"
-    },
+    colors: themeColors.purple || fallbackColors,
     effects: {
       blur: "blur(20px)",
       shadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
@@ -93,7 +93,7 @@ const ThemeContext = React.createContext<ThemeContextType | undefined>(undefined
 /** Theme Provider Component */
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentThemeName, setCurrentThemeName] = useState<string>("medical");
-  const currentTheme = themes[currentThemeName] ?? themes.medical;
+  const currentTheme = themes[currentThemeName] || themes.medical;
 
   const setTheme = (themeName: string) => {
     if (themes[themeName]) {
