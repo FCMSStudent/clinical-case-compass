@@ -51,10 +51,10 @@ export const SidebarNavItem: React.FC<NavItemProps> = ({ item, collapsed, isMobi
         onBlur={handleBlur}
         className={({ isActive }) =>
           cn(
-            'group relative flex items-center rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200',
+            'group relative flex items-center rounded-lg px-3 py-2.5 text-base font-medium transition-all duration-200',
             'bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20',
             'focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2',
-            isActive && 'bg-white/20 text-white shadow-sm border-white/30',
+            isActive && 'bg-white/30 shadow-md rounded-lg text-white border-white/30',
             collapsed && !isMobile && 'justify-center px-2'
           )
         }

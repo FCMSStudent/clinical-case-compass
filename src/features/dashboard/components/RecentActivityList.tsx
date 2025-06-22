@@ -106,9 +106,7 @@ const RecentActivityList: React.FC = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4, delay: index * 0.1, ease: "easeOut" }}
             // Applying glass-panel p-4 to each list item. Added flex, items-center, justify-between from spec.
-            className={`glass-panel-list hover:shadow-xl hover:backdrop-blur-md hover:ring-2 hover:ring-blue-300 transition group cursor-pointer flex items-center justify-between ${
-              index % 2 === 0 ? 'bg-white/15' : 'bg-white/10'
-            }`}
+            className="glass-panel bg-white/10 p-4 rounded-lg shadow-sm hover:shadow-md hover:backdrop-blur-md hover:ring-2 hover:ring-blue-300 transition group cursor-pointer flex items-center justify-between border-b border-white/10 last:border-b-0"
           >
             {/* Left part of the item: icon + text */}
             <span className="flex items-center flex-grow min-w-0 mr-3"> {/* Added mr-3 for spacing */}
@@ -131,7 +129,9 @@ const RecentActivityList: React.FC = () => {
             </span>
 
             {/* Right Section: Using a simple status dot as per spec example for li */}
-            <span className="inline-block w-3 h-3 rounded-full bg-green-400 shadow-md animate-ping flex-shrink-0"></span>
+            <span className={`inline-block w-3 h-3 rounded-full bg-green-400 shadow-md flex-shrink-0 ${
+              index < 2 ? 'animate-ping' : ''
+            }`}></span>
             {/* Original Badge for item.type and Eye button are omitted to match simplified spec list item.
                 If specific actions per item are needed, they would be added here or contextually.
             */}

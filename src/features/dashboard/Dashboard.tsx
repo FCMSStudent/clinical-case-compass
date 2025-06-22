@@ -57,11 +57,11 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen p-4 space-y-6">
+    <div className="min-h-screen px-4 py-6 space-y-6">
       {/* Header with Welcome Message and Search/Filter Controls */}
-      <header className="glass-header sticky top-0 z-10 flex items-center justify-between w-full max-w-3xl mx-auto">
+      <header className="welcome-banner sticky top-0 z-10 flex items-center justify-between w-full max-w-3xl mx-auto">
         <div className="flex-1">
-          <h1 className="text-2xl font-bold text-white mb-1">
+          <h1 className="text-3xl font-bold text-white mb-1">
             Welcome back, {user?.user_metadata?.full_name || 'Doctor'}!
           </h1>
           <p className="text-base text-white/90">
@@ -88,44 +88,46 @@ const Dashboard = () => {
       </header>
 
       {/* Summary Metrics */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4 max-w-3xl mx-auto">
-        {isLoading ? (
-          Array.from({ length: 4 }).map((_, index) => (
-            <div key={index} className="glass-metrics">
-              <MetricCardSkeleton />
-            </div>
-          ))
-        ) : (
-          <>
-            <motion.div variants={staggeredItem} className="glass-metrics text-center shadow-md hover:shadow-xl transition">
-              <div className="text-base font-medium text-white">Total Cases</div>
-              <div className="text-2xl font-bold text-white mt-1">
-                {data?.totalCases || 0}
+      <div className="grid grid-cols-12 gap-6">
+        <div className="col-start-3 col-span-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {isLoading ? (
+            Array.from({ length: 4 }).map((_, index) => (
+              <div key={index} className="glass-metrics">
+                <MetricCardSkeleton />
               </div>
-            </motion.div>
+            ))
+          ) : (
+            <>
+              <motion.div variants={staggeredItem} className="glass-metrics text-center">
+                <div className="text-base font-medium text-white">Total Cases</div>
+                <div className="text-2xl font-bold text-white mt-1">
+                  {data?.totalCases || 0}
+                </div>
+              </motion.div>
 
-            <motion.div variants={staggeredItem} className="glass-metrics text-center shadow-md hover:shadow-xl transition border-t-4 border-blue-300/50">
-              <div className="text-base font-medium text-white">Active Cases</div>
-              <div className="text-2xl font-bold text-white mt-1">
-                {data?.activeCases || 0}
-              </div>
-            </motion.div>
+              <motion.div variants={staggeredItem} className="glass-metrics text-center border-t-4 border-blue-300/50">
+                <div className="text-base font-medium text-white">Active Cases</div>
+                <div className="text-2xl font-bold text-white mt-1">
+                  {data?.activeCases || 0}
+                </div>
+              </motion.div>
 
-            <motion.div variants={staggeredItem} className="glass-metrics text-center shadow-md hover:shadow-xl transition border-t-4 border-blue-300/50">
-              <div className="text-base font-medium text-white">This Month</div>
-              <div className="text-2xl font-bold text-white mt-1">
-                {data?.monthlyCases || 0}
-              </div>
-            </motion.div>
+              <motion.div variants={staggeredItem} className="glass-metrics text-center border-t-4 border-blue-300/50">
+                <div className="text-base font-medium text-white">This Month</div>
+                <div className="text-2xl font-bold text-white mt-1">
+                  {data?.monthlyCases || 0}
+                </div>
+              </motion.div>
 
-            <motion.div variants={staggeredItem} className="glass-metrics text-center shadow-md hover:shadow-xl transition">
-              <div className="text-base font-medium text-white">Patients</div>
-              <div className="text-2xl font-bold text-white mt-1">
-                {data?.totalPatients || 0}
-              </div>
-            </motion.div>
-          </>
-        )}
+              <motion.div variants={staggeredItem} className="glass-metrics text-center">
+                <div className="text-base font-medium text-white">Patients</div>
+                <div className="text-2xl font-bold text-white mt-1">
+                  {data?.totalPatients || 0}
+                </div>
+              </motion.div>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Main Content Grid */}
@@ -144,13 +146,11 @@ const Dashboard = () => {
             </Badge>
           </div>
           
-          <ul className="space-y-4">
+          <ul className="space-y-0">
             {data?.recentCases?.slice(0, 5).map((caseItem, index) => (
               <li 
                 key={caseItem.id} 
-                className={`flex items-center justify-between glass-panel-list hover:shadow-xl hover:backdrop-blur-md hover:ring-2 hover:ring-blue-300 transition cursor-pointer ${
-                  index % 2 === 0 ? 'bg-white/15' : 'bg-white/10'
-                }`}
+                className="glass-panel bg-white/10 p-4 rounded-lg shadow-sm hover:shadow-md transition border-b border-white/10 last:border-b-0 cursor-pointer flex items-center justify-between"
                 onClick={() => navigate(`/cases/${caseItem.id}`)}
               >
                 <div className="flex items-center space-x-3">
@@ -296,7 +296,7 @@ const Dashboard = () => {
       {/* Floating Action Button */}
       <motion.button
         onClick={() => navigate('/cases/new')}
-        className="fixed bottom-6 right-6 bg-white/15 backdrop-blur-md border border-white/20 rounded-full shadow-lg w-12 h-12 flex items-center justify-center hover:scale-105 hover:shadow-xl hover:ring-2 hover:ring-blue-300 transition z-50"
+        className="fixed bottom-6 right-6 bg-white/15 backdrop-blur-sm rounded-full shadow-md hover:scale-105 transition w-12 h-12 flex items-center justify-center z-50"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         initial={{ opacity: 0, scale: 0 }}

@@ -99,7 +99,7 @@ const Sidebar = React.memo(function Sidebar() {
           aria-hidden={!open}
         >
           <div className="relative h-full w-full">
-            <div className="absolute inset-0 bg-white/18 backdrop-blur-[24px] saturate-160 brightness-108 border-r border-white/20 shadow-xl"></div>
+            <div className="absolute inset-0 bg-white/20 glass-nav saturate-160 brightness-108 border-r border-white/20"></div>
             <div className={cn("relative h-full", liquidGlassClasses.navigation)}>
               {content}
             </div>
@@ -123,12 +123,12 @@ const Sidebar = React.memo(function Sidebar() {
       aria-label="Desktop navigation sidebar"
       aria-hidden={!open}
     >
-      <div className="relative h-full w-full">
-        <div className="absolute inset-0 bg-white/18 backdrop-blur-[24px] saturate-160 brightness-108 border-r border-white/20 shadow-xl"></div>
-        <div className={cn("relative h-full", liquidGlassClasses.navigation)}>
-          {content}
-        </div>
-      </div>
+                <div className="relative h-full w-full">
+            <div className="absolute inset-0 bg-white/20 glass-nav saturate-160 brightness-108 border-r border-white/20"></div>
+            <div className={cn("relative h-full", liquidGlassClasses.navigation)}>
+              {content}
+            </div>
+          </div>
     </aside>
   );
 });

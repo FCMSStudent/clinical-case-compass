@@ -80,11 +80,11 @@ const StatCard = ({
       transition={{ duration: 0.2, ease: "easeOut" }}
     >
       <div className="relative">
-        <div className="absolute inset-0 bg-white/15 backdrop-blur-md rounded-lg border border-white/20 shadow-md"></div>
+        <div className="absolute inset-0 bg-white/20 backdrop-blur-md rounded-lg shadow-sm"></div>
         <div 
           className={cn(
-            "relative bg-white/15 backdrop-blur-md rounded-lg border border-white/20 p-4 group overflow-hidden transition-all duration-300",
-            "hover:bg-white/20 hover:border-white/30 hover:shadow-xl hover:backdrop-blur-lg hover:ring-2 hover:ring-blue-300",
+            "relative bg-white/20 backdrop-blur-md rounded-lg p-4 group overflow-hidden transition-all duration-300",
+            "hover:bg-white/25 hover:shadow-md hover:backdrop-blur-lg hover:ring-2 hover:ring-blue-300",
             "before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/5 before:to-transparent before:translate-x-[-100%] before:group-hover:translate-x-[100%] before:transition-transform before:duration-700",
             className
           )}
@@ -211,12 +211,12 @@ export const StatCards = ({ stats, isLoading }: StatCardsProps) => {
         <div className="sr-only">Loading statistics...</div>
         {[...Array(4)].map((_, i) => (
           <div key={i} className="relative">
-            <div className="absolute inset-0 bg-white/15 backdrop-blur-md rounded-lg border border-white/20 shadow-md"></div>
-            <div className="relative bg-white/15 backdrop-blur-md rounded-lg border border-white/20 p-4 animate-pulse">
-              <div className="h-4 bg-white/20 rounded w-3/4 mb-2"></div>
-              <div className="h-10 w-10 bg-white/20 rounded-lg"></div>
-              <div className="h-8 bg-white/20 rounded w-1/2 mb-2 mt-4"></div>
-              <div className="h-4 bg-white/20 rounded w-full"></div>
+            <div className="absolute inset-0 bg-white/20 backdrop-blur-md rounded-lg shadow-sm"></div>
+            <div className="relative bg-white/20 backdrop-blur-md rounded-lg p-4 animate-pulse">
+              <div className="h-4 bg-white/30 rounded w-3/4 mb-2"></div>
+              <div className="h-10 w-10 bg-white/30 rounded-lg"></div>
+              <div className="h-8 bg-white/30 rounded w-1/2 mb-2 mt-4"></div>
+              <div className="h-4 bg-white/30 rounded w-full"></div>
             </div>
           </div>
         ))}
