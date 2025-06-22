@@ -182,26 +182,27 @@ const EnhancedNavbar: React.FC = () => {
             <motion.div
               className="relative"
               animate={{
+                // Keep width animation, or adjust if w-full on input makes this less relevant for the container
                 width: isSearchFocused ? 320 : 256,
                 boxShadow: isSearchFocused
-                  ? "0 8px 32px rgba(0,0,0,0.12)"
+                  ? "0 8px 32px rgba(0,0,0,0.12)" // This shadow might be redundant if the input itself has the main style
                   : "0 4px 16px rgba(0,0,0,0.08)"
               }}
               transition={{ duration: 0.3 }}
             >
-              <div className="absolute inset-0 bg-white/10 backdrop-blur-[16px] saturate-130 brightness-105 rounded-xl border border-white/20 shadow-lg"></div>
-              <div className="relative flex items-center">
-                <Search className="h-4 w-4 text-white/70 absolute left-3 top-1/2 -translate-y-1/2" />
+              {/* The div that provided the input's background is removed, as the input now styles itself */}
+              <div className="relative flex items-center"> {/* Ensure this container allows input to be w-full if needed */}
+                <Search className="h-4 w-4 text-white/70 absolute left-4 top-1/2 -translate-y-1/2 z-10" /> {/* Ensure icon is above input */}
                 <input
-                  type="text"
-                  placeholder="Search cases, patients..."
+                  type="search" // Changed type to search
+                  placeholder="Search cases, patients…" // Matched placeholder
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
                   onFocus={() => setIsSearchFocused(true)}
-                  className={cn(
-                    "bg-transparent border-0 text-white placeholder:text-white/50 placeholder:font-light focus-visible:ring-0 pl-10 pr-4 py-2 rounded-xl text-sm transition-all duration-300 focus:brightness-110 focus:saturate-105 tracking-[0.005em]",
-                    "focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-transparent"
-                  )}
+                  // Applied new classes directly. Removed cn() unless other conditional classes are needed.
+                  className="w-full bg-white/10 backdrop-blur-sm rounded-[16px] pl-12 pr-4 py-3 text-base text-white placeholder:text-white/70 focus:ring-2 focus:ring-blue-300"
+                  // Removed old specific styling like focus:brightness-110, focus:saturate-105, tracking-[0.005em]
+                  // Added focus:ring-2 focus:ring-blue-300 as per general instructions for focus
                 />
               </div>
             </motion.div>
