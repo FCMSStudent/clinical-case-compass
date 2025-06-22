@@ -1,7 +1,6 @@
-import React, { memo, useState } from 'react';
+import { memo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MedicalCase } from '@/shared/types/case';
-import { Card, CardContent } from '@/shared/components/card';
 import { Button } from '@/shared/components/button';
 import { 
   User, 
@@ -12,7 +11,6 @@ import {
   Tag as TagIcon, 
   CalendarDays,
   AlertCircle,
-  CheckCircle2,
   ChevronRight,
   Sparkles
 } from 'lucide-react';
@@ -48,10 +46,6 @@ export const CaseListItem = memo<CaseListItemProps>(({ medicalCase, className, o
   const primaryTag = medicalCase.tags && medicalCase.tags.length > 0 ? medicalCase.tags[0] : null;
   const [isHovered, setIsHovered] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-
-  const handleDelete = () => {
-    setShowDeleteDialog(true);
-  };
 
   const confirmDelete = () => {
     onDelete(medicalCase.id);

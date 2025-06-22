@@ -1,5 +1,4 @@
-import React from "react";
-import { createContext, useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 
 // ────────────────────────────────────────────────────────────────────────────────
 // THEME VARIATIONS FOR GLASSY VISIONOS UI
@@ -378,26 +377,28 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     // Add .dark class for shadcn components compatibility since all our themes are dark
     root.classList.add('dark');
     
-    // Apply CSS custom properties
-    root.style.setProperty("--theme-primary", currentTheme.colors.primary);
-    root.style.setProperty("--theme-secondary", currentTheme.colors.secondary);
-    root.style.setProperty("--theme-accent", currentTheme.colors.accent);
-    root.style.setProperty("--theme-background", currentTheme.colors.background);
-    root.style.setProperty("--theme-surface", currentTheme.colors.surface);
-    root.style.setProperty("--theme-text", currentTheme.colors.text);
-    root.style.setProperty("--theme-text-secondary", currentTheme.colors.textSecondary);
-    root.style.setProperty("--theme-border", currentTheme.colors.border);
-    root.style.setProperty("--theme-glass-bg", currentTheme.colors.glass.background);
-    root.style.setProperty("--theme-glass-border", currentTheme.colors.glass.border);
-    root.style.setProperty("--theme-glass-shadow", currentTheme.colors.glass.shadow);
-    root.style.setProperty("--theme-glass-backdrop", currentTheme.colors.glass.backdrop);
-    root.style.setProperty("--theme-blur", currentTheme.effects.blur);
-    root.style.setProperty("--theme-shadow", currentTheme.effects.shadow);
-    root.style.setProperty("--theme-border-width", currentTheme.effects.border);
-    root.style.setProperty("--theme-glow", currentTheme.effects.glow);
-    
-    // Apply background
-    document.body.style.background = currentTheme.colors.background;
+    if (currentTheme) {
+      // Apply CSS custom properties
+      root.style.setProperty("--theme-primary", currentTheme.colors.primary);
+      root.style.setProperty("--theme-secondary", currentTheme.colors.secondary);
+      root.style.setProperty("--theme-accent", currentTheme.colors.accent);
+      root.style.setProperty("--theme-background", currentTheme.colors.background);
+      root.style.setProperty("--theme-surface", currentTheme.colors.surface);
+      root.style.setProperty("--theme-text", currentTheme.colors.text);
+      root.style.setProperty("--theme-text-secondary", currentTheme.colors.textSecondary);
+      root.style.setProperty("--theme-border", currentTheme.colors.border);
+      root.style.setProperty("--theme-glass-bg", currentTheme.colors.glass.background);
+      root.style.setProperty("--theme-glass-border", currentTheme.colors.glass.border);
+      root.style.setProperty("--theme-glass-shadow", currentTheme.colors.glass.shadow);
+      root.style.setProperty("--theme-glass-backdrop", currentTheme.colors.glass.backdrop);
+      root.style.setProperty("--theme-blur", currentTheme.effects.blur);
+      root.style.setProperty("--theme-shadow", currentTheme.effects.shadow);
+      root.style.setProperty("--theme-border-width", currentTheme.effects.border);
+      root.style.setProperty("--theme-glow", currentTheme.effects.glow);
+
+      // Apply background
+      document.body.style.background = currentTheme.colors.background;
+    }
 
     // Cleanup function to remove the class when the component unmounts or theme changes
     return () => {
@@ -405,16 +406,16 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     };
   }, [currentTheme]);
 
+  const contextValue: ThemeContextType | undefined = currentTheme ? {
+    currentTheme,
+    setTheme,
+    availableThemes,
+    getThemeNames,
+  } : undefined;
+
   return React.createElement(
     ThemeContext.Provider,
-    {
-      value: {
-        currentTheme,
-        setTheme,
-        availableThemes,
-        getThemeNames,
-      }
-    },
+    { value: contextValue },
     children
   );
 };
@@ -485,6 +486,11 @@ export const ThemeSwitcher: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const themeNames = getThemeNames();
+
+  if (!currentTheme) {
+    // Optionally, render a loading state or null
+    return null;
+  }
 
   return React.createElement(
     'div',

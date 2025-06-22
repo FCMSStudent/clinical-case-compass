@@ -18,7 +18,7 @@ export interface ThemeConfig {
 
 /** Theme Context Type */
 interface ThemeContextType {
-  currentTheme: ThemeConfig;
+  currentTheme: ThemeConfig | undefined; // Allow currentTheme to be undefined
   setTheme: (themeName: string) => void;
   availableThemes: string[];
   getThemeNames: () => Array<{ name: string; description: string }>;
@@ -37,11 +37,7 @@ const fallbackColors: ThemeColors = {
   glass: {
     background: "rgba(255, 255, 255, 0.1)",
     border: "rgba(255, 255, 255, 0.2)",
-    shadow: {
-      light: "0 4px 16px rgba(0, 0, 0, 0.05)",
-      medium: "0 8px 32px rgba(0, 0, 0, 0.1)",
-      heavy: "0 16px 64px rgba(0, 0, 0, 0.15)"
-    },
+    shadow: "0 8px 32px rgba(0, 0, 0, 0.1)", // Simplified to a single string
     subtle: "rgba(255, 255, 255, 0.05)",
     vibrant: "rgba(255, 255, 255, 0.15)",
     frosted: "rgba(255, 255, 255, 0.08)",
@@ -132,9 +128,16 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     return () => removeThemeFromDocument();
   }, [currentTheme]);
 
+  const contextValue: ThemeContextType = {
+    currentTheme,
+    setTheme,
+    availableThemes,
+    getThemeNames,
+  };
+
   return React.createElement(
     ThemeContext.Provider,
-    { value: { currentTheme, setTheme, availableThemes, getThemeNames } },
+    { value: contextValue },
     children
   );
 };
@@ -152,6 +155,11 @@ export const useTheme = () => {
 export const ThemeSwitcher: React.FC = () => {
   const { currentTheme, setTheme, getThemeNames } = useTheme();
   const themeNames = getThemeNames();
+
+  if (!currentTheme) {
+    // Optionally, render a loading state or null while the theme is being determined
+    return null;
+  }
 
   return (
     <div className="flex flex-col gap-2 p-4 bg-white/10 backdrop-blur-md rounded-lg border border-white/20">

@@ -114,14 +114,14 @@ const CaseEdit = () => {
   }, [medicalCase, id, navigate, form, isLoading, error]);
 
   // Helper to map SimpleImaging's output to RadiologyStudy[]
-  const mapSimpleImagingToRadiologyStudy = (simpleStudies: {id: string, type: string, findings: string}[]): RadiologyStudy[] => {
+  const mapSimpleImagingToRadiologyStudy = (simpleStudies: {id: string, type: string, findings: string, date?: string}[]): RadiologyStudy[] => {
     return simpleStudies.map(ss => ({
       id: ss.id,
       name: ss.type,
       type: extractModalityFromName(ss.type),
       findings: ss.findings,
-      date: new Date().toISOString().split('T')[0],
-      impression: "",
+      date: ss.date || new Date().toISOString().split('T')[0], // Use provided date or default to today
+      impression: "", // Default impression, can be updated later
     }));
   };
 
@@ -158,9 +158,9 @@ const CaseEdit = () => {
         patient: {
           ...medicalCase.patient,
           name: values.patientName || medicalCase.patient.name,
-          age: values.patientAge || medicalCase.patient.age,
+          age: values.patientAge === undefined ? medicalCase.patient.age : values.patientAge,
           gender: values.patientGender || medicalCase.patient.gender,
-          medicalRecordNumber: values.patientMRN || medicalCase.patient.medicalRecordNumber,
+          medicalRecordNumber: values.patientMRN === undefined ? medicalCase.patient.medicalRecordNumber : values.patientMRN,
         },
         vitals: vitals,
         labTests: labResults,
