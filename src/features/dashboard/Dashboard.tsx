@@ -1,6 +1,5 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/card";
-import { UserRound, TrendingUp, Activity, BookOpen, Users, Plus, Eye, Filter } from "lucide-react"; // Added Filter
+import { UserRound, TrendingUp, Activity, BookOpen, Users, Plus, Eye, Filter } from "lucide-react";
 import { useDashboardData } from "@/features/dashboard/hooks/use-dashboard-data";
 import { Button } from "@/shared/components/button";
 import { Badge } from "@/shared/components/badge";
@@ -12,29 +11,33 @@ import { DynamicRecentActivity } from "@/features/dashboard/components/DynamicRe
 import { RecentCasesCarousel } from "@/shared/components/recent-cases-carousel";
 import { cn } from "@/shared/utils/utils";
 
-// Simplified staggered animations
-const staggeredContainer = {
-  hidden: { opacity: 1 },
+// Enhanced animation variants for auth-style smoothness
+const containerVariants = {
+  hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.05,
-      delayChildren: 0.1,
+      duration: 0.6,
+      ease: "cubic-bezier(0.16, 1, 0.3, 1)",
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
     },
   },
 };
 
-const staggeredItem = {
+const itemVariants = {
   hidden: {
     opacity: 0,
-    y: 10,
+    y: 20,
+    scale: 0.95,
   },
   visible: {
     opacity: 1,
     y: 0,
+    scale: 1,
     transition: {
-      duration: 0.2,
-      ease: "easeOut",
+      duration: 0.5,
+      ease: "cubic-bezier(0.16, 1, 0.3, 1)",
     },
   },
 };
@@ -46,196 +49,230 @@ const Dashboard = () => {
 
   if (error) {
     return (
-      <div className="p-8 text-center">
-        <Card className="auth-glass-container">
-          <CardContent className="pt-6">
-            <h2 className="text-xl font-semibold text-white mb-2">Dashboard Error</h2>
-            <p className="text-white/70">There was an error loading the dashboard data.</p>
-          </CardContent>
-        </Card>
+      <div className="min-h-screen auth-gradient-bg">
+        <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.6, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
+            className="w-full max-w-md mx-auto"
+          >
+            <div className="auth-glass-container">
+              <Card className="border-0 bg-transparent shadow-none">
+                <CardContent className="p-6 text-center">
+                  <h2 className="auth-title text-white mb-2">Dashboard Error</h2>
+                  <p className="auth-subtitle text-white/70">There was an error loading the dashboard data.</p>
+                </CardContent>
+              </Card>
+            </div>
+          </motion.div>
+        </div>
       </div>
     );
   }
 
   return (
-    <>
-      {/* New Glass Header for Dashboard Title and Filters */}
-      <header className="bg-white/20 backdrop-blur-lg border border-white/20 rounded-[16px] p-6 sticky top-0 z-10 flex items-center justify-between mb-6">
-        {/* mb-6 added to create space before next element, adjust as needed */}
-        <h1 className="text-4xl font-bold text-white">Dashboard</h1>
-        <button
-          aria-label="Open filters"
-          className="p-2 text-white/70 hover:text-white transition-colors focus:ring-2 focus:ring-blue-300 rounded-md"
+    <div className="min-h-screen auth-gradient-bg">
+      <div className="relative z-10 min-h-screen p-4">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="max-w-7xl mx-auto space-y-6"
         >
-          <Filter className="h-6 w-6" />
-        </button>
-      </header>
+          {/* Header Section */}
+          <motion.div variants={itemVariants} className="text-center mb-8">
+            <div className="auth-glass-container max-w-2xl mx-auto">
+              <div className="p-8">
+                <motion.div
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3, duration: 0.5, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
+                >
+                  <h1 className="auth-title text-white mb-2">
+                    Welcome back, {user?.user_metadata?.full_name || 'Doctor'}!
+                  </h1>
+                  <p className="auth-subtitle text-white/90">
+                    Here's what's happening with your clinical cases today.
+                  </p>
+                </motion.div>
+                
+                {/* Quick Action Buttons */}
+                <motion.div 
+                  className="flex gap-3 justify-center mt-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4, duration: 0.5 }}
+                >
+                  <Button
+                    onClick={() => navigate('/cases/new')}
+                    className="glass-button text-white font-medium px-6 py-3"
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    New Case
+                  </Button>
+                  <Button
+                    onClick={() => navigate('/cases')}
+                    variant="outline"
+                    className="glass-button text-white font-medium px-6 py-3"
+                  >
+                    <Eye className="h-4 w-4 mr-2" />
+                    View All
+                  </Button>
+                </motion.div>
+              </div>
+            </div>
+          </motion.div>
 
-      <div className="container mx-auto px-4 py-6 space-y-6"> {/* Increased space-y to 6 to match gap-6 */}
-        {/* Original Welcome Header - now potentially redundant or needing adjustment */}
-        {/* Consider removing or simplifying this if the new header covers its purpose */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
-          <div>
-            <h2 className="text-2xl font-bold text-white mb-1"> {/* Changed to h2 for semantics if Dashboard is h1 */}
-              Welcome back, {user?.user_metadata?.full_name || 'Doctor'}!
-            </h2>
-            <p className="text-base text-white/70">
-              Here's what's happening with your clinical cases today.
-            </p>
-          </div>
-
-          <div className="flex gap-2">
-          {/* Buttons here will be styled later if they are not the primary FAB */}
-          <Button
-            onClick={() => navigate('/cases/new')}
-            className="w-full py-2 rounded-lg glass-button text-white font-medium hover:scale-102 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-300"
+          {/* Metrics Grid */}
+          <motion.div
+            variants={itemVariants}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
           >
-            <Plus className="h-4 w-4 mr-2" />
-            New Case
-          </Button>
-          <Button
-            onClick={() => navigate('/cases')}
-            variant="outline"
-            className="w-full py-2 rounded-lg bg-white/10 border border-white/20 text-white font-medium hover:bg-white/20 hover:scale-102 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            {isLoading ? (
+              Array.from({ length: 4 }).map((_, index) => (
+                <motion.div key={index} variants={itemVariants}>
+                  <div className="auth-glass-container">
+                    <MetricCardSkeleton />
+                  </div>
+                </motion.div>
+              ))
+            ) : (
+              <>
+                <motion.div variants={itemVariants}>
+                  <div className="auth-glass-container">
+                    <div className="p-6 text-center">
+                      <div className="text-sm font-medium text-white/80 mb-2">Total Cases</div>
+                      <div className="auth-title text-white">
+                        {data?.totalCases || 0}
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+
+                <motion.div variants={itemVariants}>
+                  <div className="auth-glass-container">
+                    <div className="p-6 text-center">
+                      <div className="text-sm font-medium text-white/80 mb-2">Active Cases</div>
+                      <div className="auth-title text-white">
+                        {data?.activeCases || 0}
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+
+                <motion.div variants={itemVariants}>
+                  <div className="auth-glass-container">
+                    <div className="p-6 text-center">
+                      <div className="text-sm font-medium text-white/80 mb-2">This Month</div>
+                      <div className="auth-title text-white">
+                        {data?.monthlyCases || 0}
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+
+                <motion.div variants={itemVariants}>
+                  <div className="auth-glass-container">
+                    <div className="p-6 text-center">
+                      <div className="text-sm font-medium text-white/80 mb-2">Patients</div>
+                      <div className="auth-title text-white">
+                        {data?.totalPatients || 0}
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              </>
+            )}
+          </motion.div>
+
+          {/* Main Content Grid */}
+          <motion.div
+            variants={itemVariants}
+            className="grid grid-cols-1 lg:grid-cols-3 gap-6"
           >
-            <Eye className="h-4 w-4 mr-2" />
-            View All
-          </Button>
-        </div>
-      </div>
-
-      {/* Segmented Time Filter Control */}
-      <div className="my-6 flex justify-center" role="toolbar" aria-label="Time period filter">
-        <div className="bg-white/20 backdrop-blur-lg border border-white/20 rounded-[16px] inline-flex overflow-hidden">
-          <button aria-pressed="true" className="flex-1 p-3 text-base text-white bg-white/30 hover:bg-white/40 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300">Day</button>
-          <button aria-pressed="false" className="flex-1 p-3 text-base text-white/70 hover:text-white hover:bg-white/25 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300">Week</button>
-          <button aria-pressed="false" className="flex-1 p-3 text-base text-white/70 hover:text-white hover:bg-white/25 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300">Month</button>
-        </div>
-      </div>
-
-      {/* Metrics Grid - Applying glass-panel to each item, and p-6 to container */}
-      <motion.div
-        variants={staggeredContainer}
-        initial="hidden"
-        animate="visible"
-        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 p-6"
-        role="list" // Changed from grid to list for semantics with listitem roles below
-        aria-label="Summary metrics"
-      >
-        {isLoading ? (
-          Array.from({ length: 4 }).map((_, index) => (
-            <MetricCardSkeleton key={index} />
-          ))
-        ) : (
-          <>
-            <motion.div variants={staggeredItem} className="bg-white/20 backdrop-blur-lg border border-white/20 rounded-[16px] p-6 text-center hover:shadow-xl transition" role="listitem" aria-label="Total cases metric">
-              <div className="text-base font-medium text-white">Total Cases</div>
-              <div className="text-2xl font-bold text-white mt-1">
-                {data?.totalCases || 0}
+            {/* Recent Cases */}
+            <motion.div variants={itemVariants} className="lg:col-span-2">
+              <div className="auth-glass-container">
+                <div className="p-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="auth-title text-white">Recent Cases</h3>
+                    <Badge variant="secondary" className="bg-white/10 text-white/80 border-white/20">
+                      {data?.recentCases?.length || 0} cases
+                    </Badge>
+                  </div>
+                  <RecentCasesCarousel cases={data?.recentCases || []} isLoading={isLoading} />
+                </div>
               </div>
             </motion.div>
 
-            <motion.div variants={staggeredItem} className="bg-white/20 backdrop-blur-lg border border-white/20 rounded-[16px] p-6 text-center hover:shadow-xl transition" role="listitem" aria-label="Active cases metric">
-              <div className="text-base font-medium text-white">Active Cases</div>
-              <div className="text-2xl font-bold text-white mt-1">
-                {data?.activeCases || 0}
+            {/* Recent Activity */}
+            <motion.div variants={itemVariants}>
+              <div className="auth-glass-container">
+                <div className="p-6">
+                  <h3 className="auth-title text-white mb-6">Recent Activity</h3>
+                  <DynamicRecentActivity />
+                </div>
               </div>
             </motion.div>
+          </motion.div>
 
-            <motion.div variants={staggeredItem} className="bg-white/20 backdrop-blur-lg border border-white/20 rounded-[16px] p-6 text-center hover:shadow-xl transition" role="listitem" aria-label="Cases this month metric">
-              <div className="text-base font-medium text-white">This Month</div>
-              <div className="text-2xl font-bold text-white mt-1">
-                {data?.monthlyCases || 0}
+          {/* Quick Actions Grid */}
+          <motion.div variants={itemVariants}>
+            <div className="auth-glass-container">
+              <div className="p-6">
+                <h3 className="auth-title text-white mb-6 text-center">Quick Actions</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <Button
+                    onClick={() => navigate('/cases/new')}
+                    className="glass-button text-white font-medium py-4 h-auto flex-col space-y-2"
+                  >
+                    <Plus className="h-6 w-6" />
+                    <span>Create New Case</span>
+                  </Button>
+                  <Button
+                    onClick={() => navigate('/cases')}
+                    className="glass-button text-white font-medium py-4 h-auto flex-col space-y-2"
+                  >
+                    <BookOpen className="h-6 w-6" />
+                    <span>Browse Cases</span>
+                  </Button>
+                  <Button
+                    onClick={() => navigate('/account')}
+                    className="glass-button text-white font-medium py-4 h-auto flex-col space-y-2"
+                  >
+                    <UserRound className="h-6 w-6" />
+                    <span>Profile Settings</span>
+                  </Button>
+                </div>
               </div>
-            </motion.div>
-
-            <motion.div variants={staggeredItem} className="bg-white/20 backdrop-blur-lg border border-white/20 rounded-[16px] p-6 text-center hover:shadow-xl transition" role="listitem" aria-label="Total patients metric">
-              <div className="text-base font-medium text-white">Patients</div>
-              <div className="text-2xl font-bold text-white mt-1">
-                {data?.totalPatients || 0}
-              </div>
-            </motion.div>
-          </>
-        )}
-      </motion.div>
-
-      {/* Main Content Grid - Applying glass-panel to items */}
-      <motion.div
-        variants={staggeredContainer}
-        initial="hidden"
-        animate="visible"
-        className="grid grid-cols-1 lg:grid-cols-3 gap-6"
-      >
-        {/* Recent Cases */}
-        <motion.div variants={staggeredItem} className="lg:col-span-2 bg-white/20 backdrop-blur-lg border border-white/20 rounded-[16px] p-6 hover:shadow-xl transition" role="region" aria-labelledby="recentCasesTitle">
-          <div className="flex items-center justify-between mb-4">
-            <h3 id="recentCasesTitle" className="text-xl font-semibold text-white">Recent Cases</h3>
-            <Badge variant="secondary" className="bg-white/10 text-white/80 text-sm">
-              {data?.recentCases?.length || 0} cases
-            </Badge>
-          </div>
-          <RecentCasesCarousel cases={data?.recentCases || []} isLoading={isLoading} />
+            </div>
+          </motion.div>
         </motion.div>
 
-        {/* Recent Activity */}
-        <motion.div variants={staggeredItem} className="bg-white/20 backdrop-blur-lg border border-white/20 rounded-[16px] p-6 hover:shadow-xl transition">
-          <h3 id="recentActivityTitle" className="text-xl font-semibold text-white mb-4">Recent Activity</h3>
-          <DynamicRecentActivity />
-        </motion.div>
-      </motion.div>
-
-      {/* Quick Actions - Applying glass-panel */}
-      <motion.div
-        variants={staggeredItem}
-        initial="hidden"
-        animate="visible"
-        className="bg-white/20 backdrop-blur-lg border border-white/20 rounded-[16px] p-6 hover:shadow-xl transition"
-        role="region"
-        aria-labelledby="quickActionsTitle"
-      >
-        <h3 id="quickActionsTitle" className="text-xl font-semibold text-white mb-4">Quick Actions</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <Button
-            onClick={() => navigate('/cases/new')}
-            className="w-full py-2 rounded-lg glass-button text-white font-medium hover:scale-102 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-300"
-            // Ensure this button gets correct glass styling if it's not the FAB. 'glass-button' is an existing class.
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            Create New Case
-          </Button>
-          <Button
-            onClick={() => navigate('/cases')}
-            className="w-full py-2 rounded-lg bg-white/10 border border-white/20 text-white font-medium hover:bg-white/20 hover:scale-102 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-300"
-          >
-            <BookOpen className="h-4 w-4 mr-2" />
-            Browse Cases
-          </Button>
-          <Button
-            onClick={() => navigate('/account')}
-            className="w-full py-2 rounded-lg bg-white/10 border border-white/20 text-white font-medium hover:bg-white/20 hover:scale-102 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-300"
-          >
-            <UserRound className="h-4 w-4 mr-2" />
-            Profile Settings
-          </Button>
-        </div>
-      </motion.div>
-      <FloatingNewCaseButton onClick={() => navigate('/cases/new')} />
+        {/* Floating Action Button */}
+        <FloatingNewCaseButton onClick={() => navigate('/cases/new')} />
       </div>
-    </>
+    </div>
   );
 };
 
 export default Dashboard;
 
-// Helper component for the FAB - or could be inline in Dashboard
+// Enhanced Floating Action Button with auth styling
 const FloatingNewCaseButton = ({ onClick }: { onClick: () => void }) => {
   return (
-    <button
+    <motion.button
       onClick={onClick}
       aria-label="New Case"
-      className="fixed bottom-6 right-6 bg-white/20 backdrop-blur-lg border border-white/20 w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-white hover:scale-105 focus:ring-2 focus:ring-blue-300 focus:outline-none transition"
+      className="fixed bottom-6 right-6 w-16 h-16 glass-button text-white shadow-2xl flex items-center justify-center z-50"
+      whileHover={{ scale: 1.05, y: -2 }}
+      whileTap={{ scale: 0.95 }}
+      initial={{ opacity: 0, scale: 0 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ delay: 0.8, duration: 0.5, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
     >
-      <Plus className="h-7 w-7" /> {/* Adjusted size for better fit in 56x56 (w-14, h-14) button */}
-    </button>
+      <Plus className="h-8 w-8" />
+    </motion.button>
   );
 };
