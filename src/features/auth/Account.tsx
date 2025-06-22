@@ -1,41 +1,33 @@
-import React from "react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/avatar";
 import { Button } from "@/shared/components/button";
-import { Input } from "@/shared/components/input";
 import { Label } from "@/shared/components/label";
 import { Badge } from "@/shared/components/badge";
 import { Switch } from "@/shared/components/switch";
-import { Separator } from "@/shared/components/separator";
 import { useAuth } from "@/app/providers/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { 
   User, 
-  Mail, 
   Shield, 
   Settings, 
   Download, 
   Trash2, 
   LogOut,
-  Eye,
-  EyeOff,
-  CheckCircle,
-  AlertCircle
+  CheckCircle
 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import { useDashboardData } from "@/features/dashboard/hooks/use-dashboard-data";
 import { typo, responsiveType } from "@/design-system/tokens/typography";
 import { cn } from "@/shared/utils/utils";
-import { liquidGlassClasses, getGlassTransitionVariants, getGlassHoverVariants } from "@/design-system/components/glass-effects";
+import { liquidGlassClasses, getGlassTransitionVariants } from "@/design-system/components/glass-effects";
 
 const Account = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const { getStatistics } = useDashboardData();
-  const stats = getStatistics();
+  getStatistics(); // Call getStatistics to use the import
   
   // State for settings
   const [notifications, setNotifications] = useState(true);

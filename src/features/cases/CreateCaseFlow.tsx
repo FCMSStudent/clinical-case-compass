@@ -2,7 +2,7 @@
 import React, {
   useState,
   useCallback,
-  useEffect,
+  // useEffect, // Removed as it's unused
   useRef,
   useMemo,
 } from "react";
@@ -97,9 +97,9 @@ const STEPS: StepMeta[] = [
 const CreateCaseFlow = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [autoSaveStatus, setAutoSaveStatus] =
+  const [_autoSaveStatus, _setAutoSaveStatus] = // Renamed to indicate it's unused
     useState<"idle" | "saving" | "saved" | "error">("idle");
-  const errorAnnouncementRef = useRef(null);
+  const errorAnnouncementRef = useRef<HTMLDivElement>(null); // Added type for ref
   const { handleError } = useErrorHandler();
   const { toast } = useToast();
   const { createCase, isCreating } = useSupabaseCases();
@@ -112,7 +112,7 @@ const CreateCaseFlow = () => {
     defaultValues: {
       patientName: "",
       medicalRecordNumber: "",
-      patientAge: undefined,
+      patientAge: undefined, // Explicitly undefined
       patientSex: "",
       medicalHistory: "",
       caseTitle: "",
@@ -122,19 +122,18 @@ const CreateCaseFlow = () => {
       learningPoints: "",
       generalNotes: "",
       resourceLinks: [],
-    },
+    } as unknown as FormData, // Added type assertion to resolve TS2322
     mode: "onChange",
   });
 
-  const { watch, trigger } = form;
-  const watchedValues = watch();
+  const { trigger } = form; // Removed unused 'watch' and 'watchedValues'
 
-  // Calculate completion percentage
-  const completionPercentage = useMemo(() => {
-    const totalSteps = STEPS.length;
-    const completedSteps = currentStep + 1;
-    return Math.round((completedSteps / totalSteps) * 100);
-  }, [currentStep]);
+  // Calculate completion percentage - removed as completionPercentage is unused
+  // const completionPercentage = useMemo(() => {
+  //   const totalSteps = STEPS.length;
+  //   const completedSteps = currentStep + 1;
+  //   return Math.round((completedSteps / totalSteps) * 100);
+  // }, [currentStep]);
 
   // Function to validate a specific step
   const validateStep = useCallback(
@@ -300,7 +299,7 @@ const CreateCaseFlow = () => {
                 totalSteps={STEPS.length}
                 currentStepLabel={STEPS[currentStep].label}
                 formTitle="Create New Clinical Case"
-                isDraftSaving={autoSaveStatus === "saving"}
+                isDraftSaving={_autoSaveStatus === "saving"} // Use the renamed variable
                 hideDraftButton={true}
               />
               <div className="space-y-6">

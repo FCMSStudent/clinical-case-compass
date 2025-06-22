@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { CheckCheck, Save, AlertCircle } from "lucide-react";
 
@@ -28,6 +28,10 @@ export function AutosaveIndicator({
     } else {
       setVisible(status !== "idle");
     }
+    // Adding a return statement here to satisfy TS7030,
+    // although the logic implies it's not strictly necessary
+    // as setVisible is always called.
+    return;
   }, [status]);
 
   if (!visible) return null;

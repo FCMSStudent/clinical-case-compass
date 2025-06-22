@@ -14,7 +14,6 @@ import { CaseGridSkeleton } from "@/features/cases/CaseCardSkeleton";
 import { CasesErrorBoundary } from "@/features/cases/components/CasesErrorBoundary";
 import { useSupabaseCases } from "@/shared/hooks/use-supabase-cases";
 import { useAuth } from "@/app/providers/AuthContext";
-import { cn } from "@/shared/utils/utils";
 
 const Cases = () => {
   const [searchQuery, setSearchQuery] = useState("");

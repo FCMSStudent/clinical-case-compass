@@ -1,4 +1,3 @@
-import React from "react";
 import { Card, CardContent, CardHeader } from "@/shared/components/card";
 import { Skeleton } from "@/shared/components/skeleton";
 import { cn } from "@/shared/utils/utils";
