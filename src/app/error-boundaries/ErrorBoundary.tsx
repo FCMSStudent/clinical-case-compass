@@ -20,11 +20,11 @@ export class ErrorBoundary extends Component<Props, State> {
     hasError: false
   };
 
-  public static override getDerivedStateFromError(error: Error): State {
+  public static getDerivedStateFromError(error: Error): State {
     return { hasError: true, error };
   }
 
-  public override componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Error caught by boundary:', error, errorInfo);
     this.setState({
       error,
@@ -75,7 +75,7 @@ export class ErrorBoundary extends Component<Props, State> {
     };
   }
 
-  public override render() {
+  public render() {
     if (this.state.hasError) {
       if (this.props.fallback) {
         return this.props.fallback;

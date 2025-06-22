@@ -1,3 +1,4 @@
+
 // ────────────────────────────────────────────────────────────────────────────────
 // DESIGN SYSTEM - MODULAR ENTRY POINT - APPLE LIQUID GLASS ENHANCED
 // ────────────────────────────────────────────────────────────────────────────────
@@ -17,8 +18,7 @@ export * from './animations/motion';
 // Re-export new Apple-inspired liquid glass effects
 export * from './components/glass-effects';
 
-// Legacy exports for backward compatibility
-import type { ThemeColors } from './tokens/colors';
+// Legacy exports for backward compatibility - Import everything explicitly to avoid conflicts
 import { colors, themeColors } from './tokens/colors';
 import { spacing, borderRadius, shadows, layout, sizes, zIndex, breakpoints } from './tokens/spacing';
 import { 
@@ -45,7 +45,6 @@ import {
   getContrastRatio,
   isThemeAccessible
 } from '../shared/utils/utilities';
-import type { ThemeConfig } from './themes/theme-system';
 import { ThemeProvider, useTheme, ThemeSwitcher, themes } from './themes/theme-system';
 import { typography } from './tokens/typography';
 import { typographyTokens } from './tokens/design-tokens';
@@ -127,8 +126,5 @@ export const designSystem = {
   liquidGlassClasses,
   getGlassClasses,
 } as const;
-
-// Default export for backward compatibility
-export default designSystem;
 
 export { animations };
