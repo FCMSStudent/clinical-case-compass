@@ -106,13 +106,15 @@ const RecentActivityList: React.FC = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4, delay: index * 0.1, ease: "easeOut" }}
             // Applying glass-panel p-4 to each list item. Added flex, items-center, justify-between from spec.
-            className="bg-white/20 backdrop-blur-lg border border-white/20 rounded-[16px] p-4 hover:shadow-lg transition group cursor-pointer flex items-center justify-between"
+            className={`glass-panel-list hover:shadow-xl hover:backdrop-blur-md hover:ring-2 hover:ring-blue-300 transition group cursor-pointer flex items-center justify-between ${
+              index % 2 === 0 ? 'bg-white/15' : 'bg-white/10'
+            }`}
           >
             {/* Left part of the item: icon + text */}
             <span className="flex items-center flex-grow min-w-0 mr-3"> {/* Added mr-3 for spacing */}
               {/* Icon section - applying glass-inner */}
-              <div className="bg-white/10 backdrop-blur-sm p-2 rounded-full mr-3 flex-shrink-0">
-                <IconComponent className="h-5 w-5 text-white/70" /> {/* Standardized icon style */}
+              <div className="glass-inner p-2 rounded-full mr-3 flex-shrink-0">
+                <IconComponent className="h-5 w-5 text-white/90" /> {/* Standardized icon style */}
               </div>
 
               {/* Text content div */}
@@ -121,15 +123,15 @@ const RecentActivityList: React.FC = () => {
                   {/* Displaying a concise title: either caseTitle or first few words of description */}
                   {item.caseTitle || `${item.description.split(" ").slice(0, 4).join(" ")}${item.description.split(" ").length > 4 ? "..." : ""}`}
                 </div>
-                <div className="text-sm text-white/70 truncate">
-                  {/* Subtitle: type of action and time */}
-                  <span className="capitalize">{item.type}</span> • {getTimeAgo(item.time)}
-                </div>
+                                  <div className="text-sm text-white/90 truncate">
+                    {/* Subtitle: type of action and time */}
+                    <span className="capitalize">{item.type}</span> • {getTimeAgo(item.time)}
+                  </div>
               </div>
             </span>
 
             {/* Right Section: Using a simple status dot as per spec example for li */}
-            <span className="inline-block w-3 h-3 rounded-full bg-green-400/80 flex-shrink-0"></span>
+            <span className="inline-block w-3 h-3 rounded-full bg-green-400 shadow-md animate-ping flex-shrink-0"></span>
             {/* Original Badge for item.type and Eye button are omitted to match simplified spec list item.
                 If specific actions per item are needed, they would be added here or contextually.
             */}
@@ -147,7 +149,7 @@ const RecentActivityList: React.FC = () => {
         >
           <Button
             variant="outline"
-            className="w-full border-white/30 text-white hover:bg-white/20 rounded-[16px] py-3 text-base"
+            className="w-full border-white/30 text-white hover:bg-white/20 hover:shadow-xl hover:ring-2 hover:ring-blue-300 transition rounded-lg py-3 text-base"
           >
             View All Activities
           </Button>

@@ -80,11 +80,11 @@ const StatCard = ({
       transition={{ duration: 0.2, ease: "easeOut" }}
     >
       <div className="relative">
-        <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
+        <div className="absolute inset-0 bg-white/15 backdrop-blur-md rounded-lg border border-white/20 shadow-md"></div>
         <div 
           className={cn(
-            "relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 group overflow-hidden transition-all duration-300",
-            "hover:bg-white/15 hover:border-white/30",
+            "relative bg-white/15 backdrop-blur-md rounded-lg border border-white/20 p-4 group overflow-hidden transition-all duration-300",
+            "hover:bg-white/20 hover:border-white/30 hover:shadow-xl hover:backdrop-blur-lg hover:ring-2 hover:ring-blue-300",
             "before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/5 before:to-transparent before:translate-x-[-100%] before:group-hover:translate-x-[100%] before:transition-transform before:duration-700",
             className
           )}
@@ -94,11 +94,11 @@ const StatCard = ({
         >
           <div className="flex flex-row items-center justify-between pb-4">
             <div className="space-y-1">
-              <h3 id={`${cardId}-title`} className="text-sm font-medium text-white/80">
+              <h3 id={`${cardId}-title`} className="text-sm font-medium text-white">
                 {title}
               </h3>
               {subtitle && (
-                <p className="text-xs text-white/60">{subtitle}</p>
+                <p className="text-xs text-white/90">{subtitle}</p>
               )}
             </div>
             <div 
@@ -156,14 +156,14 @@ const StatCard = ({
                 )}
               </div>
               {description && (
-                <p id={`${cardId}-description`} className="text-sm text-white/70">{description}</p>
+                <p id={`${cardId}-description`} className="text-sm text-white/90">{description}</p>
               )}
             </div>
             
             {progress !== undefined && (
               <div className="space-y-2">
                 <div className="flex justify-between text-xs">
-                  <span className="text-white/70">Progress</span>
+                  <span className="text-white/90">Progress</span>
                   <span className="font-medium text-white" aria-label={`${Math.round(progress)}% progress`}>
                     {Math.round(progress)}%
                   </span>
@@ -174,7 +174,7 @@ const StatCard = ({
                   aria-valuenow={Math.round(progress)}
                   aria-valuemin={0}
                   aria-valuemax={100}
-                  className="w-full bg-white/10 rounded-full h-2 overflow-hidden"
+                  className="w-full bg-white/15 rounded-full h-2 overflow-hidden"
                 >
                   <motion.div
                     className={cn("h-2 rounded-full", currentColor.progress)}
@@ -211,10 +211,10 @@ export const StatCards = ({ stats, isLoading }: StatCardsProps) => {
         <div className="sr-only">Loading statistics...</div>
         {[...Array(4)].map((_, i) => (
           <div key={i} className="relative">
-            <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
-            <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 animate-pulse">
+            <div className="absolute inset-0 bg-white/15 backdrop-blur-md rounded-lg border border-white/20 shadow-md"></div>
+            <div className="relative bg-white/15 backdrop-blur-md rounded-lg border border-white/20 p-4 animate-pulse">
               <div className="h-4 bg-white/20 rounded w-3/4 mb-2"></div>
-              <div className="h-10 w-10 bg-white/20 rounded-xl"></div>
+              <div className="h-10 w-10 bg-white/20 rounded-lg"></div>
               <div className="h-8 bg-white/20 rounded w-1/2 mb-2 mt-4"></div>
               <div className="h-4 bg-white/20 rounded w-full"></div>
             </div>
@@ -234,7 +234,7 @@ export const StatCards = ({ stats, isLoading }: StatCardsProps) => {
         <div className="flex items-center justify-between">
           <div>
             <h2 id="key-metrics-heading" className="text-2xl font-bold text-white">Key Metrics</h2>
-            <p className="text-white/70">Your learning progress at a glance</p>
+            <p className="text-white/90">Your learning progress at a glance</p>
           </div>
           <Badge variant="outline" className="border-white/30 text-white bg-white/10">
             <Target className="h-3 w-3 mr-1" aria-hidden="true" />

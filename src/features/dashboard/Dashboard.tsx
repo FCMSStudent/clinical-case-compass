@@ -59,28 +59,28 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen p-4 space-y-6">
       {/* Header with Welcome Message and Search/Filter Controls */}
-      <header className="glass-panel sticky top-0 z-10 flex items-center justify-between w-full max-w-4xl mx-auto">
+      <header className="glass-header sticky top-0 z-10 flex items-center justify-between w-full max-w-3xl mx-auto">
         <div className="flex-1">
           <h1 className="text-2xl font-bold text-white mb-1">
             Welcome back, {user?.user_metadata?.full_name || 'Doctor'}!
           </h1>
-          <p className="text-base text-white/70">
+          <p className="text-base text-white/90">
             Here's what's happening with your clinical cases today.
           </p>
         </div>
         
         <div className="flex items-center space-x-3 ml-4">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/70" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/90" />
             <input
               type="text"
               placeholder="Search cases..."
-              className="glass-inner flex-1 ml-0 pl-12 pr-4 py-2 text-base placeholder:text-white/70 text-white border-0 focus:ring-2 focus:ring-white/30"
+              className="glass-inner flex-1 ml-0 pl-12 pr-4 py-2 text-base placeholder:text-white/70 text-white border-0 focus:ring-2 focus:ring-blue-300 transition-all"
             />
           </div>
           <button
             aria-label="Open filters"
-            className="glass-inner p-2 text-white/70 hover:text-white transition-colors focus:ring-2 focus:ring-white/30"
+            className="glass-inner p-2 text-white/90 hover:text-white hover:backdrop-blur-md hover:ring-2 hover:ring-blue-300 transition-all focus:ring-2 focus:ring-blue-300"
           >
             <Filter className="h-5 w-5" />
           </button>
@@ -88,37 +88,37 @@ const Dashboard = () => {
       </header>
 
       {/* Summary Metrics */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 p-6 max-w-4xl mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4 max-w-3xl mx-auto">
         {isLoading ? (
           Array.from({ length: 4 }).map((_, index) => (
-            <div key={index} className="glass-panel">
+            <div key={index} className="glass-metrics">
               <MetricCardSkeleton />
             </div>
           ))
         ) : (
           <>
-            <motion.div variants={staggeredItem} className="glass-panel text-center">
+            <motion.div variants={staggeredItem} className="glass-metrics text-center shadow-md hover:shadow-xl transition">
               <div className="text-base font-medium text-white">Total Cases</div>
               <div className="text-2xl font-bold text-white mt-1">
                 {data?.totalCases || 0}
               </div>
             </motion.div>
 
-            <motion.div variants={staggeredItem} className="glass-panel text-center">
+            <motion.div variants={staggeredItem} className="glass-metrics text-center shadow-md hover:shadow-xl transition border-t-4 border-blue-300/50">
               <div className="text-base font-medium text-white">Active Cases</div>
               <div className="text-2xl font-bold text-white mt-1">
                 {data?.activeCases || 0}
               </div>
             </motion.div>
 
-            <motion.div variants={staggeredItem} className="glass-panel text-center">
+            <motion.div variants={staggeredItem} className="glass-metrics text-center shadow-md hover:shadow-xl transition border-t-4 border-blue-300/50">
               <div className="text-base font-medium text-white">This Month</div>
               <div className="text-2xl font-bold text-white mt-1">
                 {data?.monthlyCases || 0}
               </div>
             </motion.div>
 
-            <motion.div variants={staggeredItem} className="glass-panel text-center">
+            <motion.div variants={staggeredItem} className="glass-metrics text-center shadow-md hover:shadow-xl transition">
               <div className="text-base font-medium text-white">Patients</div>
               <div className="text-2xl font-bold text-white mt-1">
                 {data?.totalPatients || 0}
@@ -136,10 +136,10 @@ const Dashboard = () => {
         className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-6xl mx-auto"
       >
         {/* Recent Cases List */}
-        <motion.div variants={staggeredItem} className="lg:col-span-2 glass-panel">
+        <motion.div variants={staggeredItem} className="lg:col-span-2 glass-panel-large">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-xl font-semibold text-white">Recent Cases</h3>
-            <Badge variant="secondary" className="bg-white/10 text-white/80 border-white/20">
+            <Badge variant="secondary" className="bg-white/15 text-white border-white/20">
               {data?.recentCases?.length || 0} cases
             </Badge>
           </div>
@@ -148,18 +148,20 @@ const Dashboard = () => {
             {data?.recentCases?.slice(0, 5).map((caseItem, index) => (
               <li 
                 key={caseItem.id} 
-                className="flex items-center justify-between glass-panel hover:shadow-xl transition p-4 rounded-[16px] cursor-pointer"
+                className={`flex items-center justify-between glass-panel-list hover:shadow-xl hover:backdrop-blur-md hover:ring-2 hover:ring-blue-300 transition cursor-pointer ${
+                  index % 2 === 0 ? 'bg-white/15' : 'bg-white/10'
+                }`}
                 onClick={() => navigate(`/cases/${caseItem.id}`)}
               >
                 <div className="flex items-center space-x-3">
                   <div className="glass-inner rounded-full p-2 mr-3">
-                    <Sparkles className="h-5 w-5 text-white/70" />
+                    <Sparkles className="h-5 w-5 text-white/90" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="font-semibold text-white text-base truncate">
                       {caseItem.title || "Untitled Case"}
                     </div>
-                    <div className="text-sm text-white/70 truncate">
+                    <div className="text-sm text-white/90 truncate">
                       {caseItem.patient ? 
                         `${caseItem.patient.name}, ${caseItem.patient.age} y/o ${caseItem.patient.gender}` : 
                         "Patient N/A"
@@ -171,8 +173,8 @@ const Dashboard = () => {
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className="inline-block w-3 h-3 rounded-full bg-green-400/80"></span>
-                  <Eye className="h-4 w-4 text-white/50" />
+                  <span className="inline-block w-3 h-3 rounded-full bg-green-400 shadow-md animate-ping"></span>
+                  <Eye className="h-4 w-4 text-white/70" />
                 </div>
               </li>
             ))}
@@ -180,10 +182,10 @@ const Dashboard = () => {
           
           {(!data?.recentCases || data.recentCases.length === 0) && (
             <div className="text-center py-8">
-              <p className="text-white/70">No recent cases found.</p>
+              <p className="text-white/90">No recent cases found.</p>
               <Button
                 onClick={() => navigate('/cases/new')}
-                className="glass-button text-white font-medium mt-4"
+                className="glass-button text-white font-medium mt-4 hover:shadow-xl transition"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Create Your First Case
@@ -193,55 +195,55 @@ const Dashboard = () => {
         </motion.div>
 
         {/* Recent Activity Timeline */}
-        <motion.div variants={staggeredItem} className="glass-panel">
+        <motion.div variants={staggeredItem} className="glass-panel-large">
           <h3 className="text-xl font-semibold text-white mb-6">Recent Activity</h3>
           
           <div className="space-y-4">
             {/* Timeline Entry 1 */}
-            <div className="glass-panel mb-4 p-4 rounded-[16px]">
+            <div className="bg-white/15 backdrop-blur-sm border border-white/20 rounded-lg p-4 hover:shadow-xl hover:backdrop-blur-md hover:ring-2 hover:ring-blue-300 transition">
               <div className="flex items-start space-x-3">
                 <div className="glass-inner rounded-full p-2">
-                  <User className="h-4 w-4 text-white/70" />
+                  <User className="h-4 w-4 text-white/90" />
                 </div>
                 <div className="flex-1">
                   <p className="text-white text-sm font-medium">Case updated</p>
-                  <p className="text-white/70 text-xs">Hypertension case reviewed</p>
-                  <p className="text-white/50 text-xs mt-1">2 hours ago</p>
+                  <p className="text-white/90 text-xs">Hypertension case reviewed</p>
+                  <p className="text-white/70 text-xs mt-1">2 hours ago</p>
                 </div>
               </div>
             </div>
 
             {/* Timeline Entry 2 */}
-            <div className="glass-panel mb-4 p-4 rounded-[16px]">
+            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg p-4 hover:shadow-xl hover:backdrop-blur-md hover:ring-2 hover:ring-blue-300 transition">
               <div className="flex items-start space-x-3">
                 <div className="glass-inner rounded-full p-2">
-                  <Plus className="h-4 w-4 text-white/70" />
+                  <Plus className="h-4 w-4 text-white/90" />
                 </div>
                 <div className="flex-1">
                   <p className="text-white text-sm font-medium">New case created</p>
-                  <p className="text-white/70 text-xs">Diabetes management case</p>
-                  <p className="text-white/50 text-xs mt-1">5 hours ago</p>
+                  <p className="text-white/90 text-xs">Diabetes management case</p>
+                  <p className="text-white/70 text-xs mt-1">5 hours ago</p>
                 </div>
               </div>
             </div>
 
             {/* Timeline Entry 3 */}
-            <div className="glass-panel mb-4 p-4 rounded-[16px]">
+            <div className="bg-white/15 backdrop-blur-sm border border-white/20 rounded-lg p-4 hover:shadow-xl hover:backdrop-blur-md hover:ring-2 hover:ring-blue-300 transition">
               <div className="flex items-start space-x-3">
                 <div className="glass-inner rounded-full p-2">
-                  <Calendar className="h-4 w-4 text-white/70" />
+                  <Calendar className="h-4 w-4 text-white/90" />
                 </div>
                 <div className="flex-1">
                   <p className="text-white text-sm font-medium">Appointment scheduled</p>
-                  <p className="text-white/70 text-xs">Follow-up consultation</p>
-                  <p className="text-white/50 text-xs mt-1">1 day ago</p>
+                  <p className="text-white/90 text-xs">Follow-up consultation</p>
+                  <p className="text-white/70 text-xs mt-1">1 day ago</p>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Mini Chart Widget */}
-          <div className="glass-panel mt-6">
+          <div className="bg-white/15 backdrop-blur-sm border border-white/20 rounded-lg p-4 shadow-lg mt-6 hover:shadow-xl hover:backdrop-blur-md hover:ring-2 hover:ring-blue-300 transition">
             <h4 className="text-white font-medium mb-3">Weekly Progress</h4>
             <div className="glass-inner">
               <div className="h-20 flex items-end justify-between space-x-1">
@@ -263,27 +265,27 @@ const Dashboard = () => {
         variants={staggeredItem}
         initial="hidden"
         animate="visible"
-        className="glass-panel max-w-4xl mx-auto"
+        className="glass-panel-large max-w-3xl mx-auto"
       >
         <h3 className="text-xl font-semibold text-white mb-6 text-center">Quick Actions</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Button
             onClick={() => navigate('/cases/new')}
-            className="glass-button text-white font-medium py-4 flex items-center justify-center space-x-2"
+            className="glass-button text-white font-medium py-4 flex items-center justify-center space-x-2 hover:shadow-xl transition"
           >
             <Plus className="h-5 w-5" />
             <span>Create New Case</span>
           </Button>
           <Button
             onClick={() => navigate('/cases')}
-            className="glass-button text-white font-medium py-4 flex items-center justify-center space-x-2"
+            className="glass-button text-white font-medium py-4 flex items-center justify-center space-x-2 hover:shadow-xl transition"
           >
             <BookOpen className="h-5 w-5" />
             <span>Browse Cases</span>
           </Button>
           <Button
             onClick={() => navigate('/account')}
-            className="glass-button text-white font-medium py-4 flex items-center justify-center space-x-2"
+            className="glass-button text-white font-medium py-4 flex items-center justify-center space-x-2 hover:shadow-xl transition"
           >
             <UserRound className="h-5 w-5" />
             <span>Profile Settings</span>
@@ -294,7 +296,7 @@ const Dashboard = () => {
       {/* Floating Action Button */}
       <motion.button
         onClick={() => navigate('/cases/new')}
-        className="fixed bottom-6 right-6 glass-panel w-14 h-14 rounded-full flex items-center justify-center hover:scale-105 transition z-50"
+        className="fixed bottom-6 right-6 bg-white/15 backdrop-blur-md border border-white/20 rounded-full shadow-lg w-12 h-12 flex items-center justify-center hover:scale-105 hover:shadow-xl hover:ring-2 hover:ring-blue-300 transition z-50"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         initial={{ opacity: 0, scale: 0 }}
@@ -302,7 +304,7 @@ const Dashboard = () => {
         transition={{ delay: 0.5 }}
         aria-label="Create New Case"
       >
-        <Plus className="h-6 w-6 text-white" />
+        <Plus className="h-5 w-5 text-white" />
       </motion.button>
     </div>
   );
