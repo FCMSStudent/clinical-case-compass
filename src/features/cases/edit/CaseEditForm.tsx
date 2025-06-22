@@ -9,7 +9,7 @@ import { CaseVitalsSection } from "./CaseVitalsSection";
 import { CaseTextSection } from "./CaseTextSection";
 import { CaseLabsSection } from "./CaseLabsSection";
 import { CaseRadiologySection } from "./CaseRadiologySection";
-import { spacing, layouts, buttonVariants, iconWithText } from "@/design-system/ui-styles";
+import { spacing, layouts } from "@/design-system/ui-styles";
 
 interface CaseEditFormProps {
   form: UseFormReturn<any>;
@@ -18,7 +18,7 @@ interface CaseEditFormProps {
   onVitalsChange: (vitals: Record<string, string>) => void;
   onLabChange: (labResults: any[]) => void;
   onImagingChange: (radiologyStudies: any[]) => void;
-  initialVitals?: Record<string, string>;
+  initialVitals: Record<string, string>;
   patientAge?: number;
 }
 

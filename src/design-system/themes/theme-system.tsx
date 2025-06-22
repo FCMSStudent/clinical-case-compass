@@ -37,7 +37,11 @@ const fallbackColors: ThemeColors = {
   glass: {
     background: "rgba(255, 255, 255, 0.1)",
     border: "rgba(255, 255, 255, 0.2)",
-    shadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
+    shadow: {
+      light: "0 4px 16px rgba(0, 0, 0, 0.05)",
+      medium: "0 8px 32px rgba(0, 0, 0, 0.1)",
+      heavy: "0 16px 64px rgba(0, 0, 0, 0.15)"
+    },
     subtle: "rgba(255, 255, 255, 0.05)",
     vibrant: "rgba(255, 255, 255, 0.15)",
     frosted: "rgba(255, 255, 255, 0.08)",

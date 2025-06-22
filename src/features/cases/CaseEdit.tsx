@@ -152,15 +152,15 @@ const CaseEdit = () => {
         title: values.title || medicalCase.title,
         updatedAt: new Date().toISOString(),
         chiefComplaint: values.chiefComplaint || medicalCase.chiefComplaint,
-        history: values.history || undefined,
-        physicalExam: values.physicalExam || undefined,
-        learningPoints: values.learningPoints || undefined,
+        history: values.history || medicalCase.history,
+        physicalExam: values.physicalExam || medicalCase.physicalExam,
+        learningPoints: values.learningPoints || medicalCase.learningPoints,
         patient: {
           ...medicalCase.patient,
           name: values.patientName || medicalCase.patient.name,
           age: values.patientAge || medicalCase.patient.age,
           gender: values.patientGender || medicalCase.patient.gender,
-          medicalRecordNumber: values.patientMRN || medicalCase.patient.medicalRecordNumber || "",
+          medicalRecordNumber: values.patientMRN || medicalCase.patient.medicalRecordNumber,
         },
         vitals: vitals,
         labTests: labResults,
@@ -213,7 +213,14 @@ const CaseEdit = () => {
     diastolicBP: medicalCase.vitals.diastolicBP?.toString() || "80",
     respiratoryRate: medicalCase.vitals.respiratoryRate?.toString() || "16",
     oxygenSaturation: medicalCase.vitals.oxygenSaturation?.toString() || "98"
-  } : undefined;
+  } : {
+    temperature: "37",
+    heartRate: "80", 
+    systolicBP: "120",
+    diastolicBP: "80",
+    respiratoryRate: "16",
+    oxygenSaturation: "98"
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
