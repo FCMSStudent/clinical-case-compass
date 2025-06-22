@@ -220,7 +220,8 @@ const Dashboard = () => {
         </div>
       </motion.div>
       <FloatingNewCaseButton onClick={() => navigate('/cases/new')} />
-    </div>
+      </div>
+    </>
   );
 };
 
