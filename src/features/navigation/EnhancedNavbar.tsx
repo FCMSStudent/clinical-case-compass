@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from "react";
 import { Search, Menu, X, Home, BookOpen, ChevronDown, User, LogOut } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -113,12 +114,12 @@ const EnhancedNavbar: React.FC = () => {
 
   return (
     <motion.nav
-      className="sticky top-0 z-50 mb-8 backdrop-blur-md bg-white/5 border-b border-white/10"
+      className="sticky top-0 z-50 mb-8 auth-glass-container mx-4 mt-4 rounded-2xl"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
     >
-      <div className="max-w-7xl mx-auto px-4 py-4">
+      <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <motion.div
@@ -154,7 +155,7 @@ const EnhancedNavbar: React.FC = () => {
                     className={cn(
                       "flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300",
                       isActive
-                        ? "backdrop-blur-md bg-white/20 border border-white/30 text-white shadow-sm"
+                        ? "auth-glass-container text-white shadow-sm"
                         : "text-white/80 hover:text-white hover:bg-white/10 hover:border-white/20 border border-transparent",
                       "focus:ring-2 focus:ring-white/20 focus:outline-none"
                     )}
@@ -183,7 +184,7 @@ const EnhancedNavbar: React.FC = () => {
               }}
               transition={{ duration: 0.2 }}
             >
-              <div className="relative">
+              <div className="relative auth-glass-container rounded-xl">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/70" />
                 <input
                   type="search"
@@ -192,15 +193,11 @@ const EnhancedNavbar: React.FC = () => {
                   onChange={e => setSearchQuery(e.target.value)}
                   onFocus={() => setIsSearchFocused(true)}
                   className={cn(
-                    "w-full pl-12 pr-4 py-3 text-white rounded-xl transition-all duration-300",
-                    "backdrop-blur-md bg-white/10 border border-white/20",
-                    "placeholder:text-white/60",
-                    "focus:bg-white/20 focus:border-white/30 focus:ring-2 focus:ring-white/20 focus:outline-none",
-                    "hover:bg-white/15 hover:border-white/25"
+                    "w-full pl-12 pr-4 py-3 text-white rounded-xl transition-all duration-300 bg-transparent",
+                    "placeholder:text-white/60 border-0 outline-0",
+                    "focus:bg-white/5"
                   )}
                 />
-                {/* Glass effect overlay */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent rounded-xl pointer-events-none"></div>
               </div>
             </motion.div>
 
@@ -212,7 +209,7 @@ const EnhancedNavbar: React.FC = () => {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -10, scale: 0.95 }}
                   transition={{ duration: 0.3, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
-                  className="absolute top-full left-0 right-0 mt-2 backdrop-blur-xl bg-white/10 rounded-2xl border border-white/20 shadow-xl z-50 overflow-hidden"
+                  className="absolute top-full left-0 right-0 mt-2 auth-glass-container rounded-2xl shadow-xl z-50 overflow-hidden"
                 >
                   {searchResults.length > 0 ? (
                     <div className="py-2">
@@ -261,9 +258,7 @@ const EnhancedNavbar: React.FC = () => {
                 onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                 className={cn(
                   "flex items-center space-x-2 px-4 py-2 rounded-xl transition-all duration-300",
-                  "backdrop-blur-md bg-white/10 border border-white/20",
-                  "hover:bg-white/20 hover:border-white/30",
-                  "text-white/90 hover:text-white",
+                  "auth-glass-container text-white/90 hover:text-white",
                   "focus:ring-2 focus:ring-white/20 focus:outline-none group"
                 )}
                 whileHover={{ 
@@ -284,7 +279,7 @@ const EnhancedNavbar: React.FC = () => {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
                     transition={{ duration: 0.3, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
-                    className="absolute right-0 mt-2 w-48 backdrop-blur-xl bg-white/10 rounded-xl border border-white/20 shadow-xl py-2 z-20 overflow-hidden"
+                    className="absolute right-0 mt-2 w-48 auth-glass-container rounded-xl shadow-xl py-2 z-20 overflow-hidden"
                   >
                     <motion.button
                       className="w-full px-4 py-2 text-left text-white flex items-center space-x-2 transition-all duration-300 hover:bg-white/20 focus:ring-2 focus:ring-white/20 focus:outline-none"
@@ -316,9 +311,7 @@ const EnhancedNavbar: React.FC = () => {
             <motion.button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className={cn(
-                "p-2 rounded-xl transition-all duration-300",
-                "backdrop-blur-md bg-white/10 border border-white/20",
-                "hover:bg-white/20 hover:border-white/30",
+                "p-2 rounded-xl transition-all duration-300 auth-glass-container",
                 "text-white focus:ring-2 focus:ring-white/20 focus:outline-none"
               )}
               whileHover={{ 
@@ -341,7 +334,7 @@ const EnhancedNavbar: React.FC = () => {
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
-              className="md:hidden mt-4 backdrop-blur-md bg-white/10 rounded-xl border border-white/20 overflow-hidden"
+              className="md:hidden mt-4 auth-glass-container rounded-xl overflow-hidden"
             >
               <div className="p-4 space-y-4">
                 {NAV_ITEMS.map(item => {

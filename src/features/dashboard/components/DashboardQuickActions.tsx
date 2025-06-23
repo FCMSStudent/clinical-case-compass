@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { Plus, BookOpen, UserRound } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/shared/components/button";
-import { glass } from "@/design-system/components/components";
 import { cn } from "@/shared/utils/utils";
 
 export const DashboardQuickActions: React.FC = () => {
@@ -36,7 +35,7 @@ export const DashboardQuickActions: React.FC = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.3 }}
-      className="glass-panel-large max-w-5xl mx-auto"
+      className="auth-glass-container max-w-5xl mx-auto p-8 rounded-2xl"
     >
       <h3 className="text-2xl font-semibold text-white mb-8 text-center">
         Quick Actions
@@ -55,9 +54,9 @@ export const DashboardQuickActions: React.FC = () => {
             <Button
               onClick={action.onClick}
               variant={action.variant}
-              className="glass-inner w-full py-6 flex items-center justify-center space-x-3 text-white font-medium text-lg hover:bg-white/25 transition-all duration-200"
+              className="auth-glass-container w-full py-6 flex items-center justify-center space-x-3 text-white font-medium text-lg hover:scale-105 transition-all duration-200 border-0"
             >
-              <span className="p-1 rounded-full glass-inner">
+              <span className="p-1 rounded-full auth-glass-container">
                 {action.icon}
               </span>
               <span>{action.label}</span>
