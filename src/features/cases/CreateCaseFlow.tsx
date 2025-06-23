@@ -3,7 +3,6 @@ import React, {
   useState,
   useCallback,
   useRef,
-  useMemo,
 } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -226,7 +225,7 @@ const CreateCaseFlow = () => {
           chiefComplaintAnalysis: undefined,
           history: (clinical.patientHistory as string) || formData.medicalHistory || "",
           physicalExam: (clinical.physicalExam as string) || "",
-          symptoms: clinical.systemSymptoms || {},
+          symptoms: (clinical.systemSymptoms as Record<string, string[]>) || {},
           vitals: clinical.vitals || {},
           labTests: clinical.labResults || [],
           radiologyStudies: clinical.radiologyStudies || [],

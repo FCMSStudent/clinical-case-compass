@@ -31,7 +31,7 @@ export interface CaseEditFormProps {
   onLabChange: (labs: LabTest[]) => void;
   onImagingChange: (studies: {id: string, type: string, findings: string}[]) => void;
   initialVitals: Record<string, string>;
-  patientAge?: number; // Make optional to handle undefined
+  patientAge: number; // Make required with default value
 }
 
 export const CaseEditForm: React.FC<CaseEditFormProps> = ({
@@ -42,7 +42,7 @@ export const CaseEditForm: React.FC<CaseEditFormProps> = ({
   onLabChange,
   onImagingChange,
   initialVitals,
-  patientAge = 30, // Provide default value
+  patientAge,
 }) => {
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

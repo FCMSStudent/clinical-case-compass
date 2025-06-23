@@ -1,3 +1,4 @@
+
 export interface Patient {
   id: string;
   name: string;
@@ -43,7 +44,7 @@ export interface RadiologyStudy {
   name: string;
   type: string;
   findings: string;
-  date?: string;
+  date?: string; // Make date optional to match the actual usage
   impression?: string;
 }
 
@@ -57,12 +58,12 @@ export interface MedicalCase {
   updatedAt: string;
   chiefComplaint: string;
   chiefComplaintAnalysis?: string;
-  history?: string;
-  physicalExam?: string;
+  history?: string; // Keep optional as it's used this way
+  physicalExam?: string; // Keep optional as it's used this way
   diagnoses: Diagnosis[];
   tags: CaseTag[];
   resources: Resource[];
-  learningPoints?: string;
+  learningPoints?: string; // Keep optional as it's used this way
   vitals?: Record<string, string>;
   urinarySymptoms?: string[];
   symptoms?: Record<string, string[]>; // Corrected type for review of systems

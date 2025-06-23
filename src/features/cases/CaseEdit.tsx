@@ -120,7 +120,7 @@ const CaseEdit = () => {
       name: ss.type,
       type: extractModalityFromName(ss.type),
       findings: ss.findings,
-      date: ss.date || new Date().toISOString().split('T')[0], // Provide default date if undefined
+      date: ss.date || new Date().toISOString().split('T')[0], // Provide default date
       impression: "", // Default impression, can be updated later
     }));
   };
@@ -146,15 +146,15 @@ const CaseEdit = () => {
     setIsSaving(true);
 
     try {
-      // Create updated case object
+      // Create updated case object with proper defaults
       const updatedCase: MedicalCase = {
         ...medicalCase,
         title: values.title || medicalCase.title,
         updatedAt: new Date().toISOString(),
         chiefComplaint: values.chiefComplaint || medicalCase.chiefComplaint,
-        history: values.history || medicalCase.history,
-        physicalExam: values.physicalExam || medicalCase.physicalExam,
-        learningPoints: values.learningPoints || medicalCase.learningPoints,
+        history: values.history || medicalCase.history || "", // Ensure string value
+        physicalExam: values.physicalExam || medicalCase.physicalExam || "", // Ensure string value
+        learningPoints: values.learningPoints || medicalCase.learningPoints || "", // Ensure string value
         patient: {
           ...medicalCase.patient,
           name: values.patientName || medicalCase.patient.name,
