@@ -1,14 +1,11 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { Search, Menu, X, Home, BookOpen, ChevronDown, User, LogOut } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate, NavLink, useLocation } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
 import { useSupabaseCases } from "@/shared/hooks/use-supabase-cases";
 import { useAuth } from "@/app/providers/AuthContext";
 import { cn } from "@/shared/utils/utils";
 import { Button } from "@/shared/components/button";
-import { liquidGlassClasses, getGlassHoverVariants, getGlassTransitionVariants } from "@/design-system/components/glass-effects";
 import type { MedicalCase } from "@/shared/types/case";
 
 interface NavItem {
@@ -17,6 +14,7 @@ interface NavItem {
   icon: React.ComponentType;
   hasNotifications?: boolean;
 }
+
 const NAV_ITEMS: NavItem[] = [
   { label: "Dashboard", to: "/dashboard", icon: Home },
   { label: "Cases", to: "/cases", icon: BookOpen, hasNotifications: false },
@@ -115,62 +113,61 @@ const EnhancedNavbar: React.FC = () => {
 
   return (
     <motion.nav
-      className={cn(
-        "w-full rounded-2xl",
-        "bg-white/18 backdrop-blur-[24px] saturate-160 brightness-108 border border-white/20 shadow-lg",
-        liquidGlassClasses.navigation
-      )}
-      variants={getGlassTransitionVariants('medium')}
-      initial="initial"
-      animate="animate"
+      className="sticky top-0 z-50 mb-8 backdrop-blur-md bg-white/5 border-b border-white/10"
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
     >
-      <div className="px-6">
-        <div className="flex items-center justify-between h-16">
+      <div className="max-w-7xl mx-auto px-4 py-4">
+        <div className="flex items-center justify-between">
           {/* Logo */}
           <motion.div
             className="flex items-center"
-            whileHover={{ scale: 1.03, y: -1 }}
-            whileTap={{ scale: 0.97 }}
-            transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+            whileHover={{ 
+              scale: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 1 : 1.02 
+            }}
+            transition={{ duration: 0.2 }}
           >
             <NavLink
               to="/dashboard"
-              className={cn(
-                "text-2xl font-bold transition-all duration-300 hover:brightness-110 tracking-[-0.02em]",
-                "text-white/80 contrast-more:text-white contrast-more:font-medium",
-                "focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-transparent"
-              )}
+              className="text-2xl font-bold text-white transition-all duration-300 hover:brightness-110"
             >
               Medica
             </NavLink>
           </motion.div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-6">
             {NAV_ITEMS.map(item => {
               const isActive = location.pathname === item.to;
+              const Icon = item.icon;
               return (
                 <motion.div
                   key={item.to}
-                  whileHover={{ scale: 1.03, y: -1 }}
-                  whileTap={{ scale: 0.97 }}
-                  transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  whileHover={{ 
+                    scale: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 1 : 1.02 
+                  }}
+                  transition={{ duration: 0.2 }}
                 >
                   <NavLink
                     to={item.to}
                     className={cn(
-                      "flex items-center space-x-2 px-3 py-2 rounded-lg text-sm transition-all duration-300",
-                      "text-white/80 hover:text-white hover:bg-white/20 hover:brightness-105 hover:saturate-110",
+                      "flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300",
                       isActive
-                        ? "bg-white/25 text-white shadow-md backdrop-blur-[20px] brightness-110 saturate-105"
-                        : "",
-                      "contrast-more:text-white contrast-more:font-medium",
-                      "focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-transparent"
+                        ? "backdrop-blur-md bg-white/20 border border-white/30 text-white shadow-sm"
+                        : "text-white/80 hover:text-white hover:bg-white/10 hover:border-white/20 border border-transparent",
+                      "focus:ring-2 focus:ring-white/20 focus:outline-none"
                     )}
                   >
-                    <item.icon />
-                    <span className="font-medium tracking-[0.01em]">{item.label}</span>
-                    {item.hasNotifications && <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse" />}
+                    <Icon className="h-4 w-4" />
+                    <span>{item.label}</span>
+                    {item.hasNotifications && (
+                      <motion.div 
+                        className="w-2 h-2 bg-red-400 rounded-full"
+                        animate={{ scale: [1, 1.2, 1], opacity: [0.7, 1, 0.7] }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                      />
+                    )}
                   </NavLink>
                 </motion.div>
               );
@@ -178,35 +175,36 @@ const EnhancedNavbar: React.FC = () => {
           </div>
 
           {/* Search Bar */}
-          <div ref={searchRef} className="relative hidden md:block">
+          <div ref={searchRef} className="relative hidden md:block min-w-[320px]">
             <motion.div
               className="relative"
               animate={{
-                // Keep width animation, or adjust if w-full on input makes this less relevant for the container
-                width: isSearchFocused ? 320 : 256,
-                boxShadow: isSearchFocused
-                  ? "0 8px 32px rgba(0,0,0,0.12)" // This shadow might be redundant if the input itself has the main style
-                  : "0 4px 16px rgba(0,0,0,0.08)"
+                scale: isSearchFocused ? 1.02 : 1,
               }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.2 }}
             >
-              {/* The div that provided the input's background is removed, as the input now styles itself */}
-              <div className="relative flex items-center"> {/* Ensure this container allows input to be w-full if needed */}
-                <Search className="h-4 w-4 text-white/70 absolute left-4 top-1/2 -translate-y-1/2 z-10" /> {/* Ensure icon is above input */}
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/70" />
                 <input
-                  type="search" // Changed type to search
-                  placeholder="Search cases, patients…" // Matched placeholder
+                  type="search"
+                  placeholder="Search cases, patients..."
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
                   onFocus={() => setIsSearchFocused(true)}
-                  // Applied new classes directly. Removed cn() unless other conditional classes are needed.
-                  className="w-full bg-white/10 backdrop-blur-sm rounded-[16px] pl-12 pr-4 py-3 text-base text-white placeholder:text-white/70 focus:ring-2 focus:ring-blue-300"
-                  // Removed old specific styling like focus:brightness-110, focus:saturate-105, tracking-[0.005em]
-                  // Added focus:ring-2 focus:ring-blue-300 as per general instructions for focus
+                  className={cn(
+                    "w-full pl-12 pr-4 py-3 text-white rounded-xl transition-all duration-300",
+                    "backdrop-blur-md bg-white/10 border border-white/20",
+                    "placeholder:text-white/60",
+                    "focus:bg-white/20 focus:border-white/30 focus:ring-2 focus:ring-white/20 focus:outline-none",
+                    "hover:bg-white/15 hover:border-white/25"
+                  )}
                 />
+                {/* Glass effect overlay */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent rounded-xl pointer-events-none"></div>
               </div>
             </motion.div>
 
+            {/* Search Results Dropdown */}
             <AnimatePresence>
               {isSearchFocused && (searchQuery || searchResults.length > 0) && (
                 <motion.div
@@ -214,7 +212,7 @@ const EnhancedNavbar: React.FC = () => {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -10, scale: 0.95 }}
                   transition={{ duration: 0.3, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
-                  className="absolute top-full left-0 right-0 mt-2 bg-white/15 backdrop-blur-[28px] saturate-170 brightness-107 rounded-2xl border border-white/20 shadow-2xl z-50"
+                  className="absolute top-full left-0 right-0 mt-2 backdrop-blur-xl bg-white/10 rounded-2xl border border-white/20 shadow-xl z-50 overflow-hidden"
                 >
                   {searchResults.length > 0 ? (
                     <div className="py-2">
@@ -222,20 +220,11 @@ const EnhancedNavbar: React.FC = () => {
                         <motion.button
                           key={result.id}
                           onClick={() => handleSearchResultClick(result)}
-                          className={cn(
-                            "w-full px-4 py-3 text-left transition-all duration-300 hover:bg-white/20 hover:brightness-105 hover:saturate-110",
-                            "focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-transparent"
-                          )}
-                          whileHover={{ x: 4 }}
-                          whileTap={{ scale: 0.97 }}
-                          transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+                          className="w-full px-4 py-3 text-left transition-all duration-300 hover:bg-white/20 text-white"
+                          whileHover={{ x: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 4 }}
+                          transition={{ duration: 0.2 }}
                         >
-                          <div className={cn(
-                            "font-medium text-sm",
-                            result.type === 'urgent' ? "text-red-300 font-semibold" : "text-white"
-                          )}>
-                            {result.title}
-                          </div>
+                          <div className="font-medium text-sm">{result.title}</div>
                           {result.subtitle && <div className="text-white/70 text-xs mt-1">{result.subtitle}</div>}
                         </motion.button>
                       ))}
@@ -250,10 +239,9 @@ const EnhancedNavbar: React.FC = () => {
                           <motion.button
                             key={suggestion}
                             onClick={() => setSearchQuery(suggestion)}
-                            className="block w-full text-left px-2 py-1 text-white/60 text-sm rounded transition-all duration-300 hover:bg-white/20 hover:text-white/80 hover:brightness-105"
-                            whileHover={{ x: 4 }}
-                            whileTap={{ scale: 0.97 }}
-                            transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+                            className="block w-full text-left px-2 py-1 text-white/60 text-sm rounded transition-all duration-300 hover:bg-white/20 hover:text-white/80"
+                            whileHover={{ x: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 4 }}
+                            transition={{ duration: 0.2 }}
                           >
                             {suggestion}
                           </motion.button>
@@ -272,19 +260,21 @@ const EnhancedNavbar: React.FC = () => {
               <motion.button
                 onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                 className={cn(
-                  "flex items-center space-x-2 px-3 py-2 rounded-xl transition-all duration-300",
-                  "bg-white/15 backdrop-blur-[20px] brightness-110 border border-white/25",
-                  "hover:bg-white/25 hover:brightness-105 hover:saturate-110",
-                  "text-white/80 contrast-more:text-white contrast-more:font-medium",
-                  "focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-transparent"
+                  "flex items-center space-x-2 px-4 py-2 rounded-xl transition-all duration-300",
+                  "backdrop-blur-md bg-white/10 border border-white/20",
+                  "hover:bg-white/20 hover:border-white/30",
+                  "text-white/90 hover:text-white",
+                  "focus:ring-2 focus:ring-white/20 focus:outline-none group"
                 )}
-                whileHover={{ scale: 1.03, y: -1 }}
-                whileTap={{ scale: 0.97 }}
-                transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+                whileHover={{ 
+                  scale: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 1 : 1.02 
+                }}
+                transition={{ duration: 0.2 }}
               >
-                <User className="h-4 w-4 text-white" />
-                <span className="text-white text-sm">{getUserDisplayName()}</span>
-                <ChevronDown className="h-3 w-3 text-white/70" />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl"></div>
+                <User className="h-4 w-4 relative z-10" />
+                <span className="text-sm relative z-10">{getUserDisplayName()}</span>
+                <ChevronDown className="h-3 w-3 text-white/70 relative z-10" />
               </motion.button>
 
               <AnimatePresence>
@@ -294,25 +284,23 @@ const EnhancedNavbar: React.FC = () => {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
                     transition={{ duration: 0.3, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
-                    className="absolute right-0 mt-2 w-48 bg-white/15 backdrop-blur-[28px] saturate-170 brightness-107 rounded-xl border border-white/25 shadow-xl py-2 z-20"
+                    className="absolute right-0 mt-2 w-48 backdrop-blur-xl bg-white/10 rounded-xl border border-white/20 shadow-xl py-2 z-20 overflow-hidden"
                   >
                     <motion.button
-                      className="w-full px-4 py-2 text-left text-white flex items-center space-x-2 transition-all duration-300 hover:bg-white/20 hover:brightness-105 hover:saturate-110 focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-transparent"
+                      className="w-full px-4 py-2 text-left text-white flex items-center space-x-2 transition-all duration-300 hover:bg-white/20 focus:ring-2 focus:ring-white/20 focus:outline-none"
                       onClick={() => { navigate('/account'); setIsUserMenuOpen(false); }}
-                      whileHover={{ x: 4 }}
-                      whileTap={{ scale: 0.97 }}
-                      transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+                      whileHover={{ x: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 4 }}
+                      transition={{ duration: 0.2 }}
                     >
                       <User className="h-4 w-4" />
                       <span>Account</span>
                     </motion.button>
                     <div className="h-px bg-white/20 my-2" />
                     <motion.button
-                      className="w-full px-4 py-2 text-left text-red-300 flex items-center space-x-2 transition-all duration-300 hover:bg-white/20 hover:brightness-105 hover:saturate-110 focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-transparent"
+                      className="w-full px-4 py-2 text-left text-red-300 flex items-center space-x-2 transition-all duration-300 hover:bg-white/20 focus:ring-2 focus:ring-white/20 focus:outline-none"
                       onClick={handleSignOut}
-                      whileHover={{ x: 4 }}
-                      whileTap={{ scale: 0.97 }}
-                      transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+                      whileHover={{ x: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 4 }}
+                      transition={{ duration: 0.2 }}
                     >
                       <LogOut className="h-4 w-4" />
                       <span>Sign out</span>
@@ -323,8 +311,78 @@ const EnhancedNavbar: React.FC = () => {
             </div>
           </div>
 
-          {/* Mobile Menu Button and Mobile Menu omitted for brevity */}
+          {/* Mobile Menu Button */}
+          <div className="md:hidden">
+            <motion.button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className={cn(
+                "p-2 rounded-xl transition-all duration-300",
+                "backdrop-blur-md bg-white/10 border border-white/20",
+                "hover:bg-white/20 hover:border-white/30",
+                "text-white focus:ring-2 focus:ring-white/20 focus:outline-none"
+              )}
+              whileHover={{ 
+                scale: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 1 : 1.05 
+              }}
+              whileTap={{ 
+                scale: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 1 : 0.95 
+              }}
+            >
+              {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </motion.button>
+          </div>
         </div>
+
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
+              className="md:hidden mt-4 backdrop-blur-md bg-white/10 rounded-xl border border-white/20 overflow-hidden"
+            >
+              <div className="p-4 space-y-4">
+                {NAV_ITEMS.map(item => {
+                  const isActive = location.pathname === item.to;
+                  const Icon = item.icon;
+                  return (
+                    <NavLink
+                      key={item.to}
+                      to={item.to}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={cn(
+                        "flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300",
+                        isActive
+                          ? "bg-white/20 border border-white/30 text-white"
+                          : "text-white/80 hover:text-white hover:bg-white/10"
+                      )}
+                    >
+                      <Icon className="h-4 w-4" />
+                      <span>{item.label}</span>
+                    </NavLink>
+                  );
+                })}
+                <div className="h-px bg-white/20" />
+                <button
+                  onClick={() => { navigate('/account'); setIsMobileMenuOpen(false); }}
+                  className="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all duration-300 w-full text-left"
+                >
+                  <User className="h-4 w-4" />
+                  <span>Account</span>
+                </button>
+                <button
+                  onClick={handleSignOut}
+                  className="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium text-red-300 hover:bg-white/10 transition-all duration-300 w-full text-left"
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span>Sign out</span>
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </motion.nav>
   );
