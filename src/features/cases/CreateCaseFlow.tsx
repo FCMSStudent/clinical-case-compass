@@ -1,7 +1,7 @@
+
 import React, {
   useState,
   useCallback,
-  // useEffect, // Removed as it's unused
   useRef,
   useMemo,
 } from "react";
@@ -96,9 +96,9 @@ const STEPS: StepMeta[] = [
 const CreateCaseFlow = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [_autoSaveStatus, _setAutoSaveStatus] = // Renamed to indicate it's unused
+  const [_autoSaveStatus, _setAutoSaveStatus] = 
     useState<"idle" | "saving" | "saved" | "error">("idle");
-  const errorAnnouncementRef = useRef<HTMLDivElement>(null); // Added type for ref
+  const errorAnnouncementRef = useRef<HTMLDivElement>(null);
   const { handleError } = useErrorHandler();
   const { toast } = useToast();
   const { createCase, isCreating } = useSupabaseCases();
@@ -111,7 +111,7 @@ const CreateCaseFlow = () => {
     defaultValues: {
       patientName: "",
       medicalRecordNumber: "",
-      patientAge: undefined, // Explicitly undefined
+      patientAge: undefined,
       patientSex: "",
       medicalHistory: "",
       caseTitle: "",
@@ -121,18 +121,11 @@ const CreateCaseFlow = () => {
       learningPoints: "",
       generalNotes: "",
       resourceLinks: [],
-    } as unknown as FormData, // Added type assertion to resolve TS2322
+    } as unknown as FormData,
     mode: "onChange",
   });
 
-  const { trigger } = form; // Removed unused 'watch' and 'watchedValues'
-
-  // Calculate completion percentage - removed as completionPercentage is unused
-  // const completionPercentage = useMemo(() => {
-  //   const totalSteps = STEPS.length;
-  //   const completedSteps = currentStep + 1;
-  //   return Math.round((completedSteps / totalSteps) * 100);
-  // }, [currentStep]);
+  const { trigger } = form;
 
   // Function to validate a specific step
   const validateStep = useCallback(
@@ -231,12 +224,12 @@ const CreateCaseFlow = () => {
           status: "draft" as const,
           chiefComplaint: formData.chiefComplaint || "",
           chiefComplaintAnalysis: undefined,
-          history: (clinical.patientHistory as string) ?? formData.medicalHistory ?? "",
-          physicalExam: clinical.physicalExam ?? "",
-          symptoms: clinical.systemSymptoms ?? {},
-          vitals: clinical.vitals ?? {},
-          labTests: clinical.labResults ?? [],
-          radiologyStudies: clinical.radiologyStudies ?? [],
+          history: (clinical.patientHistory as string) || formData.medicalHistory || "",
+          physicalExam: (clinical.physicalExam as string) || "",
+          symptoms: clinical.systemSymptoms || {},
+          vitals: clinical.vitals || {},
+          labTests: clinical.labResults || [],
+          radiologyStudies: clinical.radiologyStudies || [],
           learningPoints: formData.learningPoints || "",
           urinarySymptoms: [],
         },
@@ -295,7 +288,7 @@ const CreateCaseFlow = () => {
                 totalSteps={STEPS.length}
                 currentStepLabel={STEPS[currentStep]?.label || ""}
                 formTitle="Create New Clinical Case"
-                isDraftSaving={_autoSaveStatus === "saving"} // Use the renamed variable
+                isDraftSaving={_autoSaveStatus === "saving"}
                 hideDraftButton={true}
               />
               <div className="space-y-6">
@@ -308,7 +301,7 @@ const CreateCaseFlow = () => {
                 currentStep={currentStep + 1}
                 totalSteps={STEPS.length}
                 currentStepLabel={STEPS[currentStep]?.label || ""}
-                onPrevious={currentStep > 0 ? handlePrevious : () => {}}
+                onPrevious={currentStep > 0 ? handlePrevious : undefined}
                 onNext={handleNext}
                 isSubmitting={isSubmitting || isCreating}
               />

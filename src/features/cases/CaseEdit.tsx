@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { z } from "zod";
@@ -119,7 +120,7 @@ const CaseEdit = () => {
       name: ss.type,
       type: extractModalityFromName(ss.type),
       findings: ss.findings,
-      date: ss.date ?? new Date().toISOString().split('T')[0], // Use nullish coalescing to ensure string
+      date: ss.date || new Date().toISOString().split('T')[0], // Provide default date if undefined
       impression: "", // Default impression, can be updated later
     }));
   };
@@ -159,7 +160,7 @@ const CaseEdit = () => {
           name: values.patientName || medicalCase.patient.name,
           age: values.patientAge ?? medicalCase.patient.age,
           gender: values.patientGender || medicalCase.patient.gender,
-          medicalRecordNumber: values.patientMRN ?? medicalCase.patient.medicalRecordNumber ?? "",
+          medicalRecordNumber: values.patientMRN || medicalCase.patient.medicalRecordNumber || "",
         },
         vitals: vitals,
         labTests: labResults,
@@ -247,7 +248,7 @@ const CaseEdit = () => {
         onLabChange={setLabResults}
         onImagingChange={handleImagingChange}
         initialVitals={initialVitals}
-        patientAge={form.watch("patientAge") ?? 30}
+        patientAge={form.watch("patientAge") || 30} // Provide default value
       />
     </div>
   );
