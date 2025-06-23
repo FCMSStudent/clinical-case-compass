@@ -11,9 +11,10 @@ import { motion } from 'framer-motion';
 interface CaseListItemProps {
   medicalCase: MedicalCase;
   className?: string;
+  onDelete?: () => void;
 }
 
-export const CaseListItem = memo<CaseListItemProps>(({ medicalCase, className }) => {
+export const CaseListItem = memo<CaseListItemProps>(({ medicalCase, className, onDelete }) => {
   const [, setIsHovered] = useState(false);
 
   try {

@@ -44,7 +44,7 @@ export interface RadiologyStudy {
   name: string;
   type: string;
   findings: string;
-  date?: string; // Make date optional to match the actual usage
+  date: string; // Required field - always provide a date string
   impression?: string;
 }
 
