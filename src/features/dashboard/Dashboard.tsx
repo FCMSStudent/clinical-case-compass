@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
@@ -13,11 +12,10 @@ import { cn } from "@/shared/utils/utils";
 const Dashboard = () => {
   const navigate = useNavigate();
   const { data, isLoading, error } = useDashboardData();
-  const [searchQuery, setSearchQuery] = useState("");
 
   if (error) {
     return (
-      <div className="min-h-screen auth-gradient-bg flex items-center justify-center p-4">
+      <div className="min-h-screen dashboard-gradient-bg flex items-center justify-center p-4">
         {/* Ambient glassmorphism background elements */}
         <motion.div 
           className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400/20 rounded-full filter blur-3xl"
@@ -61,7 +59,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen auth-gradient-bg relative overflow-hidden">
+    <div className="min-h-screen dashboard-gradient-bg relative">
       {/* Enhanced ambient glassmorphism background elements */}
       <motion.div 
         className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400/20 rounded-full filter blur-3xl"
@@ -106,10 +104,7 @@ const Dashboard = () => {
       />
 
       <div className="relative z-10">
-        <DashboardHeader 
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-        />
+        <DashboardHeader />
         
         <div className="px-4 pb-8 space-y-8 max-w-7xl mx-auto">
           <motion.div

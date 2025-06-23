@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Outlet } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -6,7 +5,7 @@ import EnhancedNavbar from "../EnhancedNavbar";
 
 const AppLayout: React.FC = () => {
   return (
-    <div className="min-h-screen auth-gradient-bg relative overflow-hidden">
+    <div className="min-h-screen dashboard-gradient-bg relative">
       {/* Enhanced ambient glassmorphism background elements */}
       <motion.div 
         className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400/20 rounded-full filter blur-3xl"
@@ -55,7 +54,7 @@ const AppLayout: React.FC = () => {
         <EnhancedNavbar />
         
         <motion.main 
-          className="flex-1"
+          className="flex-1 pt-8"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
