@@ -1,4 +1,3 @@
-
 import React, {
   useState,
   useCallback,
@@ -154,7 +153,10 @@ const CreateCaseFlow = () => {
 
   // Function to handle moving to the next step
   const handleNext = useCallback(async () => {
-    const stepId = STEPS[currentStep].id;
+    const currentStepData = STEPS[currentStep];
+    if (!currentStepData) return;
+    
+    const stepId = currentStepData.id;
     const isValid = await validateStep(stepId);
 
     if (!isValid) {
@@ -221,7 +223,7 @@ const CreateCaseFlow = () => {
           name: formData.patientName || "Unknown Patient",
           age: formData.patientAge || 0,
           gender: (formData.patientSex as "male" | "female" | "other") || "other",
-          medicalRecordNumber: formData.medicalRecordNumber,
+          medicalRecordNumber: formData.medicalRecordNumber || "",
         },
         case: {
           title: formData.caseTitle || "Untitled Case",
@@ -229,20 +231,20 @@ const CreateCaseFlow = () => {
           status: "draft" as const,
           chiefComplaint: formData.chiefComplaint || "",
           chiefComplaintAnalysis: undefined,
-          history: clinical.patientHistory ?? formData.medicalHistory ?? "", // Clinical patientHistory > overview medicalHistory
-          physicalExam: clinical.physicalExam ?? "", // Clinical physicalExam
-          symptoms: clinical.systemSymptoms ?? {},   // Clinical systemSymptoms (review of systems)
-          vitals: clinical.vitals ?? {},             // Clinical vitals
-          labTests: clinical.labResults ?? [],       // Clinical labResults
-          radiologyStudies: clinical.radiologyStudies ?? [], // Clinical radiologyStudies
-          learningPoints: formData.learningPoints,
-          urinarySymptoms: [], // currently not handled in form, keep as empty array
+          history: (clinical.patientHistory as string) ?? formData.medicalHistory ?? "",
+          physicalExam: clinical.physicalExam ?? "",
+          symptoms: clinical.systemSymptoms ?? {},
+          vitals: clinical.vitals ?? {},
+          labTests: clinical.labResults ?? [],
+          radiologyStudies: clinical.radiologyStudies ?? [],
+          learningPoints: formData.learningPoints || "",
+          urinarySymptoms: [],
         },
         resources: formData.resourceLinks?.map(link => ({
           title: link.description || "Resource",
           type: "other" as const,
-          url: link.url,
-          notes: link.description,
+          url: link.url || "",
+          notes: link.description || "",
         })) || [],
       };
 
@@ -270,12 +272,6 @@ const CreateCaseFlow = () => {
     }
   }, [trigger, handleError, toast, createCase, user, navigate, form]);
 
-  // Function to determine if the user can proceed to the next step
-  const canProceed = useMemo(() => {
-    // For now, always allow proceeding - validation happens on next/submit
-    return true;
-  }, []);
-
   // Function to handle step change
   const handleStepChange = (stepId: string) => {
     const stepIndex = STEPS.findIndex((step) => step.id === stepId);
@@ -297,7 +293,7 @@ const CreateCaseFlow = () => {
               <FormHeader
                 currentStep={currentStep + 1}
                 totalSteps={STEPS.length}
-                currentStepLabel={STEPS[currentStep].label}
+                currentStepLabel={STEPS[currentStep]?.label || ""}
                 formTitle="Create New Clinical Case"
                 isDraftSaving={_autoSaveStatus === "saving"} // Use the renamed variable
                 hideDraftButton={true}
@@ -311,8 +307,8 @@ const CreateCaseFlow = () => {
               <FormNavigation
                 currentStep={currentStep + 1}
                 totalSteps={STEPS.length}
-                currentStepLabel={STEPS[currentStep].label}
-                onPrevious={currentStep > 0 ? handlePrevious : undefined}
+                currentStepLabel={STEPS[currentStep]?.label || ""}
+                onPrevious={currentStep > 0 ? handlePrevious : () => {}}
                 onNext={handleNext}
                 isSubmitting={isSubmitting || isCreating}
               />

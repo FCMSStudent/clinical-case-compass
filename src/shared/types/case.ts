@@ -3,7 +3,7 @@ export interface Patient {
   name: string;
   age: number;
   gender: "male" | "female" | "other" | "unknown";
-  medicalRecordNumber?: string;
+  medicalRecordNumber?: string | undefined;
 }
 
 export interface CaseTag {
@@ -43,7 +43,7 @@ export interface RadiologyStudy {
   name: string;
   type: string;
   findings: string;
-  date: string;
+  date?: string;
   impression?: string;
 }
 

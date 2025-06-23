@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
+import { themeColors } from '../tokens/colors';
 
 // ────────────────────────────────────────────────────────────────────────────────
 // THEME VARIATIONS FOR GLASSY VISIONOS UI
@@ -544,3 +545,7 @@ export const ThemeSwitcher: React.FC = () => {
     )
   );
 };
+
+// This file is now redundant. All theme color definitions are in src/design-system/tokens/colors.ts
+// Export themeColors for compatibility if needed.
+export { themeColors };

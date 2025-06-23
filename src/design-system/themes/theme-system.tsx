@@ -1,4 +1,3 @@
-
 import React, { useContext, useState, useEffect } from "react";
 import { ThemeColors, themeColors } from '../tokens/colors';
 import { applyThemeToDocument, removeThemeFromDocument } from '../../shared/utils/utilities';
@@ -37,17 +36,35 @@ const fallbackColors: ThemeColors = {
   glass: {
     background: "rgba(255, 255, 255, 0.1)",
     border: "rgba(255, 255, 255, 0.2)",
-    shadow: {
-      light: "0 4px 16px rgba(0, 0, 0, 0.05)",
-      medium: "0 8px 32px rgba(0, 0, 0, 0.1)",
-      heavy: "0 16px 64px rgba(0, 0, 0, 0.15)"
-    },
+    shadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
     subtle: "rgba(255, 255, 255, 0.05)",
     vibrant: "rgba(255, 255, 255, 0.15)",
     frosted: "rgba(255, 255, 255, 0.08)",
     innerShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.1)",
-    backdrop: "backdrop-blur(20px)",
-    overlay: "rgba(0, 0, 0, 0.1)"
+    reflection: "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%)",
+    adaptiveGlass: {
+      onDark: "rgba(255, 255, 255, 0.12)",
+      onLight: "rgba(0, 0, 0, 0.08)",
+      onColor: "rgba(255, 255, 255, 0.15)",
+    },
+    backdrop: {
+      light: "blur(20px) brightness(1.1)",
+      medium: "blur(30px) saturate(150%) brightness(1.05)",
+      heavy: "blur(50px) saturate(180%) contrast(1.1)",
+    },
+    contextual: {
+      navigation: "rgba(255, 255, 255, 0.18)",
+      modal: "rgba(255, 255, 255, 0.25)",
+      card: "rgba(255, 255, 255, 0.08)",
+      alert: "rgba(255, 255, 255, 0.2)",
+    },
+    elevation: {
+      50: "rgba(255, 255, 255, 0.02)",
+      100: "rgba(255, 255, 255, 0.05)",
+      200: "rgba(255, 255, 255, 0.08)",
+      300: "rgba(255, 255, 255, 0.12)",
+      400: "rgba(255, 255, 255, 0.18)",
+    },
   },
   gradient: {
     primary: "linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)",
