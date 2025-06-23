@@ -21,7 +21,7 @@ export const EnhancedAppLayout: React.FC<EnhancedAppLayoutProps> = ({
   const variants = getMotionVariants(pageTransitionVariants, reducedMotionPageTransitionVariants);
 
   return (
-    <div className="min-h-screen auth-gradient-bg">
+    <div className="min-h-screen dashboard-gradient-bg">
       <motion.div
         className="relative z-10 flex flex-col min-h-screen"
         variants={variants}
