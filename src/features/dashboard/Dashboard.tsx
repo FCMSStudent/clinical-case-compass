@@ -42,14 +42,10 @@ const Dashboard = () => {
         <DashboardQuickActions />
       </div>
 
-      {/* Floating Action Button */}
+      {/* Enhanced Floating Action Button */}
       <motion.button
         onClick={() => navigate('/cases/new')}
-        className={cn(
-          "fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-lg z-50 flex items-center justify-center transition-all duration-200",
-          glass.elevated,
-          "hover:scale-105 focus:ring-2 focus:ring-white/30 focus:outline-none"
-        )}
+        className="fixed bottom-8 right-8 w-16 h-16 rounded-full shadow-xl z-50 flex items-center justify-center transition-all duration-200 glass-card-elevated hover:scale-105 focus:ring-2 focus:ring-white/40 focus:outline-none"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         initial={{ opacity: 0, scale: 0 }}
@@ -57,7 +53,7 @@ const Dashboard = () => {
         transition={{ delay: 0.5 }}
         aria-label="Create New Case"
       >
-        <Plus className="h-6 w-6 text-white" />
+        <Plus className="h-7 w-7 text-white" />
       </motion.button>
     </div>
   );

@@ -372,38 +372,46 @@
   font-size: var(--font-size-md) !important;
 }
 
-/* Dashboard Glassmorphic Utility Classes */
+/* Dashboard Glassmorphic Utility Classes - Enhanced Auth-like Aesthetic */
 @layer components {
   .glass-panel {
-    @apply bg-white/10 backdrop-blur-sm rounded-lg p-4 shadow-sm hover:shadow-md hover:backdrop-blur-md hover:ring-2 hover:ring-blue-300 transition;
+    @apply bg-white/15 backdrop-blur-md rounded-lg p-4 shadow-lg hover:shadow-xl hover:backdrop-blur-lg hover:ring-2 hover:ring-blue-300 transition-all border border-white/20;
   }
   
   .glass-panel-large {
-    @apply bg-white/20 backdrop-blur-md rounded-lg p-4 shadow-md hover:shadow-lg hover:backdrop-blur-lg hover:ring-2 hover:ring-blue-300 transition;
+    @apply bg-white/20 backdrop-blur-lg rounded-lg p-6 shadow-lg hover:shadow-xl hover:backdrop-blur-xl hover:ring-2 hover:ring-blue-300 transition-all border border-white/25;
   }
   
   .glass-panel-list {
-    @apply bg-white/10 backdrop-blur-sm rounded-lg p-4 shadow-sm hover:shadow-md hover:backdrop-blur-md hover:ring-2 hover:ring-blue-300 transition;
+    @apply bg-white/10 backdrop-blur-md rounded-lg p-4 shadow-md hover:shadow-lg hover:backdrop-blur-lg hover:ring-2 hover:ring-blue-300 transition-all border border-white/20;
   }
   
   .glass-inner {
-    @apply bg-white/10 backdrop-blur-sm rounded-lg p-3;
+    @apply bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-white/20;
   }
   
   .glass-header {
-    @apply bg-white/20 backdrop-blur-lg border border-white/20 rounded-lg p-4 shadow-md;
+    @apply bg-white/20 backdrop-blur-xl border border-white/25 rounded-lg p-6 shadow-lg;
   }
   
   .glass-metrics {
-    @apply bg-white/20 backdrop-blur-md border-white/10 rounded-lg p-4 shadow-sm hover:shadow-md hover:backdrop-blur-lg hover:ring-2 hover:ring-blue-300 transition;
+    @apply bg-white/20 backdrop-blur-lg border border-white/20 rounded-lg p-5 shadow-md hover:shadow-lg hover:backdrop-blur-xl hover:ring-2 hover:ring-blue-300 transition-all;
   }
   
   .glass-nav {
-    @apply backdrop-blur-sm border border-white/20 shadow-md;
+    @apply backdrop-blur-lg border border-white/25 shadow-lg bg-white/15;
   }
   
   .welcome-banner {
-    @apply bg-white/20 backdrop-blur-md border border-white/20 rounded-lg p-4 shadow-md;
+    @apply bg-white/20 backdrop-blur-xl border border-white/25 rounded-lg p-6 shadow-lg;
+  }
+  
+  .glass-hero {
+    @apply bg-white/20 backdrop-blur-xl border border-white/25 rounded-xl p-8 shadow-xl;
+  }
+  
+  .glass-card-elevated {
+    @apply bg-white/20 backdrop-blur-lg border border-white/25 rounded-lg p-5 shadow-lg hover:shadow-xl hover:ring-2 hover:ring-blue-300 transition-all;
   }
 }
 

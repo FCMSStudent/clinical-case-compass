@@ -36,16 +36,13 @@ export const DashboardQuickActions: React.FC = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.3 }}
-      className={cn(
-        "p-6 rounded-xl max-w-4xl mx-auto",
-        glass.card
-      )}
+      className="glass-panel-large max-w-5xl mx-auto"
     >
-      <h3 className="text-xl font-semibold text-white mb-6 text-center">
+      <h3 className="text-2xl font-semibold text-white mb-8 text-center">
         Quick Actions
       </h3>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {actions.map((action, index) => (
           <motion.div
             key={action.label}
@@ -58,12 +55,11 @@ export const DashboardQuickActions: React.FC = () => {
             <Button
               onClick={action.onClick}
               variant={action.variant}
-              className={cn(
-                "w-full py-4 flex items-center justify-center space-x-2 text-white font-medium transition-all duration-200",
-                "bg-white/15 hover:bg-white/25 border-white/20 hover:border-white/30"
-              )}
+              className="glass-inner w-full py-6 flex items-center justify-center space-x-3 text-white font-medium text-lg hover:bg-white/25 transition-all duration-200"
             >
-              {action.icon}
+              <span className="p-1 rounded-full glass-inner">
+                {action.icon}
+              </span>
               <span>{action.label}</span>
             </Button>
           </motion.div>

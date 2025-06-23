@@ -27,26 +27,19 @@ const MetricCard: React.FC<{
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay }}
-      className={cn(
-        "p-6 rounded-xl border border-white/20 transition-all duration-300",
-        glass.card,
-        "hover:scale-[1.02] hover:shadow-lg"
-      )}
+      className="glass-metrics hover:scale-[1.02] cursor-pointer"
     >
-      <div className="flex items-center justify-between mb-4">
-        <div className={cn(
-          "p-3 rounded-xl",
-          glass.subtle
-        )}>
+      <div className="flex items-center justify-between mb-6">
+        <div className="glass-inner p-4 rounded-xl">
           {icon}
         </div>
         {trend && (
           <div className={cn(
-            "flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium",
-            trend.isPositive ? "text-green-300 bg-green-500/20" : "text-red-300 bg-red-500/20"
+            "flex items-center space-x-2 px-3 py-2 rounded-full text-sm font-medium glass-inner",
+            trend.isPositive ? "text-green-200" : "text-red-200"
           )}>
             <TrendingUp className={cn(
-              "h-3 w-3",
+              "h-4 w-4",
               !trend.isPositive && "rotate-180"
             )} />
             <span>{Math.abs(trend.value)}%</span>
@@ -54,11 +47,11 @@ const MetricCard: React.FC<{
         )}
       </div>
       
-      <div className="space-y-1">
-        <div className="text-2xl font-bold text-white">
+      <div className="space-y-2">
+        <div className="text-3xl font-bold text-white">
           {value.toLocaleString()}
         </div>
-        <div className="text-sm text-white/80">
+        <div className="text-lg text-white/90 font-medium">
           {title}
         </div>
       </div>
@@ -67,17 +60,14 @@ const MetricCard: React.FC<{
 };
 
 const MetricSkeleton: React.FC = () => (
-  <div className={cn(
-    "p-6 rounded-xl border border-white/20 animate-pulse",
-    glass.card
-  )}>
-    <div className="flex items-center justify-between mb-4">
-      <div className="w-12 h-12 bg-white/20 rounded-xl"></div>
-      <div className="w-16 h-6 bg-white/20 rounded-full"></div>
+  <div className="glass-metrics animate-pulse">
+    <div className="flex items-center justify-between mb-6">
+      <div className="w-16 h-16 bg-white/20 rounded-xl"></div>
+      <div className="w-20 h-8 bg-white/20 rounded-full"></div>
     </div>
-    <div className="space-y-2">
-      <div className="w-20 h-8 bg-white/20 rounded"></div>
-      <div className="w-24 h-4 bg-white/20 rounded"></div>
+    <div className="space-y-3">
+      <div className="w-24 h-9 bg-white/25 rounded"></div>
+      <div className="w-32 h-6 bg-white/20 rounded"></div>
     </div>
   </div>
 );

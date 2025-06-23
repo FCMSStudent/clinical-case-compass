@@ -28,26 +28,18 @@ const RecentCaseItem: React.FC<{
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.3, delay: index * 0.05 }}
       onClick={onClick}
-      className={cn(
-        "p-4 rounded-lg border border-white/10 cursor-pointer transition-all duration-200 group",
-        glass.subtle,
-        "hover:bg-white/15 hover:scale-[1.01] hover:shadow-md"
-      )}
+      className="glass-panel-list cursor-pointer group"
     >
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-3 flex-1 min-w-0">
-          <div className={cn(
-            "p-2 rounded-full transition-all duration-200",
-            glass.subtle,
-            "group-hover:bg-white/20"
-          )}>
-            <Sparkles className="h-4 w-4 text-white/90" />
+        <div className="flex items-center space-x-4 flex-1 min-w-0">
+          <div className="glass-inner p-3 rounded-full">
+            <Sparkles className="h-5 w-5 text-white" />
           </div>
           <div className="flex-1 min-w-0">
-            <div className="font-semibold text-white text-base truncate">
+            <div className="font-semibold text-white text-lg truncate">
               {caseItem.title || "Untitled Case"}
             </div>
-            <div className="text-sm text-white/80 truncate">
+            <div className="text-base text-white/90 truncate">
               {caseItem.patient ? 
                 `${caseItem.patient.name}, ${caseItem.patient.age} y/o ${caseItem.patient.gender}` : 
                 "Patient N/A"
@@ -58,9 +50,9 @@ const RecentCaseItem: React.FC<{
             </div>
           </div>
         </div>
-        <div className="flex items-center space-x-2">
-          <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
-          <Eye className="h-4 w-4 text-white/60 group-hover:text-white/80 transition-colors" />
+        <div className="flex items-center space-x-3">
+          <div className="w-3 h-3 rounded-full bg-green-400 shadow-md animate-pulse"></div>
+          <Eye className="h-5 w-5 text-white/80 group-hover:text-white transition-colors" />
         </div>
       </div>
     </motion.div>
@@ -79,23 +71,16 @@ const ActivityItem: React.FC<{
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.1 }}
-      className={cn(
-        "p-4 rounded-lg border border-white/10 transition-all duration-200",
-        glass.subtle,
-        "hover:bg-white/15 hover:shadow-sm"
-      )}
+      className="glass-panel-list"
     >
-      <div className="flex items-start space-x-3">
-        <div className={cn(
-          "p-2 rounded-full",
-          glass.subtle
-        )}>
+      <div className="flex items-start space-x-4">
+        <div className="glass-inner p-3 rounded-full">
           {icon}
         </div>
         <div className="flex-1">
-          <p className="text-white text-sm font-medium">{title}</p>
-          <p className="text-white/80 text-xs">{subtitle}</p>
-          <p className="text-white/60 text-xs mt-1">{time}</p>
+          <p className="text-white text-base font-medium">{title}</p>
+          <p className="text-white/90 text-sm">{subtitle}</p>
+          <p className="text-white/70 text-sm mt-1">{time}</p>
         </div>
       </div>
     </motion.div>
@@ -112,18 +97,18 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({
     return (
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
-          <div className={cn("p-6 rounded-xl", glass.card)}>
-            <div className="animate-pulse space-y-4">
+          <div className="glass-panel-large">
+            <div className="animate-pulse space-y-5">
               {Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="h-16 bg-white/20 rounded-lg"></div>
+                <div key={i} className="h-20 bg-white/25 rounded-lg"></div>
               ))}
             </div>
           </div>
         </div>
-        <div className={cn("p-6 rounded-xl", glass.card)}>
-          <div className="animate-pulse space-y-4">
+        <div className="glass-panel-large">
+          <div className="animate-pulse space-y-5">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="h-20 bg-white/20 rounded-lg"></div>
+              <div key={i} className="h-24 bg-white/25 rounded-lg"></div>
             ))}
           </div>
         </div>
@@ -156,15 +141,15 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       {/* Recent Cases */}
       <div className="lg:col-span-2">
-        <div className={cn("p-6 rounded-xl", glass.card)}>
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-semibold text-white">Recent Cases</h3>
-            <Badge variant="secondary" className="bg-white/15 text-white border-white/20">
+        <div className="glass-panel-large">
+          <div className="flex items-center justify-between mb-8">
+            <h3 className="text-2xl font-semibold text-white">Recent Cases</h3>
+            <Badge variant="secondary" className="glass-inner text-white text-lg px-4 py-2">
               {data?.recentCases?.length || 0} cases
             </Badge>
           </div>
           
-          <div className="space-y-3">
+          <div className="space-y-4">
             {data?.recentCases?.slice(0, 5).map((caseItem, index) => (
               <RecentCaseItem
                 key={caseItem.id}
@@ -176,20 +161,17 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({
           </div>
           
           {(!data?.recentCases || data.recentCases.length === 0) && (
-            <div className="text-center py-12">
-              <div className={cn(
-                "w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center",
-                glass.subtle
-              )}>
-                <BookOpen className="h-8 w-8 text-white/60" />
+            <div className="text-center py-16">
+              <div className="glass-inner w-20 h-20 mx-auto mb-6 rounded-full flex items-center justify-center">
+                <BookOpen className="h-10 w-10 text-white/80" />
               </div>
-              <p className="text-white/90 text-lg mb-2">No recent cases found</p>
-              <p className="text-white/60 mb-6">Get started by creating your first case</p>
+              <p className="text-white text-xl mb-3 font-medium">No recent cases found</p>
+              <p className="text-white/80 mb-8 text-lg">Get started by creating your first case</p>
               <Button
                 onClick={() => navigate('/cases/new')}
-                className="bg-white/20 hover:bg-white/30 text-white border-white/30"
+                className="glass-inner hover:bg-white/25 text-white text-lg px-6 py-3"
               >
-                <Plus className="h-4 w-4 mr-2" />
+                <Plus className="h-5 w-5 mr-2" />
                 Create Your First Case
               </Button>
             </div>
@@ -198,10 +180,10 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({
       </div>
 
       {/* Recent Activity */}
-      <div className={cn("p-6 rounded-xl", glass.card)}>
-        <h3 className="text-xl font-semibold text-white mb-6">Recent Activity</h3>
+      <div className="glass-panel-large">
+        <h3 className="text-2xl font-semibold text-white mb-8">Recent Activity</h3>
         
-        <div className="space-y-4">
+        <div className="space-y-5">
           {activities.map((activity, index) => (
             <ActivityItem
               key={index}
@@ -215,19 +197,16 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({
         </div>
 
         {/* Mini Chart */}
-        <div className={cn(
-          "mt-6 p-4 rounded-lg",
-          glass.subtle
-        )}>
-          <h4 className="text-white font-medium mb-3">Weekly Progress</h4>
-          <div className="h-20 flex items-end justify-between space-x-1">
+        <div className="glass-inner mt-8">
+          <h4 className="text-white font-medium mb-4 text-lg">Weekly Progress</h4>
+          <div className="h-24 flex items-end justify-between space-x-2">
             {[65, 45, 80, 55, 70, 90, 75].map((height, index) => (
               <motion.div
                 key={index}
                 initial={{ height: 0 }}
                 animate={{ height: `${height}%` }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-white/30 rounded-sm flex-1"
+                className="bg-white/40 rounded-sm flex-1"
               />
             ))}
           </div>
