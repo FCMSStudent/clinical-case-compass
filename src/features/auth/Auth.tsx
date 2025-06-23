@@ -101,7 +101,7 @@ const Auth = () => {
 
   return (
     <motion.div
-      className="min-h-screen relative overflow-hidden dashboard-gradient-bg"
+      className="min-h-screen relative overflow-hidden"
       variants={pageVariants}
       initial="initial"
       animate="animate"

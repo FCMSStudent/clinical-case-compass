@@ -2,12 +2,18 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import { motion } from "framer-motion";
 import EnhancedNavbar from "../EnhancedNavbar";
+import UnifiedBackground from "@/shared/components/UnifiedBackground";
 
 const AppLayout: React.FC = () => {
   return (
-    <div className="min-h-screen dashboard-gradient-bg relative">
-      {/* Main layout */}
-      <div className="relative z-10 flex flex-col min-h-screen">
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Unified Background with all effects */}
+      <div className="absolute inset-0 dashboard-gradient-bg">
+        <UnifiedBackground />
+      </div>
+      
+      {/* Main layout - integrated with background */}
+      <div className="relative flex flex-col min-h-screen">
         <EnhancedNavbar />
         
         <motion.main 

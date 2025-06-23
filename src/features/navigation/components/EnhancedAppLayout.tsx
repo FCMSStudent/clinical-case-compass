@@ -1,8 +1,8 @@
-
 import React from "react";
 import EnhancedNavbar from "../EnhancedNavbar";
 import Breadcrumbs from "../Breadcrumbs";
 import { motion } from "framer-motion";
+import UnifiedBackground from "@/shared/components/UnifiedBackground";
 import {
   pageTransitionVariants,
   reducedMotionPageTransitionVariants,
@@ -21,9 +21,14 @@ export const EnhancedAppLayout: React.FC<EnhancedAppLayoutProps> = ({
   const variants = getMotionVariants(pageTransitionVariants, reducedMotionPageTransitionVariants);
 
   return (
-    <div className="min-h-screen dashboard-gradient-bg">
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Unified Background with all effects */}
+      <div className="absolute inset-0 dashboard-gradient-bg">
+        <UnifiedBackground />
+      </div>
+      
       <motion.div
-        className="relative z-10 flex flex-col min-h-screen"
+        className="relative flex flex-col min-h-screen"
         variants={variants}
         initial="initial"
         animate="animate"
