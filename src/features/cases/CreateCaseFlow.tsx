@@ -222,7 +222,7 @@ const CreateCaseFlow = () => {
           priority: "medium" as const,
           status: "draft" as const,
           chiefComplaint: formData.chiefComplaint || "",
-          chiefComplaintAnalysis: undefined,
+          chiefComplaintAnalysis: "",
           history: (clinical.patientHistory as string) || formData.medicalHistory || "",
           physicalExam: (clinical.physicalExam as string) || "",
           symptoms: (clinical.systemSymptoms as Record<string, string[]>) || {} as Record<string, string[]>,

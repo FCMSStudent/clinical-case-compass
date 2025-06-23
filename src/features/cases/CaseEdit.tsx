@@ -121,7 +121,7 @@ const CaseEdit = () => {
       type: extractModalityFromName(ss.type),
       findings: ss.findings,
       date: ss.date || new Date().toISOString().split('T')[0], // Always provide a date string
-      impression: "", // Default impression, can be updated later
+      impression: "", // Default impression
     }));
   };
 
@@ -152,9 +152,9 @@ const CaseEdit = () => {
         title: values.title,
         updatedAt: new Date().toISOString(),
         chiefComplaint: values.chiefComplaint,
-        history: values.history,
-        physicalExam: values.physicalExam,
-        learningPoints: values.learningPoints,
+        history: values.history || "",
+        physicalExam: values.physicalExam || "",
+        learningPoints: values.learningPoints || "",
         patient: {
           ...medicalCase.patient,
           name: values.patientName,
