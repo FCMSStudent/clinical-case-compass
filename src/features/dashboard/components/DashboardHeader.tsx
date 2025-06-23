@@ -16,7 +16,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = () => {
 
   return (
     <motion.header 
-      className="mb-8"
+      className="mb-4"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
