@@ -14,17 +14,17 @@ import { useSupabaseCases } from "@/shared/hooks/use-supabase-cases";
 import { CaseEditForm } from "@/features/cases/edit/CaseEditForm";
 import { typography, layouts } from "@/design-system/ui-styles";
 
-// Define the form schema with optional fields
+// Define the form schema with required fields
 const formSchema = z.object({
-  title: z.string().optional(),
-  patientName: z.string().optional(),
-  patientAge: z.coerce.number().min(0).max(120).optional(),
-  patientGender: z.enum(["male", "female", "other"]).optional(),
-  patientMRN: z.string().optional(),
-  chiefComplaint: z.string().optional(),
-  history: z.string().optional(),
-  physicalExam: z.string().optional(),
-  learningPoints: z.string().optional(),
+  title: z.string().min(1, "Title is required"),
+  patientName: z.string().min(1, "Patient name is required"),
+  patientAge: z.coerce.number().min(0).max(120),
+  patientGender: z.enum(["male", "female", "other"]),
+  patientMRN: z.string(),
+  chiefComplaint: z.string().min(1, "Chief complaint is required"),
+  history: z.string(),
+  physicalExam: z.string(),
+  learningPoints: z.string(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -120,7 +120,7 @@ const CaseEdit = () => {
       name: ss.type,
       type: extractModalityFromName(ss.type),
       findings: ss.findings,
-      date: ss.date || new Date().toISOString().split('T')[0], // Provide default date
+      date: ss.date || new Date().toISOString().split('T')[0], // Always provide a date string
       impression: "", // Default impression, can be updated later
     }));
   };
@@ -149,18 +149,18 @@ const CaseEdit = () => {
       // Create updated case object with proper defaults
       const updatedCase: MedicalCase = {
         ...medicalCase,
-        title: values.title || medicalCase.title,
+        title: values.title,
         updatedAt: new Date().toISOString(),
-        chiefComplaint: values.chiefComplaint || medicalCase.chiefComplaint,
-        history: values.history || medicalCase.history || "", // Ensure string value
-        physicalExam: values.physicalExam || medicalCase.physicalExam || "", // Ensure string value
-        learningPoints: values.learningPoints || medicalCase.learningPoints || "", // Ensure string value
+        chiefComplaint: values.chiefComplaint,
+        history: values.history,
+        physicalExam: values.physicalExam,
+        learningPoints: values.learningPoints,
         patient: {
           ...medicalCase.patient,
-          name: values.patientName || medicalCase.patient.name,
-          age: values.patientAge ?? medicalCase.patient.age,
-          gender: values.patientGender || medicalCase.patient.gender,
-          medicalRecordNumber: values.patientMRN || medicalCase.patient.medicalRecordNumber || "",
+          name: values.patientName,
+          age: values.patientAge,
+          gender: values.patientGender,
+          medicalRecordNumber: values.patientMRN,
         },
         vitals: vitals,
         labTests: labResults,
@@ -248,7 +248,7 @@ const CaseEdit = () => {
         onLabChange={setLabResults}
         onImagingChange={handleImagingChange}
         initialVitals={initialVitals}
-        patientAge={form.watch("patientAge") || 30} // Provide default value
+        patientAge={form.watch("patientAge") || 30}
       />
     </div>
   );

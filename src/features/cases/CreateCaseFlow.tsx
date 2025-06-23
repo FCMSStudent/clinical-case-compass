@@ -209,7 +209,7 @@ const CreateCaseFlow = () => {
       // Extract clinicalDetails fields if present
       const clinical = formData.clinicalDetails || {};
 
-      // Prepare case data for Supabase
+      // Prepare case data for Supabase with proper type handling
       const caseData = {
         patient: {
           name: formData.patientName || "Unknown Patient",
@@ -225,8 +225,8 @@ const CreateCaseFlow = () => {
           chiefComplaintAnalysis: undefined,
           history: (clinical.patientHistory as string) || formData.medicalHistory || "",
           physicalExam: (clinical.physicalExam as string) || "",
-          symptoms: (clinical.systemSymptoms as Record<string, string[]>) || {},
-          vitals: clinical.vitals || {},
+          symptoms: (clinical.systemSymptoms as Record<string, string[]>) || {} as Record<string, string[]>,
+          vitals: (clinical.vitals as Record<string, string>) || {} as Record<string, string>,
           labTests: clinical.labResults || [],
           radiologyStudies: clinical.radiologyStudies || [],
           learningPoints: formData.learningPoints || "",

@@ -12,15 +12,15 @@ import { LabTest, RadiologyStudy } from "@/shared/types/case";
 import { Loader2 } from "lucide-react";
 
 interface FormData {
-  title?: string;
-  patientName?: string;
-  patientAge?: number;
-  patientGender?: "male" | "female" | "other";
-  patientMRN?: string;
-  chiefComplaint?: string;
-  history?: string;
-  physicalExam?: string;
-  learningPoints?: string;
+  title: string;
+  patientName: string;
+  patientAge: number;
+  patientGender: "male" | "female" | "other";
+  patientMRN: string;
+  chiefComplaint: string;
+  history: string;
+  physicalExam: string;
+  learningPoints: string;
 }
 
 export interface CaseEditFormProps {
@@ -31,7 +31,7 @@ export interface CaseEditFormProps {
   onLabChange: (labs: LabTest[]) => void;
   onImagingChange: (studies: {id: string, type: string, findings: string}[]) => void;
   initialVitals: Record<string, string>;
-  patientAge: number; // Make required with default value
+  patientAge: number;
 }
 
 export const CaseEditForm: React.FC<CaseEditFormProps> = ({
