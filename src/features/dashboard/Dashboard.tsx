@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -13,37 +13,20 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const { data, isLoading, error } = useDashboardData();
 
+  // Memoize static background elements to prevent re-renders
+  const backgroundElements = useMemo(() => (
+    <>
+      {/* Simplified background elements - reduced complexity */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400/15 rounded-full filter blur-3xl opacity-60" />
+      <div className="absolute top-3/4 right-1/4 w-80 h-80 bg-purple-400/15 rounded-full filter blur-3xl opacity-60" />
+      <div className="absolute top-1/2 left-3/4 w-64 h-64 bg-indigo-400/10 rounded-full filter blur-3xl opacity-60" />
+    </>
+  ), []);
+
   if (error) {
     return (
       <div className="min-h-screen dashboard-gradient-bg flex items-center justify-center p-4">
-        {/* Ambient glassmorphism background elements */}
-        <motion.div 
-          className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400/20 rounded-full filter blur-3xl"
-          animate={{
-            x: [0, 50, 0],
-            y: [0, -30, 0],
-            scale: [1, 1.1, 1],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-        <motion.div 
-          className="absolute top-3/4 right-1/4 w-80 h-80 bg-purple-400/20 rounded-full filter blur-3xl"
-          animate={{
-            x: [0, -40, 0],
-            y: [0, 40, 0],
-            scale: [1, 0.9, 1],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1,
-          }}
-        />
+        {backgroundElements}
         
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
@@ -60,135 +43,58 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen dashboard-gradient-bg relative">
-      {/* Enhanced ambient glassmorphism background elements */}
-      <motion.div 
-        className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400/20 rounded-full filter blur-3xl"
-        animate={{
-          x: [0, 50, 0],
-          y: [0, -30, 0],
-          scale: [1, 1.1, 1],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-      <motion.div 
-        className="absolute top-3/4 right-1/4 w-80 h-80 bg-purple-400/20 rounded-full filter blur-3xl"
-        animate={{
-          x: [0, -40, 0],
-          y: [0, 40, 0],
-          scale: [1, 0.9, 1],
-        }}
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 1,
-        }}
-      />
-      <motion.div 
-        className="absolute top-1/2 left-3/4 w-64 h-64 bg-indigo-400/15 rounded-full filter blur-3xl"
-        animate={{
-          x: [0, 30, 0],
-          y: [0, -50, 0],
-          scale: [1, 1.2, 1],
-        }}
-        transition={{
-          duration: 12,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 2,
-        }}
-      />
+      {/* Static background elements - no animation to improve performance */}
+      {backgroundElements}
 
       <div className="relative z-10">
         <DashboardHeader />
         
-        {/* Enhanced Container with 8px Grid System */}
-        <div className="px-4 pb-8 max-w-7xl mx-auto">
-          {/* Primary Section: Metrics with enhanced divider */}
+        {/* Simplified container structure */}
+        <div className="px-4 pb-8 max-w-7xl mx-auto space-y-8">
+          {/* Metrics Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
-            className="space-y-8"
           >
             <DashboardMetrics data={data} isLoading={isLoading} />
-            
-            {/* Section Divider with Glassmorphism */}
-            <div className="relative py-4">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-b border-white/10 relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent backdrop-blur-sm rounded-full h-px"></div>
-                </div>
-              </div>
-              <div className="relative flex justify-center">
-                <div className="px-6 py-2 auth-glass-container rounded-full">
-                  <span className="text-white/60 text-sm font-medium tracking-wider uppercase">
-                    Recent Activity
-                  </span>
-                </div>
-              </div>
-            </div>
           </motion.div>
           
-          {/* Secondary Section: Main Content with enhanced spacing */}
+          {/* Simple Section Divider */}
+          <div className="border-b border-white/10 my-8" />
+          
+          {/* Content Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
-            className="space-y-8"
           >
             <DashboardContent data={data} isLoading={isLoading} />
-            
-            {/* Section Divider with Glassmorphism */}
-            <div className="relative py-4">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-b border-white/10 relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent backdrop-blur-sm rounded-full h-px"></div>
-                </div>
-              </div>
-              <div className="relative flex justify-center">
-                <div className="px-6 py-2 auth-glass-container rounded-full">
-                  <span className="text-white/60 text-sm font-medium tracking-wider uppercase">
-                    Quick Actions
-                  </span>
-                </div>
-              </div>
-            </div>
           </motion.div>
           
-          {/* Tertiary Section: Quick Actions */}
+          {/* Simple Section Divider */}
+          <div className="border-b border-white/10 my-8" />
+          
+          {/* Quick Actions Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
-            className="space-y-8"
           >
             <DashboardQuickActions />
           </motion.div>
         </div>
 
-        {/* Enhanced Floating Action Button with glassmorphism */}
+        {/* Simplified Floating Action Button */}
         <motion.button
           onClick={() => navigate('/cases/new')}
-          className="fixed bottom-8 right-8 w-16 h-16 rounded-2xl shadow-xl z-50 flex items-center justify-center transition-all duration-300 auth-glass-container hover:scale-105 focus:ring-2 focus:ring-white/40 focus:outline-none group"
-          whileHover={{ 
-            scale: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 1 : 1.1,
-            brightness: 1.1
-          }}
-          whileTap={{ 
-            scale: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 1 : 0.9 
-          }}
+          className="fixed bottom-8 right-8 w-16 h-16 rounded-2xl shadow-xl z-50 flex items-center justify-center transition-all duration-300 auth-glass-container hover:scale-105 focus:ring-2 focus:ring-white/40 focus:outline-none"
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.5, duration: 0.5, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
           aria-label="Create New Case"
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
-          <Plus className="h-7 w-7 text-white relative z-10" />
+          <Plus className="h-7 w-7 text-white" />
         </motion.button>
       </div>
     </div>
