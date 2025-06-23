@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
@@ -111,27 +110,66 @@ const Dashboard = () => {
           onSearchChange={setSearchQuery}
         />
         
-        <div className="px-4 pb-8 space-y-8 max-w-7xl mx-auto">
+        {/* Enhanced Container with 8px Grid System */}
+        <div className="px-4 pb-8 max-w-7xl mx-auto">
+          {/* Primary Section: Metrics with enhanced divider */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
+            className="space-y-8"
           >
             <DashboardMetrics data={data} isLoading={isLoading} />
+            
+            {/* Section Divider with Glassmorphism */}
+            <div className="relative py-4">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-b border-white/10 relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent backdrop-blur-sm rounded-full h-px"></div>
+                </div>
+              </div>
+              <div className="relative flex justify-center">
+                <div className="px-6 py-2 auth-glass-container rounded-full">
+                  <span className="text-white/60 text-sm font-medium tracking-wider uppercase">
+                    Recent Activity
+                  </span>
+                </div>
+              </div>
+            </div>
           </motion.div>
           
+          {/* Secondary Section: Main Content with enhanced spacing */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
+            className="space-y-8"
           >
             <DashboardContent data={data} isLoading={isLoading} />
+            
+            {/* Section Divider with Glassmorphism */}
+            <div className="relative py-4">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-b border-white/10 relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent backdrop-blur-sm rounded-full h-px"></div>
+                </div>
+              </div>
+              <div className="relative flex justify-center">
+                <div className="px-6 py-2 auth-glass-container rounded-full">
+                  <span className="text-white/60 text-sm font-medium tracking-wider uppercase">
+                    Quick Actions
+                  </span>
+                </div>
+              </div>
+            </div>
           </motion.div>
           
+          {/* Tertiary Section: Quick Actions */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
+            className="space-y-8"
           >
             <DashboardQuickActions />
           </motion.div>
