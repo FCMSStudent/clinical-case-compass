@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
@@ -17,11 +18,40 @@ const Dashboard = () => {
   if (error) {
     return (
       <div className="min-h-screen auth-gradient-bg flex items-center justify-center p-4">
+        {/* Ambient glassmorphism background elements */}
+        <motion.div 
+          className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400/20 rounded-full filter blur-3xl"
+          animate={{
+            x: [0, 50, 0],
+            y: [0, -30, 0],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        <motion.div 
+          className="absolute top-3/4 right-1/4 w-80 h-80 bg-purple-400/20 rounded-full filter blur-3xl"
+          animate={{
+            x: [0, -40, 0],
+            y: [0, 40, 0],
+            scale: [1, 0.9, 1],
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1,
+          }}
+        />
+        
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
-          className="auth-glass-container max-w-md p-8 text-center"
+          className="auth-glass-container max-w-md p-8 text-center relative z-10"
         >
           <h2 className="text-xl font-semibold text-white mb-4">Dashboard Error</h2>
           <p className="text-white/80">There was an error loading the dashboard data.</p>
@@ -32,12 +62,48 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen auth-gradient-bg relative overflow-hidden">
-      {/* Ambient glassmorphism background elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-white/5 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-white/5 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-white/3 rounded-full blur-3xl"></div>
-      </div>
+      {/* Enhanced ambient glassmorphism background elements */}
+      <motion.div 
+        className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400/20 rounded-full filter blur-3xl"
+        animate={{
+          x: [0, 50, 0],
+          y: [0, -30, 0],
+          scale: [1, 1.1, 1],
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+      <motion.div 
+        className="absolute top-3/4 right-1/4 w-80 h-80 bg-purple-400/20 rounded-full filter blur-3xl"
+        animate={{
+          x: [0, -40, 0],
+          y: [0, 40, 0],
+          scale: [1, 0.9, 1],
+        }}
+        transition={{
+          duration: 10,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 1,
+        }}
+      />
+      <motion.div 
+        className="absolute top-1/2 left-3/4 w-64 h-64 bg-indigo-400/15 rounded-full filter blur-3xl"
+        animate={{
+          x: [0, 30, 0],
+          y: [0, -50, 0],
+          scale: [1, 1.2, 1],
+        }}
+        transition={{
+          duration: 12,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 2,
+        }}
+      />
 
       <div className="relative z-10">
         <DashboardHeader 
@@ -74,7 +140,7 @@ const Dashboard = () => {
         {/* Enhanced Floating Action Button with glassmorphism */}
         <motion.button
           onClick={() => navigate('/cases/new')}
-          className="fixed bottom-8 right-8 w-16 h-16 rounded-full shadow-xl z-50 flex items-center justify-center transition-all duration-300 backdrop-blur-md bg-white/10 border border-white/20 hover:bg-white/20 hover:border-white/30 focus:ring-2 focus:ring-white/40 focus:outline-none group"
+          className="fixed bottom-8 right-8 w-16 h-16 rounded-2xl shadow-xl z-50 flex items-center justify-center transition-all duration-300 auth-glass-container hover:scale-105 focus:ring-2 focus:ring-white/40 focus:outline-none group"
           whileHover={{ 
             scale: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 1 : 1.1,
             brightness: 1.1
@@ -87,7 +153,7 @@ const Dashboard = () => {
           transition={{ delay: 0.5, duration: 0.5, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
           aria-label="Create New Case"
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
           <Plus className="h-7 w-7 text-white relative z-10" />
         </motion.button>
       </div>
