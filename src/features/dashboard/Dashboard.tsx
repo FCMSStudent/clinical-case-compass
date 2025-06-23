@@ -13,21 +13,9 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const { data, isLoading, error } = useDashboardData();
 
-  // Memoize static background elements to prevent re-renders
-  const backgroundElements = useMemo(() => (
-    <>
-      {/* Simplified background elements - reduced complexity */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400/15 rounded-full filter blur-3xl opacity-60" />
-      <div className="absolute top-3/4 right-1/4 w-80 h-80 bg-purple-400/15 rounded-full filter blur-3xl opacity-60" />
-      <div className="absolute top-1/2 left-3/4 w-64 h-64 bg-indigo-400/10 rounded-full filter blur-3xl opacity-60" />
-    </>
-  ), []);
-
   if (error) {
     return (
       <div className="min-h-screen dashboard-gradient-bg flex items-center justify-center p-4">
-        {backgroundElements}
-        
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -43,9 +31,6 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen dashboard-gradient-bg relative">
-      {/* Static background elements - no animation to improve performance */}
-      {backgroundElements}
-
       <div className="relative z-10">
         <DashboardHeader />
         
