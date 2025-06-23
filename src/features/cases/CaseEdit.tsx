@@ -115,14 +115,19 @@ const CaseEdit = () => {
 
   // Helper to map SimpleImaging's output to RadiologyStudy[]
   const mapSimpleImagingToRadiologyStudy = (simpleStudies: {id: string, type: string, findings: string, date?: string}[]): RadiologyStudy[] => {
-    return simpleStudies.map(ss => ({
-      id: ss.id,
-      name: ss.type,
-      type: extractModalityFromName(ss.type),
-      findings: ss.findings,
-      date: ss.date || new Date().toISOString().split('T')[0], // Always provide a date string
-      impression: "", // Default impression
-    }));
+    return simpleStudies.map(ss => {
+      // Ensure we always provide a proper date string, never undefined
+      const dateString = ss.date || new Date().toISOString().split('T')[0];
+      
+      return {
+        id: ss.id,
+        name: ss.type,
+        type: extractModalityFromName(ss.type),
+        findings: ss.findings,
+        date: dateString, // This is guaranteed to be a string
+        impression: "", // Default impression
+      };
+    });
   };
 
   // Extract modality from study name
