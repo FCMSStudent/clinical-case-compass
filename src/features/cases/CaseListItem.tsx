@@ -1,61 +1,20 @@
 import { memo, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { MedicalCase } from '@/shared/types/case';
-import { Button } from '@/shared/components/button';
 import { 
-  User, 
-  Clipboard, 
-  Eye, 
-  Edit, 
-  Trash2, 
-  Tag as TagIcon, 
-  CalendarDays,
   AlertCircle,
   ChevronRight,
   Sparkles
 } from 'lucide-react';
-import { format } from 'date-fns';
 import { cn } from '@/shared/utils/utils';
-import { motion, AnimatePresence } from 'framer-motion';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/shared/components/tooltip";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/shared/components/alert-dialog";
-import { Badge } from "@/shared/components/badge";
+import { motion } from 'framer-motion';
 
 interface CaseListItemProps {
   medicalCase: MedicalCase;
   className?: string;
-  onDelete: (caseId: string) => void;
 }
 
-export const CaseListItem = memo<CaseListItemProps>(({ medicalCase, className, onDelete }) => {
-  const primaryTag = medicalCase.tags && medicalCase.tags.length > 0 ? medicalCase.tags[0] : null;
-  const [isHovered, setIsHovered] = useState(false);
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-
-  const confirmDelete = () => {
-    onDelete(medicalCase.id);
-    setShowDeleteDialog(false);
-  };
-
-  // Defensive access for potentially undefined properties
-  const formattedDate = medicalCase?.createdAt
-    ? format(new Date(medicalCase.createdAt), "MMM d, yyyy")
-    : "N/A";
+export const CaseListItem = memo<CaseListItemProps>(({ medicalCase, className }) => {
+  const [, setIsHovered] = useState(false);
 
   try {
     // Basic check for essential data

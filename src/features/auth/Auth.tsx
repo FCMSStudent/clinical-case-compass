@@ -34,7 +34,7 @@ const Auth = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
-  const { currentTheme } = useTheme();
+  const { currentTheme: _ } = useTheme(); // Suppress unused variable warning
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
