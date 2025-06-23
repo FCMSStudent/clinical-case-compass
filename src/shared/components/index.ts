@@ -1,3 +1,4 @@
+
 // ────────────────────────────────────────────────────────────────────────────────
 // CORE COMPONENTS
 // ────────────────────────────────────────────────────────────────────────────────
@@ -92,17 +93,16 @@ export { Toaster } from "./toaster"
 export { useToast } from "@/shared/hooks/use-toast"
 export { toast } from "sonner"
 
-// Shared UI Components
-export * from './ui';
+// Shared UI Components - using named exports instead of star exports
+export { default as OptimizedBackground } from './OptimizedBackground';
+
+// Background Components
+export { default as UnifiedBackground } from './UnifiedBackground';
+
+// Body Diagram Components
+export { default as SimpleBodyPartSelector } from './SimpleBodyPartSelector';
 
 // Shared Layout Components
 export { default as NotFound } from './NotFound';
 export { default as SearchPanel } from './SearchPanel';
 export { default as RecentActivityList } from './RecentActivityList';
-
-// Background Components
-export { default as UnifiedBackground } from './UnifiedBackground';
-export { default as OptimizedBackground } from './OptimizedBackground';
-
-// Body Diagram Components
-export { default as SimpleBodyPartSelector } from './SimpleBodyPartSelector';

@@ -6,5 +6,5 @@ export { CaseListItem } from "./CaseListItem";
 export { VitalsCard } from "./VitalsCard";
 export { InteractiveVitalsCard } from "./InteractiveVitalsCard";
 export { SystemReviewChecklist } from "./SystemReviewChecklist";
-export * from "./components/CasesErrorBoundary";
-export * from "./utils/caseUtils";
+export { CasesErrorBoundary } from "./components/CasesErrorBoundary";
+export { getCasePriorityColor, getCaseStatusColor, formatCaseDate, truncateText } from "./utils/caseUtils";

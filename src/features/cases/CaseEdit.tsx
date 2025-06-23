@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { z } from "zod";
@@ -13,17 +14,17 @@ import { useSupabaseCases } from "@/shared/hooks/use-supabase-cases";
 import { CaseEditForm } from "@/features/cases/edit/CaseEditForm";
 import { typography, layouts } from "@/design-system/ui-styles";
 
-// Define the form schema with optional fields
+// Define the form schema with required fields
 const formSchema = z.object({
-  title: z.string().optional(),
-  patientName: z.string().optional(),
-  patientAge: z.coerce.number().min(0).max(120).optional(),
-  patientGender: z.enum(["male", "female", "other"]).optional(),
-  patientMRN: z.string().optional(),
-  chiefComplaint: z.string().optional(),
-  history: z.string().optional(),
-  physicalExam: z.string().optional(),
-  learningPoints: z.string().optional(),
+  title: z.string().min(1, "Title is required"),
+  patientName: z.string().min(1, "Patient name is required"),
+  patientAge: z.coerce.number().min(0).max(120),
+  patientGender: z.enum(["male", "female", "other"]),
+  patientMRN: z.string(),
+  chiefComplaint: z.string().min(1, "Chief complaint is required"),
+  history: z.string(),
+  physicalExam: z.string(),
+  learningPoints: z.string(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -114,14 +115,19 @@ const CaseEdit = () => {
 
   // Helper to map SimpleImaging's output to RadiologyStudy[]
   const mapSimpleImagingToRadiologyStudy = (simpleStudies: {id: string, type: string, findings: string, date?: string}[]): RadiologyStudy[] => {
-    return simpleStudies.map(ss => ({
-      id: ss.id,
-      name: ss.type,
-      type: extractModalityFromName(ss.type),
-      findings: ss.findings,
-      date: ss.date ?? new Date().toISOString().split('T')[0], // Use nullish coalescing to ensure string
-      impression: "", // Default impression, can be updated later
-    }));
+    return simpleStudies.map(ss => {
+      // Ensure we always provide a proper date string, never undefined
+      const dateString = ss.date || new Date().toISOString().split('T')[0];
+      
+      return {
+        id: ss.id,
+        name: ss.type,
+        type: extractModalityFromName(ss.type),
+        findings: ss.findings,
+        date: dateString, // This is guaranteed to be a string
+        impression: "", // Default impression
+      };
+    });
   };
 
   // Extract modality from study name
@@ -145,21 +151,21 @@ const CaseEdit = () => {
     setIsSaving(true);
 
     try {
-      // Create updated case object
+      // Create updated case object with proper defaults
       const updatedCase: MedicalCase = {
         ...medicalCase,
-        title: values.title || medicalCase.title,
+        title: values.title,
         updatedAt: new Date().toISOString(),
-        chiefComplaint: values.chiefComplaint || medicalCase.chiefComplaint,
-        history: values.history || medicalCase.history,
-        physicalExam: values.physicalExam || medicalCase.physicalExam,
-        learningPoints: values.learningPoints || medicalCase.learningPoints,
+        chiefComplaint: values.chiefComplaint,
+        history: values.history || "",
+        physicalExam: values.physicalExam || "",
+        learningPoints: values.learningPoints || "",
         patient: {
           ...medicalCase.patient,
-          name: values.patientName || medicalCase.patient.name,
-          age: values.patientAge ?? medicalCase.patient.age,
-          gender: values.patientGender || medicalCase.patient.gender,
-          medicalRecordNumber: values.patientMRN ?? medicalCase.patient.medicalRecordNumber ?? "",
+          name: values.patientName,
+          age: values.patientAge,
+          gender: values.patientGender,
+          medicalRecordNumber: values.patientMRN,
         },
         vitals: vitals,
         labTests: labResults,
@@ -247,7 +253,7 @@ const CaseEdit = () => {
         onLabChange={setLabResults}
         onImagingChange={handleImagingChange}
         initialVitals={initialVitals}
-        patientAge={form.watch("patientAge") ?? 30}
+        patientAge={form.watch("patientAge") || 30}
       />
     </div>
   );
