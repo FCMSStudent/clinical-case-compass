@@ -1,5 +1,5 @@
-
 import { useRef, useEffect, useState, useCallback } from "react";
+import { motion, PanInfo, useTransform } from "framer-motion";
 
 // ────────────────────────────────────────────────────────────────────────────────
 // ADVANCED INTERACTION UTILITIES FOR GLASSY VISIONOS UI
@@ -49,8 +49,6 @@ export const useGestureDetection = (
   
   const handleTouchStart = useCallback((event: TouchEvent) => {
     const touch = event.touches[0];
-    if (!touch) return;
-    
     startPos.current = { x: touch.clientX, y: touch.clientY };
     startTime.current = Date.now();
     setIsListening(true);
@@ -66,7 +64,7 @@ export const useGestureDetection = (
     }, config.timeout || 500);
   }, [onGesture, config.timeout]);
   
-  const handleTouchMove = useCallback((_: TouchEvent) => {
+  const handleTouchMove = useCallback((event: TouchEvent) => {
     if (longPressTimeout.current) {
       clearTimeout(longPressTimeout.current);
     }
@@ -80,8 +78,6 @@ export const useGestureDetection = (
     if (!startPos.current) return;
     
     const touch = event.changedTouches[0];
-    if (!touch) return;
-    
     const endPos = { x: touch.clientX, y: touch.clientY };
     const deltaX = endPos.x - startPos.current.x;
     const deltaY = endPos.y - startPos.current.y;
@@ -115,6 +111,7 @@ export const useGestureDetection = (
       }
     } else if (distance > (config.distance || 50)) {
       // Swipe detection
+      const velocity = distance / duration;
       const direction = getSwipeDirection(deltaX, deltaY);
       
       if (config.direction === "any" || config.direction === direction) {
@@ -163,7 +160,7 @@ export const useSpatialAudioCues = () => {
   const playSuccessCue = useCallback(() => {
     // Visual feedback instead of audio
     const element = document.activeElement as HTMLElement;
-    if (element?.style) {
+    if (element && element.style) {
       element.style.transform = 'scale(1.05)';
       setTimeout(() => {
         element.style.transform = '';
@@ -174,7 +171,7 @@ export const useSpatialAudioCues = () => {
   const playErrorCue = useCallback(() => {
     // Visual feedback instead of audio
     const element = document.activeElement as HTMLElement;
-    if (element?.style) {
+    if (element && element.style) {
       element.style.transform = 'scale(0.95)';
       setTimeout(() => {
         element.style.transform = '';
@@ -279,22 +276,17 @@ export const useVoiceControl = () => {
         let interimTranscript = "";
         
         for (let i = event.resultIndex; i < event.results.length; i++) {
-          const transcript = event.results[i]?.[0]?.transcript;
-          if (transcript) {
-            if (event.results[i]?.isFinal) {
-              finalTranscript += transcript;
-            } else {
-              interimTranscript += transcript;
-            }
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalTranscript += transcript;
+          } else {
+            interimTranscript += transcript;
           }
         }
         
         setTranscript(finalTranscript || interimTranscript);
         if (event.results.length > 0) {
-          const result = event.results[event.results.length - 1]?.[0];
-          if (result) {
-            setConfidence(result.confidence);
-          }
+          setConfidence(event.results[event.results.length - 1][0].confidence);
         }
       };
       
@@ -332,7 +324,7 @@ export const useEnhancedDragDrop = <T>(
   const [dragPosition, setDragPosition] = useState<{ x: number; y: number } | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   
-  const handleDragStart = useCallback((item: T, _: React.DragEvent) => {
+  const handleDragStart = useCallback((item: T, event: React.DragEvent) => {
     setDraggedItem(item);
     setIsDragging(true);
     onDragStart?.(item);
@@ -347,18 +339,15 @@ export const useEnhancedDragDrop = <T>(
     setDragPosition({ x: event.clientX, y: event.clientY });
   }, []);
   
-  const handleDragEnd = useCallback((_: React.DragEvent) => {
+  const handleDragEnd = useCallback((event: React.DragEvent) => {
     if (draggedItem && dragPosition) {
       onDrop(draggedItem, dragPosition);
     }
     
-    const item = draggedItem;
     setDraggedItem(null);
     setDragPosition(null);
     setIsDragging(false);
-    if (item) {
-      onDragEnd?.(item);
-    }
+    onDragEnd?.(draggedItem!);
     
     // Haptic feedback simulation
     if (navigator.vibrate) {
@@ -392,8 +381,6 @@ export const usePinchZoom = (
   const getDistance = (touches: TouchList) => {
     const touch1 = touches[0];
     const touch2 = touches[1];
-    if (!touch1 || !touch2) return 0;
-    
     return Math.sqrt(
       Math.pow(touch2.clientX - touch1.clientX, 2) +
       Math.pow(touch2.clientY - touch1.clientY, 2)
@@ -403,8 +390,6 @@ export const usePinchZoom = (
   const getCenter = (touches: TouchList) => {
     const touch1 = touches[0];
     const touch2 = touches[1];
-    if (!touch1 || !touch2) return { x: 0, y: 0 };
-    
     return {
       x: (touch1.clientX + touch2.clientX) / 2,
       y: (touch1.clientY + touch2.clientY) / 2,

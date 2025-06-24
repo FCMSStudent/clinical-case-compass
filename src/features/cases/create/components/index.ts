@@ -1,11 +1,13 @@
 
 // Barrel file for exporting components from this directory
 
-// Named exports only - no star exports to avoid default export conflicts
-export { FormFieldCard } from "./FormFieldCard";
-export { StatusFieldCard } from "./StatusFieldCard";
-export { StatusIndicator } from "./StatusIndicator";
-export { StepHeader } from "./StepHeader";
-export { StepProgress } from "./StepProgress";
-export { ValidationFeedback } from "./ValidationFeedback";
-export { EnhancedFormComponents } from "./EnhancedFormComponents";
+// FieldGroup has been removed/inlined into PatientStep.tsx
+// export * from "./FieldGroup"; 
+
+export * from "./FormFieldCard";
+export * from "./StatusFieldCard";
+export * from "./StatusIndicator";
+export * from "./StepHeader";
+export * from "./StepProgress";
+export * from "./ValidationFeedback";
+export * from "./EnhancedFormComponents"; // This itself exports many of the above

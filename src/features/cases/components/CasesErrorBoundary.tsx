@@ -1,9 +1,11 @@
-import { Component, ErrorInfo, ReactNode } from "react";
-import { AlertTriangle, RefreshCw } from "lucide-react";
-import { Button } from "@/shared/components/button";
+
+import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/card';
+import { Button } from '@/shared/components/button';
+import { AlertTriangle, RefreshCw } from 'lucide-react';
 
 interface Props {
-  children?: ReactNode;
+  children: ReactNode;
 }
 
 interface State {
@@ -13,38 +15,52 @@ interface State {
 
 export class CasesErrorBoundary extends Component<Props, State> {
   public state: State = {
-    hasError: false,
-    error: undefined,
+    hasError: false
   };
 
-  public override componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error("Uncaught error:", error, errorInfo);
+  public static getDerivedStateFromError(error: Error): State {
+    console.error('[CasesErrorBoundary] Error caught:', error);
+    return { hasError: true, error };
   }
 
-  public override getDerivedStateFromError(error: Error): State {
-    return { hasError: true, error };
+  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error('[CasesErrorBoundary] Error details:', {
+      error: error.message,
+      stack: error.stack,
+      componentStack: errorInfo.componentStack
+    });
   }
 
   private handleRetry = () => {
     this.setState({ hasError: false, error: undefined });
   };
 
-  public override render() {
+  public render() {
     if (this.state.hasError) {
       return (
-        <div className="flex flex-col items-center justify-center p-8 bg-red-50/10 rounded-lg border border-red-200/20">
-          <AlertTriangle className="h-12 w-12 text-red-400 mb-4" />
-          <h2 className="text-xl font-semibold text-red-200 mb-2">Something went wrong</h2>
-          <p className="text-red-300 text-center mb-4 max-w-md">
-            There was an error loading the cases. Please try refreshing the page or contact support if the problem persists.
-          </p>
-          <Button 
-            onClick={this.handleRetry}
-            className="bg-red-500/20 border border-red-400/30 text-red-100 hover:bg-red-500/30"
-          >
-            <RefreshCw className="h-4 w-4 mr-2" />
-            Try Again
-          </Button>
+        <div className="space-y-6">
+          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+            <CardHeader className="text-center">
+              <div className="mx-auto mb-4 h-12 w-12 rounded-full bg-red-500/10 flex items-center justify-center">
+                <AlertTriangle className="h-6 w-6 text-red-400" />
+              </div>
+              <CardTitle className="text-white">Cases Page Error</CardTitle>
+            </CardHeader>
+            <CardContent className="text-center">
+              <p className="text-white/70 mb-4">
+                There was an error loading the cases page. This might be due to database connection issues or missing data.
+              </p>
+              <div className="space-y-2">
+                <Button onClick={this.handleRetry} className="bg-white/20 border-white/30 text-white hover:bg-white/30">
+                  <RefreshCw className="mr-2 h-4 w-4" />
+                  Try Again
+                </Button>
+                <p className="text-xs text-white/50">
+                  Error: {this.state.error?.message || 'Unknown error'}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       );
     }

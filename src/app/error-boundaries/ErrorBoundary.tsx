@@ -16,11 +16,11 @@ interface State {
 }
 
 export class ErrorBoundary extends Component<Props, State> {
-  public override state: State = {
+  public state: State = {
     hasError: false
   };
 
-  public static getDerivedStateFromError(error: Error): State {
+  public static override getDerivedStateFromError(error: Error): State {
     return { hasError: true, error };
   }
 

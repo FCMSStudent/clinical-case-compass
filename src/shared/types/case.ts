@@ -1,10 +1,9 @@
-
 export interface Patient {
   id: string;
   name: string;
   age: number;
   gender: "male" | "female" | "other" | "unknown";
-  medicalRecordNumber?: string | undefined;
+  medicalRecordNumber?: string;
 }
 
 export interface CaseTag {
@@ -44,7 +43,7 @@ export interface RadiologyStudy {
   name: string;
   type: string;
   findings: string;
-  date: string; // Required field - always provide a date string
+  date: string;
   impression?: string;
 }
 
@@ -58,12 +57,12 @@ export interface MedicalCase {
   updatedAt: string;
   chiefComplaint: string;
   chiefComplaintAnalysis?: string;
-  history?: string; // Keep optional as it's used this way
-  physicalExam?: string; // Keep optional as it's used this way
+  history?: string;
+  physicalExam?: string;
   diagnoses: Diagnosis[];
   tags: CaseTag[];
   resources: Resource[];
-  learningPoints?: string; // Keep optional as it's used this way
+  learningPoints?: string;
   vitals?: Record<string, string>;
   urinarySymptoms?: string[];
   symptoms?: Record<string, string[]>; // Corrected type for review of systems

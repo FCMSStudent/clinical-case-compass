@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import { useLocalStorage } from "@/shared/hooks/use-local-storage";
 import { MedicalCase } from "@/shared/types/case";
 import { useSupabaseCases } from "@/shared/hooks/use-supabase-cases";
+import { cn } from "@/shared/utils/utils";
 
 // Import bento card components
 import { PatientInfoCard } from "@/features/cases/detail/PatientInfoCard";
@@ -122,7 +123,7 @@ const CaseDetail = () => {
         <ClinicalTextCard
           icon={<FileText />}
           title="Medical History"
-          content={medicalCase.history || ""}
+          content={medicalCase.history}
           layout="medium"
           placeholder="No medical history recorded for this case"
         />
@@ -131,7 +132,7 @@ const CaseDetail = () => {
         <ClinicalTextCard
           icon={<Activity />}
           title="Physical Examination"
-          content={medicalCase.physicalExam || ""}
+          content={medicalCase.physicalExam}
           layout="medium"
           placeholder="No physical examination findings recorded"
         />

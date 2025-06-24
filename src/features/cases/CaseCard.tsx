@@ -14,6 +14,8 @@ import { getPrimaryDiagnosis, isValidMedicalCase } from "./utils/caseUtils";
  * CONSTANTS & HELPERS
  * ────────────────────────────────────────────────────────────────────────────────
  */
+const VISIBLE_TAGS = 2;
+
 interface TagPillProps {
   tag: { id: string; name: string; color: string };
   className?: string;
@@ -108,9 +110,8 @@ export const CaseCard: React.FC<CaseCardProps> = memo(
         </motion.div>
       );
     } catch (error) {
-      const typedError = error as Error;
-      console.error(`[CaseCard] Error rendering medicalCase ID: ${medicalCase?.id || 'Unknown'}`, typedError.message);
-      return <CaseCardError medicalCase={medicalCase} className={className || ''} />;
+      console.error(`[CaseCard] Error rendering medicalCase ID: ${medicalCase?.id || 'Unknown'}`, error);
+      return <CaseCardError medicalCase={medicalCase} className={className} />;
     }
   }
 );

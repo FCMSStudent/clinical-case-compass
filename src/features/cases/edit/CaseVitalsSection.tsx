@@ -7,7 +7,7 @@ import { medicalSection, iconWithText } from "@/design-system/ui-styles";
 
 interface CaseVitalsSectionProps {
   onVitalsChange: (vitals: Record<string, string>) => void;
-  initialVitals: Record<string, string>;
+  initialVitals?: Record<string, string>;
   patientAge?: number;
 }
 

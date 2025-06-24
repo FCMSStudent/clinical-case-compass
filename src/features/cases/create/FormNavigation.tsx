@@ -1,3 +1,4 @@
+
 import React, { useEffect } from "react";
 import { Button } from "@/shared/components/button";
 import { Progress } from "@/shared/components/progress";
@@ -21,7 +22,7 @@ export interface FormNavigationProps {
   /** Indicates a form submission is in progress. */
   isSubmitting?: boolean;
   /** Navigate to the previous step. Optional: hides _Previous_ when omitted. */
-  onPrevious?: (() => void) | undefined;
+  onPrevious?: () => void;
   /** Navigate to the next step. Optional: hides _Next_ when omitted + not last. */
   onNext?: () => void;
   /** Navigate to save and exit. Optional: hides _Save & Exit_ when omitted. */

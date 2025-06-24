@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useMemo, useCallback, useRef, useEffect, useState } from "react";
 import { flushSync } from "react-dom";
@@ -44,7 +43,7 @@ export const useLazyLoad = (options: IntersectionObserverInit = {}) => {
   
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => {
-      if (entry?.isIntersecting) {
+      if (entry.isIntersecting) {
         setIsVisible(true);
         setHasLoaded(true);
         observer.disconnect();
@@ -380,9 +379,7 @@ export class ComputationCache<K, V> {
     // Evict oldest entries if cache is full
     if (this.cache.size >= this.maxSize) {
       const oldestKey = this.cache.keys().next().value;
-      if (oldestKey !== undefined) {
-        this.cache.delete(oldestKey);
-      }
+      this.cache.delete(oldestKey);
     }
     
     this.cache.set(key, { value, timestamp: Date.now() });

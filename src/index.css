@@ -3,7 +3,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Blue gradient background for auth pages */
+/* Blue gradient background matching user's design */
 .auth-gradient-bg {
   background: linear-gradient(180deg, #E3F2FD 0%, #BBDEFB 25%, #64B5F6 50%, #2196F3 75%, #1565C0 100%);
   background-attachment: fixed;
@@ -15,84 +15,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-/* Enhanced animated gradient background for dashboard and app pages */
-.dashboard-gradient-bg {
-  min-height: 100vh;
-  width: 100%;
-  background: linear-gradient(-45deg, #e3f2fd, #bbdefb, #64b5f6, #2196f3, #1565c0, #0d47a1);
-  background-size: 400% 400%;
-  animation: gradientShift 15s ease infinite;
-  position: relative;
-  overflow-x: hidden;
-}
-
-.dashboard-gradient-bg::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: 
-    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 40% 40%, rgba(29, 78, 216, 0.2) 0%, transparent 50%);
-  animation: floatingBubbles 20s ease-in-out infinite;
-  pointer-events: none;
-}
-
-.dashboard-gradient-bg::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: 
-    linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.02) 50%, transparent 70%),
-    linear-gradient(-45deg, transparent 30%, rgba(255, 255, 255, 0.02) 50%, transparent 70%);
-  background-size: 100px 100px, 150px 150px;
-  animation: patternShift 25s linear infinite;
-  pointer-events: none;
-  opacity: 0.5;
-}
-
-@keyframes gradientShift {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-@keyframes floatingBubbles {
-  0%, 100% {
-    transform: translate(0px, 0px) scale(1);
-    opacity: 0.8;
-  }
-  33% {
-    transform: translate(30px, -30px) scale(1.1);
-    opacity: 0.6;
-  }
-  66% {
-    transform: translate(-20px, 20px) scale(0.9);
-    opacity: 0.7;
-  }
-}
-
-@keyframes patternShift {
-  0% {
-    transform: translate(0, 0);
-  }
-  100% {
-    transform: translate(50px, 50px);
-  }
 }
 
 @keyframes lightRefraction {
@@ -129,9 +51,8 @@
   
   /* Remove any default backgrounds */
   #root {
+    background: transparent;
     min-height: 100vh;
-    position: relative;
-    z-index: 1;
   }
   
   /* Improved focus styles for accessibility */
@@ -145,18 +66,19 @@
   }
 }
 
-/* Unified Glass System - Integrates with UnifiedBackground */
+/* Apple Liquid Glass auth container - Option 3: Dark Glass */
 .auth-glass-container {
   position: relative;
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(20px) saturate(120%);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(24px) saturate(1.2) brightness(1.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
   box-shadow: 
-    0 8px 40px rgba(0, 0, 0, 0.12),
-    0 2px 8px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    0 2px 8px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
   overflow: hidden;
+  max-width: 400px;
 }
 
 /* Removed specular highlight - clean glass look */
@@ -209,7 +131,7 @@
   background: rgba(0, 0, 0, 0.12) !important;
   border: 1px solid rgba(255, 255, 255, 0.15) !important;
   backdrop-filter: blur(12px) saturate(1.1);
-  border-radius: 8px;
+  border-radius: 16px;
   color: white !important;
   box-shadow: 
     inset 0 1px 0 rgba(255, 255, 255, 0.08),
@@ -238,7 +160,7 @@
   background: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(12px) saturate(1.1);
-  border-radius: 8px;
+  border-radius: 16px;
   box-shadow: 
     inset 0 1px 0 rgba(255, 255, 255, 0.15),
     0 4px 12px rgba(0, 0, 0, 0.15),
@@ -258,8 +180,6 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.2),
     0 8px 25px rgba(0, 0, 0, 0.2),
     0 4px 8px rgba(0, 0, 0, 0.15);
-  ring: 2px;
-  ring-color: rgba(99, 179, 237, 0.5);
 }
 
 .glass-button:active {
@@ -288,13 +208,14 @@
   text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
 }
 
-/* Apple Liquid Glass toggle - 16px radius, clean design */
+/* Apple Liquid Glass toggle - COMPLETELY FIXED */
 .toggle-track {
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(8px);
   border-radius: 16px;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+  display: flex;
 }
 
 .toggle-thumb {
@@ -307,16 +228,19 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
-.toggle-inactive {
-  background: transparent;
-  transition: all 0.3s ease;
-  border-radius: 14px;
-  margin: 2px;
-}
-
-.toggle-inactive:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
+/* Toggle text elements - clean and simple */
+.toggle-text {
+  font-size: var(--font-size-md) !important;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  background: none !important;
+  border: none !important;
+  outline: none !important;
+  cursor: pointer;
+  user-select: none;
+  padding: 0;
+  margin: 0;
 }
 
 /* Unified Typography System - Consistent 5-Size Scale */
@@ -370,13 +294,6 @@
 .button-text {
   font-size: var(--font-size-lg);
   font-weight: 600;
-  letter-spacing: 0.01em;
-  line-height: 1.2;
-}
-
-.toggle-text {
-  font-size: var(--font-size-md);
-  font-weight: 500;
   letter-spacing: 0.01em;
   line-height: 1.2;
 }
@@ -444,73 +361,4 @@
 
 .button-text {
   font-size: var(--font-size-lg) !important;
-}
-
-.toggle-text {
-  font-size: var(--font-size-md) !important;
-}
-
-/* Dashboard Glassmorphic Utility Classes - Enhanced Auth-like Aesthetic */
-@layer components {
-  .glass-panel {
-    @apply bg-white/15 backdrop-blur-md rounded-lg p-4 shadow-lg hover:shadow-xl hover:backdrop-blur-lg hover:ring-2 hover:ring-blue-300 transition-all border border-white/20;
-  }
-  
-  .glass-panel-large {
-    @apply bg-white/20 backdrop-blur-lg rounded-lg p-6 shadow-lg hover:shadow-xl hover:backdrop-blur-xl hover:ring-2 hover:ring-blue-300 transition-all border border-white/25;
-  }
-  
-  .glass-panel-list {
-    @apply bg-white/10 backdrop-blur-md rounded-lg p-4 shadow-md hover:shadow-lg hover:backdrop-blur-lg hover:ring-2 hover:ring-blue-300 transition-all border border-white/20;
-  }
-  
-  .glass-inner {
-    @apply bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-white/20;
-  }
-  
-  .glass-header {
-    @apply bg-white/20 backdrop-blur-xl border border-white/25 rounded-lg p-6 shadow-lg;
-  }
-  
-  .glass-metrics {
-    @apply bg-white/20 backdrop-blur-lg border border-white/20 rounded-lg p-5 shadow-md hover:shadow-lg hover:backdrop-blur-xl hover:ring-2 hover:ring-blue-300 transition-all;
-  }
-  
-  .glass-nav {
-    @apply backdrop-blur-lg border border-white/25 shadow-lg bg-white/15;
-  }
-  
-  .welcome-banner {
-    @apply bg-white/20 backdrop-blur-xl border border-white/25 rounded-lg p-6 shadow-lg;
-  }
-  
-  .glass-hero {
-    @apply bg-white/20 backdrop-blur-xl border border-white/25 rounded-xl p-8 shadow-xl;
-  }
-  
-  .glass-card-elevated {
-    @apply bg-white/20 backdrop-blur-lg border border-white/25 rounded-lg p-5 shadow-lg hover:shadow-xl hover:ring-2 hover:ring-blue-300 transition-all;
-  }
-}
-
-/* Accessibility: Reduced transparency fallback for utility classes */
-@media (prefers-reduced-transparency: reduce) {
-  .glass-panel {
-    @apply bg-white/80 backdrop-blur-none;
-  }
-  
-  .glass-inner {
-    @apply bg-white/60 backdrop-blur-none;
-  }
-}
-
-/* Enhanced contrast for better readability */
-@media (prefers-contrast: high) {
-  .glass-panel {
-    @apply bg-white/30 border-white/40;
-  }
-  
-  .glass-inner {
-    @apply bg-white/20 border border-white/30;
-  }
 }

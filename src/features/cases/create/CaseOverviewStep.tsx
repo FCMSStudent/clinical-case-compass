@@ -1,15 +1,32 @@
-import { useFormContext } from "react-hook-form";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/card";
-import { Input } from "@/shared/components/input";
-import { Label } from "@/shared/components/label";
-import { Textarea } from "@/shared/components/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/select";
-import { Badge } from "@/shared/components/badge";
-import { User, FileText, Stethoscope, Calendar, Lightbulb } from "lucide-react";
-import { SPECIALTIES } from "@/shared/types/case";
+import React, { memo } from "react";
+import { useFormContext, FieldValues, Path } from "react-hook-form";
 import {
-  StepHeader,
-  StatusFieldCard
+  FormField,
+  FormItem,
+  FormControl,
+  FormMessage,
+} from "@/shared/components/form";
+import { Input } from "@/shared/components/input";
+import { Textarea } from "@/shared/components/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/shared/components/select";
+import { 
+  User, 
+  Calendar, 
+  FileText, 
+  UserCheck, 
+  Stethoscope, 
+  Tag 
+} from "lucide-react";
+import { cn } from "@/shared/utils/utils";
+import { 
+  StepHeader, 
+  StatusFieldCard 
 } from "./components";
 import { useFormValidation } from "@/shared/hooks/use-form-validation";
 
@@ -56,19 +73,16 @@ interface CaseOverviewFormData {
   specialty?: string;
 }
 
-interface CaseOverviewStepProps {
+export interface CaseOverviewStepProps<T extends FieldValues = CaseOverviewFormData> {
   className?: string;
 }
 
-export const CaseOverviewStep = ({ className }: CaseOverviewStepProps) => {
-  const {
-    register,
-    formState: { errors },
-    setValue,
-    getValues,
-  } = useFormContext();
-
-  const { errors: formValidationErrors, watchedFields } = useFormValidation<CaseOverviewFormData>({
+export const CaseOverviewStep = memo(function CaseOverviewStep<
+  T extends FieldValues = CaseOverviewFormData,
+>({ className }: CaseOverviewStepProps<T>) {
+  const { control } = useFormContext<T>();
+  
+  const { errors, watchedFields } = useFormValidation<T>({
     requiredFields: ["patientName", "patientAge", "patientSex", "caseTitle", "chiefComplaint"],
     watchFields: [
       "patientName", 
@@ -91,26 +105,8 @@ export const CaseOverviewStep = ({ className }: CaseOverviewStepProps) => {
   const chiefComplaintValue = (watchedFields as any)?.chiefComplaint;
   const specialtyValue = (watchedFields as any)?.specialty;
 
-  // List of common case types for quick selection
-  const commonCaseTypes = [
-    "Diagnostic Challenge",
-    "Emergency Case", 
-    "Chronic Disease Management",
-    "Surgical Case",
-    "Pediatric Case",
-    "Geriatric Case",
-    "Preventive Medicine",
-    "Mental Health Case",
-    "Infectious Disease",
-    "Oncology Case"
-  ];
-
-  const handleCaseTypeSelect = (caseType: string) => {
-    setValue("caseType", caseType);
-  };
-
   return (
-    <div className={`space-y-6 ${className}`}>
+    <div className={cn("space-y-6", className)}>
       <StepHeader
         title="Case Overview"
         description="Provide essential patient information and case details to create a comprehensive clinical case study."
@@ -126,12 +122,23 @@ export const CaseOverviewStep = ({ className }: CaseOverviewStepProps) => {
           tooltip="Enter the patient's full name as it appears in their medical records."
           isRequired
           fieldValue={patientNameValue}
-          hasError={!!formValidationErrors.patientName}
+          hasError={!!errors.patientName}
           className="md:col-span-2"
         >
-          <Input
-            placeholder="e.g., John Doe"
-            {...register("patientName")}
+          <FormField
+            control={control}
+            name={"patientName" as Path<T>}
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    placeholder="e.g., John Doe"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
         </StatusFieldCard>
 
@@ -142,38 +149,57 @@ export const CaseOverviewStep = ({ className }: CaseOverviewStepProps) => {
           tooltip="Enter the patient's age in years."
           isRequired
           fieldValue={patientAgeValue}
-          hasError={!!formValidationErrors.patientAge}
+          hasError={!!errors.patientAge}
         >
-          <Input
-            type="number"
-            placeholder="e.g., 42"
-            {...register("patientAge")}
-            onChange={(e) => {
-              const value = parseInt(e.target.value, 10);
-              register("patientAge").onChange(value || undefined);
-            }}
+          <FormField
+            control={control}
+            name={"patientAge" as Path<T>}
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    type="number"
+                    placeholder="e.g., 42"
+                    {...field}
+                    onChange={e => field.onChange(parseInt(e.target.value, 10) || undefined)}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
         </StatusFieldCard>
 
         {/* Patient Sex - Small card */}
         <StatusFieldCard
-          icon={User}
+          icon={UserCheck}
           title="Patient Sex"
           tooltip="Select the patient's sex as recorded in their medical records."
           isRequired
           fieldValue={patientSexValue}
-          hasError={!!formValidationErrors.patientSex}
+          hasError={!!errors.patientSex}
         >
-          <Select {...register("patientSex")}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select sex" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="male">Male</SelectItem>
-              <SelectItem value="female">Female</SelectItem>
-              <SelectItem value="other">Other</SelectItem>
-            </SelectContent>
-          </Select>
+          <FormField
+            control={control}
+            name={"patientSex" as Path<T>}
+            render={({ field }) => (
+              <FormItem>
+                <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select sex" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="male">Male</SelectItem>
+                    <SelectItem value="female">Female</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </StatusFieldCard>
 
         {/* Medical Record Number - Medium card */}
@@ -182,11 +208,22 @@ export const CaseOverviewStep = ({ className }: CaseOverviewStepProps) => {
           title="Medical Record Number"
           tooltip="If available, enter the patient's unique medical record number for easy identification."
           fieldValue={medicalRecordNumberValue}
-          hasError={!!formValidationErrors.medicalRecordNumber}
+          hasError={!!errors.medicalRecordNumber}
         >
-          <Input
-            placeholder="e.g., 1234567"
-            {...register("medicalRecordNumber")}
+          <FormField
+            control={control}
+            name={"medicalRecordNumber" as Path<T>}
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    placeholder="e.g., 1234567"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
         </StatusFieldCard>
 
@@ -196,13 +233,24 @@ export const CaseOverviewStep = ({ className }: CaseOverviewStepProps) => {
           title="Case Title"
           isRequired
           tooltip="A clear, descriptive title helps others quickly understand the case's focus. Include key details like condition, patient type, or unique aspects."
-          hasError={!!formValidationErrors.caseTitle}
+          hasError={!!errors.caseTitle}
           fieldValue={caseTitleValue}
           className="md:col-span-2"
         >
-          <Input
-            placeholder="e.g., Complex Hypertension Management in Elderly Patient with Comorbidities"
-            {...register("caseTitle")}
+          <FormField
+            control={control}
+            name={"caseTitle" as Path<T>}
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    placeholder="e.g., Complex Hypertension Management in Elderly Patient with Comorbidities"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
         </StatusFieldCard>
 
@@ -212,39 +260,61 @@ export const CaseOverviewStep = ({ className }: CaseOverviewStepProps) => {
           title="Chief Complaint"
           isRequired
           tooltip="The primary reason for the patient's visit or the main clinical problem being addressed."
-          hasError={!!formValidationErrors.chiefComplaint}
+          hasError={!!errors.chiefComplaint}
           fieldValue={chiefComplaintValue}
           className="lg:col-span-2"
         >
-          <Input
-            placeholder="e.g., Chest pain for 2 hours"
-            {...register("chiefComplaint")}
+          <FormField
+            control={control}
+            name={"chiefComplaint" as Path<T>}
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    placeholder="e.g., Chest pain for 2 hours"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
         </StatusFieldCard>
 
         {/* Medical Specialty - Medium card */}
         <StatusFieldCard
-          icon={User}
+          icon={Tag}
           title="Medical Specialty"
           tooltip="Select the primary medical specialty that best categorizes this case."
-          hasError={!!formValidationErrors.specialty}
+          hasError={!!errors.specialty} 
           fieldValue={specialtyValue}
         >
-          <Select {...register("specialty")}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select a specialty" />
-            </SelectTrigger>
-            <SelectContent>
-              {MEDICAL_SPECIALTIES.map((specialty) => (
-                <SelectItem
-                  key={specialty}
-                  value={specialty}
-                >
-                  {specialty}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <FormField
+            control={control}
+            name={"specialty" as Path<T>}
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a specialty" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {MEDICAL_SPECIALTIES.map((specialty) => (
+                        <SelectItem
+                          key={specialty}
+                          value={specialty}
+                        >
+                          {specialty}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </StatusFieldCard>
 
         {/* Medical History - Wide spanning card */}
@@ -253,19 +323,30 @@ export const CaseOverviewStep = ({ className }: CaseOverviewStepProps) => {
           title="Medical History"
           tooltip="Summarize the patient's relevant past medical history, chronic conditions, and previous interventions."
           fieldValue={medicalHistoryValue}
-          hasError={!!formValidationErrors.medicalHistory}
+          hasError={!!errors.medicalHistory}
           className="md:col-span-2 lg:col-span-3"
         >
-          <Textarea
-            placeholder="e.g., Hypertension, Type 2 Diabetes, Previous appendectomy in 2010..."
-            rows={3}
-            className="resize-none"
-            {...register("medicalHistory")}
+          <FormField
+            control={control}
+            name={"medicalHistory" as Path<T>}
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Textarea
+                    placeholder="e.g., Hypertension, Type 2 Diabetes, Previous appendectomy in 2010..."
+                    rows={3}
+                    className="resize-none"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
         </StatusFieldCard>
       </div>
     </div>
   );
-};
+});
 
 CaseOverviewStep.displayName = "CaseOverviewStep";

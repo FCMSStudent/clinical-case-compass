@@ -204,6 +204,7 @@ export const liquidGlassEffects = {
  * Apply liquid glass styles to an element
  */
 export const applyLiquidGlass = (
+  variant: 'subtle' | 'medium' | 'strong' = 'medium',
   context: 'card' | 'navigation' | 'modal' | 'alert' | 'button' = 'card'
 ) => {
   const baseStyles = {
@@ -414,6 +415,8 @@ export const translucentBackgrounds = {
   card: "bg-white/8 backdrop-blur-[18px] saturate-140 brightness-106",
   dropdown: "bg-white/15 backdrop-blur-[28px] saturate-170 brightness-107",
   overlay: "bg-white/10 backdrop-blur-[40px] saturate-180 contrast-110",
+  alert: "bg-white/20 backdrop-blur-[30px] saturate-150 brightness-105",
+  button: "bg-white/15 backdrop-blur-[20px] brightness-110",
   input: "bg-white/10 backdrop-blur-[16px] saturate-130 brightness-105",
   
   // Enhanced frosted glass overlay variants
@@ -422,4 +425,4 @@ export const translucentBackgrounds = {
   frostedPanel: "bg-white/20 backdrop-blur-[40px] saturate-180 contrast-110",
   frostedPopover: "bg-white/25 backdrop-blur-[40px] saturate-200 contrast-115",
   frostedSheet: "bg-white/25 backdrop-blur-[50px] saturate-200 contrast-115",
-} as const;
+} as const; 

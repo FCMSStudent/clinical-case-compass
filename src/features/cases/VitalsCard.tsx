@@ -4,9 +4,6 @@ import { Label } from "@/shared/components/label";
 import { Button } from "@/shared/components/button";
 import { Thermometer, HeartPulse, Activity, Wind, Gauge } from "lucide-react";
 import { cn } from "@/shared/utils/utils";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/card";
-import { Badge } from "@/shared/components/badge";
-import { Heart, ArrowUp, ArrowDown } from "lucide-react";
 
 interface VitalSignProps {
   label: string;
@@ -22,17 +19,9 @@ interface VitalSignProps {
   className?: string;
 }
 
-interface VitalsData {
-  temperature?: string;
-  heartRate?: string;
-  systolicBP?: string;
-  diastolicBP?: string;
-  respiratoryRate?: string;
-  oxygenSaturation?: string;
-}
-
 interface VitalsCardProps {
-  vitals: VitalsData;
+  onVitalsChange?: (vitals: Record<string, string>) => void;
+  initialVitals?: Record<string, string>;
 }
 
 const VitalSign = memo<VitalSignProps>(({ 
@@ -105,31 +94,21 @@ const VitalSign = memo<VitalSignProps>(({
 
 VitalSign.displayName = "VitalSign";
 
-export const VitalsCard = ({ vitals }: VitalsCardProps) => {
-  // Helper function to determine if a vital is out of normal range
-  const getVitalStatus = (value: string | undefined, type: string) => {
-    if (!value) return "normal";
-    
-    const numValue = parseFloat(value);
-    if (isNaN(numValue)) return "normal";
+export function VitalsCard({ onVitalsChange, initialVitals = {} }: VitalsCardProps) {
+  const [vitals, setVitals] = useState<Record<string, string>>(initialVitals);
 
-    switch (type) {
-      case "temperature":
-        return numValue < 36.5 || numValue > 37.5 ? "abnormal" : "normal";
-      case "heartRate":
-        return numValue < 60 || numValue > 100 ? "abnormal" : "normal";
-      case "systolicBP":
-        return numValue < 90 || numValue > 140 ? "abnormal" : "normal";
-      case "diastolicBP":
-        return numValue < 60 || numValue > 90 ? "abnormal" : "normal";
-      case "respiratoryRate":
-        return numValue < 12 || numValue > 20 ? "abnormal" : "normal";
-      case "oxygenSaturation":
-        return numValue < 95 ? "abnormal" : "normal";
-      default:
-        return "normal";
+  const handleVitalChange = useCallback((key: string, value: string) => {
+    const updatedVitals = {
+      ...vitals,
+      [key]: value
+    };
+    
+    setVitals(updatedVitals);
+    
+    if (onVitalsChange) {
+      onVitalsChange(updatedVitals);
     }
-  };
+  }, [vitals, onVitalsChange]);
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-min">
@@ -144,7 +123,7 @@ export const VitalsCard = ({ vitals }: VitalsCardProps) => {
         max={45}
         normalRange={{ min: 36.5, max: 37.5 }}
         icon={<Thermometer className="h-4 w-4" />}
-        onChange={(value) => vitals.temperature = value}
+        onChange={(value) => handleVitalChange("temperature", value)}
         className="md:col-span-2"
       />
 
@@ -159,7 +138,7 @@ export const VitalsCard = ({ vitals }: VitalsCardProps) => {
         max={200}
         normalRange={{ min: 60, max: 100 }}
         icon={<HeartPulse className="h-4 w-4" />}
-        onChange={(value) => vitals.heartRate = value}
+        onChange={(value) => handleVitalChange("heartRate", value)}
       />
 
       {/* Respiratory Rate */}
@@ -173,21 +152,17 @@ export const VitalsCard = ({ vitals }: VitalsCardProps) => {
         max={50}
         normalRange={{ min: 12, max: 20 }}
         icon={<Wind className="h-4 w-4" />}
-        onChange={(value) => vitals.respiratoryRate = value}
+        onChange={(value) => handleVitalChange("respiratoryRate", value)}
       />
 
       {/* Blood Pressure - spans 2 columns */}
       <VitalSign
         id="bloodPressure"
         label="Blood Pressure (Systolic/Diastolic)"
-        value={vitals.systolicBP || vitals.diastolicBP || ""}
+        value={vitals.bloodPressure || ""}
         unit="mmHg"
         icon={<Activity className="h-4 w-4" />}
-        onChange={(value) => {
-          const [systolic, diastolic] = value.split('/');
-          vitals.systolicBP = systolic;
-          vitals.diastolicBP = diastolic;
-        }}
+        onChange={(value) => handleVitalChange("bloodPressure", value)}
         className="col-span-2"
       />
 
@@ -202,7 +177,7 @@ export const VitalsCard = ({ vitals }: VitalsCardProps) => {
         max={100}
         normalRange={{ min: 95, max: 100 }}
         icon={<Gauge className="h-4 w-4" />}
-        onChange={(value) => vitals.oxygenSaturation = value}
+        onChange={(value) => handleVitalChange("oxygenSaturation", value)}
         className="col-span-2"
       />
     </div>

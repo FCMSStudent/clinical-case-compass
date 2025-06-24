@@ -1,85 +1,186 @@
-import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./providers/AuthContext";
-import LandingPage from "@/features/landing/Landing";
-import Auth from "@/features/auth/Auth";
-import Dashboard from "@/features/dashboard/Dashboard";
-import Cases from "@/features/cases/Cases";
-import NotFound from "@/shared/components/NotFound";
-import AppLayout from "@/features/navigation/components/AppLayout";
-import ProtectedRouteLayout from "@/features/navigation/components/ProtectedRouteLayout";
+import React, { Suspense } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "@/shared/components/sonner";
+import { AnimatePresence } from "framer-motion";
+import { AuthProvider, useAuth } from "./providers/AuthContext";
+import { ThemeProvider } from "@/design-system/design-system";
+import { ErrorBoundary } from "./error-boundaries/ErrorBoundary";
+import { ProtectedRouteLayout } from "@/features/navigation";
+import LoadingScreen from "@/shared/components/loading-screen";
 
-// Debug logging
-console.log('App.tsx - Loading App component...');
+// Lazy load major components for code splitting
+const Dashboard = React.lazy(() => import("@/features/dashboard/Dashboard"));
+const Cases = React.lazy(() => import("@/features/cases/Cases"));
+const CaseDetail = React.lazy(() => import("@/features/cases/CaseDetail"));
+const CaseEdit = React.lazy(() => import("@/features/cases/CaseEdit"));
+const CreateCaseFlow = React.lazy(() => import("@/features/cases/CreateCaseFlow"));
+const Account = React.lazy(() => import("@/features/auth/Account"));
+const Auth = React.lazy(() => import("@/features/auth/Auth"));
+const NotFound = React.lazy(() => import("@/shared/components/NotFound"));
+const LandingPage = React.lazy(() => import("@/features/landing/Landing"));
 
-// Simple test component to verify basic rendering
-const TestComponent = () => {
-  console.log('TestComponent - Rendering...');
+// Loading component for Suspense fallback
+const PageLoadingFallback = () => (
+  <div className="min-h-screen flex items-center justify-center bg-black">
+    <LoadingScreen />
+  </div>
+);
+
+// Create a client with better error handling
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      gcTime: 1000 * 60 * 10, // 10 minutes
+      retry: (failureCount, error) => {
+        // Don't retry on authentication errors
+        if (error?.message?.includes('not authenticated')) {
+          return false;
+        }
+        return failureCount < 2;
+      },
+      refetchOnWindowFocus: false,
+    },
+    mutations: {
+      retry: 1,
+    }
+  },
+});
+
+// Component to handle location and AnimatePresence for page transitions
+const AppRoutes = () => {
+  const location = useLocation();
+  const { session } = useAuth();
+
   return (
-    <div style={{ 
-      padding: '20px', 
-      backgroundColor: 'blue', 
-      color: 'white', 
-      minHeight: '100vh',
-      fontFamily: 'Arial, sans-serif'
-    }}>
-      <h1>Test Component - App is working!</h1>
-      <p>If you can see this, React is rendering correctly.</p>
-      <p>Current time: {new Date().toLocaleString()}</p>
-      <p>React version: {React.version}</p>
-    </div>
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        {/* Public Routes */}
+        <Route 
+          path="/landing" 
+          element={
+            <Suspense fallback={<PageLoadingFallback />}>
+              <LandingPage />
+            </Suspense>
+          } 
+        />
+        <Route 
+          path="/auth" 
+          element={
+            session ? (
+              <Navigate to="/dashboard" replace />
+            ) : (
+              <Suspense fallback={<PageLoadingFallback />}>
+                <Auth />
+              </Suspense>
+            )
+          } 
+        />
+        
+        {/* Protected routes */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRouteLayout>
+              <Suspense fallback={<PageLoadingFallback />}>
+                <Dashboard />
+              </Suspense>
+            </ProtectedRouteLayout>
+          }
+        />
+        <Route
+          path="/cases"
+          element={
+            <ProtectedRouteLayout>
+              <ErrorBoundary fallback={
+                <div className="p-8 text-center">
+                  <h2 className="text-xl font-semibold text-white mb-2">Cases Page Error</h2>
+                  <p className="text-white/70">There was an error loading the cases page.</p>
+                </div>
+              }>
+                <Suspense fallback={<PageLoadingFallback />}>
+                  <Cases />
+                </Suspense>
+              </ErrorBoundary>
+            </ProtectedRouteLayout>
+          }
+        />
+        <Route
+          path="/cases/:id"
+          element={
+            <ProtectedRouteLayout>
+              <Suspense fallback={<PageLoadingFallback />}>
+                <CaseDetail />
+              </Suspense>
+            </ProtectedRouteLayout>
+          }
+        />
+        <Route
+          path="/cases/edit/:id"
+          element={
+            <ProtectedRouteLayout>
+              <Suspense fallback={<PageLoadingFallback />}>
+                <CaseEdit />
+              </Suspense>
+            </ProtectedRouteLayout>
+          }
+        />
+        <Route
+          path="/cases/new"
+          element={
+            <ProtectedRouteLayout>
+              <Suspense fallback={<PageLoadingFallback />}>
+                <CreateCaseFlow />
+              </Suspense>
+            </ProtectedRouteLayout>
+          }
+        />
+        <Route
+          path="/account"
+          element={
+            <ProtectedRouteLayout>
+              <Suspense fallback={<PageLoadingFallback />}>
+                <Account />
+              </Suspense>
+            </ProtectedRouteLayout>
+          }
+        />
+        <Route path="/" element={session ? <Navigate to="/dashboard" replace /> : <Navigate to="/landing" replace />} />
+        <Route
+          path="*"
+          element={
+            session ? (
+              <ProtectedRouteLayout>
+                <Suspense fallback={<PageLoadingFallback />}>
+                  <NotFound />
+                </Suspense>
+              </ProtectedRouteLayout>
+            ) : (
+              <Navigate to="/landing" replace />
+            )
+          }
+        />
+      </Routes>
+    </AnimatePresence>
   );
 };
 
 const App = () => {
-  console.log('App component - Starting to render...');
-  
-  // Method 2: Start with simple test component
-  const useSimpleTest = false; // Set to false to use full app
-  
-  if (useSimpleTest) {
-    return <TestComponent />;
-  }
-  
-  try {
-    return (
-      <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            {/* Public Landing Page */}
-            <Route path="/" element={<LandingPage />} />
-            {/* Auth Page */}
-            <Route path="/auth" element={<Auth />} />
-            {/* Protected Routes */}
-            <Route element={<ProtectedRouteLayout />}>
-              <Route element={<AppLayout />}>
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/cases" element={<Cases />} />
-                {/* Add more protected routes here */}
-              </Route>
-            </Route>
-            {/* 404 Not Found */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </AuthProvider>
-    );
-  } catch (error) {
-    console.error('App component - Error rendering:', error);
-    return (
-      <div style={{ padding: '20px', color: 'white', backgroundColor: 'red', minHeight: '100vh' }}>
-        <h1>App Error</h1>
-        <p>There was an error rendering the app:</p>
-        <pre>{error instanceof Error ? error.message : String(error)}</pre>
-        <details>
-          <summary>Stack Trace</summary>
-          <pre>{error instanceof Error ? error.stack : 'No stack trace available'}</pre>
-        </details>
-      </div>
-    );
-  }
+  return (
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <AuthProvider>
+            <Router>
+              <AppRoutes />
+            </Router>
+            <Toaster position="top-right" />
+          </AuthProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
+  );
 };
-
-console.log('App.tsx - App component exported...');
 
 export default App;

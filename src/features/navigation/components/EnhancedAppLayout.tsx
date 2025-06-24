@@ -1,8 +1,9 @@
+
 import React from "react";
 import EnhancedNavbar from "../EnhancedNavbar";
 import Breadcrumbs from "../Breadcrumbs";
-import { motion } from "framer-motion";
 import UnifiedBackground from "@/shared/components/UnifiedBackground";
+import { motion } from "framer-motion";
 import {
   pageTransitionVariants,
   reducedMotionPageTransitionVariants,
@@ -18,31 +19,30 @@ export const EnhancedAppLayout: React.FC<EnhancedAppLayoutProps> = ({
   children,
   className = ""
 }) => {
+  // Get page transition variants, respecting reduced motion settings.
   const variants = getMotionVariants(pageTransitionVariants, reducedMotionPageTransitionVariants);
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Unified Background with all effects */}
-      <div className="absolute inset-0 dashboard-gradient-bg">
-        <UnifiedBackground />
-      </div>
+    <div className="min-h-screen">
+      <UnifiedBackground />
       
+      {/* Simplified motion wrapper with improved transitions */}
       <motion.div
-        className="relative flex flex-col min-h-screen"
+        className="relative z-10 flex flex-col min-h-screen"
         variants={variants}
         initial="initial"
         animate="animate"
         exit="exit"
       >
         {/* Floating Navbar */}
-        <div className="w-full flex justify-center pt-4 px-4">
+        <div className="w-full flex justify-center pt-6 px-4">
           <div className="w-full max-w-7xl">
             <EnhancedNavbar />
           </div>
         </div>
         
         <main className={`flex-1 flex flex-col ${className}`} role="main">
-          <div className="container mx-auto px-4 py-4 flex-1">
+          <div className="container mx-auto px-4 py-6 flex-1">
             <Breadcrumbs />
             {children}
           </div>

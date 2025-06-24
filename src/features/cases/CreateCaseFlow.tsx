@@ -1,7 +1,10 @@
+
 import React, {
   useState,
   useCallback,
+  useEffect,
   useRef,
+  useMemo,
 } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -94,9 +97,9 @@ const STEPS: StepMeta[] = [
 const CreateCaseFlow = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [_autoSaveStatus, _setAutoSaveStatus] = 
+  const [autoSaveStatus, setAutoSaveStatus] =
     useState<"idle" | "saving" | "saved" | "error">("idle");
-  const errorAnnouncementRef = useRef<HTMLDivElement>(null);
+  const errorAnnouncementRef = useRef(null);
   const { handleError } = useErrorHandler();
   const { toast } = useToast();
   const { createCase, isCreating } = useSupabaseCases();
@@ -119,11 +122,19 @@ const CreateCaseFlow = () => {
       learningPoints: "",
       generalNotes: "",
       resourceLinks: [],
-    } as unknown as FormData,
+    },
     mode: "onChange",
   });
 
-  const { trigger } = form;
+  const { watch, trigger } = form;
+  const watchedValues = watch();
+
+  // Calculate completion percentage
+  const completionPercentage = useMemo(() => {
+    const totalSteps = STEPS.length;
+    const completedSteps = currentStep + 1;
+    return Math.round((completedSteps / totalSteps) * 100);
+  }, [currentStep]);
 
   // Function to validate a specific step
   const validateStep = useCallback(
@@ -144,10 +155,7 @@ const CreateCaseFlow = () => {
 
   // Function to handle moving to the next step
   const handleNext = useCallback(async () => {
-    const currentStepData = STEPS[currentStep];
-    if (!currentStepData) return;
-    
-    const stepId = currentStepData.id;
+    const stepId = STEPS[currentStep].id;
     const isValid = await validateStep(stepId);
 
     if (!isValid) {
@@ -208,34 +216,34 @@ const CreateCaseFlow = () => {
       // Extract clinicalDetails fields if present
       const clinical = formData.clinicalDetails || {};
 
-      // Prepare case data for Supabase with proper type handling
+      // Prepare case data for Supabase
       const caseData = {
         patient: {
           name: formData.patientName || "Unknown Patient",
           age: formData.patientAge || 0,
           gender: (formData.patientSex as "male" | "female" | "other") || "other",
-          medicalRecordNumber: formData.medicalRecordNumber || "",
+          medicalRecordNumber: formData.medicalRecordNumber,
         },
         case: {
           title: formData.caseTitle || "Untitled Case",
           priority: "medium" as const,
           status: "draft" as const,
           chiefComplaint: formData.chiefComplaint || "",
-          chiefComplaintAnalysis: "",
-          history: (clinical.patientHistory as string) || formData.medicalHistory || "",
-          physicalExam: (clinical.physicalExam as string) || "",
-          symptoms: (clinical.systemSymptoms as Record<string, string[]>) || {},
-          vitals: (clinical.vitals as Record<string, string>) || {},
-          labTests: Array.isArray(clinical.labResults) ? clinical.labResults : [],
-          radiologyStudies: Array.isArray(clinical.radiologyStudies) ? clinical.radiologyStudies : [],
-          learningPoints: formData.learningPoints || "",
-          urinarySymptoms: [],
+          chiefComplaintAnalysis: undefined,
+          history: clinical.patientHistory ?? formData.medicalHistory ?? "", // Clinical patientHistory > overview medicalHistory
+          physicalExam: clinical.physicalExam ?? "", // Clinical physicalExam
+          symptoms: clinical.systemSymptoms ?? {},   // Clinical systemSymptoms (review of systems)
+          vitals: clinical.vitals ?? {},             // Clinical vitals
+          labTests: clinical.labResults ?? [],       // Clinical labResults
+          radiologyStudies: clinical.radiologyStudies ?? [], // Clinical radiologyStudies
+          learningPoints: formData.learningPoints,
+          urinarySymptoms: [], // currently not handled in form, keep as empty array
         },
         resources: formData.resourceLinks?.map(link => ({
           title: link.description || "Resource",
           type: "other" as const,
-          url: link.url || "",
-          notes: link.description || "",
+          url: link.url,
+          notes: link.description,
         })) || [],
       };
 
@@ -263,6 +271,12 @@ const CreateCaseFlow = () => {
     }
   }, [trigger, handleError, toast, createCase, user, navigate, form]);
 
+  // Function to determine if the user can proceed to the next step
+  const canProceed = useMemo(() => {
+    // For now, always allow proceeding - validation happens on next/submit
+    return true;
+  }, []);
+
   // Function to handle step change
   const handleStepChange = (stepId: string) => {
     const stepIndex = STEPS.findIndex((step) => step.id === stepId);
@@ -284,9 +298,9 @@ const CreateCaseFlow = () => {
               <FormHeader
                 currentStep={currentStep + 1}
                 totalSteps={STEPS.length}
-                currentStepLabel={STEPS[currentStep]?.label || ""}
+                currentStepLabel={STEPS[currentStep].label}
                 formTitle="Create New Clinical Case"
-                isDraftSaving={_autoSaveStatus === "saving"}
+                isDraftSaving={autoSaveStatus === "saving"}
                 hideDraftButton={true}
               />
               <div className="space-y-6">
@@ -298,7 +312,7 @@ const CreateCaseFlow = () => {
               <FormNavigation
                 currentStep={currentStep + 1}
                 totalSteps={STEPS.length}
-                currentStepLabel={STEPS[currentStep]?.label || ""}
+                currentStepLabel={STEPS[currentStep].label}
                 onPrevious={currentStep > 0 ? handlePrevious : undefined}
                 onNext={handleNext}
                 isSubmitting={isSubmitting || isCreating}

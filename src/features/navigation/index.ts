@@ -1,4 +1,3 @@
-
 // Barrel for navigation feature exports
 
 export { EnhancedAppLayout } from './components/EnhancedAppLayout';

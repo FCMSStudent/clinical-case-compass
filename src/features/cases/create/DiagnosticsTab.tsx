@@ -1,61 +1,60 @@
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/card";
-import { LabResultsCard } from "../LabResultsCard";
-import { RadiologyCard } from "../RadiologyCard";
-import { TestTube, FileImage } from "lucide-react";
 
-interface DiagnosticsTabProps {
-  onLabChange: (labs: any[]) => void;
-  onRadiologyChange: (studies: any[]) => void;
-}
+import React, { memo } from "react";
+import { useFormContext, Controller, Path } from "react-hook-form";
+import { TabsContent } from "@/shared/components/tabs";
+import { FormMessage } from "@/shared/components/form";
+import { 
+  Microscope as MicroscopeIcon,
+  Scan as ScanIcon,
+} from "lucide-react";
+import { StatusFieldCard } from "./components";
+import { SimpleLabs } from "./SimpleLabs";
+import { SimpleImaging } from "./SimpleImaging";
+import type { ClinicalDetailFormData } from "./ClinicalDetailConfig";
 
-export const DiagnosticsTab = ({ onLabChange, onRadiologyChange }: DiagnosticsTabProps) => {
-  const [labResults, setLabResults] = useState<any[]>([]);
-  const [radiologyStudies, setRadiologyStudies] = useState<any[]>([]);
+const FORM_FIELDS = {
+  LAB_RESULTS: "labResults",
+  RADIOLOGY_STUDIES: "radiologyStudies",
+} as const;
 
-  const handleLabChange = (labs: any[]) => {
-    setLabResults(labs);
-    onLabChange(labs);
-  };
+export const DiagnosticsTab = memo(() => {
+  const { setValue, control, watch, formState } = useFormContext<ClinicalDetailFormData>();
 
-  const handleRadiologyChange = (studies: any[]) => {
-    setRadiologyStudies(studies);
-    onRadiologyChange(studies);
-  };
+  const labResultsValue = watch(FORM_FIELDS.LAB_RESULTS as Path<ClinicalDetailFormData>);
+  const radiologyStudiesValue = watch(FORM_FIELDS.RADIOLOGY_STUDIES as Path<ClinicalDetailFormData>);
 
   return (
-    <div className="space-y-6">
+    <TabsContent value="diagnostics" className="space-y-6">
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
-              <TestTube className="h-5 w-5" />
-              Laboratory Tests
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <LabResultsCard 
-              labResults={labResults}
-              onLabChange={handleLabChange}
-            />
-          </CardContent>
-        </Card>
-
-        <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
-              <FileImage className="h-5 w-5" />
-              Radiology Studies
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <RadiologyCard 
-              radiologyStudies={radiologyStudies}
-              onRadiologyChange={handleRadiologyChange}
-            />
-          </CardContent>
-        </Card>
+        <StatusFieldCard
+          icon={MicroscopeIcon}
+          title="Laboratory Studies"
+          fieldValue={labResultsValue}
+          hasError={!!formState.errors[FORM_FIELDS.LAB_RESULTS]}
+        >
+          <SimpleLabs onLabChange={(labs) => setValue(FORM_FIELDS.LAB_RESULTS as Path<ClinicalDetailFormData>, labs, { shouldValidate: true })} />
+          <Controller 
+            name={FORM_FIELDS.LAB_RESULTS as Path<ClinicalDetailFormData>} 
+            control={control} 
+            render={({ fieldState }) => fieldState.error ? <FormMessage className="mt-2">{fieldState.error.message}</FormMessage> : null} 
+          />
+        </StatusFieldCard>
+        
+        <StatusFieldCard
+          icon={ScanIcon}
+          title="Imaging Studies"
+          fieldValue={radiologyStudiesValue}
+          hasError={!!formState.errors[FORM_FIELDS.RADIOLOGY_STUDIES]}
+        >
+          <SimpleImaging onImagingChange={(studies) => setValue(FORM_FIELDS.RADIOLOGY_STUDIES as Path<ClinicalDetailFormData>, studies, { shouldValidate: true })} />
+          <Controller 
+            name={FORM_FIELDS.RADIOLOGY_STUDIES as Path<ClinicalDetailFormData>} 
+            control={control} 
+            render={({ fieldState }) => fieldState.error ? <FormMessage className="mt-2">{fieldState.error.message}</FormMessage> : null} 
+          />
+        </StatusFieldCard>
       </div>
-    </div>
+    </TabsContent>
   );
-};
+});
+DiagnosticsTab.displayName = "DiagnosticsTab";

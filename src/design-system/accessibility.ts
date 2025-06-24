@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { toast } from "sonner";
 
 // ────────────────────────────────────────────────────────────────────────────────
@@ -127,7 +127,7 @@ export class AccessibilityManager {
         
         this.recognition.onresult = (event: SpeechRecognitionEvent) => {
           const transcript = Array.from(event.results)
-            .map(result => result[0]?.transcript?.toLowerCase() || '')
+            .map(result => result[0].transcript.toLowerCase())
             .join("");
           
           this.processVoiceCommand(transcript);
@@ -547,7 +547,7 @@ export class AccessibilityManager {
         listening: 1200,
       };
       
-      oscillator.frequency.setValueAtTime(frequencies[type],  this.audioContext.currentTime);
+      oscillator.frequency.setValueAtTime(frequencies[type], this.audioContext.currentTime);
       oscillator.type = "sine";
       
       gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
@@ -656,7 +656,7 @@ export const useAccessibility = () => {
 /**
  * Eye tracking hook - simplified simulation
  */
-export const useEyeTracking = (_config: EyeTrackingConfig = {}) => {
+export const useEyeTracking = (config: EyeTrackingConfig = {}) => {
   const [focusedElement, setFocusedElement] = useState<HTMLElement | null>(null);
   
   // Simplified implementation - just track mouse hover for now

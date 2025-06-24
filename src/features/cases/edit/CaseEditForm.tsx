@@ -1,37 +1,25 @@
 
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
+import { Form } from "@/shared/components/form";
 import { Button } from "@/shared/components/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/card";
+import { Save } from "lucide-react";
 import { CaseBasicInfoSection } from "./CaseBasicInfoSection";
-import { CaseTextSection } from "./CaseTextSection";
 import { CaseVitalsSection } from "./CaseVitalsSection";
+import { CaseTextSection } from "./CaseTextSection";
 import { CaseLabsSection } from "./CaseLabsSection";
 import { CaseRadiologySection } from "./CaseRadiologySection";
-import { LabTest, RadiologyStudy } from "@/shared/types/case";
-import { Loader2 } from "lucide-react";
+import { spacing, layouts, buttonVariants, iconWithText } from "@/design-system/ui-styles";
 
-interface FormData {
-  title: string;
-  patientName: string;
-  patientAge: number;
-  patientGender: "male" | "female" | "other";
-  patientMRN: string;
-  chiefComplaint: string;
-  history: string;
-  physicalExam: string;
-  learningPoints: string;
-}
-
-export interface CaseEditFormProps {
-  form: UseFormReturn<FormData>;
-  onSubmit: (data: FormData) => void;
+interface CaseEditFormProps {
+  form: UseFormReturn<any>;
+  onSubmit: (values: any) => void;
   isSaving: boolean;
   onVitalsChange: (vitals: Record<string, string>) => void;
-  onLabChange: (labs: LabTest[]) => void;
-  onImagingChange: (studies: {id: string, type: string, findings: string}[]) => void;
-  initialVitals: Record<string, string>;
-  patientAge: number;
+  onLabChange: (labResults: any[]) => void;
+  onImagingChange: (radiologyStudies: any[]) => void;
+  initialVitals?: Record<string, string>;
+  patientAge?: number;
 }
 
 export const CaseEditForm: React.FC<CaseEditFormProps> = ({
@@ -42,83 +30,67 @@ export const CaseEditForm: React.FC<CaseEditFormProps> = ({
   onLabChange,
   onImagingChange,
   initialVitals,
-  patientAge,
+  patientAge
 }) => {
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Basic Information */}
-        <Card className="auth-glass-container">
-          <CardHeader>
-            <CardTitle className="text-white">Basic Information</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <CaseBasicInfoSection form={form} />
-          </CardContent>
-        </Card>
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        id="case-edit-form"
+        className={spacing.section.lg}
+      >
+        {/* Basic Information Section */}
+        <CaseBasicInfoSection form={form} />
 
-        {/* Clinical Text */}
-        <Card className="auth-glass-container">
-          <CardHeader>
-            <CardTitle className="text-white">Clinical Information</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <CaseTextSection form={form} />
-          </CardContent>
-        </Card>
-      </div>
+        {/* Vital Signs Section */}
+        <CaseVitalsSection
+          onVitalsChange={onVitalsChange}
+          initialVitals={initialVitals}
+          patientAge={patientAge}
+        />
 
-      {/* Vitals Section */}
-      <Card className="auth-glass-container">
-        <CardHeader>
-          <CardTitle className="text-white">Vital Signs</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <CaseVitalsSection
-            onVitalsChange={onVitalsChange}
-            initialVitals={initialVitals}
-            patientAge={patientAge}
-          />
-        </CardContent>
-      </Card>
+        {/* History Section */}
+        <CaseTextSection
+          form={form}
+          fieldName="history"
+          title="History"
+          placeholder="Relevant medical history"
+        />
 
-      {/* Lab Results Section */}
-      <Card className="auth-glass-container">
-        <CardHeader>
-          <CardTitle className="text-white">Laboratory Results</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <CaseLabsSection onLabChange={onLabChange} patientAge={patientAge} />
-        </CardContent>
-      </Card>
+        {/* Physical Examination Section */}
+        <CaseTextSection
+          form={form}
+          fieldName="physicalExam"
+          title="Physical Examination"
+          placeholder="Physical examination findings"
+        />
 
-      {/* Radiology Section */}
-      <Card className="auth-glass-container">
-        <CardHeader>
-          <CardTitle className="text-white">Imaging Studies</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <CaseRadiologySection onImagingChange={onImagingChange} />
-        </CardContent>
-      </Card>
+        {/* Laboratory Results Section */}
+        <CaseLabsSection onLabChange={onLabChange} />
 
-      {/* Save Button */}
-      <div className="flex justify-end">
-        <Button 
-          type="submit" 
-          disabled={isSaving}
-          className="min-w-32"
-        >
-          {isSaving ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Saving...
-            </>
-          ) : (
-            "Save Changes"
-          )}
-        </Button>
-      </div>
-    </form>
+        {/* Radiology Studies Section */}
+        <CaseRadiologySection onImagingChange={onImagingChange} />
+
+        {/* Learning Points Section */}
+        <CaseTextSection
+          form={form}
+          fieldName="learningPoints"
+          title="Learning Points"
+          placeholder="Key learning points for this case"
+        />
+
+        {/* Submit Button */}
+        <div className={layouts.flex.between}>
+          <div></div>
+          <Button
+            type="submit"
+            disabled={isSaving}
+          >
+            <Save className="mr-2 h-4 w-4" />
+            {isSaving ? "Saving..." : "Save Changes"}
+          </Button>
+        </div>
+      </form>
+    </Form>
   );
 };

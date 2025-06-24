@@ -1,4 +1,4 @@
-import type { RadiologyStudy } from "@/shared/types/case";
+import type { RadiologyStudy } from "@/types/case";
 
 // Common radiology studies with typical findings
 export const COMMON_RADIOLOGY_STUDIES = [

@@ -1,18 +1,25 @@
-import { useFormContext, FieldValues, Path } from "react-hook-form";
-import { memo } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/card";
-import { Input } from "@/shared/components/input";
-import { Label } from "@/shared/components/label";
-import { Textarea } from "@/shared/components/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/select";
-import { Badge } from "@/shared/components/badge";
-import { Lightbulb, User, FileText, Stethoscope, Tag } from "lucide-react";
-import { SPECIALTIES } from "@/shared/types/case";
-import { FormField, FormItem, FormControl, FormMessage } from "@/shared/components/form";
-import { StepHeader } from "./components/StepHeader";
-import { StatusFieldCard } from "./components/StatusFieldCard";
-import { useFormValidation } from "@/shared/hooks/use-form-validation";
+
+import React, { memo } from "react";
+import { useFormContext, Path, FieldValues } from "react-hook-form";
+import { FileText, Stethoscope, Tag } from "lucide-react";
 import { cn } from "@/shared/utils/utils";
+import { StepHeader, StatusFieldCard } from "./components"; // Changed FormFieldCard to StatusFieldCard
+import { CaseInfoFormData } from "./schemas/case-info-schema";
+import { useFormValidation } from "@/shared/hooks/use-form-validation"; // Added import for useFormValidation
+import {
+  FormField,
+  FormItem,
+  FormControl,
+  FormMessage,
+} from "@/shared/components/form"; // Added imports for form components
+import { Input } from "@/shared/components/input"; // Added import for Input
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/shared/components/select"; // Added imports for select components
 
 /**
  * Constants
@@ -51,14 +58,8 @@ const MEDICAL_SPECIALTIES = [
  * PROPS
  * ────────────────────────────────────────────────────────────────────────────────
  */
-interface CaseInfoStepProps<T extends FieldValues = any> {
+export interface CaseInfoStepProps<T extends FieldValues = CaseInfoFormData> {
   className?: string;
-}
-
-interface CaseInfoFormData {
-  caseTitle: string;
-  chiefComplaint: string;
-  specialty: string;
 }
 
 /**

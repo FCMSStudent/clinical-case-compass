@@ -34,7 +34,7 @@ const Auth = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
-  const { currentTheme: _ } = useTheme(); // Suppress unused variable warning
+  const { currentTheme } = useTheme();
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -66,7 +66,7 @@ const Auth = () => {
     setError(null);
     try {
       await signIn(data.email, data.password);
-      navigate("/dashboard");
+      navigate("/");
       toast({
         title: "Welcome back!",
         description: "You have successfully logged in.",
@@ -101,7 +101,7 @@ const Auth = () => {
 
   return (
     <motion.div
-      className="min-h-screen relative overflow-hidden"
+      className="min-h-screen relative overflow-hidden auth-gradient-bg"
       variants={pageVariants}
       initial="initial"
       animate="animate"
@@ -111,7 +111,7 @@ const Auth = () => {
         <motion.div
           initial={{ opacity: 0, y: 20, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.6, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
           className="w-full max-w-sm mx-auto p-4"
         >
           {/* Refined glassmorphic container */}
@@ -126,14 +126,14 @@ const Auth = () => {
                   transition={{ 
                     delay: 0.2, 
                     duration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0.01 : 0.5, 
-                    ease: [0.16, 1, 0.3, 1] 
+                    ease: "cubic-bezier(0.16, 1, 0.3, 1)" 
                   }}
                   className="text-left"
                 >
                   <motion.div 
                     className="mb-2"
                     whileHover={window.matchMedia('(prefers-reduced-motion: reduce)').matches ? {} : { scale: 1.02 }}
-                    transition={{ duration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 0.2, ease: [0.16, 1, 0.3, 1] }}
+                    transition={{ duration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 0.2 }}
                   >
                     <h1 className="auth-title text-white transition-all duration-300 hover:brightness-110">
                       Medica
@@ -146,8 +146,8 @@ const Auth = () => {
               </CardHeader>
 
               <CardContent className="p-6 pt-0 space-y-4 relative z-10">
-                {/* Apple Liquid Glass toggle with 16px radius */}
-                <div className="relative flex toggle-track p-1 h-12">
+                {/* Apple Liquid Glass toggle - COMPLETELY FIXED */}
+                <div className="relative toggle-track p-1 h-12">
                   <motion.div
                     className="absolute top-1 bottom-1 toggle-thumb"
                     style={{
@@ -165,30 +165,32 @@ const Auth = () => {
                         }
                     }
                   />
-                  <button 
-                    onClick={() => setActiveTab("login")}
-                    className={cn(
-                      "relative z-10 flex-1 toggle-text transition-all duration-300",
-                      activeTab === "login" 
-                        ? "text-white" 
-                        : "text-white/70 hover:text-white/90 toggle-inactive"
-                    )}
-                    aria-label="Sign in to your account"
-                  >
-                    Sign In
-                  </button>
-                  <button 
-                    onClick={() => setActiveTab("signup")}
-                    className={cn(
-                      "relative z-10 flex-1 toggle-text transition-all duration-300",
-                      activeTab === "signup" 
-                        ? "text-white" 
-                        : "text-white/70 hover:text-white/90 toggle-inactive"
-                    )}
-                    aria-label="Create a new account"
-                  >
-                    Sign Up
-                  </button>
+                  <div className="relative z-10 flex h-full">
+                    <button 
+                      onClick={() => setActiveTab("login")}
+                      className={cn(
+                        "flex-1 flex items-center justify-center toggle-text transition-all duration-300",
+                        activeTab === "login" 
+                          ? "text-white" 
+                          : "text-white/70 hover:text-white/90"
+                      )}
+                      aria-label="Sign in to your account"
+                    >
+                      Sign In
+                    </button>
+                    <button 
+                      onClick={() => setActiveTab("signup")}
+                      className={cn(
+                        "flex-1 flex items-center justify-center toggle-text transition-all duration-300",
+                        activeTab === "signup" 
+                          ? "text-white" 
+                          : "text-white/70 hover:text-white/90"
+                      )}
+                      aria-label="Create a new account"
+                    >
+                      Sign Up
+                    </button>
+                  </div>
                 </div>
 
                 <AnimatePresence mode="wait">
@@ -215,7 +217,7 @@ const Auth = () => {
                       exit={{ opacity: 0, y: -20, scale: 0.95 }}
                       transition={{ 
                         duration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0.01 : 0.4, 
-                        ease: [0.16, 1, 0.3, 1] 
+                        ease: "cubic-bezier(0.16, 1, 0.3, 1)" 
                       }}
                       className="mt-4"
                       role="alert"

@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+// Remove: import { getCaseById } from "@/data/mock-data";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -8,22 +9,23 @@ import { toast } from "sonner";
 
 import { PageHeader } from "@/shared/components/page-header";
 import { useLocalStorage } from "@/shared/hooks/use-local-storage";
-import { MedicalCase, RadiologyStudy, LabTest } from "@/shared/types/case";
+import { MedicalCase, RadiologyStudy } from "@/shared/types/case";
 import { useSupabaseCases } from "@/shared/hooks/use-supabase-cases";
 import { CaseEditForm } from "@/features/cases/edit/CaseEditForm";
 import { typography, layouts } from "@/design-system/ui-styles";
+import { colors } from "@/design-system/tokens/design-tokens";
 
-// Define the form schema with required fields
+// Define the form schema with optional fields
 const formSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  patientName: z.string().min(1, "Patient name is required"),
-  patientAge: z.coerce.number().min(0).max(120),
-  patientGender: z.enum(["male", "female", "other"]),
-  patientMRN: z.string(),
-  chiefComplaint: z.string().min(1, "Chief complaint is required"),
-  history: z.string(),
-  physicalExam: z.string(),
-  learningPoints: z.string(),
+  title: z.string().optional(),
+  patientName: z.string().optional(),
+  patientAge: z.coerce.number().min(0).max(120).optional(),
+  patientGender: z.enum(["male", "female", "other"]).optional(),
+  patientMRN: z.string().optional(),
+  chiefComplaint: z.string().optional(),
+  history: z.string().optional(),
+  physicalExam: z.string().optional(),
+  learningPoints: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -47,7 +49,7 @@ const CaseEdit = () => {
 
   // State for specialized inputs
   const [vitals, setVitals] = useState<Record<string, string>>({});
-  const [labResults, setLabResults] = useState<LabTest[]>([]);
+  const [labResults, setLabResults] = useState<Record<string, unknown>[]>([]);
   const [radiologyStudies, setRadiologyStudies] = useState<RadiologyStudy[]>([]);
 
   // Set up form with existing case data
@@ -110,26 +112,26 @@ const CaseEdit = () => {
     if (medicalCase.radiologyStudies) {
       setRadiologyStudies(medicalCase.radiologyStudies);
     }
+    // Removed backward compatibility for radiologyExams as it's handled by the hook
   }, [medicalCase, id, navigate, form, isLoading, error]);
 
   // Helper to map SimpleImaging's output to RadiologyStudy[]
-  const mapSimpleImagingToRadiologyStudy = (simpleStudies: {id: string, type: string, findings: string, date?: string}[]): RadiologyStudy[] => {
-    return simpleStudies.map(ss => {
-      // Ensure we always provide a proper date string, never undefined
-      const dateString = ss.date || new Date().toISOString().split('T')[0];
-      
-      return {
-        id: ss.id,
-        name: ss.type,
-        type: extractModalityFromName(ss.type),
-        findings: ss.findings,
-        date: dateString, // This is guaranteed to be a string
-        impression: ss.impression || "", // Add default impression to match RadiologyStudy type
-      };
-    });
+  // This is a placeholder and might need more sophisticated logic
+  // to determine 'type' (modality) and 'date'.
+  const mapSimpleImagingToRadiologyStudy = (simpleStudies: {id: string, type: string, findings: string}[]): RadiologyStudy[] => {
+    return simpleStudies.map(ss => ({
+      id: ss.id,
+      name: ss.type, // SimpleImaging's 'type' is more like a 'name' (e.g., "Chest X-Ray")
+      type: extractModalityFromName(ss.type), // Needs a helper to get "X-Ray" from "Chest X-Ray"
+      findings: ss.findings,
+      date: new Date().toISOString().split('T')[0], // Default to today
+      impression: "", // SimpleImaging doesn't have impression
+    }));
   };
 
-  // Extract modality from study name
+  // This function would try to extract modality like "CT", "MRI", "X-Ray"
+  // from a study name like "CT Head" or "Chest X-Ray".
+  // This is a simplistic implementation.
   const extractModalityFromName = (studyName: string): string => {
     const lowerName = studyName.toLowerCase();
     if (lowerName.includes("ct") || lowerName.includes("computed tomography")) return "CT";
@@ -137,8 +139,10 @@ const CaseEdit = () => {
     if (lowerName.includes("x-ray") || lowerName.includes("radiography")) return "X-Ray";
     if (lowerName.includes("ultrasound")) return "Ultrasound";
     if (lowerName.includes("pet")) return "PET";
-    return "Other";
+    // Add more rules as needed
+    return "Other"; // Default modality
   };
+
 
   const handleImagingChange = (studiesFromSimpleImaging: {id: string, type: string, findings: string}[]) => {
     setRadiologyStudies(mapSimpleImagingToRadiologyStudy(studiesFromSimpleImaging));
@@ -150,21 +154,21 @@ const CaseEdit = () => {
     setIsSaving(true);
 
     try {
-      // Create updated case object with proper defaults
+      // Create updated case object
       const updatedCase: MedicalCase = {
         ...medicalCase,
-        title: values.title,
+        title: values.title || medicalCase.title,
         updatedAt: new Date().toISOString(),
-        chiefComplaint: values.chiefComplaint,
-        history: values.history || "",
-        physicalExam: values.physicalExam || "",
-        learningPoints: values.learningPoints || "",
+        chiefComplaint: values.chiefComplaint || medicalCase.chiefComplaint,
+        history: values.history || undefined,
+        physicalExam: values.physicalExam || undefined,
+        learningPoints: values.learningPoints || undefined,
         patient: {
           ...medicalCase.patient,
-          name: values.patientName,
-          age: values.patientAge,
-          gender: values.patientGender,
-          medicalRecordNumber: values.patientMRN,
+          name: values.patientName || medicalCase.patient.name,
+          age: values.patientAge || medicalCase.patient.age,
+          gender: values.patientGender || medicalCase.patient.gender,
+          medicalRecordNumber: values.patientMRN || undefined,
         },
         vitals: vitals,
         labTests: labResults,
@@ -217,14 +221,7 @@ const CaseEdit = () => {
     diastolicBP: medicalCase.vitals.diastolicBP?.toString() || "80",
     respiratoryRate: medicalCase.vitals.respiratoryRate?.toString() || "16",
     oxygenSaturation: medicalCase.vitals.oxygenSaturation?.toString() || "98"
-  } : {
-    temperature: "37",
-    heartRate: "80", 
-    systolicBP: "120",
-    diastolicBP: "80",
-    respiratoryRate: "16",
-    oxygenSaturation: "98"
-  };
+  } : undefined;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -249,10 +246,10 @@ const CaseEdit = () => {
         onSubmit={onSubmit}
         isSaving={isSaving}
         onVitalsChange={setVitals}
-        onLabChange={setLabResults}
+        onLabChange={setLabResults} // Consider mapping this if SimpleLabs output is different
         onImagingChange={handleImagingChange}
         initialVitals={initialVitals}
-        patientAge={form.watch("patientAge") || 30}
+        patientAge={form.watch("patientAge")}
       />
     </div>
   );

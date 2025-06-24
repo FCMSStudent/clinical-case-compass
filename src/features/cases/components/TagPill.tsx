@@ -1,9 +1,7 @@
-import { memo } from "react";
-import { Badge } from "@/shared/components/badge";
-import { CaseTag } from "@/shared/types/case";
+import React, { memo } from "react";
+import { Tag } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/shared/utils/utils";
-import { Tag } from "lucide-react";
 
 interface TagPillProps {
   tag: { id: string; name: string; color: string };

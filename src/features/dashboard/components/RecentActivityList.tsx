@@ -88,73 +88,104 @@ const RecentActivityList: React.FC = () => {
     return time;
   };
 
-  // The parent component (Dashboard.tsx) now provides the main glass-panel container for "Recent Activity".
-  // This component will render the list directly.
-  // The header part (title like "Recent Activity", icon) that was previously inside this component
-  // is now handled by Dashboard.tsx's structure for the panel that wraps <DynamicRecentActivity />.
   return (
-    // This div is equivalent to the <ul>, space-y-4 applied as per spec
-    <div className="space-y-4">
-      {activityItems.map((item, index) => {
-        const IconComponent = activityIcons[item.type];
-        // const colors = activityColors[item.type]; // Colors are removed for the new simpler design
-
-        return (
-          <motion.div
-            key={item.id}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.4, delay: index * 0.1, ease: "easeOut" }}
-            // Applying glass-panel p-4 to each list item. Added flex, items-center, justify-between from spec.
-            className="glass-panel bg-white/10 p-4 rounded-lg shadow-sm hover:shadow-md hover:backdrop-blur-md hover:ring-2 hover:ring-blue-300 transition group cursor-pointer flex items-center justify-between border-b border-white/10 last:border-b-0"
-          >
-            {/* Left part of the item: icon + text */}
-            <span className="flex items-center flex-grow min-w-0 mr-3"> {/* Added mr-3 for spacing */}
-              {/* Icon section - applying glass-inner */}
-              <div className="glass-inner p-2 rounded-full mr-3 flex-shrink-0">
-                <IconComponent className="h-5 w-5 text-white/90" /> {/* Standardized icon style */}
-              </div>
-
-              {/* Text content div */}
-              <div className="flex-grow min-w-0">
-                <div className="font-semibold text-white text-base truncate" title={item.caseTitle || item.description}>
-                  {/* Displaying a concise title: either caseTitle or first few words of description */}
-                  {item.caseTitle || `${item.description.split(" ").slice(0, 4).join(" ")}${item.description.split(" ").length > 4 ? "..." : ""}`}
-                </div>
-                                  <div className="text-sm text-white/90 truncate">
-                    {/* Subtitle: type of action and time */}
-                    <span className="capitalize">{item.type}</span> • {getTimeAgo(item.time)}
+    <div className="relative">
+      <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"></div>
+      <div className="relative bg-white/10 backdrop-blur-md rounded-2xl border border-white/20">
+        <div className="pb-6 pt-6 px-6">
+          <div className="flex items-center justify-between">
+            <div className="space-y-2">
+              <h3 className="text-xl font-bold flex items-center gap-2 text-white">
+                <Activity className="h-6 w-6 text-white/80" />
+                Recent Activity
+              </h3>
+              <p className="text-white/70">
+                Your latest case activities and updates
+              </p>
+            </div>
+            <div className="p-3 rounded-full bg-white/20 border border-white/30">
+              <Clock className="h-5 w-5 text-white" />
+            </div>
+          </div>
+        </div>
+        <div className="px-6 pb-6 space-y-4">
+          {activityItems.map((item, index) => {
+            const IconComponent = activityIcons[item.type];
+            const colors = activityColors[item.type];
+            
+            return (
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.4, delay: index * 0.1, ease: "easeOut" }}
+                className="group"
+              >
+                <div className={`
+                  relative p-4 rounded-lg border transition-all duration-300 cursor-pointer
+                  hover:shadow-md hover:scale-[1.02] group-hover:border-white/40
+                  ${colors.bg} ${colors.border}
+                `}>
+                  <div className="flex items-start gap-3">
+                    <div className={`
+                      p-2 rounded-lg ${colors.icon} border border-white/30
+                      group-hover:scale-110 transition-transform duration-300
+                    `}>
+                      <IconComponent className="h-4 w-4 text-white" />
+                    </div>
+                    <div className="flex-1 space-y-2">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1">
+                          <h4 className="font-medium text-sm line-clamp-1 group-hover:text-white transition-colors text-white/90">
+                            {item.caseTitle}
+                          </h4>
+                          <p className="text-xs text-white/70 line-clamp-2">
+                            {item.description}
+                          </p>
+                        </div>
+                        <Badge 
+                          variant="secondary" 
+                          className={`text-xs ${colors.bg} ${colors.text} border-white/30`}
+                        >
+                          {item.type}
+                        </Badge>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1 text-xs text-white/60">
+                          <Clock className="h-3 w-3" />
+                          {getTimeAgo(item.time)}
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 h-6 px-2 text-white hover:bg-white/20"
+                        >
+                          <Eye className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </div>
                   </div>
-              </div>
-            </span>
-
-            {/* Right Section: Using a simple status dot as per spec example for li */}
-            <span className={`inline-block w-3 h-3 rounded-full bg-green-400 shadow-md flex-shrink-0 ${
-              index < 2 ? 'animate-ping' : ''
-            }`}></span>
-            {/* Original Badge for item.type and Eye button are omitted to match simplified spec list item.
-                If specific actions per item are needed, they would be added here or contextually.
-            */}
-          </motion.div>
-        );
-      })}
-
-      {/* "View All Activities" Button - styling will be reviewed in button step. Placeholder for structure. */}
-      {activityItems.length > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: activityItems.length * 0.1 + 0.1, ease: "easeOut" }}
-          className="pt-4 border-t border-white/20"
-        >
-          <Button
-            variant="outline"
-            className="w-full border-white/30 text-white hover:bg-white/20 hover:shadow-xl hover:ring-2 hover:ring-blue-300 transition rounded-lg py-3 text-base"
+                </div>
+              </motion.div>
+            );
+          })}
+          
+          {/* View All Activities Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.6, ease: "easeOut" }}
+            className="pt-4 border-t border-white/20"
           >
-            View All Activities
-          </Button>
-        </motion.div>
-      )}
+            <Button 
+              variant="outline" 
+              className="w-full border-white/30 text-white hover:bg-white/20"
+            >
+              View All Activities
+            </Button>
+          </motion.div>
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,7 +1,6 @@
+
 import React, { memo, ReactNode } from "react";
 import { cn } from "@/shared/utils/utils";
-import { Card, CardContent } from "@/shared/components/card";
-import { StepProgress } from "./components/StepProgress";
 
 /**
  * Lightweight meta-data contract for each form step.
@@ -24,7 +23,7 @@ export interface FormContainerProps {
    * Callback when the user clicks a step in the progress indicator.
    * Receives the id of the clicked step.
    */
-  onStepChange: (stepId: string) => void;
+  onStepChange?: (stepId: string) => void;
   /** Main content of the current step. */
   children: ReactNode;
   /** Extra classes for the outer wrapper. */
@@ -44,21 +43,11 @@ export const FormContainer = memo(
     className,
   }: FormContainerProps) => {
     return (
-      <div className="max-w-4xl mx-auto space-y-6">
-        <Card className="bg-white/10 backdrop-blur-sm border-white/20 shadow-xl">
-          <CardContent className="p-6">
-            <StepProgress 
-              steps={steps}
-              currentStep={currentStepIndex}
-              onStepClick={onStepChange}
-            />
-          </CardContent>
-        </Card>
-        
-        <div className="space-y-6">
+      <section className={cn("space-y-6", className)}>
+        <div className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-2xl p-6 group overflow-hidden transition-all duration-300">
           {children}
         </div>
-      </div>
+      </section>
     );
   },
 );
