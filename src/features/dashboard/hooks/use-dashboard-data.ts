@@ -116,7 +116,7 @@ const DEMO_CASES: MedicalCase[] = [
 
 export function useDashboardData() {
   const { isOfflineMode } = useAuth();
-  const { cases, isLoading, error } = useSupabaseCases();
+  const { cases = [], isLoading, error } = useSupabaseCases();
 
   // Use demo data in offline mode
   const effectiveCases = isOfflineMode ? DEMO_CASES : cases;
@@ -136,6 +136,10 @@ export function useDashboardData() {
   const data = useMemo(() => {
     console.log('useDashboardData - Computing data with cases:', effectiveCases?.length || 0);
     
+    // Always return a data structure, even if empty
+    const now = new Date();
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    
     if (!effectiveCases || effectiveCases.length === 0) {
       const emptyData = {
         totalCases: 0,
@@ -148,9 +152,6 @@ export function useDashboardData() {
       console.log('useDashboardData - Returning empty data:', emptyData);
       return emptyData;
     }
-
-    const now = new Date();
-    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
     
     // Calculate metrics once
     const totalCases = effectiveCases.length;

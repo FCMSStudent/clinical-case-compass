@@ -1,14 +1,10 @@
+
 import React from "react";
 import { Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/app/providers/AuthContext";
 
-interface DashboardHeaderProps {
-  searchQuery: string;
-  onSearchChange: (query: string) => void;
-}
-
-export const DashboardHeader: React.FC<DashboardHeaderProps> = () => {
+export const DashboardHeader: React.FC = () => {
   const { user } = useAuth();
 
   // Get user display name with fallback
