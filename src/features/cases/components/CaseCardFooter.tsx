@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useState } from "react";
 import { Calendar, User, MapPin } from "lucide-react";
 import { Badge } from "@/shared/components/badge";
 import { MedicalCase } from "@/shared/types/case";

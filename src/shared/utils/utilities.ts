@@ -2,7 +2,7 @@
 // DESIGN SYSTEM UTILITIES
 // ────────────────────────────────────────────────────────────────────────────────
 
-import { themeColors, type ThemeColors, type GlassSystem } from './colors';
+import { themeColors, type ThemeColors, type GlassSystem } from '@/design-system/tokens/colors';
 
 /** Check for reduced motion preference */
 export const prefersReducedMotion = () => {

@@ -1,8 +1,7 @@
-
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react-swc";
+import react from "@vitejs/plugin-react";
 import path from "path";
-import { componentTagger } from "lovable-tagger";
+// import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }: { mode: string }) => ({
@@ -12,7 +11,7 @@ export default defineConfig(({ mode }: { mode: string }) => ({
   },
   plugins: [
     react(),
-    mode === 'development' && componentTagger(),
+    // mode === 'development' && componentTagger(),
   ].filter(Boolean),
   resolve: {
     alias: {
@@ -78,7 +77,9 @@ export default defineConfig(({ mode }: { mode: string }) => ({
       'react-router-dom',
       '@tanstack/react-query',
       'framer-motion',
-      'lucide-react'
+      'lucide-react',
+      '@supabase/supabase-js',
+      '@supabase/postgrest-js'
     ],
     exclude: ['@supabase/supabase-js']
   },

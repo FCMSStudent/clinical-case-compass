@@ -129,8 +129,10 @@
   
   /* Remove any default backgrounds */
   #root {
-    background: transparent;
+    background: yellow !important;
     min-height: 100vh;
+    position: relative;
+    z-index: 1;
   }
   
   /* Improved focus styles for accessibility */

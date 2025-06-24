@@ -1,12 +1,18 @@
-import { useFormContext } from "react-hook-form";
+import { useFormContext, FieldValues, Path } from "react-hook-form";
+import { memo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/card";
 import { Input } from "@/shared/components/input";
 import { Label } from "@/shared/components/label";
 import { Textarea } from "@/shared/components/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/select";
 import { Badge } from "@/shared/components/badge";
-import { Lightbulb, User, FileText, Stethoscope } from "lucide-react";
+import { Lightbulb, User, FileText, Stethoscope, Tag } from "lucide-react";
 import { SPECIALTIES } from "@/shared/types/case";
+import { FormField, FormItem, FormControl, FormMessage } from "@/shared/components/form";
+import { StepHeader } from "./components/StepHeader";
+import { StatusFieldCard } from "./components/StatusFieldCard";
+import { useFormValidation } from "@/shared/hooks/use-form-validation";
+import { cn } from "@/shared/utils/utils";
 
 /**
  * Constants
@@ -45,8 +51,14 @@ const MEDICAL_SPECIALTIES = [
  * PROPS
  * ────────────────────────────────────────────────────────────────────────────────
  */
-interface CaseInfoStepProps {
+interface CaseInfoStepProps<T extends FieldValues = any> {
   className?: string;
+}
+
+interface CaseInfoFormData {
+  caseTitle: string;
+  chiefComplaint: string;
+  specialty: string;
 }
 
 /**
@@ -54,59 +66,6 @@ interface CaseInfoStepProps {
  * COMPONENT
  * ────────────────────────────────────────────────────────────────────────────────
  */
-export const CaseInfoStep = ({ className }: CaseInfoStepProps) => {
-  const {
-    register,
-    formState: { errors },
-    setValue,
-    getValues,
-  } = useFormContext();
-
-  // List of common case types for quick selection
-  const commonCaseTypes = [
-    "Diagnostic Challenge",
-    "Emergency Case",
-    "Chronic Disease Management",
-    "Surgical Case",
-    "Pediatric Case",
-    "Geriatric Case",
-    "Preventive Medicine",
-    "Mental Health Case",
-    "Infectious Disease",
-    "Oncology Case"
-  ];
-
-  const handleCaseTypeSelect = (caseType: string) => {
-    setValue("caseType", caseType);
-  };
-
-  return (
-    <div className={`space-y-6 ${className || ''}`}>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Case Information</CardTitle>
-          <div className="flex items-center space-x-2">
-            <p className="text-xs text-muted-foreground">
-              {/* Add case information update notification logic here */}
-            </p>
-          </div>
-        </CardHeader>
-      </Card>
-
-      {/* Case Title */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Case Title</CardTitle>
-          <CardDescription>
-            A clear, descriptive title helps others quickly understand the case's focus. Include key details like condition, patient type, or unique aspects.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex space-x-4 text-sm">
-            <div className="flex items-center">
-              <span className="mr-2 text-xs font-medium">
-                {/* Add case title validation logic here */}
-              </span>
 export const CaseInfoStep = memo(function CaseInfoStep<
   T extends FieldValues = CaseInfoFormData,
 >({ className }: CaseInfoStepProps<T>) {
