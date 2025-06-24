@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./providers/AuthContext";
 import LandingPage from "@/features/landing/Landing";
 import Auth from "@/features/auth/Auth";
+import Dashboard from "@/features/dashboard/Dashboard";
+import Cases from "@/features/cases/Cases";
 import NotFound from "@/shared/components/NotFound";
 import AppLayout from "@/features/navigation/components/AppLayout";
 import ProtectedRouteLayout from "@/features/navigation/components/ProtectedRouteLayout";
@@ -33,7 +35,7 @@ const App = () => {
   console.log('App component - Starting to render...');
   
   // Method 2: Start with simple test component
-  const useSimpleTest = true; // Set to false to use full app
+  const useSimpleTest = false; // Set to false to use full app
   
   if (useSimpleTest) {
     return <TestComponent />;
@@ -51,6 +53,8 @@ const App = () => {
             {/* Protected Routes */}
             <Route element={<ProtectedRouteLayout />}>
               <Route element={<AppLayout />}>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/cases" element={<Cases />} />
                 {/* Add more protected routes here */}
               </Route>
             </Route>
