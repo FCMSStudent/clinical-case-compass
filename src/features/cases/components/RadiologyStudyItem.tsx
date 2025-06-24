@@ -1,10 +1,14 @@
-import React from "react";
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/card";
 import { Button } from "@/shared/components/button";
+import { Input } from "@/shared/components/input";
 import { Label } from "@/shared/components/label";
+import { Textarea } from "@/shared/components/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/select";
+import { CalendarDays, FileImage, Plus, Trash2 } from "lucide-react";
+import { RadiologyStudy } from "@/shared/types/case";
 import { motion } from "framer-motion";
-import { X, Image as ImageIcon } from "lucide-react";
 import { Badge } from "@/shared/components/badge";
-import type { RadiologyStudy } from "@/shared/types/case";
 import { getStudyByName } from "../utils/radiologyData";
 
 // Common radiology studies with typical findings
@@ -127,7 +131,7 @@ export const RadiologyStudyItem: React.FC<RadiologyStudyItemProps> = ({
           className="h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive"
           onClick={() => onRemove(study.id)}
         >
-          <X className="h-4 w-4" />
+          <Trash2 className="h-4 w-4" />
         </Button>
       </div>
 
@@ -140,7 +144,7 @@ export const RadiologyStudyItem: React.FC<RadiologyStudyItemProps> = ({
 
       {commonStudy && (
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <ImageIcon className="h-3 w-3" />
+          <FileImage className="h-3 w-3" />
           <span>Common study type with predefined findings</span>
         </div>
       )}

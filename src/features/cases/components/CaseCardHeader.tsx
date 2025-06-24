@@ -1,8 +1,6 @@
-import React, { memo } from "react";
-import { User, Sparkles, CalendarDays } from "lucide-react";
-import { motion } from "framer-motion";
-import { format } from "date-fns";
-import { cn } from "@/shared/utils/utils";
+import { memo } from "react";
+import { Badge } from "@/shared/components/badge";
+import { MoreVertical, Star } from "lucide-react";
 import { MedicalCase } from "@/shared/types/case";
 
 interface CaseCardHeaderProps {

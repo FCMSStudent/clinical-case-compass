@@ -1,4 +1,3 @@
-
 import React, { createContext, useReducer, useEffect, useContext, useMemo, useCallback } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
@@ -26,10 +25,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { session, user, loading, isOfflineMode } = state;
   const { toast } = useToast();
 
+  // Debug logging for auth state
+  console.log('AuthProvider - State:', {
+    hasSession: !!session,
+    hasUser: !!user,
+    userId: user?.id,
+    userEmail: user?.email,
+    loading,
+    isOfflineMode
+  });
+
   useEffect(() => {
     // Get the Supabase URL and key from environment variables
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
     const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+    console.log('AuthProvider - Environment check:', {
+      hasSupabaseUrl: !!supabaseUrl,
+      hasSupabaseKey: !!supabaseAnonKey,
+      supabaseUrl: supabaseUrl ? `${supabaseUrl.substring(0, 20)}...` : 'missing'
+    });
 
     // Check if Supabase is properly configured
     if (!supabaseUrl || !supabaseAnonKey) {
@@ -42,11 +57,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Get initial session
     const getInitialSession = async () => {
       try {
+        console.log('AuthProvider - Getting initial session...');
         const { data: { session }, error } = await supabase.auth.getSession();
         if (error) {
           console.error("Error getting session:", error);
           dispatch({ type: 'SET_OFFLINE_MODE', payload: true });
         } else {
+          console.log('AuthProvider - Initial session result:', {
+            hasSession: !!session,
+            userId: session?.user?.id,
+            userEmail: session?.user?.email
+          });
           dispatch({ type: 'SET_SESSION', payload: session });
           dispatch({ type: 'SET_USER', payload: session?.user ?? null });
         }
@@ -61,6 +82,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Set up auth state listener first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, currentSession) => {
+        console.log('AuthProvider - Auth state change:', {
+          event,
+          hasSession: !!currentSession,
+          userId: currentSession?.user?.id
+        });
+        
         dispatch({ type: 'SET_SESSION', payload: currentSession });
         
         if (event === 'SIGNED_IN') {

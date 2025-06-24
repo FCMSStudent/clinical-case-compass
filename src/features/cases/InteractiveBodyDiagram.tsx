@@ -61,7 +61,10 @@ export const InteractiveBodyDiagram: React.FC<InteractiveBodyDiagramProps> = ({
       }
       setSelectedParts(newSelectedParts);
       if (onBodyPartSelected) {
-        onBodyPartSelected(existingIndex > -1 ? selection : newSelectedParts[newSelectedParts.length-1]);
+        const selectionToPass = existingIndex > -1 ? selection : newSelectedParts[newSelectedParts.length - 1];
+        if (selectionToPass) {
+          onBodyPartSelected(selectionToPass);
+        }
       }
     },
     [selectedParts, view, onBodyPartSelected]
@@ -154,7 +157,7 @@ export const InteractiveBodyDiagram: React.FC<InteractiveBodyDiagramProps> = ({
           <Switch
             id="view-switch"
             checked={view === "posterior"}
-            onCheckedChange={(checked) => {
+            onCheckedChange={(isChecked) => {
               if (view === "anterior") setView("posterior");
               else if (view === "posterior") setView("lateral");
               else setView("anterior");

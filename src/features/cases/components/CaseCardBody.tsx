@@ -1,5 +1,3 @@
-import React, { memo } from "react";
-import { Clipboard, Stethoscope } from "lucide-react";
 import { Badge } from "@/shared/components/badge";
 import { MedicalCase } from "@/shared/types/case";
 

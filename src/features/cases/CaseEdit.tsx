@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { z } from "zod";
@@ -125,7 +124,7 @@ const CaseEdit = () => {
         type: extractModalityFromName(ss.type),
         findings: ss.findings,
         date: dateString, // This is guaranteed to be a string
-        impression: "", // Default impression
+        impression: ss.impression || "", // Add default impression to match RadiologyStudy type
       };
     });
   };

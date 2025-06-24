@@ -1,9 +1,10 @@
-
-import React, { memo, useState } from "react";
+import { memo } from "react";
+import { Calendar, User, MapPin } from "lucide-react";
+import { Badge } from "@/shared/components/badge";
+import { MedicalCase } from "@/shared/types/case";
 import { useNavigate } from "react-router-dom";
 import { Tag, ChevronRight } from "lucide-react";
 import { Button } from "@/shared/components/button";
-import { Badge } from "@/shared/components/badge";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Tooltip,
@@ -22,7 +23,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/shared/components/alert-dialog";
-import { MedicalCase } from "@/shared/types/case";
 import { TagPill } from "./TagPill";
 
 interface CaseCardFooterProps {

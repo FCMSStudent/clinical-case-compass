@@ -1,5 +1,6 @@
-import React, { memo } from "react";
-import { AlertCircle } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
+import { Button } from "@/shared/components/button";
+import { memo } from "react";
 import { cn } from "@/shared/utils/utils";
 
 interface CaseCardErrorProps {
@@ -13,7 +14,7 @@ export const CaseCardError = memo(({ medicalCase, className }: CaseCardErrorProp
     "hover:bg-red-900/40",
     className
   )}>
-    <AlertCircle className="h-10 w-10 text-red-400 mb-3" />
+    <AlertTriangle className="h-10 w-10 text-red-400 mb-3" />
     <h3 className="text-lg font-semibold text-red-200 mb-1">Case Rendering Error</h3>
     <p className="text-sm text-red-300">There was an issue displaying this case card.</p>
     <p className="text-xs text-red-400 mt-2">Case ID: {medicalCase?.id || "Unknown"}</p>

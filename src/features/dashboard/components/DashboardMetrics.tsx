@@ -79,20 +79,20 @@ const MetricCard: React.FC<{
               {icon}
             </div>
             
-            {trend && (
+              {trend && (
               <div className={cn(
                 "flex items-center space-x-2 px-3 py-2 rounded-full text-sm font-medium",
-                trend.isPositive 
+                    trend.isPositive 
                   ? "bg-green-500/20 text-green-200 border border-green-400/30" 
                   : "bg-red-500/20 text-red-200 border border-red-400/30"
               )}>
-                <TrendingUp className={cn(
+                  <TrendingUp className={cn(
                   "h-4 w-4",
-                  !trend.isPositive && "rotate-180"
-                )} />
-                <span>{Math.abs(trend.value)}%</span>
+                    !trend.isPositive && "rotate-180"
+                  )} />
+                  <span>{Math.abs(trend.value)}%</span>
               </div>
-            )}
+              )}
           </div>
           
           {/* Value and title */}
@@ -115,13 +115,13 @@ MetricCard.displayName = 'MetricCard';
 // Simplified Skeleton Component
 const MetricSkeleton: React.FC = memo(() => (
   <div className="backdrop-blur-md bg-white/5 rounded-2xl border border-white/10 p-6 animate-pulse min-h-[140px]">
-    <div className="flex items-center justify-between mb-6">
-      <div className="w-14 h-14 bg-white/20 rounded-xl"></div>
+      <div className="flex items-center justify-between mb-6">
+        <div className="w-14 h-14 bg-white/20 rounded-xl"></div>
       <div className="w-16 h-8 bg-white/20 rounded-full"></div>
-    </div>
-    <div className="space-y-3">
-      <div className="w-20 h-8 bg-white/25 rounded"></div>
-      <div className="w-32 h-6 bg-white/20 rounded"></div>
+      </div>
+      <div className="space-y-3">
+        <div className="w-20 h-8 bg-white/25 rounded"></div>
+        <div className="w-32 h-6 bg-white/20 rounded"></div>
     </div>
   </div>
 ));
@@ -139,39 +139,39 @@ export const DashboardMetrics: React.FC<DashboardMetricsProps> = memo(({
     if (!data) return [];
     
     return [
-      {
-        title: "Total Cases",
-        value: data.totalCases,
-        icon: <BookOpen className="h-6 w-6 text-blue-300" />,
-        trend: { value: 12, isPositive: true },
-        color: "blue",
-        onClick: () => navigate('/cases?filter=all')
-      },
-      {
-        title: "Active Cases",
-        value: data.activeCases,
-        icon: <CheckCircle className="h-6 w-6 text-green-300" />,
-        trend: { value: 8, isPositive: true },
-        color: "green",
-        onClick: () => navigate('/cases?filter=active')
-      },
-      {
-        title: "This Month",
-        value: data.monthlyCases,
-        icon: <TrendingUp className="h-6 w-6 text-purple-300" />,
-        trend: { value: 15, isPositive: true },
-        color: "purple",
-        onClick: () => navigate('/cases?filter=monthly')
-      },
-      {
-        title: "Total Patients",
-        value: data.totalPatients,
-        icon: <Users className="h-6 w-6 text-orange-300" />,
-        trend: { value: 5, isPositive: true },
-        color: "orange",
-        onClick: () => navigate('/patients')
-      }
-    ];
+    {
+      title: "Total Cases",
+      value: data.totalCases,
+      icon: <BookOpen className="h-6 w-6 text-blue-300" />,
+      trend: { value: 12, isPositive: true },
+      color: "blue",
+      onClick: () => navigate('/cases?filter=all')
+    },
+    {
+      title: "Active Cases",
+      value: data.activeCases,
+      icon: <CheckCircle className="h-6 w-6 text-green-300" />,
+      trend: { value: 8, isPositive: true },
+      color: "green",
+      onClick: () => navigate('/cases?filter=active')
+    },
+    {
+      title: "This Month",
+      value: data.monthlyCases,
+      icon: <TrendingUp className="h-6 w-6 text-purple-300" />,
+      trend: { value: 15, isPositive: true },
+      color: "purple",
+      onClick: () => navigate('/cases?filter=monthly')
+    },
+    {
+      title: "Total Patients",
+      value: data.totalPatients,
+      icon: <Users className="h-6 w-6 text-orange-300" />,
+      trend: { value: 5, isPositive: true },
+      color: "orange",
+      onClick: () => navigate('/patients')
+    }
+  ];
   }, [data, navigate]);
 
   if (isLoading) {
