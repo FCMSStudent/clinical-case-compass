@@ -1,12 +1,17 @@
+
 import { useMemo } from 'react';
 import { useSupabaseCases } from '@/shared/hooks/use-supabase-cases';
 import { MedicalCase } from '@/shared/types/case';
 
 export function useDashboardData() {
-  const { cases, isLoading, error } = useSupabaseCases();
+  const { cases = [], isLoading, error } = useSupabaseCases();
 
   // Memoize expensive calculations to prevent recalculation on every render
   const data = useMemo(() => {
+    // Always return a data structure, even if empty
+    const now = new Date();
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    
     if (!cases || cases.length === 0) {
       return {
         totalCases: 0,
@@ -17,9 +22,6 @@ export function useDashboardData() {
         recentActivity: []
       };
     }
-
-    const now = new Date();
-    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
     
     // Calculate metrics once
     const totalCases = cases.length;
@@ -57,6 +59,7 @@ export function useDashboardData() {
   // Memoize helper functions
   const getRecentCases = useMemo(() => 
     (limit: number = 5): MedicalCase[] => {
+      if (!cases) return [];
       return cases
         .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
         .slice(0, limit);
@@ -65,6 +68,15 @@ export function useDashboardData() {
 
   const getStatistics = useMemo(() => 
     () => {
+      if (!cases) {
+        return {
+          totalCases: 0,
+          totalResources: 0,
+          casesWithLearningPoints: 0,
+          thisWeekCases: 0
+        };
+      }
+
       const totalCases = cases.length;
       const totalResources = cases.reduce((acc, curr) => acc + curr.resources.length, 0);
       const casesWithLearningPoints = cases.filter(c => c.learningPoints && c.learningPoints.length > 0).length;
@@ -89,6 +101,8 @@ export function useDashboardData() {
 
   const getSpecialtyProgress = useMemo(() => 
     () => {
+      if (!cases) return [];
+      
       const specialtyCount = cases.reduce((acc, caseItem) => {
         caseItem.tags.forEach(tag => {
           if (!acc[tag.name]) {
@@ -107,7 +121,7 @@ export function useDashboardData() {
 
   return {
     data,
-    cases,
+    cases: cases || [],
     isLoading,
     error,
     getRecentCases,

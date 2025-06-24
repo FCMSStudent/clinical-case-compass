@@ -1,6 +1,7 @@
+
 import React, { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { Plus } from "lucide-react";
+import { Plus, BookOpen, Users, TrendingUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useDashboardData } from "@/features/dashboard/hooks/use-dashboard-data";
 import { DashboardHeader } from "./components/DashboardHeader";
@@ -12,6 +13,9 @@ import { cn } from "@/shared/utils/utils";
 const Dashboard = () => {
   const navigate = useNavigate();
   const { data, isLoading, error } = useDashboardData();
+
+  // Show welcome content for new users with empty data
+  const showWelcomeState = !isLoading && data && data.totalCases === 0;
 
   if (error) {
     return (
@@ -44,20 +48,49 @@ const Dashboard = () => {
           <DashboardMetrics data={data} isLoading={isLoading} />
         </motion.div>
         
-        {/* Simple Section Divider */}
-        <div className="border-b border-white/10 my-8" />
+        {/* Welcome State for New Users */}
+        {showWelcomeState && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
+            className="auth-glass-container p-8 text-center"
+          >
+            <BookOpen className="h-16 w-16 text-white/80 mx-auto mb-4" />
+            <h3 className="text-2xl font-bold text-white mb-4">
+              Ready to start your medical case collection?
+            </h3>
+            <p className="text-white/90 mb-6 max-w-md mx-auto">
+              Create your first case to begin tracking patient encounters, diagnoses, and learning points.
+            </p>
+            <motion.button
+              onClick={() => navigate('/cases/new')}
+              className="glass-button px-6 py-3 text-white font-medium rounded-lg"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <Plus className="h-5 w-5 inline mr-2" />
+              Create Your First Case
+            </motion.button>
+          </motion.div>
+        )}
         
-        {/* Content Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
-        >
-          <DashboardContent data={data} isLoading={isLoading} />
-        </motion.div>
+        {/* Simple Section Divider */}
+        {!showWelcomeState && <div className="border-b border-white/10 my-8" />}
+        
+        {/* Content Section - only show if there's data */}
+        {!showWelcomeState && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
+          >
+            <DashboardContent data={data} isLoading={isLoading} />
+          </motion.div>
+        )}
         
         {/* Simple Section Divider */}
-        <div className="border-b border-white/10 my-8" />
+        {!showWelcomeState && <div className="border-b border-white/10 my-8" />}
         
         {/* Quick Actions Section */}
         <motion.div
