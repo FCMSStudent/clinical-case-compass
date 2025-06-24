@@ -66,7 +66,7 @@ const Auth = () => {
     setError(null);
     try {
       await signIn(data.email, data.password);
-      navigate("/");
+      navigate("/dashboard");
       toast({
         title: "Welcome back!",
         description: "You have successfully logged in.",
@@ -111,7 +111,7 @@ const Auth = () => {
         <motion.div
           initial={{ opacity: 0, y: 20, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.6, ease: "cubic-bezier(0.16, 1, 0.3, 1)" }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="w-full max-w-sm mx-auto p-4"
         >
           {/* Refined glassmorphic container */}
@@ -126,14 +126,14 @@ const Auth = () => {
                   transition={{ 
                     delay: 0.2, 
                     duration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0.01 : 0.5, 
-                    ease: "cubic-bezier(0.16, 1, 0.3, 1)" 
+                    ease: [0.16, 1, 0.3, 1] 
                   }}
                   className="text-left"
                 >
                   <motion.div 
                     className="mb-2"
                     whileHover={window.matchMedia('(prefers-reduced-motion: reduce)').matches ? {} : { scale: 1.02 }}
-                    transition={{ duration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 0.2 }}
+                    transition={{ duration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 0.2, ease: [0.16, 1, 0.3, 1] }}
                   >
                     <h1 className="auth-title text-white transition-all duration-300 hover:brightness-110">
                       Medica
@@ -215,7 +215,7 @@ const Auth = () => {
                       exit={{ opacity: 0, y: -20, scale: 0.95 }}
                       transition={{ 
                         duration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0.01 : 0.4, 
-                        ease: "cubic-bezier(0.16, 1, 0.3, 1)" 
+                        ease: [0.16, 1, 0.3, 1] 
                       }}
                       className="mt-4"
                       role="alert"

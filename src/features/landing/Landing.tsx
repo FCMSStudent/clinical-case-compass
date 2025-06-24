@@ -1,5 +1,6 @@
-
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/app/providers/AuthContext';
 import UnifiedBackground from '@/shared/components/UnifiedBackground';
 import LandingNavbar from '@/features/landing/components/LandingNavbar';
 import HeroSection from '@/features/landing/components/HeroSection';
@@ -15,6 +16,12 @@ import {
 } from "@/design-system/animations/motion";
 
 const LandingPage = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (user) navigate('/dashboard');
+  }, [user, navigate]);
+
   // Get page transition variants, respecting reduced motion settings.
   const variants = getMotionVariants(pageTransitionVariants, reducedMotionPageTransitionVariants);
 
