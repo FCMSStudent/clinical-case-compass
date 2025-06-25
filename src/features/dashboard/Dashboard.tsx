@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/card";
-import { UserRound, TrendingUp, Activity, BookOpen, Users, Target, Plus, Eye } from "lucide-react";
+import { UserRound, TrendingUp, Activity, BookOpen, Users, Target, Plus, Eye, BarChart3, Filter } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useDashboardData } from "@/features/dashboard/hooks/use-dashboard-data";
+import { useEnhancedDashboardData } from "@/features/dashboard/hooks/use-enhanced-dashboard-data";
 import { Button } from "@/shared/components/button";
 import { Badge } from "@/shared/components/badge";
 import { useNavigate } from "react-router-dom";
@@ -10,6 +10,9 @@ import { motion } from "framer-motion";
 import { MetricCardSkeleton } from "@/shared/components/dashboard-skeleton";
 import { DynamicRecentActivity } from "@/features/dashboard/components/DynamicRecentActivity";
 import { RecentCasesCarousel } from "@/shared/components/recent-cases-carousel";
+import { EnhancedMetricCard } from "@/features/dashboard/components/EnhancedMetricCard";
+import { DashboardFilters } from "@/features/dashboard/components/DashboardFilters";
+import { AnalyticsChart } from "@/features/dashboard/components/AnalyticsChart";
 import { 
   getComponentStyles, 
   card, 
@@ -50,7 +53,23 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { currentTheme } = useTheme();
-  const { data, isLoading, error } = useDashboardData();
+  const { 
+    data, 
+    isLoading, 
+    error, 
+    searchQuery, 
+    setSearchQuery, 
+    activeFilters, 
+    setActiveFilters 
+  } = useEnhancedDashboardData();
+
+  // Convert TrendData to ChartData format
+  const mapTrendToChart = (trends: any[]) => 
+    trends.map(item => ({
+      name: item.period || item.name,
+      value: item.value,
+      trend: item.trend
+    }));
 
   if (error) {
     return (
@@ -67,7 +86,7 @@ const Dashboard = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 space-y-8">
-      {/* Welcome Header - no individual animation, relies on page transition */}
+      {/* Welcome Header */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
           <h1 className={cn(typo.h1, responsiveType.h1, "text-white mb-2")}>
@@ -97,7 +116,15 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Metrics Grid with subtle staggered animation */}
+      {/* Enhanced Filters */}
+      <DashboardFilters
+        searchValue={searchQuery}
+        onSearchChange={setSearchQuery}
+        activeFilters={activeFilters}
+        onFilterChange={setActiveFilters}
+      />
+
+      {/* Enhanced Metrics Grid */}
       <motion.div
         variants={staggeredContainer}
         initial="hidden"
@@ -105,89 +132,95 @@ const Dashboard = () => {
         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
       >
         {isLoading ? (
-          // Loading skeletons
           Array.from({ length: 4 }).map((_, index) => (
             <MetricCardSkeleton key={index} />
           ))
         ) : (
-          // Actual metrics
           <>
             <motion.div variants={staggeredItem}>
-              <Card className={getComponentStyles('card', 'default', 'md')}>
-                <CardContent className="pt-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-white/70">Total Cases</p>
-                      <p className="text-2xl font-bold text-white">
-                        {data?.totalCases || 0}
-                      </p>
-                    </div>
-                    <div className="p-3 rounded-lg bg-blue-500/20">
-                      <BookOpen className="h-6 w-6 text-blue-400" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              <EnhancedMetricCard
+                title="Total Cases"
+                value={data?.metrics.totalCases.value || 0}
+                icon={<BookOpen className="h-6 w-6" />}
+                description="All documented cases"
+                trend={data?.metrics.totalCases.trend}
+                sparklineData={data?.metrics.totalCases.sparklineData}
+                color="blue"
+                priority="medium"
+              />
             </motion.div>
 
             <motion.div variants={staggeredItem}>
-              <Card className={getComponentStyles('card', 'default', 'md')}>
-                <CardContent className="pt-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-white/70">Active Cases</p>
-                      <p className="text-2xl font-bold text-white">
-                        {data?.activeCases || 0}
-                      </p>
-                    </div>
-                    <div className="p-3 rounded-lg bg-green-500/20">
-                      <Activity className="h-6 w-6 text-green-400" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              <EnhancedMetricCard
+                title="Active Cases"
+                value={data?.metrics.activeCases.value || 0}
+                icon={<Activity className="h-6 w-6" />}
+                description="Currently active cases"
+                trend={data?.metrics.activeCases.trend}
+                sparklineData={data?.metrics.activeCases.sparklineData}
+                color="green"
+                priority="high"
+              />
             </motion.div>
 
             <motion.div variants={staggeredItem}>
-              <Card className={getComponentStyles('card', 'default', 'md')}>
-                <CardContent className="pt-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-white/70">This Month</p>
-                      <p className="text-2xl font-bold text-white">
-                        {data?.monthlyCases || 0}
-                      </p>
-                    </div>
-                    <div className="p-3 rounded-lg bg-purple-500/20">
-                      <TrendingUp className="h-6 w-6 text-purple-400" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              <EnhancedMetricCard
+                title="This Month"
+                value={data?.metrics.monthlyCases.value || 0}
+                icon={<TrendingUp className="h-6 w-6" />}
+                description="Cases this month"
+                trend={data?.metrics.monthlyCases.trend}
+                sparklineData={data?.metrics.monthlyCases.sparklineData}
+                color="purple"
+                priority="medium"
+              />
             </motion.div>
 
             <motion.div variants={staggeredItem}>
-              <Card className={getComponentStyles('card', 'default', 'md')}>
-                <CardContent className="pt-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-white/70">Patients</p>
-                      <p className="text-2xl font-bold text-white">
-                        {data?.totalPatients || 0}
-                      </p>
-                    </div>
-                    <div className="p-3 rounded-lg bg-orange-500/20">
-                      <Users className="h-6 w-6 text-orange-400" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              <EnhancedMetricCard
+                title="Patients"
+                value={data?.metrics.totalPatients.value || 0}
+                icon={<Users className="h-6 w-6" />}
+                description="Unique patients"
+                trend={data?.metrics.totalPatients.trend}
+                sparklineData={data?.metrics.totalPatients.sparklineData}
+                color="orange"
+                priority="low"
+              />
             </motion.div>
           </>
         )}
       </motion.div>
 
-      {/* Main Content Grid - simplified animations */}
+      {/* Analytics Section */}
+      <motion.div
+        variants={staggeredContainer}
+        initial="hidden"
+        animate="visible"
+        className="grid grid-cols-1 lg:grid-cols-2 gap-8"
+      >
+        <motion.div variants={staggeredItem}>
+          <AnalyticsChart
+            title="Case Trends"
+            data={mapTrendToChart(data?.caseTrends || [])}
+            type="line"
+            showTrend={true}
+            height={250}
+          />
+        </motion.div>
+
+        <motion.div variants={staggeredItem}>
+          <AnalyticsChart
+            title="Specialty Distribution"
+            data={data?.specialtyDistribution || []}
+            type="pie"
+            showTrend={false}
+            height={250}
+          />
+        </motion.div>
+      </motion.div>
+
+      {/* Main Content Grid */}
       <motion.div
         variants={staggeredContainer}
         initial="hidden"
@@ -222,6 +255,21 @@ const Dashboard = () => {
             </CardContent>
           </Card>
         </motion.div>
+      </motion.div>
+
+      {/* Activity Analytics */}
+      <motion.div
+        variants={staggeredItem}
+        initial="hidden"
+        animate="visible"
+      >
+        <AnalyticsChart
+          title="Weekly Activity"
+          data={mapTrendToChart(data?.activityData || [])}
+          type="area"
+          showTrend={true}
+          height={200}
+        />
       </motion.div>
 
       {/* Quick Actions */}
