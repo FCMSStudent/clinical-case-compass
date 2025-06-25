@@ -175,7 +175,7 @@ export const DashboardFilters = ({
                         whileTap={{ scale: 0.95 }}
                         onClick={() => toggleFilter(filter.id)}
                         className={cn(
-                          "flex items-center gap-2 px-3 py-2 rounded-lg border transition-all duration-200",
+                          "flex items-center gap-2 px-3 py-2 rounded-xl border transition-all duration-200",
                           activeFilters.includes(filter.id)
                             ? "bg-white/20 border-white/40 text-white"
                             : "bg-white/5 border-white/20 text-white/70 hover:bg-white/10 hover:text-white"
@@ -211,7 +211,7 @@ export const DashboardFilters = ({
                         whileTap={{ scale: 0.95 }}
                         onClick={() => toggleFilter(filter.id)}
                         className={cn(
-                          "px-3 py-2 rounded-lg border transition-all duration-200",
+                          "px-3 py-2 rounded-xl border transition-all duration-200",
                           activeFilters.includes(filter.id)
                             ? "bg-white/20 border-white/40 text-white"
                             : "bg-white/5 border-white/20 text-white/70 hover:bg-white/10 hover:text-white"

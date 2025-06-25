@@ -69,9 +69,9 @@ export function DynamicRecentActivity() {
           </div>
           <div className="space-y-3">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="flex items-center justify-between p-3 bg-white/5 rounded-lg animate-pulse">
+              <div key={i} className="flex items-center justify-between p-3 bg-white/5 rounded-xl animate-pulse">
                 <div className="flex items-center gap-3">
-                  <div className="h-8 w-8 bg-white/20 rounded-lg" />
+                  <div className="h-8 w-8 bg-white/20 rounded-xl" />
                   <div className="space-y-1">
                     <div className="h-4 w-32 bg-white/20 rounded" />
                     <div className="h-3 w-24 bg-white/20 rounded" />
@@ -147,7 +147,7 @@ export function DynamicRecentActivity() {
                 >
                   <div 
                     className={`
-                      relative p-3 rounded-lg border transition-all duration-300 cursor-pointer
+                      relative p-3 rounded-xl border transition-all duration-300 cursor-pointer
                       hover:shadow-md hover:scale-[1.02] group-hover:border-white/40
                       ${colors.bg} ${colors.border}
                     `}
@@ -155,7 +155,7 @@ export function DynamicRecentActivity() {
                   >
                     <div className="flex items-center gap-3">
                       <div className={`
-                        p-2 rounded-lg ${colors.icon} border border-white/30
+                        p-2 rounded-xl ${colors.icon} border border-white/30
                         group-hover:scale-110 transition-transform duration-300
                       `}>
                         <IconComponent className="h-4 w-4 text-white" />

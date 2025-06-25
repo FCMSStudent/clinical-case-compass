@@ -91,7 +91,7 @@ export const ProgressChart = ({ stats }: ProgressChartProps) => {
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className={`p-2 rounded-lg ${status.bg} border border-white/30`}>
+                    <div className={`p-2 rounded-xl ${status.bg} border border-white/30`}>
                       <IconComponent className="h-4 w-4 text-white" />
                     </div>
                     <div>
@@ -141,7 +141,7 @@ export const ProgressChart = ({ stats }: ProgressChartProps) => {
             transition={{ duration: 0.5, delay: 0.6, ease: "easeOut" }}
             className="pt-6 border-t border-white/20"
           >
-            <div className={`rounded-lg p-4 ${overallStatus.bg} border border-white/30`}>
+            <div className={`rounded-xl p-4 ${overallStatus.bg} border border-white/30`}>
               <div className="text-center space-y-3">
                 <div className="flex items-center justify-center gap-2">
                   <Zap className="h-5 w-5 text-white" />

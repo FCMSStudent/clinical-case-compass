@@ -53,7 +53,7 @@ const COLORS = [
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-white/20 backdrop-blur-md border border-white/30 rounded-lg p-3 shadow-lg">
+      <div className="bg-white/20 backdrop-blur-md border border-white/30 rounded-xl p-3 shadow-lg">
         <p className="text-white font-medium">{label}</p>
         {payload.map((entry: any, index: number) => (
           <p key={index} className="text-sm" style={{ color: entry.color }}>
@@ -262,7 +262,7 @@ export const AnalyticsChart = ({
             <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
               {data.length} items
             </Badge>
-            <div className="flex bg-white/10 rounded-lg p-1 border border-white/20">
+            <div className="flex bg-white/10 rounded-xl p-1 border border-white/20">
               {[
                 { type: "line" as const, icon: Activity },
                 { type: "bar" as const, icon: BarChart3 },
