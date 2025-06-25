@@ -142,7 +142,7 @@ export const SpecialtyProgress = ({ data }: SpecialtyProgressProps) => {
                 className="group"
               >
                 <div className={`
-                  relative p-4 rounded-lg border transition-all duration-300 cursor-pointer
+                  relative p-4 rounded-xl border transition-all duration-300 cursor-pointer
                   hover:shadow-lg hover:scale-[1.02] group-hover:border-white/40
                   ${colors.bg.replace('/10', '/20')} ${colors.border.replace('-200', '-400/30')}
                   ${isTopSpecialty ? 'ring-2 ring-white/20 shadow-md' : ''}

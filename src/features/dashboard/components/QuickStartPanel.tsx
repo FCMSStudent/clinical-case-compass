@@ -179,7 +179,7 @@ const QuickStartPanel: React.FC = () => {
                 <div className="absolute inset-0 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20"></div>
                 <div className="relative bg-white/10 backdrop-blur-md rounded-xl border border-white/20 p-4">
                   <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg bg-white/10" aria-hidden="true">
+                    <div className="p-2 rounded-xl bg-white/10" aria-hidden="true">
                       <Target className="h-4 w-4 text-white/80" />
                     </div>
                     <div className="space-y-2">

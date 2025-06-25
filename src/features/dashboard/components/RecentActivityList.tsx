@@ -122,13 +122,13 @@ const RecentActivityList: React.FC = () => {
                 className="group"
               >
                 <div className={`
-                  relative p-4 rounded-lg border transition-all duration-300 cursor-pointer
+                  relative p-4 rounded-xl border transition-all duration-300 cursor-pointer
                   hover:shadow-md hover:scale-[1.02] group-hover:border-white/40
                   ${colors.bg} ${colors.border}
                 `}>
                   <div className="flex items-start gap-3">
                     <div className={`
-                      p-2 rounded-lg ${colors.icon} border border-white/30
+                      p-2 rounded-xl ${colors.icon} border border-white/30
                       group-hover:scale-110 transition-transform duration-300
                     `}>
                       <IconComponent className="h-4 w-4 text-white" />
