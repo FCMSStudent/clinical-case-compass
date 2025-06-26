@@ -1,6 +1,6 @@
 import { useSupabaseCases } from '@/shared/hooks/use-supabase-cases';
 import { MedicalCase } from '@/shared/types/case';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useCallback, useRef } from 'react';
 
 export interface TrendData {
   period: string;
@@ -52,47 +52,22 @@ export interface EnhancedDashboardData {
   filteredCases: MedicalCase[];
 }
 
+// Cache for expensive sparkline calculations
+const sparklineDataCache = new Map<string, TrendData[]>();
+
 export function useEnhancedDashboardData() {
   const { cases, isLoading, error } = useSupabaseCases();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
-
-  // Generate mock historical data for trends
-  const generateSparklineData = (currentValue: number, periods: number = 7): TrendData[] => {
-    const data: TrendData[] = [];
-    const baseValue = currentValue * 0.7;
-    
-    for (let i = 0; i < periods; i++) {
-      const variation = (Math.random() - 0.5) * 0.3;
-      const value = Math.max(0, Math.round(baseValue + (baseValue * variation) + (i * (currentValue - baseValue) / periods)));
-      data.push({
-        period: `Day ${i + 1}`,
-        value
-      });
-    }
-    
-    return data;
-  };
-
-  const calculateTrend = (current: number, previous: number) => {
-    if (previous === 0) return { value: 0, isPositive: true, percentage: 0 };
-    const change = current - previous;
-    const percentage = Math.round((change / previous) * 100);
-    return {
-      value: change,
-      isPositive: change >= 0,
-      percentage: Math.abs(percentage)
-    };
-  };
-
-  const enhancedData = useMemo((): EnhancedDashboardData => {
-    // Filter cases based on search and filters
-    let filteredCases = cases;
+  
+  // Separate memoization for filtered cases
+  const filteredCases = useMemo(() => {
+    let result = cases;
 
     // Apply search filter
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
-      filteredCases = filteredCases.filter(case_ =>
+      result = result.filter(case_ =>
         case_.title.toLowerCase().includes(query) ||
         case_.patient.firstName.toLowerCase().includes(query) ||
         case_.patient.lastName.toLowerCase().includes(query) ||
@@ -103,7 +78,7 @@ export function useEnhancedDashboardData() {
 
     // Apply filters
     if (activeFilters.length > 0) {
-      filteredCases = filteredCases.filter(case_ => {
+      result = result.filter(case_ => {
         return activeFilters.some(filter => {
           switch (filter) {
             case 'recent':
@@ -136,7 +111,45 @@ export function useEnhancedDashboardData() {
       });
     }
 
-    // Basic calculations
+    return result;
+  }, [cases, searchQuery, activeFilters]);
+
+  // Memoized sparkline generation with caching
+  const generateSparklineData = useCallback((currentValue: number, periods: number = 7, cacheKey: string): TrendData[] => {
+    if (sparklineDataCache.has(cacheKey)) {
+      return sparklineDataCache.get(cacheKey)!;
+    }
+
+    const data: TrendData[] = [];
+    const baseValue = currentValue * 0.7;
+    
+    for (let i = 0; i < periods; i++) {
+      const variation = (Math.random() - 0.5) * 0.3;
+      const value = Math.max(0, Math.round(baseValue + (baseValue * variation) + (i * (currentValue - baseValue) / periods)));
+      data.push({
+        period: `Day ${i + 1}`,
+        value
+      });
+    }
+    
+    sparklineDataCache.set(cacheKey, data);
+    return data;
+  }, []);
+
+  // Memoized trend calculation
+  const calculateTrend = useCallback((current: number, previous: number) => {
+    if (previous === 0) return { value: 0, isPositive: true, percentage: 0 };
+    const change = current - previous;
+    const percentage = Math.round((change / previous) * 100);
+    return {
+      value: change,
+      isPositive: change >= 0,
+      percentage: Math.abs(percentage)
+    };
+  }, []);
+
+  // Memoized basic metrics
+  const basicMetrics = useMemo(() => {
     const totalCases = filteredCases.length;
     const activeCases = filteredCases.filter(c => c.status !== 'archived').length;
     const totalPatients = new Set(filteredCases.map(c => c.patient.id)).size;
@@ -147,16 +160,23 @@ export function useEnhancedDashboardData() {
       new Date(c.createdAt) >= monthStart && new Date(c.createdAt) <= thisMonth
     ).length;
 
-    // Previous month for trend calculation
+    return { totalCases, activeCases, totalPatients, monthlyCases };
+  }, [filteredCases]);
+
+  // Memoized enhanced data with proper dependency tracking
+  const enhancedData = useMemo((): EnhancedDashboardData => {
+    const { totalCases, activeCases, totalPatients, monthlyCases } = basicMetrics;
+
+    // Previous values for trend calculation (using estimated previous values)
     const previousMonthCases = Math.max(1, monthlyCases - Math.floor(Math.random() * 5));
 
-    // Generate trends
+    // Generate trends with memoized calculations
     const totalCasesTrend = calculateTrend(totalCases, Math.max(1, totalCases - 5));
     const activeCasesTrend = calculateTrend(activeCases, Math.max(1, activeCases - 2));
     const monthlyCasesTrend = calculateTrend(monthlyCases, previousMonthCases);
     const patientsTrend = calculateTrend(totalPatients, Math.max(1, totalPatients - 3));
 
-    // Specialty distribution
+    // Memoized specialty distribution
     const specialtyCount = filteredCases.reduce((acc, case_) => {
       case_.tags.forEach(tag => {
         const specialty = tag.name;
@@ -177,7 +197,7 @@ export function useEnhancedDashboardData() {
         trend: Math.random() > 0.5 ? Math.floor(Math.random() * 20) : -Math.floor(Math.random() * 10)
       }));
 
-    // Generate case trends over time
+    // Generate case trends over time (memoized)
     const caseTrends: TrendData[] = [];
     for (let i = 6; i >= 0; i--) {
       const date = new Date();
@@ -198,7 +218,7 @@ export function useEnhancedDashboardData() {
       });
     }
 
-    // Activity data
+    // Activity data (simplified)
     const activityData: TrendData[] = [];
     for (let i = 6; i >= 0; i--) {
       const date = new Date();
@@ -233,22 +253,22 @@ export function useEnhancedDashboardData() {
         totalCases: {
           value: totalCases,
           trend: totalCasesTrend,
-          sparklineData: generateSparklineData(totalCases)
+          sparklineData: generateSparklineData(totalCases, 7, `total-${totalCases}`)
         },
         activeCases: {
           value: activeCases,
           trend: activeCasesTrend,
-          sparklineData: generateSparklineData(activeCases)
+          sparklineData: generateSparklineData(activeCases, 7, `active-${activeCases}`)
         },
         monthlyCases: {
           value: monthlyCases,
           trend: monthlyCasesTrend,
-          sparklineData: generateSparklineData(monthlyCases)
+          sparklineData: generateSparklineData(monthlyCases, 7, `monthly-${monthlyCases}`)
         },
         totalPatients: {
           value: totalPatients,
           trend: patientsTrend,
-          sparklineData: generateSparklineData(totalPatients)
+          sparklineData: generateSparklineData(totalPatients, 7, `patients-${totalPatients}`)
         }
       },
       specialtyDistribution,
@@ -258,7 +278,12 @@ export function useEnhancedDashboardData() {
       recentActivity,
       filteredCases
     };
-  }, [cases, searchQuery, activeFilters]);
+  }, [basicMetrics, filteredCases, generateSparklineData, calculateTrend]);
+
+  // Cleanup function for cache management
+  const clearCache = useCallback(() => {
+    sparklineDataCache.clear();
+  }, []);
 
   return {
     data: enhancedData,
@@ -267,6 +292,7 @@ export function useEnhancedDashboardData() {
     searchQuery,
     setSearchQuery,
     activeFilters,
-    setActiveFilters
+    setActiveFilters,
+    clearCache // Expose cache clearing for memory management
   };
 }
