@@ -4,15 +4,47 @@
 
 export { Button, buttonVariants } from "./button"
 export { Input } from "./input"
-export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent } from "./card"
-
 // ────────────────────────────────────────────────────────────────────────────────
-// LAYOUT COMPONENTS
+// UNIFIED LAYOUT SYSTEM
 // ────────────────────────────────────────────────────────────────────────────────
 
-export { Container, Flex, Grid, Spacing, Section } from "./layout"
-export { BentoContainer } from "./bento-container"
-export { BentoCard } from "./bento-card"
+export {
+  // Core layout components
+  Container,
+  Flex,
+  Grid,
+  Section,
+  
+  // Card components (unified)
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+  
+  // Bento Grid (convenience exports for backward compatibility)
+  BentoContainer,
+  BentoCard,
+  
+  // Utilities
+  Spacer,
+  Divider,
+} from "./unified-layout"
+
+// Type exports
+export type {
+  ContainerProps,
+  FlexProps,
+  GridProps,
+  CardProps,
+  SectionProps,
+  LayoutVariant,
+  FlexVariant,
+  GridVariant,
+  BentoLayout,
+  CardVariant,
+} from "./unified-layout"
 
 // ────────────────────────────────────────────────────────────────────────────────
 // ANIMATION COMPONENTS
