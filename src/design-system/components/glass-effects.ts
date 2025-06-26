@@ -321,12 +321,12 @@ export const liquidGlassClasses = {
   // Enhanced button with depth and specular highlights
   authButton: 'w-full bg-white/12 backdrop-blur-sm rounded-2xl border border-white/20 py-3 px-4 text-white font-medium hover:bg-white/20 hover:shadow-[0_12px_48px_rgba(0,0,0,0.12)] hover:scale-[1.02] hover:brightness-105 focus:ring-2 focus:ring-blue-300 focus:backdrop-blur-md focus:border-2 focus:border-blue-400/50 transition-all duration-300 relative before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-b before:from-white/5 before:to-transparent before:pointer-events-none',
   
-  // Contextual variants with enhanced translucent backgrounds and softer shadows
-  card: 'bg-white/8 backdrop-blur-[18px] saturate-140 brightness-106 shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] rounded-2xl',
+  // Contextual variants with enhanced translucent backgrounds and softer shadows - updated to match auth opacity
+  card: 'bg-black/15 backdrop-blur-[24px] saturate-120 brightness-105 shadow-[0_8px_32px_rgba(0,0,0,0.2)] shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] rounded-2xl border border-white/10',
   navigation: 'bg-white/18 backdrop-blur-[24px] saturate-160 brightness-108 shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] rounded-2xl',
   modal: 'bg-white/25 backdrop-blur-[50px] saturate-200 contrast-115 shadow-[0_16px_64px_rgba(0,0,0,0.2)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] rounded-2xl',
   alert: 'bg-white/20 backdrop-blur-[30px] saturate-150 brightness-105 shadow-[0_12px_48px_rgba(0,0,0,0.12)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] rounded-2xl',
-  button: 'bg-white/15 backdrop-blur-[20px] brightness-110 shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] rounded-xl',
+  button: 'bg-white/15 backdrop-blur-[20px] brightness-110 shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.15)] rounded-xl border border-white/20',
   dropdown: 'bg-white/15 backdrop-blur-[28px] saturate-170 brightness-107 shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] rounded-xl',
   overlay: 'bg-white/10 backdrop-blur-[40px] saturate-180 contrast-110 shadow-[0_16px_64px_rgba(0,0,0,0.1)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] rounded-2xl',
   input: 'bg-white/10 backdrop-blur-[16px] saturate-130 brightness-105 shadow-[0_2px_8px_rgba(0,0,0,0.04)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] rounded-xl',
@@ -381,11 +381,11 @@ export const translucentBackgrounds = {
     tinted: "bg-white/3 backdrop-blur-[12px] brightness-105",
   },
   
-  // Light translucent backgrounds
+  // Light translucent backgrounds - updated to match auth opacity
   light: {
-    white: "bg-white/8 backdrop-blur-[18px] saturate-140 brightness-106",
-    gray: "bg-gray-500/8 backdrop-blur-[18px] saturate-140 brightness-106",
-    tinted: "bg-white/6 backdrop-blur-[18px] saturate-140 brightness-106",
+    white: "bg-black/15 backdrop-blur-[24px] saturate-120 brightness-105",
+    gray: "bg-gray-500/15 backdrop-blur-[24px] saturate-120 brightness-105",
+    tinted: "bg-black/12 backdrop-blur-[24px] saturate-120 brightness-105",
   },
   
   // Medium translucent backgrounds
@@ -409,10 +409,10 @@ export const translucentBackgrounds = {
     tinted: "bg-white/20 backdrop-blur-[45px] saturate-190 contrast-112",
   },
   
-  // Context-specific translucent backgrounds
+  // Context-specific translucent backgrounds - updated to match auth opacity
   navigation: "bg-white/18 backdrop-blur-[24px] saturate-160 brightness-108",
   modal: "bg-white/25 backdrop-blur-[50px] saturate-200 contrast-115",
-  card: "bg-white/8 backdrop-blur-[18px] saturate-140 brightness-106",
+  card: "bg-black/15 backdrop-blur-[24px] saturate-120 brightness-105",
   dropdown: "bg-white/15 backdrop-blur-[28px] saturate-170 brightness-107",
   overlay: "bg-white/10 backdrop-blur-[40px] saturate-180 contrast-110",
   alert: "bg-white/20 backdrop-blur-[30px] saturate-150 brightness-105",
