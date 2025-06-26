@@ -4,6 +4,9 @@ import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/shared/utils/utils";
 import { LineChart, Line, ResponsiveContainer, XAxis, YAxis } from "recharts";
+import { typography, responsiveType } from "@/design-system/tokens/typography";
+import { layout, spacing, sizes } from "@/design-system/tokens/spacing";
+import { liquidGlassClasses, getGlassHoverVariants } from "@/design-system/components/glass-effects";
 
 interface TrendData {
   period: string;
@@ -104,27 +107,27 @@ export const EnhancedMetricCard = ({
 
   return (
     <motion.div
-      whileHover={{ scale: 1.02, y: -2 }}
-      whileTap={{ scale: 0.98 }}
-      transition={{ duration: 0.2, ease: "easeOut" }}
+      variants={getGlassHoverVariants('medium')}
+      whileHover="hover"
+      whileTap="tap"
       className={className}
     >
       <Card className={cn(
-        "relative overflow-hidden bg-white/10 backdrop-blur-md border border-white/20",
-        "hover:bg-white/15 hover:border-white/30 transition-all duration-300",
+        liquidGlassClasses.card,
+        "relative overflow-hidden group",
         getPriorityIndicator()
       )}>
         {/* Animated background gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         
         <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
+          <div className={cn("flex items-center justify-between")}>
             <div className="space-y-1">
-              <CardTitle className="text-sm font-medium text-white/80">
+              <CardTitle className={cn(typography.labelSmall, "text-white/80")}>
                 {title}
               </CardTitle>
               {description && (
-                <p className="text-xs text-white/60">{description}</p>
+                <p className={cn(typography.caption, "text-white/60")}>{description}</p>
               )}
             </div>
             <div className={cn(
@@ -141,11 +144,11 @@ export const EnhancedMetricCard = ({
         </CardHeader>
 
         <CardContent className="pt-0">
-          <div className="space-y-4">
-            {/* Main Value */}
-            <div className="flex items-baseline justify-between">
+          <div className={cn("space-y-4")}>
+            {/* Main Value - using typography tokens */}
+            <div className={cn("flex items-baseline justify-between")}>
               <motion.span 
-                className="text-3xl font-bold text-white"
+                className={cn(responsiveType.metric, "font-bold text-white")}
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3, delay: 0.1 }}
@@ -153,18 +156,18 @@ export const EnhancedMetricCard = ({
                 {value}
               </motion.span>
               
-              {/* Trend Indicator */}
+              {/* Trend Indicator - using spacing tokens */}
               {trend && (
                 <motion.div
                   initial={{ opacity: 0, x: 10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: 0.2 }}
-                  className="flex items-center gap-1"
+                  className={cn("flex items-center", layout.grid.gap.sm)}
                 >
                   <div className={getTrendColor()}>
                     {getTrendIcon()}
                   </div>
-                  <span className={cn("text-sm font-medium", getTrendColor())}>
+                  <span className={cn(typography.bodySmall, "font-medium", getTrendColor())}>
                     {trend.percentage}%
                   </span>
                 </motion.div>
@@ -190,13 +193,13 @@ export const EnhancedMetricCard = ({
               </div>
             )}
 
-            {/* Status Badge */}
+            {/* Status Badge - using typography tokens */}
             {trend && (
-              <div className="flex justify-end">
+              <div className={cn("flex justify-end")}>
                 <Badge 
                   variant="secondary" 
                   className={cn(
-                    "text-xs",
+                    typography.caption,
                     scheme.bg,
                     scheme.text,
                     "border-white/30"

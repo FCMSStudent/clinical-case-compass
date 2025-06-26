@@ -6,21 +6,19 @@ import { Button } from "@/shared/components/button";
 import { Badge } from "@/shared/components/badge";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/app/providers/AuthContext";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { MetricCardSkeleton } from "@/shared/components/dashboard-skeleton";
 import { DynamicRecentActivity } from "@/features/dashboard/components/DynamicRecentActivity";
 import { RecentCasesCarousel } from "@/shared/components/recent-cases-carousel";
 import { EnhancedMetricCard } from "@/features/dashboard/components/EnhancedMetricCard";
 import { DashboardFilters } from "@/features/dashboard/components/DashboardFilters";
 import { AnalyticsChart } from "@/features/dashboard/components/AnalyticsChart";
-import { 
-  getComponentStyles, 
-  card, 
-  button, 
-  useTheme 
-} from "@/design-system/design-system";
-import { typo, responsiveType } from "@/design-system/tokens/typography";
+import { PageHeader } from "@/shared/components/page-header";
+import { Alert, AlertDescription } from "@/shared/components/alert";
+import { typography, responsiveType } from "@/design-system/tokens/typography";
+import { layout, spacing } from "@/design-system/tokens/spacing";
 import { cn } from "@/shared/utils/utils";
+import { liquidGlassClasses, getGlassTransitionVariants, getGlassHoverVariants } from "@/design-system/components/glass-effects";
 
 // Simplified staggered animations that work well with page transitions
 const staggeredContainer = {
@@ -52,7 +50,6 @@ const staggeredItem = {
 const Dashboard = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { currentTheme } = useTheme();
   const { 
     data, 
     isLoading, 
@@ -73,63 +70,94 @@ const Dashboard = () => {
 
   if (error) {
     return (
-      <div className="p-8 text-center">
-        <Card className={getComponentStyles('card', 'error', 'lg')}>
-          <CardContent className="pt-6">
-            <h2 className="text-xl font-semibold text-white mb-2">Dashboard Error</h2>
-            <p className="text-white/70">There was an error loading the dashboard data.</p>
-          </CardContent>
-        </Card>
-      </div>
+      <motion.div 
+        className={cn("space-y-6")}
+        variants={getGlassTransitionVariants('medium')}
+        initial="initial"
+        animate="animate"
+      >
+        <PageHeader
+          title="Dashboard"
+          description="Your clinical cases overview"
+        />
+        <Alert variant="destructive" className={cn(liquidGlassClasses.alert, "bg-red-900/30 border-red-700/50")}>
+          <AlertDescription className={typography.bodySmall}>
+            There was an error loading the dashboard data: {error.message || 'Unknown error occurred'}
+          </AlertDescription>
+        </Alert>
+      </motion.div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 space-y-8">
-      {/* Welcome Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-        <div>
-          <h1 className={cn(typo.h1, responsiveType.h1, "text-white mb-2")}>
-            Welcome back, {user?.user_metadata?.full_name || 'Doctor'}!
-          </h1>
-          <p className={cn(typo.body, "text-white/70")}>
-            Here's what's happening with your clinical cases today.
-          </p>
-        </div>
-        
-        <div className="flex gap-3">
-          <Button
-            onClick={() => navigate('/cases/new')}
-            className={getComponentStyles('button', 'primary', 'md')}
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            New Case
-          </Button>
-          <Button
-            onClick={() => navigate('/cases')}
-            variant="outline"
-            className={getComponentStyles('button', 'outline', 'md')}
-          >
-            <Eye className="h-4 w-4 mr-2" />
-            View All
-          </Button>
-        </div>
-      </div>
-
-      {/* Enhanced Filters */}
-      <DashboardFilters
-        searchValue={searchQuery}
-        onSearchChange={setSearchQuery}
-        activeFilters={activeFilters}
-        onFilterChange={setActiveFilters}
+    <motion.div 
+      className={cn("space-y-6")}
+      variants={getGlassTransitionVariants('medium')}
+      initial="initial"
+      animate="animate"
+    >
+      {/* Page Header - using design system typography */}
+      <PageHeader
+        title={`Welcome back, ${user?.user_metadata?.full_name || 'Doctor'}!`}
+        description="Here's what's happening with your clinical cases today."
+        actions={
+          <div className={cn("flex", layout.flex.align.center, layout.grid.gap.sm)}>
+            <motion.div
+              variants={getGlassHoverVariants('medium')}
+              whileHover="hover"
+              whileTap="tap"
+            >
+              <Button
+                onClick={() => navigate('/cases/new')}
+                className={cn(liquidGlassClasses.button, "text-white")}
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                New Case
+              </Button>
+            </motion.div>
+            <motion.div
+              variants={getGlassHoverVariants('subtle')}
+              whileHover="hover"
+              whileTap="tap"
+            >
+              <Button
+                onClick={() => navigate('/cases')}
+                variant="outline"
+                className={cn(liquidGlassClasses.button, "text-white border-white/30")}
+              >
+                <Eye className="h-4 w-4 mr-2" />
+                View All
+              </Button>
+            </motion.div>
+          </div>
+        }
       />
 
-      {/* Enhanced Metrics Grid */}
+      {/* Enhanced Filters - using spacing tokens */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+      >
+        <DashboardFilters
+          searchValue={searchQuery}
+          onSearchChange={setSearchQuery}
+          activeFilters={activeFilters}
+          onFilterChange={setActiveFilters}
+        />
+      </motion.div>
+
+      {/* Enhanced Metrics Grid - using layout tokens */}
       <motion.div
         variants={staggeredContainer}
         initial="hidden"
         animate="visible"
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+        className={cn(
+          layout.grid.cols[1],
+          "md:grid-cols-2 lg:grid-cols-4",
+          layout.grid.gap.lg
+        )}
+        style={{ display: 'grid' }}
       >
         {isLoading ? (
           Array.from({ length: 4 }).map((_, index) => (
@@ -192,12 +220,17 @@ const Dashboard = () => {
         )}
       </motion.div>
 
-      {/* Analytics Section */}
+      {/* Analytics Section - using layout tokens */}
       <motion.div
         variants={staggeredContainer}
         initial="hidden"
         animate="visible"
-        className="grid grid-cols-1 lg:grid-cols-2 gap-8"
+        className={cn(
+          layout.grid.cols[1],
+          "lg:grid-cols-2",
+          layout.grid.gap.lg
+        )}
+        style={{ display: 'grid' }}
       >
         <motion.div variants={staggeredItem}>
           <AnalyticsChart
@@ -220,19 +253,24 @@ const Dashboard = () => {
         </motion.div>
       </motion.div>
 
-      {/* Main Content Grid */}
+      {/* Main Content Grid - using layout tokens */}
       <motion.div
         variants={staggeredContainer}
         initial="hidden"
         animate="visible"
-        className="grid grid-cols-1 lg:grid-cols-3 gap-8"
+        className={cn(
+          layout.grid.cols[1],
+          "lg:grid-cols-3",
+          layout.grid.gap.lg
+        )}
+        style={{ display: 'grid' }}
       >
         {/* Recent Cases */}
         <motion.div variants={staggeredItem} className="lg:col-span-2">
-          <Card className={getComponentStyles('card', 'elevated', 'lg')}>
+          <Card className={cn(liquidGlassClasses.card)}>
             <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-white">Recent Cases</CardTitle>
+              <div className={cn("flex items-center justify-between")}>
+                <CardTitle className={cn(typography.h6, "text-white")}>Recent Cases</CardTitle>
                 <Badge variant="secondary" className="bg-white/10 text-white/80">
                   {data?.recentCases?.length || 0} cases
                 </Badge>
@@ -246,9 +284,9 @@ const Dashboard = () => {
 
         {/* Recent Activity */}
         <motion.div variants={staggeredItem}>
-          <Card className={getComponentStyles('card', 'elevated', 'lg')}>
+          <Card className={cn(liquidGlassClasses.card)}>
             <CardHeader>
-              <CardTitle className="text-white">Recent Activity</CardTitle>
+              <CardTitle className={cn(typography.h6, "text-white")}>Recent Activity</CardTitle>
             </CardHeader>
             <CardContent>
               <DynamicRecentActivity />
@@ -272,47 +310,57 @@ const Dashboard = () => {
         />
       </motion.div>
 
-      {/* Quick Actions */}
+      {/* Quick Actions - using typography and spacing tokens */}
       <motion.div
         variants={staggeredItem}
         initial="hidden"
         animate="visible"
       >
-        <Card className={getComponentStyles('card', 'interactive', 'lg')}>
+        <Card className={cn(liquidGlassClasses.card)}>
           <CardHeader>
-            <CardTitle className="text-white">Quick Actions</CardTitle>
+            <CardTitle className={cn(typography.h6, "text-white")}>Quick Actions</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Button
-                onClick={() => navigate('/cases/new')}
-                className={getComponentStyles('button', 'primary', 'md')}
-                variant="outline"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Create New Case
-              </Button>
-              <Button
-                onClick={() => navigate('/cases')}
-                className={getComponentStyles('button', 'secondary', 'md')}
-                variant="outline"
-              >
-                <BookOpen className="h-4 w-4 mr-2" />
-                Browse Cases
-              </Button>
-              <Button
-                onClick={() => navigate('/account')}
-                className={getComponentStyles('button', 'ghost', 'md')}
-                variant="outline"
-              >
-                <UserRound className="h-4 w-4 mr-2" />
-                Profile Settings
-              </Button>
+            <div className={cn(
+              layout.grid.cols[1],
+              "md:grid-cols-3",
+              layout.grid.gap.md
+            )} style={{ display: 'grid' }}>
+              <motion.div variants={getGlassHoverVariants('medium')} whileHover="hover" whileTap="tap">
+                <Button
+                  onClick={() => navigate('/cases/new')}
+                  className={cn(liquidGlassClasses.button, "w-full text-white")}
+                  variant="outline"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Create New Case
+                </Button>
+              </motion.div>
+              <motion.div variants={getGlassHoverVariants('subtle')} whileHover="hover" whileTap="tap">
+                <Button
+                  onClick={() => navigate('/cases')}
+                  className={cn(liquidGlassClasses.button, "w-full text-white")}
+                  variant="outline"
+                >
+                  <BookOpen className="h-4 w-4 mr-2" />
+                  Browse Cases
+                </Button>
+              </motion.div>
+              <motion.div variants={getGlassHoverVariants('subtle')} whileHover="hover" whileTap="tap">
+                <Button
+                  onClick={() => navigate('/account')}
+                  className={cn(liquidGlassClasses.button, "w-full text-white")}
+                  variant="outline"
+                >
+                  <UserRound className="h-4 w-4 mr-2" />
+                  Profile Settings
+                </Button>
+              </motion.div>
             </div>
           </CardContent>
         </Card>
       </motion.div>
-    </div>
+    </motion.div>
   );
 };
 
