@@ -92,7 +92,7 @@ export const SidebarUserProfile: React.FC<SidebarUserProfileProps> = ({ collapse
         {showUserMenu && (
           <div 
             ref={userMenuRef}
-            className="absolute top-full left-0 mt-2 w-48 z-50"
+            className="absolute top-full left-0 mt-2 w-48 z-[9999]"
             role="menu"
             aria-label="User menu"
           >
