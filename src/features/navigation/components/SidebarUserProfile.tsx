@@ -24,9 +24,17 @@ export const SidebarUserProfile: React.FC<SidebarUserProfileProps> = ({ collapse
 
   const fullName = (user.user_metadata as UserMetadata)?.full_name || user.email;
 
-  const handleSignOut = () => {
-    signOut();
-    setShowUserMenu(false);
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      setShowUserMenu(false);
+      navigate('/auth');
+    } catch (error) {
+      console.error('Sign out error:', error);
+      // Still navigate to auth page even if sign out fails
+      setShowUserMenu(false);
+      navigate('/auth');
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -150,7 +158,16 @@ export const SidebarUserProfile: React.FC<SidebarUserProfileProps> = ({ collapse
             getInteractionStates('medium', 'default', 'subtle')
           )}
           aria-label="Sign out"
-          onClick={e => { e.stopPropagation(); signOut(); }}
+          onClick={async (e) => { 
+            e.stopPropagation(); 
+            try {
+              await signOut();
+              navigate('/auth');
+            } catch (error) {
+              console.error('Sign out error:', error);
+              navigate('/auth');
+            }
+          }}
         >
           <LogOut className="h-4 w-4 text-white" aria-hidden="true" />
         </button>

@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate, NavLink, useLocation } from "react-router-dom";
 import { cn } from '@/shared/utils/utils';
 import { getInteractionStates, getGlassmorphicStyles } from '@/design-system/components/component-system';
+import { useAuth } from '@/app/providers/AuthContext';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -17,15 +18,24 @@ const HeaderActions = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const { signOut } = useAuth();
 
   const handleNavigate = (path: string) => {
     navigate(path);
     setIsUserMenuOpen(false);
   };
 
-  const handleSignOut = () => {
-    // Add sign out logic here
-    setIsUserMenuOpen(false);
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      setIsUserMenuOpen(false);
+      navigate('/auth');
+    } catch (error) {
+      console.error('Sign out error:', error);
+      // Still navigate to auth page even if sign out fails
+      setIsUserMenuOpen(false);
+      navigate('/auth');
+    }
   };
 
   // Handle click outside
@@ -186,6 +196,7 @@ const ProfileMenu: React.FC = () => {
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
   const menuRef = React.useRef<HTMLDivElement>(null);
+  const { signOut } = useAuth();
 
   React.useEffect(() => {
     const handleClick = (e: MouseEvent) => {
@@ -196,6 +207,19 @@ const ProfileMenu: React.FC = () => {
     if (open) document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
   }, [open]);
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      setOpen(false);
+      navigate('/auth');
+    } catch (error) {
+      console.error('Sign out error:', error);
+      // Still navigate to auth page even if sign out fails
+      setOpen(false);
+      navigate('/auth');
+    }
+  };
 
   return (
     <div className="relative" ref={menuRef}>
@@ -229,7 +253,7 @@ const ProfileMenu: React.FC = () => {
               "w-full px-4 py-2 text-left text-red-300 flex items-center space-x-2",
               getInteractionStates('light', 'default', 'subtle')
             )}
-            onClick={() => { setOpen(false); /* add sign out logic here */ }}
+            onClick={handleSignOut}
           >
             <LogOut className="h-4 w-4" />
             <span>Log out</span>
