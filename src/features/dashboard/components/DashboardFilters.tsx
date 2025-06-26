@@ -6,6 +6,9 @@ import { Search, Filter, X, Calendar, Tag, TrendingUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { cn } from "@/shared/utils/utils";
+import { typography } from "@/design-system/tokens/typography";
+import { layout, spacing, sizes } from "@/design-system/tokens/spacing";
+import { liquidGlassClasses, getGlassHoverVariants } from "@/design-system/components/glass-effects";
 
 interface FilterOption {
   id: string;
@@ -64,37 +67,42 @@ export const DashboardFilters = ({
 
   return (
     <div className={cn("space-y-4", className)}>
-      {/* Main Search Bar */}
-      <Card className="bg-white/10 backdrop-blur-md border border-white/20">
-        <CardContent className="p-4">
-          <div className="flex items-center gap-3">
+      {/* Main Search Bar - using design system */}
+      <Card className={cn(liquidGlassClasses.card)}>
+        <CardContent className={cn(sizes.card.md)}>
+          <div className={cn("flex items-center", layout.grid.gap.sm)}>
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/60" />
+              <Search className={cn("absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4", typography.placeholder)} />
               <Input
                 placeholder="Search cases, patients, or conditions..."
                 value={searchValue}
                 onChange={(e) => onSearchChange(e.target.value)}
-                className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-white/60 
-                         focus:bg-white/15 focus:border-white/40 transition-all duration-200"
+                className={cn(
+                  liquidGlassClasses.input,
+                  "pl-10 text-white",
+                  typography.placeholder
+                )}
               />
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setIsExpanded(!isExpanded)}
-              className="bg-white/10 border-white/20 text-white hover:bg-white/20 transition-all duration-200"
-            >
-              <Filter className="h-4 w-4 mr-2" />
-              Filters
-              {hasActiveFilters && (
-                <Badge className="ml-2 bg-blue-500 text-white">
-                  {activeFilters.length + (searchValue ? 1 : 0)}
-                </Badge>
-              )}
-            </Button>
+            <motion.div variants={getGlassHoverVariants('subtle')} whileHover="hover" whileTap="tap">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsExpanded(!isExpanded)}
+                className={cn(liquidGlassClasses.button, "text-white")}
+              >
+                <Filter className="h-4 w-4 mr-2" />
+                Filters
+                {hasActiveFilters && (
+                  <Badge className="ml-2 bg-blue-500 text-white">
+                    {activeFilters.length + (searchValue ? 1 : 0)}
+                  </Badge>
+                )}
+              </Button>
+            </motion.div>
           </div>
 
-          {/* Active Filters Display */}
+          {/* Active Filters Display - using typography tokens */}
           <AnimatePresence>
             {hasActiveFilters && (
               <motion.div
@@ -102,9 +110,12 @@ export const DashboardFilters = ({
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.2 }}
-                className="flex flex-wrap items-center gap-2 mt-3 pt-3 border-t border-white/20"
+                className={cn(
+                  "flex flex-wrap items-center mt-3 pt-3 border-t border-white/20",
+                  layout.grid.gap.sm
+                )}
               >
-                <span className="text-sm text-white/70">Active filters:</span>
+                <span className={cn(typography.bodySmall)}>Active filters:</span>
                 {searchValue && (
                   <Badge variant="secondary" className="bg-white/20 text-white">
                     Search: "{searchValue}"
@@ -138,7 +149,7 @@ export const DashboardFilters = ({
                   variant="ghost"
                   size="sm"
                   onClick={clearAllFilters}
-                  className="text-white/70 hover:text-white hover:bg-white/10 h-6 px-2"
+                  className={cn(typography.caption, "text-white/70 hover:text-white hover:bg-white/10 h-6 px-2")}
                 >
                   Clear all
                 </Button>
@@ -148,7 +159,7 @@ export const DashboardFilters = ({
         </CardContent>
       </Card>
 
-      {/* Expanded Filters */}
+      {/* Expanded Filters - using design system */}
       <AnimatePresence>
         {isExpanded && (
           <motion.div
@@ -157,34 +168,36 @@ export const DashboardFilters = ({
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
           >
-            <Card className="bg-white/10 backdrop-blur-md border border-white/20">
-              <CardContent className="p-4 space-y-4">
-                {/* Quick Filters */}
+            <Card className={cn(liquidGlassClasses.card)}>
+              <CardContent className={cn(sizes.card.md, "space-y-4")}>
+                {/* Quick Filters - using typography tokens */}
                 <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-sm font-medium text-white flex items-center gap-2">
+                  <div className={cn("flex items-center justify-between mb-3")}>
+                    <h3 className={cn(typography.labelSmall, "flex items-center", layout.grid.gap.sm)}>
                       <Tag className="h-4 w-4" />
                       Quick Filters
                     </h3>
                   </div>
-                  <div className="flex flex-wrap gap-2">
+                  <div className={cn("flex flex-wrap", layout.grid.gap.sm)}>
                     {quickFilters.map(filter => (
                       <motion.button
                         key={filter.id}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
+                        variants={getGlassHoverVariants('subtle')}
+                        whileHover="hover"
+                        whileTap="tap"
                         onClick={() => toggleFilter(filter.id)}
                         className={cn(
-                          "flex items-center gap-2 px-3 py-2 rounded-xl border transition-all duration-200",
+                          "flex items-center px-3 py-2 rounded-xl border transition-all duration-200",
+                          layout.grid.gap.sm,
                           activeFilters.includes(filter.id)
-                            ? "bg-white/20 border-white/40 text-white"
+                            ? cn(liquidGlassClasses.button, "border-white/40 text-white")
                             : "bg-white/5 border-white/20 text-white/70 hover:bg-white/10 hover:text-white"
                         )}
                       >
                         {filter.color && (
                           <div className={cn("w-2 h-2 rounded-full", filter.color)} />
                         )}
-                        <span className="text-sm">{filter.label}</span>
+                        <span className={typography.button}>{filter.label}</span>
                         {filter.count && (
                           <Badge className="bg-white/20 text-white text-xs">
                             {filter.count}
@@ -195,48 +208,49 @@ export const DashboardFilters = ({
                   </div>
                 </div>
 
-                {/* Time Filters */}
+                {/* Time Filters - using typography tokens */}
                 <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-sm font-medium text-white flex items-center gap-2">
+                  <div className={cn("flex items-center justify-between mb-3")}>
+                    <h3 className={cn(typography.labelSmall, "flex items-center", layout.grid.gap.sm)}>
                       <Calendar className="h-4 w-4" />
                       Time Range
                     </h3>
                   </div>
-                  <div className="flex flex-wrap gap-2">
+                  <div className={cn("flex flex-wrap", layout.grid.gap.sm)}>
                     {timeFilters.map(filter => (
                       <motion.button
                         key={filter.id}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
+                        variants={getGlassHoverVariants('subtle')}
+                        whileHover="hover"
+                        whileTap="tap"
                         onClick={() => toggleFilter(filter.id)}
                         className={cn(
                           "px-3 py-2 rounded-xl border transition-all duration-200",
                           activeFilters.includes(filter.id)
-                            ? "bg-white/20 border-white/40 text-white"
+                            ? cn(liquidGlassClasses.button, "border-white/40 text-white")
                             : "bg-white/5 border-white/20 text-white/70 hover:bg-white/10 hover:text-white"
                         )}
                       >
-                        <span className="text-sm">{filter.label}</span>
+                        <span className={typography.button}>{filter.label}</span>
                       </motion.button>
                     ))}
                   </div>
                 </div>
 
-                {/* Advanced Options Toggle */}
+                {/* Advanced Options Toggle - using typography tokens */}
                 <div className="pt-2 border-t border-white/20">
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => setShowAdvanced(!showAdvanced)}
-                    className="text-white/70 hover:text-white hover:bg-white/10"
+                    className={cn(typography.bodySmall, "text-white/70 hover:text-white hover:bg-white/10")}
                   >
                     <TrendingUp className="h-4 w-4 mr-2" />
                     {showAdvanced ? "Hide" : "Show"} Advanced Filters
                   </Button>
                 </div>
 
-                {/* Advanced Filters */}
+                {/* Advanced Filters - using layout and typography tokens */}
                 <AnimatePresence>
                   {showAdvanced && (
                     <motion.div
@@ -246,14 +260,14 @@ export const DashboardFilters = ({
                       transition={{ duration: 0.2 }}
                       className="space-y-3 pt-3 border-t border-white/20"
                     >
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className={cn(layout.grid.cols[1], "md:grid-cols-2", layout.grid.gap.md)} style={{ display: 'grid' }}>
                         <div>
-                          <label className="text-sm text-white/70 mb-2 block">
+                          <label className={cn(typography.labelSmall, "mb-2 block")}>
                             Case Status
                           </label>
                           <div className="space-y-1">
                             {["Active", "Completed", "Archived", "Draft"].map(status => (
-                              <label key={status} className="flex items-center gap-2 text-sm text-white/80">
+                              <label key={status} className={cn("flex items-center", layout.grid.gap.sm, typography.bodySmall)}>
                                 <input
                                   type="checkbox"
                                   checked={activeFilters.includes(status.toLowerCase())}
@@ -266,12 +280,12 @@ export const DashboardFilters = ({
                           </div>
                         </div>
                         <div>
-                          <label className="text-sm text-white/70 mb-2 block">
+                          <label className={cn(typography.labelSmall, "mb-2 block")}>
                             Specialty
                           </label>
                           <div className="space-y-1">
                             {["Cardiology", "Neurology", "Emergency", "Surgery"].map(specialty => (
-                              <label key={specialty} className="flex items-center gap-2 text-sm text-white/80">
+                              <label key={specialty} className={cn("flex items-center", layout.grid.gap.sm, typography.bodySmall)}>
                                 <input
                                   type="checkbox"
                                   checked={activeFilters.includes(specialty.toLowerCase())}

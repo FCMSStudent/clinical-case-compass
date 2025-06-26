@@ -15,9 +15,10 @@ import { DashboardFilters } from "@/features/dashboard/components/DashboardFilte
 import { AnalyticsChart } from "@/features/dashboard/components/AnalyticsChart";
 import { PageHeader } from "@/shared/components/page-header";
 import { Alert, AlertDescription } from "@/shared/components/alert";
-import { typo } from "@/design-system/tokens/typography";
+import { typography, responsiveType } from "@/design-system/tokens/typography";
+import { layout, spacing } from "@/design-system/tokens/spacing";
 import { cn } from "@/shared/utils/utils";
-import { liquidGlassClasses, getGlassTransitionVariants } from "@/design-system/components/glass-effects";
+import { liquidGlassClasses, getGlassTransitionVariants, getGlassHoverVariants } from "@/design-system/components/glass-effects";
 
 // Simplified staggered animations that work well with page transitions
 const staggeredContainer = {
@@ -70,7 +71,7 @@ const Dashboard = () => {
   if (error) {
     return (
       <motion.div 
-        className="space-y-6"
+        className={cn("space-y-6")}
         variants={getGlassTransitionVariants('medium')}
         initial="initial"
         animate="animate"
@@ -80,7 +81,7 @@ const Dashboard = () => {
           description="Your clinical cases overview"
         />
         <Alert variant="destructive" className={cn(liquidGlassClasses.alert, "bg-red-900/30 border-red-700/50")}>
-          <AlertDescription className="text-red-200">
+          <AlertDescription className={typography.bodySmall}>
             There was an error loading the dashboard data: {error.message || 'Unknown error occurred'}
           </AlertDescription>
         </Alert>
@@ -90,39 +91,39 @@ const Dashboard = () => {
 
   return (
     <motion.div 
-      className="space-y-6"
+      className={cn("space-y-6")}
       variants={getGlassTransitionVariants('medium')}
       initial="initial"
       animate="animate"
     >
-      {/* Page Header - now consistent with other pages */}
+      {/* Page Header - using design system typography */}
       <PageHeader
         title={`Welcome back, ${user?.user_metadata?.full_name || 'Doctor'}!`}
         description="Here's what's happening with your clinical cases today."
         actions={
-          <div className="flex gap-3">
+          <div className={cn("flex", layout.flex.align.center, layout.grid.gap.sm)}>
             <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ duration: 0.2 }}
+              variants={getGlassHoverVariants('medium')}
+              whileHover="hover"
+              whileTap="tap"
             >
               <Button
                 onClick={() => navigate('/cases/new')}
-                className="bg-white/20 border-white/30 text-white hover:bg-white/30 transition-all duration-300"
+                className={cn(liquidGlassClasses.button, "text-white")}
               >
                 <Plus className="h-4 w-4 mr-2" />
                 New Case
               </Button>
             </motion.div>
             <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ duration: 0.2 }}
+              variants={getGlassHoverVariants('subtle')}
+              whileHover="hover"
+              whileTap="tap"
             >
               <Button
                 onClick={() => navigate('/cases')}
                 variant="outline"
-                className="bg-white/10 border-white/30 text-white hover:bg-white/20 transition-all duration-300"
+                className={cn(liquidGlassClasses.button, "text-white border-white/30")}
               >
                 <Eye className="h-4 w-4 mr-2" />
                 View All
@@ -132,7 +133,7 @@ const Dashboard = () => {
         }
       />
 
-      {/* Enhanced Filters */}
+      {/* Enhanced Filters - using spacing tokens */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -146,12 +147,17 @@ const Dashboard = () => {
         />
       </motion.div>
 
-      {/* Enhanced Metrics Grid */}
+      {/* Enhanced Metrics Grid - using layout tokens */}
       <motion.div
         variants={staggeredContainer}
         initial="hidden"
         animate="visible"
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+        className={cn(
+          layout.grid.cols[1],
+          "md:grid-cols-2 lg:grid-cols-4",
+          layout.grid.gap.lg
+        )}
+        style={{ display: 'grid' }}
       >
         {isLoading ? (
           Array.from({ length: 4 }).map((_, index) => (
@@ -214,12 +220,17 @@ const Dashboard = () => {
         )}
       </motion.div>
 
-      {/* Analytics Section */}
+      {/* Analytics Section - using layout tokens */}
       <motion.div
         variants={staggeredContainer}
         initial="hidden"
         animate="visible"
-        className="grid grid-cols-1 lg:grid-cols-2 gap-6"
+        className={cn(
+          layout.grid.cols[1],
+          "lg:grid-cols-2",
+          layout.grid.gap.lg
+        )}
+        style={{ display: 'grid' }}
       >
         <motion.div variants={staggeredItem}>
           <AnalyticsChart
@@ -242,19 +253,24 @@ const Dashboard = () => {
         </motion.div>
       </motion.div>
 
-      {/* Main Content Grid */}
+      {/* Main Content Grid - using layout tokens */}
       <motion.div
         variants={staggeredContainer}
         initial="hidden"
         animate="visible"
-        className="grid grid-cols-1 lg:grid-cols-3 gap-6"
+        className={cn(
+          layout.grid.cols[1],
+          "lg:grid-cols-3",
+          layout.grid.gap.lg
+        )}
+        style={{ display: 'grid' }}
       >
         {/* Recent Cases */}
         <motion.div variants={staggeredItem} className="lg:col-span-2">
           <Card className={cn(liquidGlassClasses.card)}>
             <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-white">Recent Cases</CardTitle>
+              <div className={cn("flex items-center justify-between")}>
+                <CardTitle className={cn(typography.h6, "text-white")}>Recent Cases</CardTitle>
                 <Badge variant="secondary" className="bg-white/10 text-white/80">
                   {data?.recentCases?.length || 0} cases
                 </Badge>
@@ -270,7 +286,7 @@ const Dashboard = () => {
         <motion.div variants={staggeredItem}>
           <Card className={cn(liquidGlassClasses.card)}>
             <CardHeader>
-              <CardTitle className="text-white">Recent Activity</CardTitle>
+              <CardTitle className={cn(typography.h6, "text-white")}>Recent Activity</CardTitle>
             </CardHeader>
             <CardContent>
               <DynamicRecentActivity />
@@ -294,7 +310,7 @@ const Dashboard = () => {
         />
       </motion.div>
 
-      {/* Quick Actions */}
+      {/* Quick Actions - using typography and spacing tokens */}
       <motion.div
         variants={staggeredItem}
         initial="hidden"
@@ -302,34 +318,44 @@ const Dashboard = () => {
       >
         <Card className={cn(liquidGlassClasses.card)}>
           <CardHeader>
-            <CardTitle className="text-white">Quick Actions</CardTitle>
+            <CardTitle className={cn(typography.h6, "text-white")}>Quick Actions</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Button
-                onClick={() => navigate('/cases/new')}
-                className="bg-white/20 border-white/30 text-white hover:bg-white/30 transition-all duration-300"
-                variant="outline"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Create New Case
-              </Button>
-              <Button
-                onClick={() => navigate('/cases')}
-                className="bg-white/15 border-white/30 text-white hover:bg-white/25 transition-all duration-300"
-                variant="outline"
-              >
-                <BookOpen className="h-4 w-4 mr-2" />
-                Browse Cases
-              </Button>
-              <Button
-                onClick={() => navigate('/account')}
-                className="bg-white/10 border-white/30 text-white hover:bg-white/20 transition-all duration-300"
-                variant="outline"
-              >
-                <UserRound className="h-4 w-4 mr-2" />
-                Profile Settings
-              </Button>
+            <div className={cn(
+              layout.grid.cols[1],
+              "md:grid-cols-3",
+              layout.grid.gap.md
+            )} style={{ display: 'grid' }}>
+              <motion.div variants={getGlassHoverVariants('medium')} whileHover="hover" whileTap="tap">
+                <Button
+                  onClick={() => navigate('/cases/new')}
+                  className={cn(liquidGlassClasses.button, "w-full text-white")}
+                  variant="outline"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Create New Case
+                </Button>
+              </motion.div>
+              <motion.div variants={getGlassHoverVariants('subtle')} whileHover="hover" whileTap="tap">
+                <Button
+                  onClick={() => navigate('/cases')}
+                  className={cn(liquidGlassClasses.button, "w-full text-white")}
+                  variant="outline"
+                >
+                  <BookOpen className="h-4 w-4 mr-2" />
+                  Browse Cases
+                </Button>
+              </motion.div>
+              <motion.div variants={getGlassHoverVariants('subtle')} whileHover="hover" whileTap="tap">
+                <Button
+                  onClick={() => navigate('/account')}
+                  className={cn(liquidGlassClasses.button, "w-full text-white")}
+                  variant="outline"
+                >
+                  <UserRound className="h-4 w-4 mr-2" />
+                  Profile Settings
+                </Button>
+              </motion.div>
             </div>
           </CardContent>
         </Card>
