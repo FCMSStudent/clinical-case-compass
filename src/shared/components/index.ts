@@ -106,3 +106,93 @@ export { default as OptimizedBackground } from './OptimizedBackground';
 
 // Body Diagram Components
 export { default as SimpleBodyPartSelector } from './SimpleBodyPartSelector';
+
+// Layout components
+export * from './layout'
+export * from './separator'
+export * from './scroll-area'
+export * from './resizable'
+
+// Content components
+export * from './card'
+export * from './sheet'
+export * from './dialog'
+export * from './popover'
+export * from './hover-card'
+export * from './tabs'
+export * from './accordion'
+export * from './collapsible'
+export * from './aspect-ratio'
+
+// Data components
+export * from './table'
+export * from './chart'
+export * from './data/bodyPartData'
+
+// Interactive components  
+export * from './command'
+export * from './context-menu'
+export * from './dropdown-menu'
+export * from './menubar'
+export * from './navigation-menu'
+export * from './breadcrumb'
+export * from './pagination'
+
+// Form components - Unified System
+export * from './form'
+export * from './button'
+export * from './input'
+export * from './textarea'
+export * from './select'
+export * from './checkbox'
+export * from './radio-group'
+export * from './switch'
+export * from './slider'
+export * from './label'
+
+// Feedback components
+export * from './alert'
+export * from './alert-dialog'
+export * from './toast'
+export * from './toaster'
+export * from './sonner'
+export * from './progress'
+export * from './skeleton'
+export * from './loading-spinner'
+export * from './loading-screen'
+
+// Utility components
+export * from './badge'
+export * from './avatar'
+export * from './tooltip'
+export * from './toggle'
+export * from './toggle-group'
+export * from './input-otp'
+
+// Specialized components
+export * from './carousel'
+export * from './bento-card'
+export * from './bento-container'
+export * from './recent-cases-carousel'
+export * from './NotFound'
+export * from './OfflineBanner'
+export * from './ErrorSummary'
+export * from './page-header'
+export * from './RecentActivityList'
+export * from './SearchPanel'
+export * from './settings-card'
+export * from './animation'
+export * from './UnifiedBackground'
+export * from './dashboard-skeleton'
+export * from './form-group'
+export * from './form-progress'
+export * from './autosave-indicator'
+export * from './avatar-upload'
+
+// Medical/Clinical components
+export * from './components/BodyDiagramHeader'
+export * from './components/BodyDiagramHint'
+export * from './components/BodyDiagramTooltip'
+export * from './components/BodyPartButton'
+export * from './SimpleBodyPartSelector'
+export * from './types/bodyPartTypes'
