@@ -18,9 +18,9 @@ export const glass = {
   elevated: `${glassmorphic} bg-white/12 backdrop-blur-[24px] saturate-160 brightness-108 shadow-[0_12px_48px_rgba(0,0,0,0.12)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]`,
   overlay: `backdrop-blur-xl border-white/25 bg-white/10 shadow-[0_16px_64px_rgba(0,0,0,0.1)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] backdrop-blur-[40px] saturate-180 contrast-110`,
   
-  // Card variants with enhanced glass effects
-  card: `${glassmorphic} bg-white/8 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] border backdrop-blur-[18px] saturate-140 brightness-106`,
-  cardElevated: `${glassmorphic} bg-white/12 rounded-2xl shadow-[0_12px_48px_rgba(0,0,0,0.12)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] border backdrop-blur-[24px] saturate-160 brightness-108`,
+  // Card variants with enhanced glass effects - updated to match auth opacity
+  card: `${glassmorphic} bg-black/15 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.2)] shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] border border-white/10 backdrop-blur-[24px] saturate-120 brightness-105`,
+  cardElevated: `${glassmorphic} bg-black/18 rounded-2xl shadow-[0_12px_48px_rgba(0,0,0,0.2)] shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] border border-white/10 backdrop-blur-[24px] saturate-120 brightness-105`,
   
   // Contextual glass variants
   navigation: `${glassmorphic} bg-white/18 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] border backdrop-blur-[24px] saturate-160 brightness-108`,
