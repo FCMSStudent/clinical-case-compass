@@ -6,21 +6,18 @@ import { Button } from "@/shared/components/button";
 import { Badge } from "@/shared/components/badge";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/app/providers/AuthContext";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { MetricCardSkeleton } from "@/shared/components/dashboard-skeleton";
 import { DynamicRecentActivity } from "@/features/dashboard/components/DynamicRecentActivity";
 import { RecentCasesCarousel } from "@/shared/components/recent-cases-carousel";
 import { EnhancedMetricCard } from "@/features/dashboard/components/EnhancedMetricCard";
 import { DashboardFilters } from "@/features/dashboard/components/DashboardFilters";
 import { AnalyticsChart } from "@/features/dashboard/components/AnalyticsChart";
-import { 
-  getComponentStyles, 
-  card, 
-  button, 
-  useTheme 
-} from "@/design-system/design-system";
-import { typo, responsiveType } from "@/design-system/tokens/typography";
+import { PageHeader } from "@/shared/components/page-header";
+import { Alert, AlertDescription } from "@/shared/components/alert";
+import { typo } from "@/design-system/tokens/typography";
 import { cn } from "@/shared/utils/utils";
+import { liquidGlassClasses, getGlassTransitionVariants } from "@/design-system/components/glass-effects";
 
 // Simplified staggered animations that work well with page transitions
 const staggeredContainer = {
@@ -52,7 +49,6 @@ const staggeredItem = {
 const Dashboard = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { currentTheme } = useTheme();
   const { 
     data, 
     isLoading, 
@@ -73,56 +69,82 @@ const Dashboard = () => {
 
   if (error) {
     return (
-      <div className="p-8 text-center">
-        <Card className={getComponentStyles('card', 'error', 'lg')}>
-          <CardContent className="pt-6">
-            <h2 className="text-xl font-semibold text-white mb-2">Dashboard Error</h2>
-            <p className="text-white/70">There was an error loading the dashboard data.</p>
-          </CardContent>
-        </Card>
-      </div>
+      <motion.div 
+        className="space-y-6"
+        variants={getGlassTransitionVariants('medium')}
+        initial="initial"
+        animate="animate"
+      >
+        <PageHeader
+          title="Dashboard"
+          description="Your clinical cases overview"
+        />
+        <Alert variant="destructive" className={cn(liquidGlassClasses.alert, "bg-red-900/30 border-red-700/50")}>
+          <AlertDescription className="text-red-200">
+            There was an error loading the dashboard data: {error.message || 'Unknown error occurred'}
+          </AlertDescription>
+        </Alert>
+      </motion.div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 space-y-8">
-      {/* Welcome Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-        <div>
-          <h1 className={cn(typo.h1, responsiveType.h1, "text-white mb-2")}>
-            Welcome back, {user?.user_metadata?.full_name || 'Doctor'}!
-          </h1>
-          <p className={cn(typo.body, "text-white/70")}>
-            Here's what's happening with your clinical cases today.
-          </p>
-        </div>
-        
-        <div className="flex gap-3">
-          <Button
-            onClick={() => navigate('/cases/new')}
-            className={getComponentStyles('button', 'primary', 'md')}
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            New Case
-          </Button>
-          <Button
-            onClick={() => navigate('/cases')}
-            variant="outline"
-            className={getComponentStyles('button', 'outline', 'md')}
-          >
-            <Eye className="h-4 w-4 mr-2" />
-            View All
-          </Button>
-        </div>
-      </div>
+    <motion.div 
+      className="space-y-6"
+      variants={getGlassTransitionVariants('medium')}
+      initial="initial"
+      animate="animate"
+    >
+      {/* Page Header - now consistent with other pages */}
+      <PageHeader
+        title={`Welcome back, ${user?.user_metadata?.full_name || 'Doctor'}!`}
+        description="Here's what's happening with your clinical cases today."
+        actions={
+          <div className="flex gap-3">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+            >
+              <Button
+                onClick={() => navigate('/cases/new')}
+                className="bg-white/20 border-white/30 text-white hover:bg-white/30 transition-all duration-300"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                New Case
+              </Button>
+            </motion.div>
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+            >
+              <Button
+                onClick={() => navigate('/cases')}
+                variant="outline"
+                className="bg-white/10 border-white/30 text-white hover:bg-white/20 transition-all duration-300"
+              >
+                <Eye className="h-4 w-4 mr-2" />
+                View All
+              </Button>
+            </motion.div>
+          </div>
+        }
+      />
 
       {/* Enhanced Filters */}
-      <DashboardFilters
-        searchValue={searchQuery}
-        onSearchChange={setSearchQuery}
-        activeFilters={activeFilters}
-        onFilterChange={setActiveFilters}
-      />
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+      >
+        <DashboardFilters
+          searchValue={searchQuery}
+          onSearchChange={setSearchQuery}
+          activeFilters={activeFilters}
+          onFilterChange={setActiveFilters}
+        />
+      </motion.div>
 
       {/* Enhanced Metrics Grid */}
       <motion.div
@@ -197,7 +219,7 @@ const Dashboard = () => {
         variants={staggeredContainer}
         initial="hidden"
         animate="visible"
-        className="grid grid-cols-1 lg:grid-cols-2 gap-8"
+        className="grid grid-cols-1 lg:grid-cols-2 gap-6"
       >
         <motion.div variants={staggeredItem}>
           <AnalyticsChart
@@ -225,11 +247,11 @@ const Dashboard = () => {
         variants={staggeredContainer}
         initial="hidden"
         animate="visible"
-        className="grid grid-cols-1 lg:grid-cols-3 gap-8"
+        className="grid grid-cols-1 lg:grid-cols-3 gap-6"
       >
         {/* Recent Cases */}
         <motion.div variants={staggeredItem} className="lg:col-span-2">
-          <Card className={getComponentStyles('card', 'elevated', 'lg')}>
+          <Card className={cn(liquidGlassClasses.card)}>
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle className="text-white">Recent Cases</CardTitle>
@@ -246,7 +268,7 @@ const Dashboard = () => {
 
         {/* Recent Activity */}
         <motion.div variants={staggeredItem}>
-          <Card className={getComponentStyles('card', 'elevated', 'lg')}>
+          <Card className={cn(liquidGlassClasses.card)}>
             <CardHeader>
               <CardTitle className="text-white">Recent Activity</CardTitle>
             </CardHeader>
@@ -278,7 +300,7 @@ const Dashboard = () => {
         initial="hidden"
         animate="visible"
       >
-        <Card className={getComponentStyles('card', 'interactive', 'lg')}>
+        <Card className={cn(liquidGlassClasses.card)}>
           <CardHeader>
             <CardTitle className="text-white">Quick Actions</CardTitle>
           </CardHeader>
@@ -286,7 +308,7 @@ const Dashboard = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Button
                 onClick={() => navigate('/cases/new')}
-                className={getComponentStyles('button', 'primary', 'md')}
+                className="bg-white/20 border-white/30 text-white hover:bg-white/30 transition-all duration-300"
                 variant="outline"
               >
                 <Plus className="h-4 w-4 mr-2" />
@@ -294,7 +316,7 @@ const Dashboard = () => {
               </Button>
               <Button
                 onClick={() => navigate('/cases')}
-                className={getComponentStyles('button', 'secondary', 'md')}
+                className="bg-white/15 border-white/30 text-white hover:bg-white/25 transition-all duration-300"
                 variant="outline"
               >
                 <BookOpen className="h-4 w-4 mr-2" />
@@ -302,7 +324,7 @@ const Dashboard = () => {
               </Button>
               <Button
                 onClick={() => navigate('/account')}
-                className={getComponentStyles('button', 'ghost', 'md')}
+                className="bg-white/10 border-white/30 text-white hover:bg-white/20 transition-all duration-300"
                 variant="outline"
               >
                 <UserRound className="h-4 w-4 mr-2" />
@@ -312,7 +334,7 @@ const Dashboard = () => {
           </CardContent>
         </Card>
       </motion.div>
-    </div>
+    </motion.div>
   );
 };
 
