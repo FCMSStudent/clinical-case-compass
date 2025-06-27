@@ -167,11 +167,11 @@ const Auth = () => {
                     whileHover={window.matchMedia('(prefers-reduced-motion: reduce)').matches ? {} : { scale: 1.02 }}
                     transition={{ duration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 0.2 }}
                   >
-                    <h1 className="auth-title text-white transition-all duration-300 hover:brightness-110">
+                    <h1 className="auth-title text-2xl sm:text-3xl font-bold leading-tight text-white transition-all duration-300 hover:brightness-110">
                       Medica
                     </h1>
                   </motion.div>
-                  <p className="auth-subtitle text-white/90">
+                  <p className="auth-subtitle text-base sm:text-lg text-gray-300 leading-snug">
                     {activeTab === "forgot-password" 
                       ? "Reset your password"
                       : "Sign in to your account or create a new one"

@@ -48,7 +48,7 @@ const LoginForm = ({ onLoginSubmit, onForgotPassword, isLoading }: LoginFormProp
               <FormItem className="form-row-spacing form-field-container">
                 <FormLabel 
                   id="login-email-label"
-                  className="form-label text-white/90"
+                  className="form-label text-sm font-medium text-white/90"
                 >
                   Email
                 </FormLabel>
@@ -66,7 +66,7 @@ const LoginForm = ({ onLoginSubmit, onForgotPassword, isLoading }: LoginFormProp
                     size="md"
                     leftIcon={<Mail className="h-4 w-4" />}
                     error={!!fieldState.error}
-                    className="h-12 form-input glass-input"
+                    className="h-12 form-input glass-input text-sm text-gray-500 placeholder:text-gray-500"
                   />
                 </FormControl>
                 <FormMessage id="login-email-error" className="form-error-message text-red-300" />
@@ -81,7 +81,7 @@ const LoginForm = ({ onLoginSubmit, onForgotPassword, isLoading }: LoginFormProp
               <FormItem className="form-row-spacing form-field-container">
                 <FormLabel 
                   id="login-password-label"
-                  className="form-label text-white/90"
+                  className="form-label text-sm font-medium text-white/90"
                 >
                   Password
                 </FormLabel>
@@ -110,7 +110,7 @@ const LoginForm = ({ onLoginSubmit, onForgotPassword, isLoading }: LoginFormProp
                       </button>
                     }
                     error={!!fieldState.error}
-                    className="h-12 form-input glass-input"
+                    className="h-12 form-input glass-input text-sm text-gray-500 placeholder:text-gray-500"
                   />
                 </FormControl>
                 <FormMessage id="login-password-error" className="form-error-message text-red-300" />
@@ -157,7 +157,7 @@ const LoginForm = ({ onLoginSubmit, onForgotPassword, isLoading }: LoginFormProp
           <div className="pt-4">
             <Button
               type="submit"
-              className="w-full py-3 button-text glass-button"
+              className="w-full py-3 button-text glass-button text-base font-semibold"
               size="md"
               disabled={isLoading}
               variant="primary"

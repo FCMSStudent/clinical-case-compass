@@ -80,8 +80,8 @@ const ForgotPasswordForm = ({ onForgotPasswordSubmit, onBackToLogin, isLoading }
       className="w-full space-y-4"
     >
       <div className="space-y-2 text-left">
-        <h3 className="text-2xl font-bold text-white">Forgot your password?</h3>
-        <p className="text-base text-white/80">
+        <h3 className="text-xl sm:text-2xl font-semibold leading-tight text-white">Forgot your password?</h3>
+        <p className="text-sm sm:text-base text-gray-400 leading-snug">
           Enter your email address and we'll send you a link to reset your password.
         </p>
       </div>
@@ -95,7 +95,7 @@ const ForgotPasswordForm = ({ onForgotPasswordSubmit, onBackToLogin, isLoading }
               <FormItem className="form-row-spacing form-field-container">
                 <FormLabel 
                   id="forgot-email-label"
-                  className="form-label text-white/90"
+                  className="form-label text-sm font-medium text-white/90"
                 >
                   Email
                 </FormLabel>
@@ -113,7 +113,7 @@ const ForgotPasswordForm = ({ onForgotPasswordSubmit, onBackToLogin, isLoading }
                     size="md"
                     leftIcon={<Mail className="h-4 w-4" />}
                     error={!!fieldState.error}
-                    className="h-12 form-input glass-input"
+                    className="h-12 form-input glass-input text-sm text-gray-500 placeholder:text-gray-500"
                   />
                 </FormControl>
                 <FormMessage id="forgot-email-error" className="form-error-message text-red-300" />
@@ -124,7 +124,7 @@ const ForgotPasswordForm = ({ onForgotPasswordSubmit, onBackToLogin, isLoading }
           <div className="pt-4 flex flex-row gap-3">
             <Button
               type="submit"
-              className="button-text glass-button"
+              className="button-text glass-button text-base font-semibold"
               size="md"
               variant="primary"
               disabled={isLoading}
@@ -143,7 +143,7 @@ const ForgotPasswordForm = ({ onForgotPasswordSubmit, onBackToLogin, isLoading }
               onClick={onBackToLogin}
               variant="secondary"
               size="md"
-              className="button-text glass-button"
+              className="button-text glass-button text-base font-semibold"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Sign In

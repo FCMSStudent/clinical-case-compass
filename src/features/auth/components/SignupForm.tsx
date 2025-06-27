@@ -51,7 +51,7 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
               <FormItem className="form-row-spacing form-field-container">
                 <FormLabel 
                   id="signup-fullname-label"
-                  className="form-label text-white/90"
+                  className="form-label text-sm font-medium text-white/90"
                 >
                   Full Name
                 </FormLabel>
@@ -69,7 +69,7 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
                     size="md"
                     leftIcon={<User className="h-4 w-4" />}
                     error={!!fieldState.error}
-                    className="h-12 form-input glass-input"
+                    className="h-12 form-input glass-input text-sm text-gray-500 placeholder:text-gray-500"
                   />
                 </FormControl>
                 <FormMessage id="signup-fullname-error" className="form-error-message text-red-300" />
@@ -84,7 +84,7 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
               <FormItem className="form-row-spacing form-field-container">
                 <FormLabel 
                   id="signup-email-label"
-                  className="form-label text-white/90"
+                  className="form-label text-sm font-medium text-white/90"
                 >
                   Email
                 </FormLabel>
@@ -102,7 +102,7 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
                     size="md"
                     leftIcon={<Mail className="h-4 w-4" />}
                     error={!!fieldState.error}
-                    className="h-12 form-input glass-input"
+                    className="h-12 form-input glass-input text-sm text-gray-500 placeholder:text-gray-500"
                   />
                 </FormControl>
                 <FormMessage id="signup-email-error" className="form-error-message text-red-300" />
@@ -117,7 +117,7 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
               <FormItem className="form-row-spacing form-field-container">
                 <FormLabel 
                   id="signup-password-label"
-                  className="form-label text-white/90"
+                  className="form-label text-sm font-medium text-white/90"
                 >
                   Password
                 </FormLabel>
@@ -146,7 +146,7 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
                       </button>
                     }
                     error={!!fieldState.error}
-                    className="h-12 form-input glass-input"
+                    className="h-12 form-input glass-input text-sm text-gray-500 placeholder:text-gray-500"
                   />
                 </FormControl>
                 <FormMessage id="signup-password-error" className="form-error-message text-red-300" />
@@ -164,7 +164,7 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
               <FormItem className="form-row-spacing form-field-container">
                 <FormLabel 
                   id="signup-confirm-password-label"
-                  className="form-label text-white/90"
+                  className="form-label text-sm font-medium text-white/90"
                 >
                   Confirm Password
                 </FormLabel>
@@ -193,7 +193,7 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
                       </button>
                     }
                     error={!!fieldState.error}
-                    className="h-12 form-input glass-input"
+                    className="h-12 form-input glass-input text-sm text-gray-500 placeholder:text-gray-500"
                   />
                 </FormControl>
                 <FormMessage id="signup-confirm-password-error" className="form-error-message text-red-300" />
@@ -204,7 +204,7 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
           <div className="pt-4">
             <Button
               type="submit"
-              className="w-full py-3 button-text glass-button"
+              className="w-full py-3 button-text glass-button text-base font-semibold"
               size="md"
               disabled={isLoading}
               variant="primary"
