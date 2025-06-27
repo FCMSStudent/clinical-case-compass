@@ -135,7 +135,7 @@ const ForgotPasswordForm = ({ onForgotPasswordSubmit, onBackToLogin, isLoading }
                   <span className="button-text">Sending...</span>
                 </div>
               ) : (
-                "Send Reset Link"
+                "Send Link"
               )}
             </Button>
             <Button
@@ -146,7 +146,7 @@ const ForgotPasswordForm = ({ onForgotPasswordSubmit, onBackToLogin, isLoading }
               className="button-text glass-button text-base font-semibold"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Sign In
+              Back
             </Button>
           </div>
         </form>
