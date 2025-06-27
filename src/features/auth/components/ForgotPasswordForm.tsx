@@ -40,23 +40,23 @@ const ForgotPasswordForm = ({ onForgotPasswordSubmit, onBackToLogin, isLoading }
         key="email-sent"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full space-y-4 text-center"
+        className="w-full space-y-4"
       >
         <div className="space-y-4">
           <div className="w-16 h-16 mx-auto bg-green-500/20 rounded-full flex items-center justify-center">
             <Mail className="w-8 h-8 text-green-400" />
           </div>
-          <div className="space-y-2">
+          <div className="space-y-2 text-left">
             <h3 className="text-xl font-semibold text-white">Check your email</h3>
             <p className="text-white/70 text-sm">
               We've sent a password reset link to <strong>{form.getValues("email")}</strong>
             </p>
           </div>
-          <div className="pt-4 space-y-3">
+          <div className="pt-4">
             <Button
               onClick={onBackToLogin}
-              variant="outline"
-              className="w-full py-3 button-text glass-button"
+              variant="secondary"
+              className="button-text glass-button text-left"
               size="md"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
@@ -79,9 +79,9 @@ const ForgotPasswordForm = ({ onForgotPasswordSubmit, onBackToLogin, isLoading }
       }}
       className="w-full space-y-4"
     >
-      <div className="text-center space-y-2">
-        <h3 className="text-xl font-semibold text-white">Forgot your password?</h3>
-        <p className="text-white/70 text-sm">
+      <div className="space-y-2 text-left">
+        <h3 className="text-2xl font-bold text-white">Forgot your password?</h3>
+        <p className="text-base text-white/80">
           Enter your email address and we'll send you a link to reset your password.
         </p>
       </div>
@@ -121,10 +121,10 @@ const ForgotPasswordForm = ({ onForgotPasswordSubmit, onBackToLogin, isLoading }
             )}
           />
 
-          <div className="pt-4 space-y-3">
+          <div className="pt-4 flex flex-row gap-2">
             <Button
               type="submit"
-              className="w-full py-3 button-text glass-button"
+              className="button-text glass-button"
               size="md"
               disabled={isLoading}
               variant="primary"
@@ -142,8 +142,8 @@ const ForgotPasswordForm = ({ onForgotPasswordSubmit, onBackToLogin, isLoading }
             <Button
               type="button"
               onClick={onBackToLogin}
-              variant="ghost"
-              className="w-full py-3 button-text"
+              variant="secondary"
+              className="button-text glass-button text-left"
               size="md"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />

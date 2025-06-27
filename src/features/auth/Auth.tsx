@@ -183,14 +183,14 @@ const Auth = () => {
               <CardContent className="p-6 pt-0 space-y-4 relative z-10">
                 {/* Apple Liquid Glass toggle - Only show for login/signup */}
                 {activeTab !== "forgot-password" && (
-                  <div className="relative toggle-track p-1 h-12">
+                  <div className="relative toggle-track p-1 h-12 overflow-hidden whitespace-nowrap rounded-2xl flex items-center">
                     <motion.div
-                      className="absolute top-1 bottom-1 toggle-thumb"
+                      className="absolute top-1 bottom-1 left-1 toggle-thumb rounded-2xl"
                       style={{
-                        width: `calc(50% - 4px)`,
+                        width: `50%`,
                       }}
                       animate={{
-                        x: activeTab === "login" ? "2px" : `calc(100% + 2px)`,
+                        x: activeTab === "login" ? 0 : "100%",
                       }}
                       transition={window.matchMedia('(prefers-reduced-motion: reduce)').matches 
                         ? { duration: 0.01 }
@@ -201,28 +201,30 @@ const Auth = () => {
                           }
                       }
                     />
-                    <div className="relative z-10 flex h-full">
+                    <div className="relative z-10 flex flex-row h-full w-full">
                       <button 
                         onClick={() => setActiveTab("login")}
                         className={cn(
-                          "flex-1 flex items-center justify-center toggle-text transition-all duration-300",
+                          "flex-1 flex items-center justify-center toggle-text transition-all duration-300 h-full text-lg font-semibold",
                           activeTab === "login" 
                             ? "text-white" 
                             : "text-white/70 hover:text-white/90"
                         )}
                         aria-label="Sign in to your account"
+                        type="button"
                       >
                         Sign In
                       </button>
                       <button 
                         onClick={() => setActiveTab("signup")}
                         className={cn(
-                          "flex-1 flex items-center justify-center toggle-text transition-all duration-300",
+                          "flex-1 flex items-center justify-center toggle-text transition-all duration-300 h-full text-lg font-semibold",
                           activeTab === "signup" 
                             ? "text-white" 
                             : "text-white/70 hover:text-white/90"
                         )}
                         aria-label="Create a new account"
+                        type="button"
                       >
                         Sign Up
                       </button>
