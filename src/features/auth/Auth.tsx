@@ -291,28 +291,6 @@ const Auth = () => {
                     </Alert>
                   </motion.div>
                 )}
-
-                {/* Legal Links */}
-                <div className="pt-4 text-center">
-                  <div className="text-xs text-white/50 space-x-4">
-                    <a 
-                      href="/privacy" 
-                      className="hover:text-white/70 transition-colors underline underline-offset-2"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Privacy Policy
-                    </a>
-                    <a 
-                      href="/terms" 
-                      className="hover:text-white/70 transition-colors underline underline-offset-2"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Terms of Service
-                    </a>
-                  </div>
-                </div>
               </CardContent>
             </Card>
           </div>
