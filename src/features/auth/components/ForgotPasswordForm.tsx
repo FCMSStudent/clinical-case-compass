@@ -145,8 +145,8 @@ const ForgotPasswordForm = ({ onForgotPasswordSubmit, onBackToLogin, isLoading }
               size="md"
               className="button-text glass-button text-base font-semibold flex items-center gap-2"
             >
-              <span className="flex items-center"><ArrowLeft className="w-5 h-5 align-middle" /></span>
-              <span className="flex items-center">Back</span>
+              <ArrowLeft className="w-5 h-5 align-middle" />
+              Back
             </Button>
           </div>
         </form>
