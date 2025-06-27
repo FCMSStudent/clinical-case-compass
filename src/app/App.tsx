@@ -9,16 +9,18 @@ import { ErrorBoundary } from "./error-boundaries/ErrorBoundary";
 import { ProtectedRouteLayout } from "@/features/navigation";
 import LoadingScreen from "@/shared/components/loading-screen";
 
-// Lazy load major components for code splitting
-const Dashboard = React.lazy(() => import("@/features/dashboard/Dashboard"));
-const Cases = React.lazy(() => import("@/features/cases/Cases"));
-const CaseDetail = React.lazy(() => import("@/features/cases/CaseDetail"));
-const CaseEdit = React.lazy(() => import("@/features/cases/CaseEdit"));
-const CreateCaseFlow = React.lazy(() => import("@/features/cases/CreateCaseFlow"));
-const Account = React.lazy(() => import("@/features/auth/Account"));
-const Auth = React.lazy(() => import("@/features/auth/Auth"));
-const NotFound = React.lazy(() => import("@/shared/components/NotFound"));
-const LandingPage = React.lazy(() => import("@/features/landing/Landing"));
+// Import pages from the new pages directory
+import {
+  LandingPage,
+  AuthPage,
+  DashboardPage,
+  CasesPage,
+  CaseDetailPage,
+  CaseEditPage,
+  CreateCasePage,
+  AccountPage,
+  NotFoundPage
+} from "@/pages";
 
 // Loading component for Suspense fallback
 const PageLoadingFallback = () => (
@@ -72,7 +74,7 @@ const AppRoutes = () => {
               <Navigate to="/dashboard" replace />
             ) : (
               <Suspense fallback={<PageLoadingFallback />}>
-                <Auth />
+                <AuthPage />
               </Suspense>
             )
           } 
@@ -84,7 +86,7 @@ const AppRoutes = () => {
           element={
             <ProtectedRouteLayout>
               <Suspense fallback={<PageLoadingFallback />}>
-                <Dashboard />
+                <DashboardPage />
               </Suspense>
             </ProtectedRouteLayout>
           }
@@ -100,7 +102,7 @@ const AppRoutes = () => {
                 </div>
               }>
                 <Suspense fallback={<PageLoadingFallback />}>
-                  <Cases />
+                  <CasesPage />
                 </Suspense>
               </ErrorBoundary>
             </ProtectedRouteLayout>
@@ -111,7 +113,7 @@ const AppRoutes = () => {
           element={
             <ProtectedRouteLayout>
               <Suspense fallback={<PageLoadingFallback />}>
-                <CaseDetail />
+                <CaseDetailPage />
               </Suspense>
             </ProtectedRouteLayout>
           }
@@ -121,7 +123,7 @@ const AppRoutes = () => {
           element={
             <ProtectedRouteLayout>
               <Suspense fallback={<PageLoadingFallback />}>
-                <CaseEdit />
+                <CaseEditPage />
               </Suspense>
             </ProtectedRouteLayout>
           }
@@ -131,7 +133,7 @@ const AppRoutes = () => {
           element={
             <ProtectedRouteLayout>
               <Suspense fallback={<PageLoadingFallback />}>
-                <CreateCaseFlow />
+                <CreateCasePage />
               </Suspense>
             </ProtectedRouteLayout>
           }
@@ -141,7 +143,7 @@ const AppRoutes = () => {
           element={
             <ProtectedRouteLayout>
               <Suspense fallback={<PageLoadingFallback />}>
-                <Account />
+                <AccountPage />
               </Suspense>
             </ProtectedRouteLayout>
           }
@@ -153,7 +155,7 @@ const AppRoutes = () => {
             session ? (
               <ProtectedRouteLayout>
                 <Suspense fallback={<PageLoadingFallback />}>
-                  <NotFound />
+                  <NotFoundPage />
                 </Suspense>
               </ProtectedRouteLayout>
             ) : (

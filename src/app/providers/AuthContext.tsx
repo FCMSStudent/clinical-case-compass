@@ -127,6 +127,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = useCallback(async () => {
     if (isOfflineMode) {
+      // In offline mode, just clear the local state
+      dispatch({ type: 'SET_SESSION', payload: null });
+      dispatch({ type: 'SET_USER', payload: null });
       return;
     }
 
@@ -135,8 +138,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error: unknown) {
       const err = error as Error;
       toast.error(err.message || "An error occurred during sign out");
+      // Even if sign out fails, clear local state
+      dispatch({ type: 'SET_SESSION', payload: null });
+      dispatch({ type: 'SET_USER', payload: null });
     }
-  }, [isOfflineMode, toast]);
+  }, [isOfflineMode, toast, dispatch]);
 
   const updateProfile = useCallback(async (data: UserMetadata) => {
     if (isOfflineMode) {
