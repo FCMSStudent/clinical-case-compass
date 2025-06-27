@@ -130,12 +130,14 @@ const LoginForm = ({ onLoginSubmit, onForgotPassword, isLoading }: LoginFormProp
                       onCheckedChange={field.onChange}
                       id="remember-me"
                       aria-label="Remember me"
-                      className="border-white/30 data-[state=checked]:bg-white/20 data-[state=checked]:border-white/50"
+                      variant="elevated"
+                      size="md"
+                      className="mr-2"
                     />
                   </FormControl>
                   <FormLabel 
                     htmlFor="remember-me"
-                    className="text-sm text-white/70 cursor-pointer"
+                    className="text-base text-white/80 font-medium cursor-pointer select-none"
                   >
                     Remember me
                   </FormLabel>

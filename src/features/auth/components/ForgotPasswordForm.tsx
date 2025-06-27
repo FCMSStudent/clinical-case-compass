@@ -121,13 +121,13 @@ const ForgotPasswordForm = ({ onForgotPasswordSubmit, onBackToLogin, isLoading }
             )}
           />
 
-          <div className="pt-4 flex flex-row gap-2">
+          <div className="pt-4 flex flex-row gap-3">
             <Button
               type="submit"
               className="button-text glass-button"
               size="md"
-              disabled={isLoading}
               variant="primary"
+              disabled={isLoading}
             >
               {isLoading ? (
                 <div className="flex items-center gap-2">
@@ -138,13 +138,12 @@ const ForgotPasswordForm = ({ onForgotPasswordSubmit, onBackToLogin, isLoading }
                 "Send Reset Link"
               )}
             </Button>
-            
             <Button
               type="button"
               onClick={onBackToLogin}
               variant="secondary"
-              className="button-text glass-button text-left"
               size="md"
+              className="button-text glass-button"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Sign In
