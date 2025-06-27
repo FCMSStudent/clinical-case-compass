@@ -6,15 +6,17 @@ import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 
 import { Button } from "@/shared/components/button";
 import { Input } from "@/shared/components/input";
+import { Checkbox } from "@/shared/components/checkbox";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/components/form";
 import { loginSchema, type LoginFormData } from "@/features/auth/authSchemas";
 
 interface LoginFormProps {
   onLoginSubmit: (data: LoginFormData) => Promise<void>;
+  onForgotPassword: () => void;
   isLoading: boolean;
 }
 
-const LoginForm = ({ onLoginSubmit, isLoading }: LoginFormProps) => {
+const LoginForm = ({ onLoginSubmit, onForgotPassword, isLoading }: LoginFormProps) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<LoginFormData>({
@@ -22,6 +24,7 @@ const LoginForm = ({ onLoginSubmit, isLoading }: LoginFormProps) => {
     defaultValues: {
       email: "",
       password: "",
+      rememberMe: false,
     },
   });
 
@@ -114,6 +117,40 @@ const LoginForm = ({ onLoginSubmit, isLoading }: LoginFormProps) => {
               </FormItem>
             )}
           />
+
+          <div className="flex items-center justify-between">
+            <FormField
+              control={form.control}
+              name="rememberMe"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center space-x-2 space-y-0">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      id="remember-me"
+                      aria-label="Remember me"
+                      className="border-white/30 data-[state=checked]:bg-white/20 data-[state=checked]:border-white/50"
+                    />
+                  </FormControl>
+                  <FormLabel 
+                    htmlFor="remember-me"
+                    className="text-sm text-white/70 cursor-pointer"
+                  >
+                    Remember me
+                  </FormLabel>
+                </FormItem>
+              )}
+            />
+            
+            <button
+              type="button"
+              onClick={onForgotPassword}
+              className="text-sm text-white/70 hover:text-white transition-colors underline underline-offset-2"
+            >
+              Forgot password?
+            </button>
+          </div>
 
           <div className="pt-4">
             <Button

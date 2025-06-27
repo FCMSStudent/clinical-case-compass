@@ -8,6 +8,7 @@ import { Button } from "@/shared/components/button";
 import { Input } from "@/shared/components/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/components/form";
 import { signupSchema, type SignupFormData } from "@/features/auth/authSchemas";
+import PasswordStrengthIndicator from "./PasswordStrengthIndicator";
 
 interface SignupFormProps {
   onSignupSubmit: (data: SignupFormData) => Promise<void>;
@@ -27,6 +28,8 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
       confirmPassword: "",
     },
   });
+
+  const passwordValue = form.watch("password");
 
   return (
     <motion.div
@@ -147,6 +150,9 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
                   />
                 </FormControl>
                 <FormMessage id="signup-password-error" className="form-error-message text-red-300" />
+                
+                {/* Password Strength Indicator */}
+                <PasswordStrengthIndicator password={passwordValue} />
               </FormItem>
             )}
           />
@@ -209,7 +215,7 @@ const SignupForm = ({ onSignupSubmit, isLoading }: SignupFormProps) => {
                   <span className="button-text">Creating account...</span>
                 </div>
               ) : (
-                "Sign Up"
+                "Create Account"
               )}
             </Button>
           </div>

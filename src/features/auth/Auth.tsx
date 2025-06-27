@@ -22,9 +22,10 @@ import {
 } from "@/design-system/animations/motion";
 import { cn } from "@/shared/utils/utils";
 
-import type { LoginFormData, SignupFormData } from "@/features/auth/authSchemas";
+import type { LoginFormData, SignupFormData, ForgotPasswordFormData } from "@/features/auth/authSchemas";
 import LoginForm from "@/features/auth/components/LoginForm";
 import SignupForm from "@/features/auth/components/SignupForm";
+import ForgotPasswordForm from "@/features/auth/components/ForgotPasswordForm";
 
 const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -96,6 +97,37 @@ const Auth = () => {
     }
   };
 
+  const onForgotPasswordSubmit = async (data: ForgotPasswordFormData) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      // TODO: Implement actual password reset functionality
+      // For now, we'll simulate the API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      toast({
+        title: "Reset link sent",
+        description: "Check your email for password reset instructions.",
+        variant: "default",
+      });
+    } catch (error: unknown) {
+      console.error("Forgot password error:", error);
+      const errorMessage = error instanceof Error ? error.message : "An error occurred while sending reset link";
+      setError(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleForgotPassword = () => {
+    setActiveTab("forgot-password");
+    setError(null);
+  };
+
+  const handleBackToLogin = () => {
+    setActiveTab("login");
+    setError(null);
+  };
+
   // Get page transition variants, respecting reduced motion settings.
   const pageVariants = getMotionVariants(globalPageTransitionVariants, globalReducedMotionPageVariants);
 
@@ -140,101 +172,145 @@ const Auth = () => {
                     </h1>
                   </motion.div>
                   <p className="auth-subtitle text-white/90">
-                    Sign in to your account or create a new one
+                    {activeTab === "forgot-password" 
+                      ? "Reset your password"
+                      : "Sign in to your account or create a new one"
+                    }
                   </p>
                 </motion.div>
               </CardHeader>
 
               <CardContent className="p-6 pt-0 space-y-4 relative z-10">
-                {/* Apple Liquid Glass toggle - COMPLETELY FIXED */}
-                <div className="relative toggle-track p-1 h-12">
-                  <motion.div
-                    className="absolute top-1 bottom-1 toggle-thumb"
-                    style={{
-                      width: `calc(50% - 4px)`,
-                    }}
-                    animate={{
-                      x: activeTab === "login" ? "2px" : `calc(100% + 2px)`,
-                    }}
-                    transition={window.matchMedia('(prefers-reduced-motion: reduce)').matches 
-                      ? { duration: 0.01 }
-                      : {
-                          type: "spring",
-                          stiffness: 200,
-                          damping: 20,
-                        }
-                    }
-                  />
-                  <div className="relative z-10 flex h-full">
-                    <button 
-                      onClick={() => setActiveTab("login")}
-                      className={cn(
-                        "flex-1 flex items-center justify-center toggle-text transition-all duration-300",
-                        activeTab === "login" 
-                          ? "text-white" 
-                          : "text-white/70 hover:text-white/90"
-                      )}
-                      aria-label="Sign in to your account"
-                    >
-                      Sign In
-                    </button>
-                    <button 
-                      onClick={() => setActiveTab("signup")}
-                      className={cn(
-                        "flex-1 flex items-center justify-center toggle-text transition-all duration-300",
-                        activeTab === "signup" 
-                          ? "text-white" 
-                          : "text-white/70 hover:text-white/90"
-                      )}
-                      aria-label="Create a new account"
-                    >
-                      Sign Up
-                    </button>
+                {/* Apple Liquid Glass toggle - Only show for login/signup */}
+                {activeTab !== "forgot-password" && (
+                  <div className="relative toggle-track p-1 h-12">
+                    <motion.div
+                      className="absolute top-1 bottom-1 toggle-thumb"
+                      style={{
+                        width: `calc(50% - 4px)`,
+                      }}
+                      animate={{
+                        x: activeTab === "login" ? "2px" : `calc(100% + 2px)`,
+                      }}
+                      transition={window.matchMedia('(prefers-reduced-motion: reduce)').matches 
+                        ? { duration: 0.01 }
+                        : {
+                            type: "spring",
+                            stiffness: 200,
+                            damping: 20,
+                          }
+                      }
+                    />
+                    <div className="relative z-10 flex h-full">
+                      <button 
+                        onClick={() => setActiveTab("login")}
+                        className={cn(
+                          "flex-1 flex items-center justify-center toggle-text transition-all duration-300",
+                          activeTab === "login" 
+                            ? "text-white" 
+                            : "text-white/70 hover:text-white/90"
+                        )}
+                        aria-label="Sign in to your account"
+                      >
+                        Sign In
+                      </button>
+                      <button 
+                        onClick={() => setActiveTab("signup")}
+                        className={cn(
+                          "flex-1 flex items-center justify-center toggle-text transition-all duration-300",
+                          activeTab === "signup" 
+                            ? "text-white" 
+                            : "text-white/70 hover:text-white/90"
+                        )}
+                        aria-label="Create a new account"
+                      >
+                        Sign Up
+                      </button>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <AnimatePresence mode="wait">
                   {activeTab === "login" && (
-                    <LoginForm isLoading={isLoading} onLoginSubmit={onLoginSubmit} />
+                    <LoginForm 
+                      isLoading={isLoading} 
+                      onLoginSubmit={onLoginSubmit}
+                      onForgotPassword={handleForgotPassword}
+                    />
                   )}
 
                   {activeTab === "signup" && (
-                    <SignupForm isLoading={isLoading} onSignupSubmit={onSignupSubmit} />
+                    <SignupForm 
+                      isLoading={isLoading} 
+                      onSignupSubmit={onSignupSubmit}
+                    />
+                  )}
+
+                  {activeTab === "forgot-password" && (
+                    <ForgotPasswordForm
+                      isLoading={isLoading}
+                      onForgotPasswordSubmit={onForgotPasswordSubmit}
+                      onBackToLogin={handleBackToLogin}
+                    />
                   )}
                 </AnimatePresence>
 
+                {/* Error Alert */}
                 {error && (
-                  <Alert variant="destructive" className="mt-4 bg-red-500/10 border-red-400/30 backdrop-blur-md rounded-2xl">
-                    <AlertDescription className="text-red-100">{error}</AlertDescription>
-                  </Alert>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Alert variant="destructive" className="border-red-500/20 bg-red-500/10">
+                      <AlertTitle className="text-red-300">Authentication Error</AlertTitle>
+                      <AlertDescription className="text-red-200">
+                        {error}
+                      </AlertDescription>
+                    </Alert>
+                  </motion.div>
                 )}
 
-                <AnimatePresence>
-                  {verificationSent && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: -20, scale: 0.95 }}
-                      transition={{ 
-                        duration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0.01 : 0.4, 
-                        ease: "cubic-bezier(0.16, 1, 0.3, 1)" 
-                      }}
-                      className="mt-4"
-                      role="alert"
-                      aria-live="polite"
+                {/* Success Alert for Email Verification */}
+                {verificationSent && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Alert className="border-green-500/20 bg-green-500/10">
+                      <CheckCircle2 className="h-4 w-4 text-green-400" />
+                      <AlertTitle className="text-green-300">Verification Email Sent</AlertTitle>
+                      <AlertDescription className="text-green-200">
+                        Please check your email and click the verification link to complete your registration.
+                      </AlertDescription>
+                    </Alert>
+                  </motion.div>
+                )}
+
+                {/* Legal Links */}
+                <div className="pt-4 text-center">
+                  <div className="text-xs text-white/50 space-x-4">
+                    <a 
+                      href="/privacy" 
+                      className="hover:text-white/70 transition-colors underline underline-offset-2"
+                      target="_blank"
+                      rel="noopener noreferrer"
                     >
-                      <Alert className="bg-green-500/10 border-green-400/30 backdrop-blur-md rounded-2xl">
-                        <CheckCircle2 className="h-4 w-4 text-green-400" aria-hidden="true" />
-                        <AlertTitle className="text-green-400 font-medium">
-                          Verification Email Sent
-                        </AlertTitle>
-                        <AlertDescription className="text-green-300/90 font-light">
-                          Please check your email to verify your account before signing in.
-                        </AlertDescription>
-                      </Alert>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                      Privacy Policy
+                    </a>
+                    <a 
+                      href="/terms" 
+                      className="hover:text-white/70 transition-colors underline underline-offset-2"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Terms of Service
+                    </a>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </div>
