@@ -1,5 +1,4 @@
-
-import { Component, ErrorInfo, ReactNode } from 'react';
+import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { Button } from '@/shared/components/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/components/card';
 import { AlertTriangle, RefreshCw, ExternalLink } from 'lucide-react';
@@ -20,11 +19,11 @@ export class ErrorBoundary extends Component<Props, State> {
     hasError: false
   };
 
-  public static override getDerivedStateFromError(error: Error): State {
+  public static getDerivedStateFromError(error: Error): State {
     return { hasError: true, error };
   }
 
-  public override componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Error caught by boundary:', error, errorInfo);
     this.setState({
       error,

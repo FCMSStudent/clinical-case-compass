@@ -18,7 +18,6 @@ export * from './animations/motion';
 export * from './components/glass-effects';
 
 // Legacy exports for backward compatibility
-import type { ThemeColors } from './tokens/colors';
 import { colors, themeColors } from './tokens/colors';
 import { spacing, borderRadius, shadows, layout, sizes, zIndex, breakpoints } from './tokens/spacing';
 import { 
@@ -45,7 +44,6 @@ import {
   getContrastRatio,
   isThemeAccessible
 } from '../shared/utils/utilities';
-import type { ThemeConfig } from './themes/theme-system';
 import { ThemeProvider, useTheme, ThemeSwitcher, themes } from './themes/theme-system';
 import { typography } from './tokens/typography';
 import { typographyTokens } from './tokens/design-tokens';

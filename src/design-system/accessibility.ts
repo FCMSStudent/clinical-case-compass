@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { toast } from "sonner";
 
 // ────────────────────────────────────────────────────────────────────────────────
@@ -458,13 +458,15 @@ export class AccessibilityManager {
    */
   private handleFocusIn(event: FocusEvent) {
     const target = event.target as HTMLElement;
-    target.classList.add("focus-visible");
-    
-    // Update focus index
-    const focusableElements = this.getFocusableElements();
-    const index = focusableElements.indexOf(target);
-    if (index !== -1) {
-      this.currentFocusIndex = index;
+    if (target) {
+      target.classList.add("focus-visible");
+      
+      // Update focus index
+      const focusableElements = this.getFocusableElements();
+      const index = focusableElements.indexOf(target);
+      if (index !== -1) {
+        this.currentFocusIndex = index;
+      }
     }
   }
   
@@ -657,32 +659,29 @@ export const useAccessibility = () => {
  * Eye tracking hook - simplified simulation
  */
 export const useEyeTracking = (config: EyeTrackingConfig = {}) => {
-  const [focusedElement, setFocusedElement] = useState<HTMLElement | null>(null);
-  
-  // Simplified implementation - just track mouse hover for now
-  const handleMouseEnter = useCallback((event: MouseEvent) => {
-    const element = event.target as HTMLElement;
-    setFocusedElement(element);
-  }, []);
-  
-  const handleMouseLeave = useCallback(() => {
-    setFocusedElement(null);
-  }, []);
+  const [currentFocus, setCurrentFocus] = useState<HTMLElement | null>(null);
+  const [gazePosition, setGazePosition] = useState<{ x: number; y: number } | null>(null);
   
   useEffect(() => {
-    document.addEventListener("mouseenter", handleMouseEnter);
-    document.addEventListener("mouseleave", handleMouseLeave);
-    
-    return () => {
-      document.removeEventListener("mouseenter", handleMouseEnter);
-      document.removeEventListener("mouseleave", handleMouseLeave);
+    const handleMouseMove = (event: MouseEvent) => {
+      setGazePosition({ x: event.clientX, y: event.clientY });
+      
+      const element = document.elementFromPoint(event.clientX, event.clientY) as HTMLElement;
+      if (element && element !== currentFocus) {
+        setTimeout(() => {
+          setCurrentFocus(element);
+        }, config.dwellTime || 300);
+      }
     };
-  }, [handleMouseEnter, handleMouseLeave]);
+    
+    document.addEventListener('mousemove', handleMouseMove);
+    return () => document.removeEventListener('mousemove', handleMouseMove);
+  }, [currentFocus, config.dwellTime]);
   
   return {
-    focusedElement,
-    gazePosition: null,
-    isFocused: (element: HTMLElement) => element === focusedElement,
+    currentFocus,
+    gazePosition,
+    isFocused: (element: HTMLElement) => element === currentFocus,
   };
 };
 
