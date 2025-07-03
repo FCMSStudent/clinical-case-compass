@@ -1,5 +1,3 @@
-
-
 import React, { useContext, useState, useEffect } from "react";
 import { ThemeColors, themeColors } from '../tokens/colors';
 import { applyThemeToDocument, removeThemeFromDocument } from '../../shared/utils/utilities';
@@ -89,7 +87,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   // Apply theme to document
   useEffect(() => {
-    if (currentTheme?.colors) {
+    if (currentTheme && currentTheme.colors) {
       applyThemeToDocument(currentTheme.colors);
     }
     return () => removeThemeFromDocument();
