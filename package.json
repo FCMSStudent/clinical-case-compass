@@ -18,9 +18,6 @@
     "test:watch": "vitest --watch",
     "type-check": "tsc --noEmit",
     "type-check:watch": "tsc --noEmit --watch",
-    "docs:build": "npm run docs:components && npm run docs:api",
-    "docs:components": "echo 'Building component documentation...'",
-    "docs:api": "echo 'Building API documentation...'",
     "clean": "rm -rf dist coverage test-results .eslintcache",
     "precommit": "npm run lint && npm run type-check && npm run test:run"
   },
