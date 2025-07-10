@@ -1,5 +1,5 @@
 // Remove: import { getCaseById } from "@/data/mock-data";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
