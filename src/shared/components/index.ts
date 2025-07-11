@@ -14,7 +14,7 @@ export {
   Flex,
   Grid,
   Section,
-  
+
   // Card components (unified)
   Card,
   CardHeader,
@@ -22,11 +22,11 @@ export {
   CardDescription,
   CardContent,
   CardFooter,
-  
+
   // Bento Grid (convenience exports for backward compatibility)
   BentoContainer,
   BentoCard,
-  
+
   // Utilities
   Spacer,
   Divider,
@@ -106,14 +106,9 @@ export { FormProgress } from "./form-progress"
 export { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "./input-otp"
 export { PageHeader } from "./page-header"
 export { SettingsCard } from "./settings-card"
-export { RecentCasesCarousel } from "./recent-cases-carousel"
 // export { Chart } from "./chart" // Chart component is not ready
 export { default as LoadingScreen } from "./loading-screen"
 export { LoadingSpinner } from "./loading-spinner"
-export { AutosaveIndicator } from "./autosave-indicator"
-export { AvatarUpload } from "./avatar-upload"
-export { default as DashboardSkeleton } from "./dashboard-skeleton"
-export { ErrorSummary } from "./ErrorSummary"
 export { OfflineBanner } from "./OfflineBanner"
 
 // ────────────────────────────────────────────────────────────────────────────────
@@ -150,9 +145,8 @@ export * from './aspect-ratio'
 // Data components
 export * from './table'
 export * from './chart'
-export * from './data/bodyPartData'
 
-// Interactive components  
+// Interactive components
 export * from './command'
 export * from './context-menu'
 export * from './dropdown-menu'
@@ -196,19 +190,14 @@ export * from './input-otp'
 export * from './carousel'
 export * from './bento-card'
 export * from './bento-container'
-export * from './recent-cases-carousel'
 export * from './NotFound'
 export * from './OfflineBanner'
-export * from './ErrorSummary'
 export * from './page-header'
 export * from './settings-card'
 export * from './animation'
 export * from './UnifiedBackground'
-export * from './dashboard-skeleton'
 export * from './form-group'
 export * from './form-progress'
-export * from './autosave-indicator'
-export * from './avatar-upload'
 
 // Medical/Clinical components
 export * from './components/BodyDiagramHeader'

@@ -33,17 +33,7 @@ import {
   glassmorphic,
   glass
 } from './components/components';
-import { 
-  getGlassmorphicStyles, 
-  applyThemeToDocument,
-  removeThemeFromDocument,
-  generateThemeCSSProperties,
-  validateTheme,
-  mergeThemes,
-  generateThemeVariations,
-  getContrastRatio,
-  isThemeAccessible
-} from '../shared/utils/utilities';
+
 import { ThemeProvider, useTheme, ThemeSwitcher, themes } from './themes/theme-system';
 import { typography } from './tokens/typography';
 import { typographyTokens } from './tokens/design-tokens';
@@ -88,16 +78,7 @@ export const designSystem = {
   glassmorphic,
   glass,
   
-  // Utilities
-  getGlassmorphicStyles,
-  applyThemeToDocument,
-  removeThemeFromDocument,
-  generateThemeCSSProperties,
-  validateTheme,
-  mergeThemes,
-  generateThemeVariations,
-  getContrastRatio,
-  isThemeAccessible,
+
   
   // Theme System
   ThemeProvider,

@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { ThemeColors, themeColors } from '../tokens/colors';
-import { applyThemeToDocument, removeThemeFromDocument } from '../../shared/utils/utilities';
+
 
 /** Theme Configuration Interface */
 export interface ThemeConfig {
@@ -87,10 +87,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   // Apply theme to document
   useEffect(() => {
-    if (currentTheme && currentTheme.colors) {
-      applyThemeToDocument(currentTheme.colors);
-    }
-    return () => removeThemeFromDocument();
+    // Theme application logic removed - utilities file was deleted
   }, [currentTheme]);
 
   return React.createElement(
