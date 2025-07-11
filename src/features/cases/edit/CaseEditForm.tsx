@@ -9,7 +9,7 @@ import { CaseVitalsSection } from "./CaseVitalsSection";
 import { CaseTextSection } from "./CaseTextSection";
 import { CaseLabsSection } from "./CaseLabsSection";
 import { CaseRadiologySection } from "./CaseRadiologySection";
-import { spacing, layouts, buttonVariants, iconWithText } from "@/design-system/ui-styles";
+import { spacing, layouts } from "@/design-system/ui-styles";
 
 interface CaseEditFormProps {
   form: UseFormReturn<any>;
@@ -29,7 +29,7 @@ export const CaseEditForm: React.FC<CaseEditFormProps> = ({
   onVitalsChange,
   onLabChange,
   onImagingChange,
-  initialVitals,
+  initialVitals = {},
   patientAge
 }) => {
   return (
