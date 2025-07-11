@@ -106,14 +106,9 @@ export { FormProgress } from "./form-progress"
 export { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "./input-otp"
 export { PageHeader } from "./page-header"
 export { SettingsCard } from "./settings-card"
-export { RecentCasesCarousel } from "./recent-cases-carousel"
 // export { Chart } from "./chart" // Chart component is not ready
 export { default as LoadingScreen } from "./loading-screen"
 export { LoadingSpinner } from "./loading-spinner"
-export { AutosaveIndicator } from "./autosave-indicator"
-export { AvatarUpload } from "./avatar-upload"
-export { default as DashboardSkeleton } from "./dashboard-skeleton"
-export { ErrorSummary } from "./ErrorSummary"
 export { OfflineBanner } from "./OfflineBanner"
 
 // ────────────────────────────────────────────────────────────────────────────────
@@ -126,14 +121,9 @@ export { toast } from "sonner"
 
 // Shared UI Components
 export { default as NotFound } from './NotFound';
-export { default as SearchPanel } from './SearchPanel';
-export { default as RecentActivityList } from './RecentActivityList';
 
 // Background Components
 export { default as UnifiedBackground } from './UnifiedBackground';
-
-// Body Diagram Components
-export { default as SimpleBodyPartSelector } from './SimpleBodyPartSelector';
 
 // Layout components
 export * from './layout'
@@ -155,7 +145,6 @@ export * from './aspect-ratio'
 // Data components
 export * from './table'
 export * from './chart'
-export * from './data/bodyPartData'
 
 // Interactive components  
 export * from './command'
@@ -201,26 +190,13 @@ export * from './input-otp'
 export * from './carousel'
 export * from './bento-card'
 export * from './bento-container'
-export * from './recent-cases-carousel'
 export * from './NotFound'
 export * from './OfflineBanner'
-export * from './ErrorSummary'
 export * from './page-header'
-export * from './RecentActivityList'
-export * from './SearchPanel'
 export * from './settings-card'
 export * from './animation'
 export * from './UnifiedBackground'
-export * from './dashboard-skeleton'
 export * from './form-group'
 export * from './form-progress'
-export * from './autosave-indicator'
-export * from './avatar-upload'
 
 // Medical/Clinical components
-export * from './components/BodyDiagramHeader'
-export * from './components/BodyDiagramHint'
-export * from './components/BodyDiagramTooltip'
-export * from './components/BodyPartButton'
-export * from './SimpleBodyPartSelector'
-export * from './types/bodyPartTypes'
