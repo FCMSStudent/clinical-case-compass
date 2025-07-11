@@ -126,14 +126,9 @@ export { toast } from "sonner"
 
 // Shared UI Components
 export { default as NotFound } from './NotFound';
-export { default as SearchPanel } from './SearchPanel';
-export { default as RecentActivityList } from './RecentActivityList';
 
 // Background Components
 export { default as UnifiedBackground } from './UnifiedBackground';
-
-// Body Diagram Components
-export { default as SimpleBodyPartSelector } from './SimpleBodyPartSelector';
 
 // Layout components
 export * from './layout'
@@ -206,8 +201,6 @@ export * from './NotFound'
 export * from './OfflineBanner'
 export * from './ErrorSummary'
 export * from './page-header'
-export * from './RecentActivityList'
-export * from './SearchPanel'
 export * from './settings-card'
 export * from './animation'
 export * from './UnifiedBackground'
@@ -222,5 +215,4 @@ export * from './components/BodyDiagramHeader'
 export * from './components/BodyDiagramHint'
 export * from './components/BodyDiagramTooltip'
 export * from './components/BodyPartButton'
-export * from './SimpleBodyPartSelector'
 export * from './types/bodyPartTypes'
