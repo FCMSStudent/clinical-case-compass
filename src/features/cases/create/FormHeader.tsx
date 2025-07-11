@@ -31,7 +31,7 @@ export interface FormHeaderProps {
 }
 
 /**
- * Compact header component for multi-step forms that integrates well with AppLayout.
+ * Compact header component for multi-step forms that integrates well with EnhancedAppLayout.
  */
 export const FormHeader = memo(function FormHeader({
   currentStep,
