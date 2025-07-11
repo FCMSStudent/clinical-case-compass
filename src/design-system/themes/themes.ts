@@ -1,5 +1,5 @@
 import React from "react";
-import { createContext, useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 
 // ────────────────────────────────────────────────────────────────────────────────
 // THEME VARIATIONS FOR GLASSY VISIONOS UI
@@ -411,7 +411,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     ThemeContext.Provider,
     {
       value: {
-        currentTheme,
+        currentTheme: currentTheme!,
         setTheme,
         availableThemes,
         getThemeNames,

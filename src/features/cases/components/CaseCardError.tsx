@@ -4,7 +4,7 @@ import { cn } from "@/shared/utils/utils";
 
 interface CaseCardErrorProps {
   medicalCase: any;
-  className?: string;
+  className: string | undefined;
 }
 
 export const CaseCardError = memo(({ medicalCase, className }: CaseCardErrorProps) => (

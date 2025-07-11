@@ -9,7 +9,7 @@ import { toast } from "sonner";
 
 import { PageHeader } from "@/shared/components/page-header";
 import { useLocalStorage } from "@/shared/hooks/use-local-storage";
-import { MedicalCase, RadiologyStudy } from "@/shared/types/case";
+import { MedicalCase, RadiologyStudy, LabTest } from "@/shared/types/case";
 import { useSupabaseCases } from "@/shared/hooks/use-supabase-cases";
 import { CaseEditForm } from "@/features/cases/edit/CaseEditForm";
 import { typography, layouts } from "@/design-system/ui-styles";
@@ -106,7 +106,7 @@ const CaseEdit = () => {
     }
 
     if (medicalCase.labTests) {
-      setLabResults(medicalCase.labTests);
+      setLabResults(medicalCase.labTests as Record<string, unknown>[]);
     }
 
     if (medicalCase.radiologyStudies) {
@@ -124,7 +124,7 @@ const CaseEdit = () => {
       name: ss.type, // SimpleImaging's 'type' is more like a 'name' (e.g., "Chest X-Ray")
       type: extractModalityFromName(ss.type), // Needs a helper to get "X-Ray" from "Chest X-Ray"
       findings: ss.findings,
-      date: new Date().toISOString().split('T')[0], // Default to today
+      date: new Date().toISOString().split('T')[0] || "", // Default to today
       impression: "", // SimpleImaging doesn't have impression
     }));
   };
@@ -168,10 +168,10 @@ const CaseEdit = () => {
           name: values.patientName || medicalCase.patient.name,
           age: values.patientAge || medicalCase.patient.age,
           gender: values.patientGender || medicalCase.patient.gender,
-          medicalRecordNumber: values.patientMRN || undefined,
+          medicalRecordNumber: values.patientMRN || "",
         },
         vitals: vitals,
-        labTests: labResults,
+        labTests: labResults as LabTest[],
         radiologyStudies: radiologyStudies,
       };
 
@@ -248,7 +248,7 @@ const CaseEdit = () => {
         onVitalsChange={setVitals}
         onLabChange={setLabResults} // Consider mapping this if SimpleLabs output is different
         onImagingChange={handleImagingChange}
-        initialVitals={initialVitals}
+        initialVitals={initialVitals || {}}
         patientAge={form.watch("patientAge")}
       />
     </div>

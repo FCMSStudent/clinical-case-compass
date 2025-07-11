@@ -123,7 +123,7 @@ const CaseDetail = () => {
         <ClinicalTextCard
           icon={<FileText />}
           title="Medical History"
-          content={medicalCase.history}
+          content={medicalCase.history || undefined}
           layout="medium"
           placeholder="No medical history recorded for this case"
         />
@@ -132,7 +132,7 @@ const CaseDetail = () => {
         <ClinicalTextCard
           icon={<Activity />}
           title="Physical Examination"
-          content={medicalCase.physicalExam}
+          content={medicalCase.physicalExam || undefined}
           layout="medium"
           placeholder="No physical examination findings recorded"
         />

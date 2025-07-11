@@ -27,7 +27,7 @@ const Account = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const { getStatistics } = useDashboardData();
-  const stats = getStatistics();
+  const _stats = getStatistics();
   
   // State for settings
   const [notifications, setNotifications] = useState(true);

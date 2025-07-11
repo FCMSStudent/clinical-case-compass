@@ -28,7 +28,7 @@ import { TagPill } from "./TagPill";
 interface CaseCardFooterProps {
   medicalCase: MedicalCase;
   isHovered: boolean;
-  onDelete?: (caseId: string) => void;
+  onDelete: ((caseId: string) => void) | undefined;
 }
 
 const VISIBLE_TAGS = 2;

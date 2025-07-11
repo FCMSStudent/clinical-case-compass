@@ -127,7 +127,7 @@ export class AccessibilityManager {
         
         this.recognition.onresult = (event: SpeechRecognitionEvent) => {
           const transcript = Array.from(event.results)
-            .map(result => result[0].transcript.toLowerCase())
+            .map(result => result[0]?.transcript?.toLowerCase() || "")
             .join("");
           
           this.processVoiceCommand(transcript);
