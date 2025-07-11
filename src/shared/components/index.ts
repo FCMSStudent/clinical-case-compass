@@ -14,7 +14,7 @@ export {
   Flex,
   Grid,
   Section,
-  
+
   // Card components (unified)
   Card,
   CardHeader,
@@ -22,11 +22,11 @@ export {
   CardDescription,
   CardContent,
   CardFooter,
-  
+
   // Bento Grid (convenience exports for backward compatibility)
   BentoContainer,
   BentoCard,
-  
+
   // Utilities
   Spacer,
   Divider,
@@ -146,7 +146,7 @@ export * from './aspect-ratio'
 export * from './table'
 export * from './chart'
 
-// Interactive components  
+// Interactive components
 export * from './command'
 export * from './context-menu'
 export * from './dropdown-menu'
@@ -200,3 +200,8 @@ export * from './form-group'
 export * from './form-progress'
 
 // Medical/Clinical components
+export * from './components/BodyDiagramHeader'
+export * from './components/BodyDiagramHint'
+export * from './components/BodyDiagramTooltip'
+export * from './components/BodyPartButton'
+export * from './types/bodyPartTypes'
