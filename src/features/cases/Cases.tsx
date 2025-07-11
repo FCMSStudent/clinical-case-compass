@@ -15,7 +15,7 @@ import { useSupabaseCases } from "@/shared/hooks/use-supabase-cases";
 import { useAuth } from "@/app/providers/AuthContext";
 import { typo } from "@/design-system/tokens/typography";
 import { cn } from "@/shared/utils/utils";
-import { liquidGlassClasses, getGlassTransitionVariants, getGlassHoverVariants } from "@/design-system/components/glass-effects";
+import { liquidGlassClasses, getGlassTransitionVariants } from "@/design-system/components/glass-effects";
 
 const Cases = () => {
   const [searchQuery, setSearchQuery] = useState("");

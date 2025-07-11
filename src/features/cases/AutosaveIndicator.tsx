@@ -51,7 +51,9 @@ export function AutosaveIndicator({
           <AlertCircle className="mr-1 h-3 w-3 text-red-300" />
           <span className="text-red-100">Save failed</span>
         </>
-      ) : null}
+      ) : (
+        <span className="text-white/60">Idle</span>
+      )}
     </div>
   );
 }

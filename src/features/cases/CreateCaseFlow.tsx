@@ -2,7 +2,6 @@
 import React, {
   useState,
   useCallback,
-  useEffect,
   useRef,
   useMemo,
 } from "react";
@@ -97,7 +96,7 @@ const STEPS: StepMeta[] = [
 const CreateCaseFlow = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [autoSaveStatus, setAutoSaveStatus] =
+  const [autoSaveStatus, _setAutoSaveStatus] =
     useState<"idle" | "saving" | "saved" | "error">("idle");
   const errorAnnouncementRef = useRef(null);
   const { handleError } = useErrorHandler();
@@ -112,7 +111,7 @@ const CreateCaseFlow = () => {
     defaultValues: {
       patientName: "",
       medicalRecordNumber: "",
-      patientAge: undefined,
+      patientAge: 0,
       patientSex: "",
       medicalHistory: "",
       caseTitle: "",

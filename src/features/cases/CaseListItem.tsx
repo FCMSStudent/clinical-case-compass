@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import { memo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MedicalCase } from '@/shared/types/case';
 import { Card, CardContent } from '@/shared/components/card';
@@ -11,9 +11,6 @@ import {
   Trash2, 
   Tag as TagIcon, 
   CalendarDays,
-  AlertCircle,
-  CheckCircle2,
-  ChevronRight,
   Sparkles
 } from 'lucide-react';
 import { format } from 'date-fns';
@@ -49,7 +46,7 @@ export const CaseListItem = memo<CaseListItemProps>(({ medicalCase, className, o
   const [isHovered, setIsHovered] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
-  const handleDelete = () => {
+  const _handleDelete = () => {
     setShowDeleteDialog(true);
   };
 

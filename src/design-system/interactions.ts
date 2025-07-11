@@ -1,5 +1,4 @@
-import { useRef, useEffect, useState, useCallback } from "react";
-import { motion, PanInfo, useTransform } from "framer-motion";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 
 // ────────────────────────────────────────────────────────────────────────────────
 // ADVANCED INTERACTION UTILITIES FOR GLASSY VISIONOS UI
@@ -66,7 +65,7 @@ export const useGestureDetection = (
     }
   }, [onGesture, config.timeout]);
   
-  const handleTouchMove = useCallback((event: TouchEvent) => {
+  const handleTouchMove = useCallback((_event: TouchEvent) => {
     if (longPressTimeout.current) {
       clearTimeout(longPressTimeout.current);
     }
@@ -279,17 +278,23 @@ export const useVoiceControl = () => {
         let interimTranscript = "";
         
         for (let i = event.resultIndex; i < event.results.length; i++) {
-          const transcript = event.results[i][0].transcript;
-          if (event.results[i].isFinal) {
-            finalTranscript += transcript;
-          } else {
-            interimTranscript += transcript;
+          const result = event.results[i];
+          if (result) {
+            const transcript = result[0]?.transcript || "";
+            if (result.isFinal) {
+              finalTranscript += transcript;
+            } else {
+              interimTranscript += transcript;
+            }
           }
         }
         
         setTranscript(finalTranscript || interimTranscript);
         if (event.results.length > 0) {
-          setConfidence(event.results[event.results.length - 1][0].confidence);
+          const lastResult = event.results[event.results.length - 1];
+          if (lastResult) {
+            setConfidence(lastResult[0]?.confidence || 0);
+          }
         }
       };
       
@@ -327,7 +332,7 @@ export const useEnhancedDragDrop = <T>(
   const [dragPosition, setDragPosition] = useState<{ x: number; y: number } | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   
-  const handleDragStart = useCallback((item: T, event: React.DragEvent) => {
+  const handleDragStart = useCallback((item: T, _event: React.DragEvent) => {
     setDraggedItem(item);
     setIsDragging(true);
     onDragStart?.(item);
@@ -342,7 +347,7 @@ export const useEnhancedDragDrop = <T>(
     setDragPosition({ x: event.clientX, y: event.clientY });
   }, []);
   
-  const handleDragEnd = useCallback((event: React.DragEvent) => {
+  const handleDragEnd = useCallback((_event: React.DragEvent) => {
     if (draggedItem && dragPosition) {
       onDrop(draggedItem, dragPosition);
     }

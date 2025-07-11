@@ -35,7 +35,7 @@ const Auth = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
-  const { currentTheme } = useTheme();
+  const { currentTheme: _currentTheme } = useTheme();
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
