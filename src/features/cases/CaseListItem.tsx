@@ -11,7 +11,9 @@ import {
   Trash2, 
   Tag as TagIcon, 
   CalendarDays,
-  Sparkles
+  Sparkles,
+  ChevronRight,
+  AlertCircle
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/shared/utils/utils';

@@ -1,5 +1,4 @@
 import { typography } from "./tokens/typography";
-import { buttonVariants as dsButtonVariants } from "./design-system";
 import { colors, spacing as dsSpacing } from "./tokens/design-tokens";
 
 const medicalSection = {
@@ -45,34 +44,10 @@ const commonStyles = {
 const iconWithText = "flex items-center gap-2";
 const inputBase = "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
 
-/** Enhanced focus ring for interactive elements */
-export const focusRing = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent";
-
-/** Disabled state styling */
-export const disabledState = "disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed";
-
-/** Enhanced glassmorphic effect */
-export const glassmorphic = `backdrop-blur-md border-white/20 transition-all duration-200 ease-out`;
-
-/** Enhanced glassmorphic backgrounds with better depth - updated to match auth opacity */
-export const glass = {
-  subtle: `${glassmorphic} bg-black/15 shadow-sm border-white/10`,
-  elevated: `${glassmorphic} bg-black/18 shadow-md border-white/10`,
-  overlay: `backdrop-blur-xl border-white/10 bg-black/15 shadow-lg`,
-  card: `${glassmorphic} bg-black/15 rounded-xl shadow-sm border border-white/10`,
-  cardElevated: `${glassmorphic} bg-black/18 rounded-xl shadow-md border border-white/10`
-} as const;
-
-export const buttonVariants = {
-  ...dsButtonVariants,
-  primary: dsButtonVariants.primary,
-  default: dsButtonVariants.primary,
-};
-
 // Re-exporting for compatibility
 export {
   typography,
-  spacing,
+  spacing as uiSpacing,
   medicalSection,
   formField,
   layouts,
