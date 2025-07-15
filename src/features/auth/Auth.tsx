@@ -97,7 +97,7 @@ const Auth = () => {
     }
   };
 
-  const onForgotPasswordSubmit = async (data: ForgotPasswordFormData) => {
+  const onForgotPasswordSubmit = async (_data: ForgotPasswordFormData) => {
     setIsLoading(true);
     setError(null);
     try {

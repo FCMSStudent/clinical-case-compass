@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { HeartPulse } from "lucide-react";
 import { VitalSlider } from "./components/VitalSlider";
 import { VitalsPresetButtons } from "./components/VitalsPresetButtons";
@@ -31,6 +31,7 @@ export function InteractiveVitalsCard({
   // Apply preset vital signs
   const applyPreset = useCallback((preset: keyof typeof VITAL_PRESETS) => {
     const presetValues = VITAL_PRESETS[preset];
+    if (!presetValues) return;
 
     setVitalSigns(prev => {
       return prev.map(vital => ({
@@ -43,9 +44,13 @@ export function InteractiveVitalsCard({
   // Memoize the handleVitalChange function to prevent unnecessary re-renders
   const handleVitalChange = useCallback((index: number, values: number[]) => {
     const newValue = values[0];
+    if (newValue === undefined) return;
+    
     setVitalSigns(prev => {
       const updated = [...prev];
-      updated[index] = { ...updated[index], value: newValue };
+      if (updated[index]) {
+        updated[index] = { ...updated[index], value: newValue };
+      }
       return updated;
     });
   }, []);
@@ -70,7 +75,7 @@ export function InteractiveVitalsCard({
       setVitalSigns(prev => 
         prev.map(vital => ({
           ...vital,
-          value: initialVitals[vital.name] ? parseFloat(initialVitals[vital.name]) : vital.value,
+          value: initialVitals[vital.name] ? parseFloat(initialVitals[vital.name] || "0") : vital.value,
           range: normalRanges[vital.name as keyof typeof normalRanges]
         }))
       );
@@ -102,48 +107,60 @@ export function InteractiveVitalsCard({
         {/* Bentogrid Layout */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-min">
           {/* Temperature - spans 2 columns on larger screens */}
-          <VitalSlider 
-            vital={vitalSigns[0]} 
-            index={0} 
-            handleVitalChange={handleVitalChange}
-            className="md:col-span-2"
-          />
+          {vitalSigns[0] && (
+            <VitalSlider 
+              vital={vitalSigns[0]} 
+              index={0} 
+              handleVitalChange={handleVitalChange}
+              className="md:col-span-2"
+            />
+          )}
           
           {/* Heart Rate */}
-          <VitalSlider 
-            vital={vitalSigns[1]} 
-            index={1} 
-            handleVitalChange={handleVitalChange}
-          />
+          {vitalSigns[1] && (
+            <VitalSlider 
+              vital={vitalSigns[1]} 
+              index={1} 
+              handleVitalChange={handleVitalChange}
+            />
+          )}
           
           {/* Respiratory Rate */}
-          <VitalSlider 
-            vital={vitalSigns[4]} 
-            index={4} 
-            handleVitalChange={handleVitalChange}
-          />
+          {vitalSigns[4] && (
+            <VitalSlider 
+              vital={vitalSigns[4]} 
+              index={4} 
+              handleVitalChange={handleVitalChange}
+            />
+          )}
           
           {/* Systolic BP */}
-          <VitalSlider 
-            vital={vitalSigns[2]} 
-            index={2} 
-            handleVitalChange={handleVitalChange}
-          />
+          {vitalSigns[2] && (
+            <VitalSlider 
+              vital={vitalSigns[2]} 
+              index={2} 
+              handleVitalChange={handleVitalChange}
+            />
+          )}
           
           {/* Diastolic BP */}
-          <VitalSlider 
-            vital={vitalSigns[3]} 
-            index={3} 
-            handleVitalChange={handleVitalChange}
-          />
+          {vitalSigns[3] && (
+            <VitalSlider 
+              vital={vitalSigns[3]} 
+              index={3} 
+              handleVitalChange={handleVitalChange}
+            />
+          )}
           
           {/* Oxygen Saturation - spans 2 columns */}
-          <VitalSlider 
-            vital={vitalSigns[5]} 
-            index={5} 
-            handleVitalChange={handleVitalChange}
-            className="col-span-2"
-          />
+          {vitalSigns[5] && (
+            <VitalSlider 
+              vital={vitalSigns[5]} 
+              index={5} 
+              handleVitalChange={handleVitalChange}
+              className="col-span-2"
+            />
+          )}
         </div>
       </div>
     </div>

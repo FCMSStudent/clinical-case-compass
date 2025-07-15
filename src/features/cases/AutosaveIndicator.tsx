@@ -28,6 +28,7 @@ export function AutosaveIndicator({
     } else {
       setVisible(status !== "idle");
     }
+    return undefined;
   }, [status]);
 
   if (!visible) return null;

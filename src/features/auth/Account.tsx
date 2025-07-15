@@ -27,7 +27,7 @@ const Account = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const { getStatistics } = useDashboardData();
-  const _stats = getStatistics();
+  getStatistics(); // Call but don't store result since it's not used
   
   // State for settings
   const [notifications, setNotifications] = useState(true);

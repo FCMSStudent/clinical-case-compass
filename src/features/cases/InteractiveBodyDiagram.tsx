@@ -1,11 +1,11 @@
-import React, { useState, useCallback, useMemo, useRef } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Switch } from "@/shared/components/switch";
 import { Label } from "@/shared/components/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/select";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/shared/components/tooltip";
 import { Button } from "@/shared/components/button";
-import { Info, RotateCcw } from "lucide-react";
+import { RotateCcw } from "lucide-react";
 import { cn } from "@/shared/utils/utils";
 import { 
   BODY_PARTS as bodyPartsData, 
@@ -61,7 +61,10 @@ export const InteractiveBodyDiagram: React.FC<InteractiveBodyDiagramProps> = ({
       }
       setSelectedParts(newSelectedParts);
       if (onBodyPartSelected) {
-        onBodyPartSelected(existingIndex > -1 ? selection : newSelectedParts[newSelectedParts.length-1]);
+        const selectionToPass = existingIndex > -1 ? selection : newSelectedParts[newSelectedParts.length-1];
+        if (selectionToPass) {
+          onBodyPartSelected(selectionToPass);
+        }
       }
     },
     [selectedParts, view, onBodyPartSelected]
@@ -154,7 +157,7 @@ export const InteractiveBodyDiagram: React.FC<InteractiveBodyDiagramProps> = ({
           <Switch
             id="view-switch"
             checked={view === "posterior"}
-            onCheckedChange={(checked) => {
+            onCheckedChange={(_checked) => {
               if (view === "anterior") setView("posterior");
               else if (view === "posterior") setView("lateral");
               else setView("anterior");
