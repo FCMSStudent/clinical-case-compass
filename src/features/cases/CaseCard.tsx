@@ -14,7 +14,7 @@ import { getPrimaryDiagnosis, isValidMedicalCase } from "./utils/caseUtils";
  * CONSTANTS & HELPERS
  * ────────────────────────────────────────────────────────────────────────────────
  */
-const VISIBLE_TAGS = 2;
+
 
 interface TagPillProps {
   tag: { id: string; name: string; color: string };

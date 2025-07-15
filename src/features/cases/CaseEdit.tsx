@@ -13,7 +13,7 @@ import { MedicalCase, RadiologyStudy, LabTest } from "@/shared/types/case";
 import { useSupabaseCases } from "@/shared/hooks/use-supabase-cases";
 import { CaseEditForm } from "@/features/cases/edit/CaseEditForm";
 import { typography, layouts } from "@/design-system/ui-styles";
-import { colors } from "@/design-system/tokens/design-tokens";
+
 
 // Define the form schema with optional fields
 const formSchema = z.object({
@@ -106,7 +106,7 @@ const CaseEdit = () => {
     }
 
     if (medicalCase.labTests) {
-      setLabResults(medicalCase.labTests as Record<string, unknown>[]);
+      setLabResults(medicalCase.labTests as unknown as Record<string, unknown>[]);
     }
 
     if (medicalCase.radiologyStudies) {
@@ -160,9 +160,9 @@ const CaseEdit = () => {
         title: values.title || medicalCase.title,
         updatedAt: new Date().toISOString(),
         chiefComplaint: values.chiefComplaint || medicalCase.chiefComplaint,
-        history: values.history || undefined,
-        physicalExam: values.physicalExam || undefined,
-        learningPoints: values.learningPoints || undefined,
+        history: values.history || "",
+        physicalExam: values.physicalExam || "",
+        learningPoints: values.learningPoints || "",
         patient: {
           ...medicalCase.patient,
           name: values.patientName || medicalCase.patient.name,
@@ -171,7 +171,7 @@ const CaseEdit = () => {
           medicalRecordNumber: values.patientMRN || "",
         },
         vitals: vitals,
-        labTests: labResults as LabTest[],
+        labTests: labResults as unknown as LabTest[],
         radiologyStudies: radiologyStudies,
       };
 
@@ -249,7 +249,7 @@ const CaseEdit = () => {
         onLabChange={setLabResults} // Consider mapping this if SimpleLabs output is different
         onImagingChange={handleImagingChange}
         initialVitals={initialVitals || {}}
-        patientAge={form.watch("patientAge")}
+        patientAge={form.watch("patientAge") || 0}
       />
     </div>
   );
