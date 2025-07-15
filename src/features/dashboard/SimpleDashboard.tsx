@@ -23,38 +23,16 @@ const SimpleDashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen p-4 md:p-6 lg:p-8">
-      {/* Header Section */}
-      <header className="mb-8">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-          <div>
-            <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
-              {greeting}, {userName}! 👋
-            </h1>
-            <p className="text-white/70 text-lg">
-              Here's your medical cases overview for today
-            </p>
-          </div>
-          
-          <div className="flex flex-col sm:flex-row gap-3">
-            <Button
-              onClick={() => navigate('/cases/new')}
-              className="bg-white/15 backdrop-blur-md text-white border border-white/20 hover:bg-white/25"
-            >
-              <Plus className="h-5 w-5 mr-2" />
-              Create New Case
-            </Button>
-            <Button
-              onClick={() => navigate('/cases')}
-              variant="outline"
-              className="bg-transparent text-white border border-white/20 hover:bg-white/10"
-            >
-              <Eye className="h-5 w-5 mr-2" />
-              View All Cases
-            </Button>
-          </div>
-        </div>
-      </header>
+    <div className="p-4 md:p-6 lg:p-8">
+      {/* Welcome Section */}
+      <div className="mb-8">
+        <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
+          {greeting}, {userName}! 👋
+        </h1>
+        <p className="text-white/70 text-lg">
+          Here's your medical cases overview for today
+        </p>
+      </div>
 
       {/* Quick Stats Grid */}
       <section className="mb-8">
