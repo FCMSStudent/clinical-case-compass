@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Button } from "@/shared/components/button";
 import { Label } from "@/shared/components/label";
 import { motion } from "framer-motion";
@@ -7,87 +7,7 @@ import { Badge } from "@/shared/components/badge";
 import type { RadiologyStudy } from "@/shared/types/case";
 import { getStudyByName } from "../utils/radiologyData";
 
-// Common radiology studies with typical findings
-const COMMON_RADIOLOGY_STUDIES = [
-  { 
-    id: "chest-xray",
-    name: "Chest X-Ray",
-    type: "X-Ray",
-    commonFindings: [
-      "Normal",
-      "Pulmonary infiltrates",
-      "Pleural effusion",
-      "Cardiomegaly",
-      "Pneumothorax",
-      "Atelectasis"
-    ]
-  },
-  { 
-    id: "ct-chest",
-    name: "CT Chest",
-    type: "CT",
-    commonFindings: [
-      "Normal",
-      "Ground glass opacities",
-      "Consolidation",
-      "Pulmonary nodules",
-      "Mediastinal lymphadenopathy",
-      "Pleural effusion"
-    ]
-  },
-  { 
-    id: "ct-abdomen",
-    name: "CT Abdomen/Pelvis",
-    type: "CT",
-    commonFindings: [
-      "Normal",
-      "Appendicitis",
-      "Diverticulitis",
-      "Cholecystitis",
-      "Bowel obstruction",
-      "Free fluid"
-    ]
-  },
-  { 
-    id: "mri-brain",
-    name: "MRI Brain",
-    type: "MRI",
-    commonFindings: [
-      "Normal",
-      "Acute infarct",
-      "Mass lesion",
-      "White matter changes",
-      "Cerebral edema",
-      "Hemorrhage"
-    ]
-  },
-  { 
-    id: "us-abdomen",
-    name: "Ultrasound Abdomen",
-    type: "Ultrasound",
-    commonFindings: [
-      "Normal",
-      "Cholelithiasis",
-      "Hepatomegaly",
-      "Splenomegaly",
-      "Ascites",
-      "Renal calculi"
-    ]
-  },
-  { 
-    id: "echo",
-    name: "Echocardiogram",
-    type: "Ultrasound",
-    commonFindings: [
-      "Normal",
-      "Reduced EF",
-      "Valvular disease",
-      "Pericardial effusion",
-      "Wall motion abnormality",
-      "Cardiac chamber enlargement"
-    ]
-  }
-] as const;
+// Common radiology studies with typical findings (commented out as unused)
 
 interface RadiologyStudyItemProps {
   study: RadiologyStudy;

@@ -1,5 +1,5 @@
 
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { Component, ErrorInfo, ReactNode } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/card';
 import { Button } from '@/shared/components/button';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
@@ -14,7 +14,7 @@ interface State {
 }
 
 export class CasesErrorBoundary extends Component<Props, State> {
-  public state: State = {
+  public override state: State = {
     hasError: false
   };
 
@@ -23,7 +23,7 @@ export class CasesErrorBoundary extends Component<Props, State> {
     return { hasError: true, error };
   }
 
-  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  public override componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('[CasesErrorBoundary] Error details:', {
       error: error.message,
       stack: error.stack,
@@ -32,10 +32,10 @@ export class CasesErrorBoundary extends Component<Props, State> {
   }
 
   private handleRetry = () => {
-    this.setState({ hasError: false, error: undefined });
+    this.setState({ hasError: false });
   };
 
-  public render() {
+  public override render() {
     if (this.state.hasError) {
       return (
         <div className="space-y-6">

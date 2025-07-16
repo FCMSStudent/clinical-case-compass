@@ -1,5 +1,5 @@
 
-import React, { memo, useState } from "react";
+import { memo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Tag, ChevronRight } from "lucide-react";
 import { Button } from "@/shared/components/button";

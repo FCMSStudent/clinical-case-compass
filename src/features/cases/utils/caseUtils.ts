@@ -1,4 +1,4 @@
-import { MedicalCase } from "@/types/case";
+import { MedicalCase } from "@/shared/types/case";
 
 /**
  * Get the primary diagnosis from a medical case

@@ -1,7 +1,6 @@
 
-import React from "react";
 import { BentoCard } from "@/shared/components/bento-card";
-import { typography, spacing } from "@/design-system/ui-styles";
+import { typography } from "@/design-system/ui-styles";
 import { cn } from "@/shared/utils/utils";
 
 interface ClinicalTextCardProps {

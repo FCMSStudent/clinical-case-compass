@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import { memo } from "react";
 import { Tag } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/shared/utils/utils";

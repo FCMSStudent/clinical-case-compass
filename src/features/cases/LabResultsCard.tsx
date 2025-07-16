@@ -1,21 +1,16 @@
-import React, { useState, useCallback } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/card";
+import { useState, useCallback } from "react";
 import { Input } from "@/shared/components/input";
 import { Label } from "@/shared/components/label";
 import { Button } from "@/shared/components/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/select";
-import { Alert, AlertDescription } from "@/shared/components/alert";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/shared/components/tooltip";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Plus, 
   X, 
-  AlertCircle, 
-  Info, 
   TrendingUp, 
   TrendingDown,
   CheckCircle2,
-  Clock,
   FileText
 } from "lucide-react";
 import { cn } from "@/shared/utils/utils";

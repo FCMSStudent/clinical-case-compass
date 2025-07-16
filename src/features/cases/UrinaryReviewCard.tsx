@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/card";
+import { useState } from "react";
+import { Card } from "@/shared/components/card";
 import { Checkbox } from "@/shared/components/checkbox";
 import { Label } from "@/shared/components/label";
 import { Droplet } from "lucide-react";

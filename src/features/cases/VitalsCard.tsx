@@ -1,7 +1,6 @@
-import React, { useState, useCallback, memo } from "react";
+import { useState, useCallback, memo } from "react";
 import { Input } from "@/shared/components/input";
 import { Label } from "@/shared/components/label";
-import { Button } from "@/shared/components/button";
 import { Thermometer, HeartPulse, Activity, Wind, Gauge } from "lucide-react";
 import { cn } from "@/shared/utils/utils";
 
@@ -37,9 +36,6 @@ const VitalSign = memo<VitalSignProps>(({
   id,
   className
 }) => {
-  const isOutOfRange = normalRange && value && !isNaN(Number(value)) 
-    ? Number(value) < normalRange.min || Number(value) > normalRange.max
-    : false;
 
   const getStatusColor = () => {
     if (!normalRange || !value || isNaN(Number(value))) return "";

@@ -1,9 +1,8 @@
-import React from "react";
 import { BentoCard } from "@/shared/components/bento-card";
 import { Badge } from "@/shared/components/badge";
 import { Stethoscope, AlertCircle } from "lucide-react";
 import { MedicalCase } from "@/shared/types/case";
-import { typography, spacing } from "@/design-system/ui-styles";
+import { typography } from "@/design-system/ui-styles";
 import { cn } from "@/shared/utils/utils";
 
 interface DiagnosisCardProps {
