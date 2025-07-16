@@ -17,11 +17,8 @@ import {
 } from "@/shared/components/select";
 import { User, Calendar, FileText as FileTextIcon, UserCheck } from "lucide-react"; // Renamed FileText to FileTextIcon to avoid conflict
 import { cn } from "@/shared/utils/utils";
-import { 
-  StepHeader, 
-  StatusFieldCard,
-  // ValidationFeedback removed
-} from "./components";
+import { StepHeader } from './components/StepHeader';
+import { StatusFieldCard } from './components/StatusFieldCard';
 import { useFormValidation } from "@/shared/hooks/use-form-validation";
 import { PatientFormData } from "./schemas/patient-schema";
 

@@ -9,7 +9,7 @@ import { CaseVitalsSection } from "./CaseVitalsSection";
 import { CaseTextSection } from "./CaseTextSection";
 import { CaseLabsSection } from "./CaseLabsSection";
 import { CaseRadiologySection } from "./CaseRadiologySection";
-import { spacing, layouts } from "@/design-system/ui-styles";
+import { spacing } from '@/design-system/tokens/spacing';
 
 interface CaseEditFormProps {
   form: UseFormReturn<any>;
@@ -80,7 +80,7 @@ export const CaseEditForm: React.FC<CaseEditFormProps> = ({
         />
 
         {/* Submit Button */}
-        <div className={layouts.flex.between}>
+        <div className={spacing.layouts.flex.between}>
           <div></div>
           <Button
             type="submit"

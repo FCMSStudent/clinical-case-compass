@@ -24,10 +24,8 @@ import {
   Tag 
 } from "lucide-react";
 import { cn } from "@/shared/utils/utils";
-import { 
-  StepHeader, 
-  StatusFieldCard 
-} from "./components";
+import { StepHeader } from './components/StepHeader';
+import { StatusFieldCard } from './components/StatusFieldCard';
 import { useFormValidation } from "@/shared/hooks/use-form-validation";
 
 /**

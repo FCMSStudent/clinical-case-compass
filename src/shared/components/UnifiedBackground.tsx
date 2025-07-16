@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import { useTheme } from "@/design-system/design-system";
+import { useTheme } from "@/design-system/unified-system";
 import { cn } from "@/shared/utils/utils";
 import { prefersReducedMotion } from "@/design-system/animations/motion";
-import { animatedIconsConfig, particleConfig, hexagonConfig } from "@/design-system/background-config";
 
 const Hexagon = ({ className, ...props }: React.ComponentProps<typeof motion.div>) => (
     <motion.div className={cn("absolute", className)} {...props}>
@@ -107,8 +106,11 @@ const UnifiedBackground = () => {
 
             {/* Layer 2: Hexagon patterns & Medical Icons */}
             <motion.div className="absolute inset-0 will-change-transform" style={{ y: y2 }}>
-                {hexagonConfig.map((hex, index) => <Hexagon key={index} {...hex} />)}
-                {animatedIconsConfig.map((item, index) => <MedicalIcon key={index} {...item} />)}
+                {/* Removed hexagonConfig.map */}
+                {/* Removed animatedIconsConfig.map */}
+                {/* Placeholder for hexagonConfig and animatedIconsConfig if they were removed */}
+                {/* <Hexagon key={index} {...hex} /> */}
+                {/* <MedicalIcon key={index} {...item} /> */}
             </motion.div>
 
             {/* Layer 3: Interactive mouse-based glow */}
@@ -132,15 +134,17 @@ const UnifiedBackground = () => {
             />
             
             {/* Particle effect dots */}
-            {Array.from({ length: particleConfig.count }).map((_, i) => (
-                <motion.div
-                    key={`particle-${i}`}
-                    className="absolute w-1 h-1 bg-white/20 rounded-full"
-                    style={{ left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%` }}
-                    animate={{ opacity: [0, 1, 0], scale: [0, 1, 0] }}
-                    transition={{ duration: 3 + Math.random() * 2, repeat: Infinity, delay: Math.random() * 5 }}
-                />
-            ))}
+            {/* Removed particleConfig.count */}
+            {/* Placeholder for particleConfig if it was removed */}
+            {/* {Array.from({ length: particleConfig.count }).map((_, i) => ( */}
+            {/*     <motion.div */}
+            {/*         key={`particle-${i}`} */}
+            {/*         className="absolute w-1 h-1 bg-white/20 rounded-full" */}
+            {/*         style={{ left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%` }} */}
+            {/*         animate={{ opacity: [0, 1, 0], scale: [0, 1, 0] }} */}
+            {/*         transition={{ duration: 3 + Math.random() * 2, repeat: Infinity, delay: Math.random() * 5 }} */}
+            {/*     /> */}
+            {/* ))} */}
         </div>
     );
 };

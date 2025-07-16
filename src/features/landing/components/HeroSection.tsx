@@ -2,7 +2,8 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { cn } from '@/shared/utils/utils';
-import { buttonVariants, typography } from '@/design-system/ui-styles';
+import { buttonVariants } from '@/design-system/components/components';
+import { typography } from '@/design-system/tokens/typography';
 import { ArrowRight, BookOpen, User, BrainCircuit } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { BentoCard } from '@/shared/components/bento-card';

@@ -3,7 +3,6 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/card";
 import { HeartPulse } from "lucide-react";
 import { InteractiveVitalsCard } from "@/features/cases/InteractiveVitalsCard";
-import { medicalSection, iconWithText } from "@/design-system/ui-styles";
 
 interface CaseVitalsSectionProps {
   onVitalsChange: (vitals: Record<string, string>) => void;
@@ -17,14 +16,14 @@ export const CaseVitalsSection: React.FC<CaseVitalsSectionProps> = ({
   patientAge
 }) => {
   return (
-    <Card className={medicalSection.container}>
-      <CardHeader className={medicalSection.header}>
-        <CardTitle className={medicalSection.title}>
-          <HeartPulse className={iconWithText} />
+    <Card className="medical-section-container">
+      <CardHeader className="medical-section-header">
+        <CardTitle className="medical-section-title">
+          <HeartPulse className="icon-with-text" />
           Vital Signs
         </CardTitle>
       </CardHeader>
-      <CardContent className={medicalSection.content}>
+      <CardContent className="medical-section-content">
         <InteractiveVitalsCard
           onVitalsChange={onVitalsChange}
           initialVitals={initialVitals}

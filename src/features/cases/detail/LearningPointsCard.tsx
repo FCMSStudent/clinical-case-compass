@@ -2,7 +2,7 @@ import React from "react";
 import { BentoCard } from "@/shared/components/bento-card";
 import { BookOpen } from "lucide-react";
 import { MedicalCase } from "@/shared/types/case";
-import { typography } from "@/design-system/ui-styles";
+import { typography } from '@/design-system/tokens/typography';
 import { cn } from "@/shared/utils/utils";
 
 interface LearningPointsCardProps {

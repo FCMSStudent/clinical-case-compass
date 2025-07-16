@@ -4,23 +4,21 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/shared/components/sonner";
 import { AnimatePresence } from "framer-motion";
 import { AuthProvider, useAuth } from "./providers/AuthContext";
-import { ThemeProvider } from "@/design-system/design-system";
+import { ThemeProvider } from "@/design-system/unified-system";
 import { ErrorBoundary } from "./error-boundaries/ErrorBoundary";
 import { ProtectedRouteLayout } from "@/features/navigation";
 import LoadingScreen from "@/shared/components/loading-screen";
 
 // Import pages from the new pages directory
-import {
-  LandingPage,
-  AuthPage,
-  DashboardPage,
-  CasesPage,
-  CaseDetailPage,
-  CaseEditPage,
-  CreateCasePage,
-  AccountPage,
-  NotFoundPage
-} from "@/pages";
+import LandingPage from '@/pages/LandingPage';
+import AuthPage from '@/pages/AuthPage';
+import DashboardPage from '@/pages/DashboardPage';
+import CasesPage from '@/pages/CasesPage';
+import CaseDetailPage from '@/pages/CaseDetailPage';
+import CaseEditPage from '@/pages/CaseEditPage';
+import CreateCasePage from '@/pages/CreateCasePage';
+import AccountPage from '@/pages/AccountPage';
+import NotFoundPage from '@/pages/NotFoundPage';
 
 // Loading component for Suspense fallback
 const PageLoadingFallback = () => (

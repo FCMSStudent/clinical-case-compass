@@ -26,7 +26,8 @@ import { clinicalDetailStepSchema, type ClinicalDetailFormData, TAB_ITEMS, type 
 import { SystemReviewChecklist } from "@/features/cases/SystemReviewChecklist";
 import { VitalsCard } from "@/features/cases/VitalsCard";
 import { DiagnosticsTab } from "./DiagnosticsTab";
-import { StepHeader, StatusFieldCard } from "./components";
+import { StepHeader } from './components/StepHeader';
+import { StatusFieldCard } from './components/StatusFieldCard';
 
 const FORM_FIELDS = {
   PATIENT_HISTORY: "patientHistory",
