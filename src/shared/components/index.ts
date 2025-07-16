@@ -1,9 +1,11 @@
+
 // ────────────────────────────────────────────────────────────────────────────────
 // CORE COMPONENTS
 // ────────────────────────────────────────────────────────────────────────────────
 
 export { Button, buttonVariants } from "./button"
 export { Input } from "./input"
+
 // ────────────────────────────────────────────────────────────────────────────────
 // UNIFIED LAYOUT SYSTEM
 // ────────────────────────────────────────────────────────────────────────────────
@@ -61,7 +63,7 @@ export {
 } from "./animation"
 
 // ────────────────────────────────────────────────────────────────────────────────
-// LEGACY COMPONENTS (for backward compatibility)
+// UI COMPONENTS
 // ────────────────────────────────────────────────────────────────────────────────
 
 export { Toggle, toggleVariants } from "./toggle"
@@ -107,14 +109,19 @@ export { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "./inpu
 export { PageHeader } from "./page-header"
 export { SettingsCard } from "./settings-card"
 export { RecentCasesCarousel } from "./recent-cases-carousel"
-// export { Chart } from "./chart" // Chart component is not ready
-export { default as LoadingScreen } from "./loading-screen"
-export { LoadingSpinner } from "./loading-spinner"
 export { AutosaveIndicator } from "./autosave-indicator"
 export { AvatarUpload } from "./avatar-upload"
-export { default as DashboardSkeleton } from "./dashboard-skeleton"
 export { ErrorSummary } from "./ErrorSummary"
 export { OfflineBanner } from "./OfflineBanner"
+
+// ────────────────────────────────────────────────────────────────────────────────
+// DEFAULT EXPORTS (converted to named exports)
+// ────────────────────────────────────────────────────────────────────────────────
+
+export { default as LoadingScreen } from "./loading-screen"
+export { default as DashboardSkeleton } from "./dashboard-skeleton"
+export { default as NotFound } from './NotFound'
+export { default as UnifiedBackground } from './UnifiedBackground'
 
 // ────────────────────────────────────────────────────────────────────────────────
 // TOAST COMPONENTS
@@ -124,95 +131,22 @@ export { Toaster } from "./toaster"
 export { useToast } from "@/shared/hooks/use-toast"
 export { toast } from "sonner"
 
-// Shared UI Components
-export { default as NotFound } from './NotFound';
+// ────────────────────────────────────────────────────────────────────────────────
+// LOADING COMPONENTS
+// ────────────────────────────────────────────────────────────────────────────────
 
-// Background Components
-export { default as UnifiedBackground } from './UnifiedBackground';
+export { LoadingSpinner } from "./loading-spinner"
 
-// Layout components
-export * from './layout'
-export * from './separator'
-export * from './scroll-area'
-export * from './resizable'
+// ────────────────────────────────────────────────────────────────────────────────
+// SPECIALIZED COMPONENTS
+// ────────────────────────────────────────────────────────────────────────────────
 
-// Content components
-export * from './card'
-export * from './sheet'
-export * from './dialog'
-export * from './popover'
-export * from './hover-card'
-export * from './tabs'
-export * from './accordion'
-export * from './collapsible'
-export * from './aspect-ratio'
-
-// Data components
-export * from './table'
-export * from './chart'
-export * from './data/bodyPartData'
-
-// Interactive components  
-export * from './command'
-export * from './context-menu'
-export * from './dropdown-menu'
-export * from './menubar'
-export * from './navigation-menu'
-export * from './breadcrumb'
-export * from './pagination'
-
-// Form components - Unified System
-export * from './form'
-export * from './button'
-export * from './input'
-export * from './textarea'
-export * from './select'
-export * from './checkbox'
-export * from './radio-group'
-export * from './switch'
-export * from './slider'
-export * from './label'
-
-// Feedback components
-export * from './alert'
-export * from './alert-dialog'
-export * from './toast'
-export * from './toaster'
-export * from './sonner'
-export * from './progress'
-export * from './skeleton'
-export * from './loading-spinner'
-export * from './loading-screen'
-
-// Utility components
-export * from './badge'
-export * from './avatar'
-export * from './tooltip'
-export * from './toggle'
-export * from './toggle-group'
-export * from './input-otp'
-
-// Specialized components
-export * from './carousel'
-export * from './bento-card'
-export * from './bento-container'
-export * from './recent-cases-carousel'
-export * from './NotFound'
-export * from './OfflineBanner'
-export * from './ErrorSummary'
-export * from './page-header'
-export * from './settings-card'
-export * from './animation'
-export * from './UnifiedBackground'
-export * from './dashboard-skeleton'
-export * from './form-group'
-export * from './form-progress'
-export * from './autosave-indicator'
-export * from './avatar-upload'
+export { BentoCard } from './bento-card'
+export { BentoContainer } from './bento-container'
 
 // Medical/Clinical components
-export * from './components/BodyDiagramHeader'
-export * from './components/BodyDiagramHint'
-export * from './components/BodyDiagramTooltip'
-export * from './components/BodyPartButton'
-export * from './types/bodyPartTypes'
+export { BodyDiagramHeader } from './components/BodyDiagramHeader'
+export { BodyDiagramHint } from './components/BodyDiagramHint'
+export { BodyDiagramTooltip } from './components/BodyDiagramTooltip'
+export { BodyPartButton } from './components/BodyPartButton'
+export type { BodyPartSelection } from './types/bodyPartTypes'

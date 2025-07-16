@@ -1,3 +1,4 @@
+
 import { Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -7,7 +8,7 @@ import { AuthProvider, useAuth } from "./providers/AuthContext";
 import { ThemeProvider } from "@/design-system/unified-system";
 import { ErrorBoundary } from "./error-boundaries/ErrorBoundary";
 import { ProtectedRouteLayout } from "@/features/navigation";
-import LoadingScreen from "@/shared/components/loading-screen";
+import { LoadingScreen } from "@/shared/components";
 
 // Import pages from the new pages directory
 import LandingPage from '@/pages/LandingPage';

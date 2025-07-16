@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Landing from '@/features/landing/Landing';
 import PageLayout from './layouts/PageLayout';
@@ -10,4 +11,4 @@ const LandingPage: React.FC = () => {
   );
 };
 
-export default LandingPage; 
+export default LandingPage;
