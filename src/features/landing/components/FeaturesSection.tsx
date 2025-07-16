@@ -3,7 +3,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { BookOpen, User, BrainCircuit } from 'lucide-react';
 import { cn } from '@/shared/utils/utils';
-import { typography } from '@/design-system/design-system';
+import { typography } from '@/design-system/unified-system';
 
 const FeatureCard = ({ icon, title, description, image, reverse = false }: { icon: React.ReactNode, title: string, description: string, image: string, reverse?: boolean }) => {
   const imageContent = (

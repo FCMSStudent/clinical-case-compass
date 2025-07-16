@@ -14,7 +14,7 @@ import {
   AlertTitle,
 } from "@/shared/components/alert";
 import { CheckCircle2 } from "lucide-react";
-import { useTheme } from "@/design-system/design-system";
+import { useTheme } from "@/design-system/unified-system";
 import {
   pageTransitionVariants as globalPageTransitionVariants,
   reducedMotionPageTransitionVariants as globalReducedMotionPageVariants,

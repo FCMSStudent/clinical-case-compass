@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import { useTheme } from "@/design-system/design-system";
+import { useTheme } from "@/design-system/unified-system";
 import { cn } from "@/shared/utils/utils";
 import { prefersReducedMotion } from "@/design-system/animations/motion";
 import { animatedIconsConfig, particleConfig, hexagonConfig } from "@/design-system/background-config";
