@@ -2,7 +2,7 @@
 import React from 'react';
 import { LoadingSpinner } from './loading-spinner';
 import UnifiedBackground from '@/shared/components/UnifiedBackground';
-import { typography } from '@/design-system/ui-styles';
+import { typography } from '@/design-system/tokens/typography';
 import { cn } from '@/shared/utils/utils';
 
 const LoadingScreen = () => {

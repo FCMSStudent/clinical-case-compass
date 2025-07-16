@@ -8,7 +8,6 @@ import {
   FormMessage,
 } from "@/shared/components/form";
 import { Textarea } from "@/shared/components/textarea";
-import { medicalSection, formField } from "@/design-system/ui-styles";
 
 interface CaseTextSectionProps {
   form: UseFormReturn<any>;

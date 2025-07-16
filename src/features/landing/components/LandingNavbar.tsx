@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { cn } from '@/shared/utils/utils';
-import { buttonVariants } from '@/design-system/ui-styles';
+import { buttonVariants } from '@/design-system/components/components';
 import { liquidGlassClasses, getGlassTransitionVariants } from '@/design-system/components/glass-effects';
 
 const LandingNavbar = () => {

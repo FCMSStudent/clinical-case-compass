@@ -12,7 +12,7 @@ import { useLocalStorage } from "@/shared/hooks/use-local-storage";
 import { MedicalCase, RadiologyStudy, LabTest } from "@/shared/types/case";
 import { useSupabaseCases } from "@/shared/hooks/use-supabase-cases";
 import { CaseEditForm } from "@/features/cases/edit/CaseEditForm";
-import { typography, layouts } from "@/design-system/ui-styles";
+import { typography } from '@/design-system/tokens/typography';
 
 
 // Define the form schema with optional fields

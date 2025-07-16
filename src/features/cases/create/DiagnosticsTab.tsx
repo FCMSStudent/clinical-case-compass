@@ -7,7 +7,7 @@ import {
   Microscope as MicroscopeIcon,
   Scan as ScanIcon,
 } from "lucide-react";
-import { StatusFieldCard } from "./components";
+import { StatusFieldCard } from './components/StatusFieldCard';
 import { SimpleLabs } from "./SimpleLabs";
 import { SimpleImaging } from "./SimpleImaging";
 import type { ClinicalDetailFormData } from "./ClinicalDetailConfig";

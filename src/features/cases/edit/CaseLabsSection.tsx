@@ -3,7 +3,6 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/card";
 import { TestTube } from "lucide-react";
 import { SimpleLabs } from "@/features/cases/create/SimpleLabs";
-import { medicalSection, iconWithText } from "@/design-system/ui-styles";
 
 interface CaseLabsSectionProps {
   onLabChange: (labResults: any[]) => void;
